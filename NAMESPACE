@@ -1,0 +1,8 @@
+#Dependencies
+import(dispRity)
+
+## Utilities
+export(plot.space)
+
+## Functions
+export(reduce.space)
