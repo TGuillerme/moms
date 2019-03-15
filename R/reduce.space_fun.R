@@ -110,7 +110,7 @@ run.density.removal <- function(space, parameters) {
 # ' @param point a point in space
 # ' @param centre the centre from which to count the radius
 # ' @param radius the radius for removal
-#' 
+# ' 
 point.in.circle <- function(point, centre = c(0,0), radius) {
 
     ## Measure the distance from the center
@@ -123,7 +123,7 @@ point.in.circle <- function(point, centre = c(0,0), radius) {
 # ' @description Select only the points above one value
 # ' @param point a point in space
 # ' @param value the threshold value
-#' 
+# ' 
 select.value <- function(point, value) {
     return(ifelse(point[1] > value && point[2] > value, TRUE, FALSE))
 }
@@ -140,4 +140,4 @@ get.neigbhours <- function(trait_space, distance, diameter = 0.1) {
 
     ## Select the neighbors
     return(unique(neighbors[neighbors[,1] != neighbors[,2]]))
-} 
+}

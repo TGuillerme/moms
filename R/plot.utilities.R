@@ -1,13 +1,10 @@
 #' @title Plot space
-#' @description plotting space changes
+#' @description plotting the spaces changing
 #' @param space the space to plot (matrix)
 #' @param remove logical, the elements to remove or add (using !)
 #' @param main the title
 #' @param defaults a list of parameters for plot() and points()
-
-#' @example
-
-#' @export
+#' @examples
 
 ## Plot space function (utility shortcut)
 plot.space <- function(space, remove, main, defaults) {

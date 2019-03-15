@@ -1,0 +1,247 @@
+---
+title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
+author: "Thomas Guillerme, Mark Puttick, Vera Weisbecker"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    fig_width: 6
+    fig_height: 6
+---
+
+```{r, echo = FALSE}
+## Loading the packages
+library(knitr)
+library(ape)
+library(dispRity)
+
+## Loading the utility functions
+source("../Functions/plot.utilities.R")
+source("../Functions/reduce.space_fun.R")
+source("../Functions/reduce.space.R")
+
+## Setting the default parameters for the space plots
+defaults <- list(pch = 20,
+                 xlim = c(-3, 3),
+                 xlim = c(-3, 3),
+                 col1 = "grey",
+                 col2 = "black",
+                 xlab = "Trait 1",
+                 ylab = "Trait 2")
+```
+
+# Introduction
+
+ * Disparity is used a lot since the 1990s [Definition blabla] and also in ecology
+ * It is linked to funtional spaces in ecology (but not called disparity there)
+ * Here we will try to approach both aspects (but more like macroevolution) by defining disparity as: "multidimensional trait-space occupancy".
+ * In macroevolution, disparity is used to test hypothesis on how one or multiple groups occupy a morphospace (either through time or space or both)
+ * It has been used to answer classical questions such as 1) does disparity of one group changes through time or in response to extinction or 2) do groups A and B have different disparity.
+
+ * However, the problem is that it is unclear what is meant in these two questions: classically disparity has been measured as sum or product of ranges or variance.
+ * This measures the "spread" of a group in a morphospace (the product of ranges is the hyper-rectangular volume) but many more aspects might be interesting to researchers.
+ * For example, in 1) a group's disparity (e.g. sum of variance) might not change through time but it's density might (suggesting that the morphospace is more/less tightly packed); in 2) two groups's disparities (e.g. sum of ranges) might be different but they might be situated in the same region of the morphospace.
+ * Here we are going to classify disparity metrics into two broad spatial occupancy categories that might change independently: the volume, the density and the position. All of them are a distribution of distance in the space (whether Euclidean, Manhattan or others) and are traditionally summarised into a central tendency (e.g. the **sum** of variances, the **mean** pairwise distance), etc...
+
+
+## Disparity metrics
+
+```{r, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide'}
+set.seed(11)
+## Plot space function (utility shortcut)
+## The elements
+elements <- 10
+
+## Trait space
+trait_space <- space.maker(elements, 2, distribution = rnorm)
+
+## Graphical parameters
+op <- par(mfrow = c(1,3), bty = "n")
+
+## The volume
+plot(trait_space, pch = defaults$pch, main = "A - Volume", xlab = "Trait 1", ylab = "Trait 2")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1)
+
+## The density
+plot(trait_space, pch = defaults$pch, main = "B - Density", xlab = "Trait 1", ylab = "")
+## Plotting the pairwise lines
+pair.line <- function(line, trait_space, defaults) {
+    lines(x = trait_space[line,1], y = trait_space[line,2], col = defaults$col1)
+}
+apply(combn(1:elements, 2), 2, pair.line, trait_space, defaults)
+points(trait_space, pch = defaults$pch)
+
+## The position
+plot(trait_space, pch = defaults$pch, main = "C - Position", xlab = "Trait 1", ylab = "")
+## Plotting the center of the space
+points(0,0, pch = 13, cex = 2)
+arrows(x0 = 0, y0 = 0, x1 = trait_space[,1], y1 = trait_space[,2], code = 0, col = defaults$col1)
+points(trait_space, pch = defaults$pch)
+
+par(op)
+```
+
+#### 1. The volume
+
+ * This type of metrics measures the spread of a group in the trait-space. In biological terms, the bigger this metric, the more a group achieved more extreme morphologies.
+ * This can be typically the hyper-volume, ellispsoid volume, product of ranges or product of variance.
+
+#### 2. The density
+
+ * This type of metrics measures the "packness" of a group in the trait-space. In biological terms, the bigger this metric, the more different morphologies are (i.e. heterogeneous).
+ * This can be typically the mean pairwise distance, median distance from centroid, etc.
+
+#### 3. The position
+
+ * This type of metrics measures where the group is in the morphospace, either relative to another group or relative to a fixed point in the morphospace. Biological interpretation depends on what the distance from is. If it's distance from the centre of the morphospace, the bigger the metric, the more "weird" specimens in a group are (i.e. the centre being the average morphology in an ordination).
+ * This has been rarely used.
+
+
+
+ * Of course, different metrics can represent multiple aspects of these three main "axis".
+ * Also, multiple scenarios can be predicted in macroevolutionary process to change the morphospace (e.g. a mass extinction making the specimens with extreme characteristics go extinct (e.g. big mammals in the megafauna extinction))
+ * In this paper, we look at the effect of each spatial transformation on the different types of broad category metrics.
+
+ * Furthermore, multidimensional spaces are in essence... multidimensional (here we mean beyond our 3 physical dimensions).
+ * This adds another layer of complexity because some spatial properties do not change linerarly with the number of dimensions, especially with ordination techniques (where dimensions are ranked).
+ * We thus also look at the effect of dimensions on the metrics + whether they are sensitive to sample size or missing data.
+
+<!-- * Finally, one other aspect can be comparing a group to another one  -->
+<!-- TG: Should we add stuff about comparing groups to each other? I.e. how to distinguish two groups, see Effect_of_metric_on_space.Rmd  -->
+ 
+
+# Methods
+
+## Making shifting spaces
+
+ * We generate a series of spaces following some specific transformations.
+
+ * First we generate a space with *n* elements and *k* dimensions and a general distribution *D*
+
+ * We then remove 50% of the elements in the space 
+
+ * We then modify this space following these four scenarios
+    1. Random: This represents a loss in diversity within the space (or gain).
+    2. By limit: selectively removing the centre or the edges
+    3. By displacement: selectively removing one or three corners
+    4. By density: increasing or reducing density
+
+
+
+
+
+```{r, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide'}
+set.seed(42)
+op <- par(mfrow = c(4,2), bty = "n")
+## The elements
+elements <- 300
+## The amount to remove
+remove <- 0.5
+
+## Trait space
+trait_space <- space.maker(elements, 2, distribution = rnorm)
+## The original space
+plot(trait_space, pch = 20, xlim = c(-3, 3), ylim = c(-3, 3),
+     main = "A - Original space", xlab = "Trait 1", ylab = "Trait 2")
+
+## The randomly removed space
+to_remove <- reduce.space(trait_space, type = "random", remove = 0.5)
+## Plotting the reduction
+plot.space(trait_space, to_remove, main = "B - Random removal", defaults)
+
+## The limit removal
+to_remove <- reduce.space(trait_space, type = "limit", remove = 0.5)
+## Plotting the reduction
+plot.space(trait_space, to_remove, main = "C1 - Limit removal (minimal)", defaults)
+plot.space(trait_space, !to_remove, main = "C2 - Limit removal (maximal)", defaults)
+
+## The displacement removal
+to_remove <- reduce.space(trait_space, type = "displacement", remove = 0.5)
+## Moving the space to the upper right corner (positive)
+plot.space(trait_space, to_remove, main = "D1 - Displacement (positive)", defaults)
+plot.space(trait_space, !to_remove, main = "D2 - Displacement (negative)", defaults)
+
+## The density removal
+to_remove <- reduce.space(trait_space, type = "density", remove = 0.5)
+## Plotting the reduction
+plot.space(trait_space, to_remove, main = "E1 - Density (higher)", defaults)
+plot.space(trait_space, !to_remove, main = "E2 - Density (lower)", defaults)
+```
+
+ [TODO:]
+  - Should the dimensions be independent? Correlated? Screed (i.e. with decreasing variance)
+  - Should we change the distributions *D* or leave it always fixed (normal)
+
+
+ * We then extrapolate these changes for different points
+    * number of elements *n*: 10, 50, 100, 500, 1000
+    * number of dimensions *k*: 10, 50, 100, 500, 1000
+
+## What do the metrics measure?
+
+ * Include fable with: 1) name of the metric, 2) broad category, 3) what they measure, 4) their formula.
+
+#### Volume metrics
+
+
+```{r, echo = FALSE}
+## The list of volume metrics used
+volume_metrics <- list("ellispoid.volume" = ellipse.volume,
+                       )
+```
+
+#### Density metrics
+
+
+
+#### Position metrics
+
+
+
+ * The mean squared pairwise distance (`mean(pairwise.dist(X)^2)`)
+ * The median distance from centroid (`c(median, centroids)`)
+ * The convex hull volume (`convhull.volume` - in 2D that's the surface!)
+ * The ellipsoid volume (`ellipse.volume`)
+ * The minimum spanning tree length (`span.tree.length`)
+ * The sum of the variances of each dimensions (`c(sum, variances)`)
+ * The sum of the ranges of each dimensions (`c(sum, ranges)`)
+
+```{r, warning = FALSE}
+## The list of metrics
+metrics <- list("mean_sqrt_dist" = function(X) mean(pairwise.dist(X)^2),
+                "median_centroid" = c(median, centroids),
+                "convhull" = convhull.volume,
+                "ellispoid" = ellipse.volume,
+                "span_tree" = span.tree.length,
+                "sum_var" = c(sum, variances),
+                "sum_ranges" = c(sum, ranges))
+```
+
+What are the different metrics measuring? (on simple 2D sets)
+
+## How good ("resilient") are the metrics?
+
+ * How are they effective to the number of specimens (sample size 1)
+ * How are they effective to the number of dimensions (sample size 2) - curse of multidimensionality
+ * How are they effective to missing data (gapiness)
+
+
+# Results
+
+
+
+## What do the metrics measure?
+
+
+
+
+A Table with different metrics and the things tested: 1- What is it
+capturing (size, position, density) 2- Effect of dimensionality 3-
+Measuring the effect on tests
+
+# Results
+
+
+# Acknowledgments
+

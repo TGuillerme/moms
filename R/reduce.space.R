@@ -1,6 +1,6 @@
 #' @title Reduce space
 #'
-#' @description Remove a proportion of elements in a space following different types
+#' @description Remove elements from a multidimensional space
 #'
 #' @param space the trait space
 #' @param type how to reduce the space (either \code{"random"}, \code{"limit"}, \code{"displacement"} or \code{"density"})
@@ -117,3 +117,123 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
 
     return(to_remove)
 }
+
+
+
+
+
+# #' @export
+# random.removal <- function(space, remove, parameters, tuning) {
+#     ## Count the elements
+#     elements <- nrow(space)
+#     ## Return a portion of the space
+#     to_remove <- sample(1:elements, elements*remove)
+#     return(1:elements %in% to_remove)
+# }
+
+# #' @export
+# limit.removal <- function(space, remove, parameters, tuning) {    
+    
+#     if(missing(parameters)) {
+#         parameters <- list()
+#     }
+
+#     ## Set the default centre
+#     if(is.null(parameters$centre)) {
+#         parameters$centre <- rep(0, ncol(space))
+#     } 
+
+#     ## Set the default centre
+#     if(is.null(parameters$radius)) {
+#         ## Default radius (will be optimised)
+#         parameters$radius <- 1
+#     } 
+
+
+#     ## Set the arguments
+#     args <- list("space" = space, "parameters" = parameters)
+#     args$parameters$optimise <- parameters$radius
+
+#     ## Select the bits to remove
+#     run.limit.removal <- function(space, parameters) {
+#         apply(space, 1, point.in.circle, centre = parameters$centre, radius = parameters$optimise)
+#     }
+
+#     ## Run the function
+#     to_remove <- do.call(run.limit.removal, args)
+#     ## Optimise the function (if necessary)
+#     to_remove <- optimise.results(to_remove, fun = run.limit.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
+
+#     return(to_remove)
+# }
+
+# #' @export
+# displacement.removal <- function(space, remove, parameters, tuning) {    
+   
+#     if(missing(parameters)) {
+#         parameters <- list()
+#     }
+
+
+#     ## Set the default centre
+#     if(is.null(parameters$value)) {
+#         ## Default value (will be optimised)
+#         parameters$value <- 1
+#     } 
+
+#     ## Set the arguments
+#     args <- list("space" = space, "parameters" = parameters)
+#     args$parameters$optimise <- parameters$value
+
+#     ## Select the bits to remove
+#     run.displacement.removal <- function(space, parameters) {
+#         apply(space, 1, select.value, value = parameters$optimise)
+#     }
+
+#     ## Run the function
+#     to_remove <- do.call(run.displacement.removal, args)
+#     ## Optimise the function (if necessary)
+#     to_remove <- optimise.results(to_remove, fun = run.displacement.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
+
+#     return(to_remove)
+# }
+
+
+# #' @export
+# density.removal <- function(space, remove, parameters, tuning) {  
+    
+#     if(missing(parameters)) {
+#         parameters <- list()
+#     }  
+
+#     ## Set the default what
+#     if(is.null(parameters$what)) {
+#         parameters$what <- "close"
+#     }
+#     ## Set the default output
+#     if(is.null(parameters$output)) {
+#         parameters$output <- "pairs"
+#     }
+#     ## Set the default centre
+#     if(is.null(parameters$diameter)) {
+#         ## Default value (will be optimised)
+#         parameters$diameter <- 1
+#     } 
+
+#     ## Set the arguments
+#     args <- list("space" = space, "parameters" = parameters)
+#     args$parameters$optimise <- parameters$diameter
+
+#     ## Select the bits to remove
+#     run.density.removal <- function(space, parameters) {
+#         close_neigbhours <- get.neigbhours(space, what = parameters$what, diameter = parameters$optimise, output = parameters$output)
+#         return(1:nrow(space) %in% close_neigbhours)
+#     }
+
+#     ## Run the function
+#     to_remove <- do.call(run.density.removal, args)
+#     ## Optimise the function (if necessary)
+#     to_remove <- optimise.results(to_remove, fun = run.density.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
+
+#     return(to_remove)
+# }
