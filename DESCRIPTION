@@ -1,4 +1,4 @@
-Package: Moms
+Package: moms
 Title: Measuring Occupancy of Multidimensional Spaces
 Author: Thomas Guillerme [aut, cre, cph]
 Maintainer: Thomas Guillerme <guillert@tcd.ie>

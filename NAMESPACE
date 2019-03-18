@@ -1,3 +1,6 @@
 
 ## Functions
-export(average)
+export(reduce.space)
+
+## Utilities
+export(plot.space)
