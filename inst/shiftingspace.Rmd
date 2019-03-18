@@ -3,7 +3,7 @@ title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
 author: "Thomas Guillerme, Mark Puttick, Vera Weisbecker"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 6
     fig_height: 6
 ---
@@ -13,11 +13,7 @@ output:
 library(knitr)
 library(ape)
 library(dispRity)
-
-## Loading the utility functions
-source("../Functions/plot.utilities.R")
-source("../Functions/reduce.space_fun.R")
-source("../Functions/reduce.space.R")
+library(moms)
 
 ## Setting the default parameters for the space plots
 defaults <- list(pch = 20,
@@ -184,41 +180,92 @@ plot.space(trait_space, !to_remove, main = "E2 - Density (lower)", defaults)
 
 #### Volume metrics
 
-
 ```{r, echo = FALSE}
 ## The list of volume metrics used
 volume_metrics <- list("ellispoid.volume" = ellipse.volume,
-                       )
+                       "convhull.volume" = convhull.volume,
+                       "n.ball.volume" = n.ball.volume,
+                       "prod.range" = c(prod, ranges),
+                       "prod.variance" = c(prod, variances),
+                       "sum.range" = c(sum, ranges),
+                       "sum.variance" = c(sum, variances),
+                       "diagonal" = diagonal)
 ```
+
+```{r mychunk_not_good, eval = FALSE, fig.show = "hide", echo = FALSE, fig.height=2, fig.width=2}
+library(knitr)
+# sample data
+dat <- data.frame(
+  text = sapply(1:10, FUN = function(x) { paste0(sample(x = LETTERS, size = 15), collapse = "") }), 
+  x1 = rnorm(10), 
+  x2 = rnorm(10, mean = 3), 
+  x3 = rnorm(10, mean = 5))
+
+# generate plots
+invisible(apply(dat[, 2:4], MARGIN = 1, FUN = boxplot))
+
+out <- cbind(row.names(dat), 
+             as.character(dat$text), 
+             sprintf("![](%s%s-%s.png)", opts_current$get("fig.path"), opts_current$get("label"), 1:nrow(dat)))
+kable(out, col.names = c("ID", "Text", "Boxplot"))
+```
+
+```{r fable_figures, fig.show='hide'}
+library(knitr)
+par(margin = c(0,0,0,0), bty = "n")
+## The volume
+plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
+
+## The volume
+plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
+
+```
+
+some text | base|lattice
+:------|:-------------------------------:|-------------------------------:
+Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_figures-1.png"), dpi = 800)`
+Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_figures-2.png"), dpi = 800)`
+
 
 #### Density metrics
 
+```{r, echo = FALSE}
+## The list of volume density metrics
+density_metrics <- list("med.eucl.pairwise.dist" = c(median, pairwise.dist),
+                        "sum.eucl.pairwise.dist" = c(sum, pairwise.dist),
+                        "med.mana.pairwise.dist" = list(c(median, pairwise.dist),
+                                                          method = "manhattan"),
+                        "med.man.pairwise.dist" = list(c(sum, pairwise.dist),
+                                                         method = "manhattan"),
+                        "med.eucl.centroids" = c(median, centroids),
+                        "sum.eucl.centroids" = c(sum, centroids),
+                        "med.mana.centroids" = list(c(median, centroids), method = "manhattan"),
+                        "sum.mana.centroids" = list(c(sum, centroids), method = "manhattan"),
+                        "minimum.span.tree" = span.tree.length)
+```
 
 
 #### Position metrics
 
 
-
- * The mean squared pairwise distance (`mean(pairwise.dist(X)^2)`)
- * The median distance from centroid (`c(median, centroids)`)
- * The convex hull volume (`convhull.volume` - in 2D that's the surface!)
- * The ellipsoid volume (`ellipse.volume`)
- * The minimum spanning tree length (`span.tree.length`)
- * The sum of the variances of each dimensions (`c(sum, variances)`)
- * The sum of the ranges of each dimensions (`c(sum, ranges)`)
-
-```{r, warning = FALSE}
-## The list of metrics
-metrics <- list("mean_sqrt_dist" = function(X) mean(pairwise.dist(X)^2),
-                "median_centroid" = c(median, centroids),
-                "convhull" = convhull.volume,
-                "ellispoid" = ellipse.volume,
-                "span_tree" = span.tree.length,
-                "sum_var" = c(sum, variances),
-                "sum_ranges" = c(sum, ranges))
+```{r, echo = FALSE}
+## The list of volume density metrics
+density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), centre = 0),
+                        "sum.eucl.dist.centre" = list(c(sum, centroids), centre = 0),
+                        "med.mana.dist.centre" = list(c(median, centroids),
+                                                        centre = 0, method = "manhattan"),
+                        "sum.mana.dist.centre" = list(c(sum, centroids),
+                                                        centre = 0, method = "manhattan"),
+                        "distance.from.prev" = "SPECIAL")
 ```
 
-What are the different metrics measuring? (on simple 2D sets)
+
 
 ## How good ("resilient") are the metrics?
 
