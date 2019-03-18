@@ -183,7 +183,7 @@ plot.space(trait_space, !to_remove, main = "E2 - Density (lower)", defaults)
 ```{r volume_metrics_list, echo = FALSE}
 ## The list of volume metrics used
 volume_metrics <- list("ellispoid.volume" = ellipse.volume,
-                       "convhull.volume" = convhull.volume,
+                       #"convhull.volume" = convhull.volume,
                        "n.ball.volume" = n.ball.volume,
                        "prod.range" = c(prod, ranges),
                        "prod.variance" = c(prod, variances),
@@ -264,9 +264,62 @@ density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), cent
 elements <- 300
 distributions <- rnorm
 dimensions <- 10
+
+## Disruption parameters
+remove <- 0.5
+
 ## Trait space
 trait_space <- space.maker(elements, dimensions, distribution = distributions)
+## Adding rownames
+rownames(trait_space) <- 1:elements
 
+## Removing elements
+random <- reduce.space(trait_space, type = "random", remove = remove)
+limits <- reduce.space(trait_space, type = "limit", remove = remove)
+displa <- reduce.space(trait_space, type = "displacement", remove = remove)
+densit <- reduce.space(trait_space, type = "density", remove = remove)
+
+## Making the custom groups list
+custom_groups <- list("all" = rownames(trait_space),
+                      "random" = rownames(trait_space)[random],
+                      "limits.min" = rownames(trait_space)[limits],
+                      "limits.max" = rownames(trait_space)[!limits],
+                      "displa.min" = rownames(trait_space)[displa],
+                      "displa.max" = rownames(trait_space)[!displa],
+                      "densit.min" = rownames(trait_space)[densit],
+                      "densit.max" = rownames(trait_space)[!densit])
+
+## Making the custom groups
+reduced_space <- custom.subsets(trait_space, group = custom_groups)
+
+## Measuring disparity
+measured_disparity <- dispRity(reduced_space, metric = volume_metrics[[1]])
+
+## Wrapping function for the disparity metrics
+lapply.metric <- function(metric, space, verbose) {
+    if(is.null(names(metric))) {
+        ## If metrics is not a named list, no options needed
+        return(dispRity(space, metric = metric, verbose = verbose))
+    } else {
+        ## Get the main elements arguments list
+        args <- list("data" = space, "metric" = metric[[1]], "verbose" = verbose)
+        ## Add the optional arguments to the list
+        args <- c(args, metric[-1])
+        ## Run dispRity
+        return(do.call(dispRity,args))
+    }
+}
+
+## Running the volumes
+disparity_volumes <- lapply(volume_metrics, lapply.metric, space = reduced_space, verbose = FALSE)
+## Scaling the values
+disparity_volumes <- lapply(disparity_volumes, rescale.dispRity)
+## Naming the results
+names(disparity_volumes) <- names(volume_metrics)
+
+## Plotting the results
+plot(disparity_volumes[[1]])
+lapply(disparity_volumes[-1], plot.dispRity, add = TRUE, xlab = "", ylab = "")
 ```
 
 
@@ -284,4 +337,6 @@ Measuring the effect on tests
 
 
 # Acknowledgments
+
+
 
