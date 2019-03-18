@@ -8,7 +8,7 @@ output:
     fig_height: 6
 ---
 
-```{r, echo = FALSE}
+```{r header, echo = FALSE}
 ## Loading the packages
 library(knitr)
 library(ape)
@@ -41,7 +41,7 @@ defaults <- list(pch = 20,
 
 ## Disparity metrics
 
-```{r, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide'}
+```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide'}
 set.seed(11)
 ## Plot space function (utility shortcut)
 ## The elements
@@ -127,7 +127,7 @@ par(op)
 
 
 
-```{r, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide'}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide'}
 set.seed(42)
 op <- par(mfrow = c(4,2), bty = "n")
 ## The elements
@@ -180,7 +180,7 @@ plot.space(trait_space, !to_remove, main = "E2 - Density (lower)", defaults)
 
 #### Volume metrics
 
-```{r, echo = FALSE}
+```{r volume_metrics_list, echo = FALSE}
 ## The list of volume metrics used
 volume_metrics <- list("ellispoid.volume" = ellipse.volume,
                        "convhull.volume" = convhull.volume,
@@ -192,25 +192,7 @@ volume_metrics <- list("ellispoid.volume" = ellipse.volume,
                        "diagonal" = diagonal)
 ```
 
-```{r mychunk_not_good, eval = FALSE, fig.show = "hide", echo = FALSE, fig.height=2, fig.width=2}
-library(knitr)
-# sample data
-dat <- data.frame(
-  text = sapply(1:10, FUN = function(x) { paste0(sample(x = LETTERS, size = 15), collapse = "") }), 
-  x1 = rnorm(10), 
-  x2 = rnorm(10, mean = 3), 
-  x3 = rnorm(10, mean = 5))
-
-# generate plots
-invisible(apply(dat[, 2:4], MARGIN = 1, FUN = boxplot))
-
-out <- cbind(row.names(dat), 
-             as.character(dat$text), 
-             sprintf("![](%s%s-%s.png)", opts_current$get("fig.path"), opts_current$get("label"), 1:nrow(dat)))
-kable(out, col.names = c("ID", "Text", "Boxplot"))
-```
-
-```{r fable_figures, fig.show='hide'}
+```{r fable_metrics, fig.show='hide'}
 library(knitr)
 par(margin = c(0,0,0,0), bty = "n")
 ## The volume
@@ -229,13 +211,13 @@ lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defau
 
 some text | base|lattice
 :------|:-------------------------------:|-------------------------------:
-Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_figures-1.png"), dpi = 800)`
-Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_figures-2.png"), dpi = 800)`
+Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-1.png"), dpi = 800)`
+Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-2.png"), dpi = 800)`
 
 
 #### Density metrics
 
-```{r, echo = FALSE}
+```{r density_metrics_list, echo = FALSE}
 ## The list of volume density metrics
 density_metrics <- list("med.eucl.pairwise.dist" = c(median, pairwise.dist),
                         "sum.eucl.pairwise.dist" = c(sum, pairwise.dist),
@@ -254,7 +236,7 @@ density_metrics <- list("med.eucl.pairwise.dist" = c(median, pairwise.dist),
 #### Position metrics
 
 
-```{r, echo = FALSE}
+```{r position_metrics_list, echo = FALSE}
 ## The list of volume density metrics
 density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), centre = 0),
                         "sum.eucl.dist.centre" = list(c(sum, centroids), centre = 0),
@@ -275,6 +257,17 @@ density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), cent
 
 
 # Results
+
+
+```{r custom_substest, echo = FALSE}
+## Space parameters
+elements <- 300
+distributions <- rnorm
+dimensions <- 10
+## Trait space
+trait_space <- space.maker(elements, dimensions, distribution = distributions)
+
+```
 
 
 
