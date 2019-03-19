@@ -21,10 +21,43 @@ shinyUI(fluidPage(
           sliderInput("n_elements", label = "Number of elements:", min = 3, max = 1000, value = 300),
 
           ## Distributions - input$distributions
-          selectInput("distributions", label = "Distributions", choices = list("Normal", "Log Normal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
+          selectInput("distributions", label = "Distributions", choices = list("Normal", "LogNormal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
 
-          ## Conditional distribution
-          ## Conditional distribution
+          ## Normal parameters
+          conditionalPanel(condition = "input.distributions == \"Normal\"",
+            ## Parameters
+            textInput("rnorm_mean", label = h5("mean"), value = 0),
+            textInput("rnorm_sd", label = h5("standard deviation"), value = 1)
+          ),
+
+          ## LogNormal parameters
+          conditionalPanel(condition = "input.distributions == \"LogNormal\"",
+            ## Parameters
+            textInput("rlnorm_mean", label = h5("mean log"), value = 0),
+            textInput("rlnorm_sd", label = h5("standard deviation log"), value = 1)
+          ),
+
+          ## Uniform parameters
+          conditionalPanel(condition = "input.distributions == \"Uniform\"",
+            ## Parameters
+            textInput("runif_min", label = h5("minimum"), value = 0),
+            textInput("runif_max", label = h5("maximum"), value = 1)
+          ),
+
+          ## Gamma parameters
+          conditionalPanel(condition = "input.distributions == \"Gamma\"",
+            ## Parameters
+            textInput("rgamma_shape", label = h5("shape (alpha)"), value = 5),
+            textInput("rgamma_rate", label = h5("rate (beta)"), value = 1)
+          ),
+
+          ## Poisson parameters
+          conditionalPanel(condition = "input.distributions == \"Poisson\"",
+            ## Parameters
+            textInput("rpois_lambda", label = h5("lambda"), value = 5)
+          ),
+
+          ## Multiple distributions
           conditionalPanel(condition = "input.distributions == \"Specific\"",
             ## Distributions for D1
             textInput("distribution_list", label = h5("Distribution list"), value = "rnorm, runif, rlnorm"),
@@ -83,10 +116,8 @@ shinyUI(fluidPage(
           h3("Disparity metric"),
 
           ## Metric - input$level1
-          selectInput("metric1", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), selected = "sum"),
-          ## Metric - input$level2
-          selectInput("metric2", label = "Metric 2", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), selected = "variances"),
-
+          selectizeInput("metric", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
+          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' or 'sum variances')."),
           hr(),
           ## Refresh button - input$refresh
           actionButton("refresh", label = "Refresh")
