@@ -1,149 +1,91 @@
+
 shinyUI(fluidPage(
   theme = 'slimline.css',
 
   wellPanel(
 
-    titlePanel("Inapplicable data reconstruction"),
-    p("Brazeau, M. D., Guillerme, T., and Smith, M. R. (2018). An algorithm for Morphological Phylogenetic Analysis with Inapplicable Data. Systematic Biology. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "10.1093/sysbio/syy083"), "."),
+    titlePanel("Measuring Occupancy in Multidimensional Spaces"),
+    p("Guillerme, T., Puttick, M., and Smith, M. R. (2019). Some paper. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
     hr(),
 
     fluidRow(
 
         ## ---------------
-        ## Tree parameters
+        ## Space parameters
         ## ---------------
         column(width = 4,
-          ## Tree input - input$tree
-          radioButtons("tree", label = h3("Tree input method"), choices = list("Random" = 1, "User (Newick)" = 2, "Nexus input" = 3), selected = 1),
+          h3("Multidimensional space parameters"),
+          ## Number of dimensions input - input$n_dimensions
+          sliderInput("n_dimensions", label = "Number of dimensions:", min = 2, max = 100, value = 3),
+          ## Number of elements input - input$n_elements
+          sliderInput("n_elements", label = "Number of elements:", min = 3, max = 1000, value = 300),
 
-          ## Random trees
-          conditionalPanel(condition = "input.tree == 1",
-            ## Type of tree - input$tree_type
-            selectInput("tree_type", label = "Tree topology type", choices = list("Random", "Balanced", "Left", "Right", "Left-Right"), selected = "Random"),
-            ## Number of taxa - input$n_taxa
-            sliderInput("n_taxa", label = "Number of taxa:", min = 3, max = 100, value = 12),
-            ## Messages for tree type :
-            ## Help text for balanced trees
-            conditionalPanel(condition = "input.tree_type == \"Balanced\"", helpText("For a balanced tree, the number of taxa must be a power of 2 otherwise a random tree is used instead.")),
-            ## Help text for balanced trees
-            conditionalPanel(condition = "input.tree_type == \"Left-Right\"", helpText("For a 'Left-Right' tree, the number of taxa must be even otherwise a random tree is used instead."))
-          ),
+          ## Distributions - input$distributions
+          selectInput("distributions", label = "Distributions", choices = list("Normal", "Log Normal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
 
-          ## Newick trees
-          conditionalPanel(condition = "input.tree == 2",
-            ## Enter some newick string - input$newick_tree
-            textInput("newick_tree", label = h5("Enter a newick tree:"), value = "((a,b),(c,d));"),
-            ## Help text for the newick trees
-            helpText("Make sure the number of opening and closing brackets match and that no commas (',') or the semi-colon (';') was omitted.")
-          ),
-
-          ## Nexus trees
-          conditionalPanel(condition = "input.tree == 3",
-            ## Upload some nexus tree
-            fileInput("nexus_tree", label = h5("Select a newick or nexus format tree")),
-            ## Tree number input - input$tree_num
-            numericInput("tree_num", label = h5("Selected tree:"), value = 1, min = 1)
-          ),
-
-          ## Tips and nodes options
-          checkboxGroupInput("showlabels", label = "Label:",
-                             choices = list("Tips" = 1, "Nodes" = 2),
-                             inline=TRUE, selected = NULL)
-        ),
-
-        ## --------------------
-        ## Character parameters
-        ## --------------------
-        column(width = 4,
-          ## Character input - input$character
-          radioButtons("character", label = h3("Character input method"),
-                       choices = list("Random" = 1, "User" = 2, "Nexus input" = 3),
-                       selected = 1),
-
-          ## Manual character input
-          conditionalPanel(condition = "input.character == 2",
-            ## Character string - input$character_string
-            textInput("character_string", label = h5("Enter a character string:"), value = "0?1-"),
-            ## Help text for the character string
-            helpText("Accepted character states are any values from 0 to 9 as well ",
-                     "as - for the inapplicable token and ? for all states (missing ",
-                     "data). Polymorphic characters can be entered as {01}."),
-            ## Match character
-            checkboxInput("matchtipchar", label = "Match character to tips",
-                          value = FALSE),
-            helpText("Tick to match left-right state input order state to the ",
-                     "alphanumeric order of the tip labels.")
-          ),
-
-          ## Nexus character
-          conditionalPanel(condition = "input.character == 3",
-            ## Nexus matrix input - input$nexus_matrix
-            fileInput("nexus_matrix", label = h5("Select a nexus format matrix")),
-            ## Character number input - input$character_num
-            numericInput("character_num", label = h5("Selected character:"), value = 1, min = 1)
-          ),
-
-          ## Colour states
-          checkboxInput("colour_states", label = "Colour states", value = FALSE),
-
-
-          ## --------------------
-          ## Exports (in column "character")
-          ## --------------------
-          hr(),
-          h3("Export results"),
-          ## Export format - input$export_type
-          selectInput("output_type", "Export format:", choices = c("csv", "pdf", "newick", "nexus", "C-test")),
-          downloadButton('downloadData', 'Download'),
-
-          conditionalPanel(condition = "input.output_type == \"C-test\"",
-            ## Enter some traversal order - input$traversal_order
-            textInput("traversal_order", label = h5("Enter an optional traversal order for output:"), value = ""),
-            ## Help text for the traversal
-            helpText("The traversal must be written in a comma separated format (e.g. 1,2,3). If left as blank the order is: tips, root, right left nodes (traversal).")
+          ## Conditional distribution
+          ## Conditional distribution
+          conditionalPanel(condition = "input.distributions == \"Specific\"",
+            ## Distributions for D1
+            textInput("distribution_list", label = h5("Distribution list"), value = "rnorm, runif, rlnorm"),
+            helpText("Enter the distributions as a list of function names from the 'stats' package separated by a comma (e.g. rnorm, runif for the normal distribution to be applied to D1 and the uniform distribution to by applied to D2). Make sure you enter the same number of distribution functions as the number of requested distributions.")
+            ## TODO: add optional arguments
           )
+        ),
 
+        ## --------------------
+        ## Disrupt space
+        ## --------------------
+        column(width = 4,
+          ## Modify space - input$reduce
+          selectInput("reduce", label = h3("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density"), selected = "None"),
 
-          # hr(),
-          # ## Citation! - input$cite_type
-          # selectInput("cite_type", label = "Cite us", choices = list("format", "plain", "BibTeX"), selected = "format"),
-          # ## Plain text format
-          # conditionalPanel(condition = "input.cite_type == \"plain\"",
-          #   helpText("Bob, Bib and Bub (2001) Something shiny here!.")
-          # ),
-          # ## BibTeX format
-          # conditionalPanel(condition = "input.cite_type == \"BibTeX\"",
-          #     helpText("@article{ShinyApp","    author={Bob, and Bib, and Bab},","    title={Something shiny},","    journal={Combinatorics},","    volume={1},","    number={1},","    pages={1:2},","    year={2001}}")
-          # )
+          ## Random removal
+          conditionalPanel(condition = "input.reduce == \"Random\"",
+            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5)
+          ),
+
+          ## Limit removal
+          conditionalPanel(condition = "input.reduce == \"Limit\"",
+            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
+            ## input$limit_optimise
+            textInput("limit_optimise", label = h5("Radius around the centre")),
+            helpText("The radius around the centre from which to keep or select the points. If this is left empty, it is estimated automatically to match the requested proportion."),
+            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
+            checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
+          ),
+
+          ## Displacement removal
+          conditionalPanel(condition = "input.reduce == \"Displace\"",
+            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
+            ## input$displacement_optimise
+            textInput("displacement_optimise", label = h5("Threshold")),
+            helpText("The threshold value from which to remove elements. If this is left empty, it is estimated automatically to match the requested proportion."),
+            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
+            checkboxInput("diplacement_type", label = "Remove below the threshold", value = FALSE)
+          ),
+
+          ## Displacement removal
+          conditionalPanel(condition = "input.reduce == \"Density\"",
+            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
+            ## input$displacement_optimise
+            textInput("density_optimise", label = h5("Tolerance")),
+            helpText("The tolerance from which to consider points are neighbours. If this is left empty, it is estimated automatically to match the requested proportion."),
+            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
+            checkboxInput("density_type", label = "Remove neighbours", value = FALSE)
+          )
         ),
 
         ## -------
-        ## Display
+        ## Disparity metric (and display)
         ## -------
         column(width = 4,
-          ## Reconstruction - input$method
-          radioButtons("method", label = h3("Reconstruction method"), choices = list("Inapplicable Fitch" = 1, "Normal Fitch" = 2), selected = 1, inline = TRUE),
+          h3("Disparity metric"),
 
-          ## Inapplicable algorithm
-          conditionalPanel(condition = "input.method == 1",
-            ## Which passes to print
-            checkboxGroupInput("showPassInapp", label = "Show passes:",
-                               choices = list("1st Downpass" = 1, "1st Uppass" = 2,
-                                              "2nd Downpass" = 3, "2nd Uppass" = 4),
-                               selected = c(1,2,3,4))
-          ),
-
-          ## Fitch algorithm
-          conditionalPanel(condition = "input.method == 2",
-            ## How to treat missing data
-            radioButtons("fitch_inapp", label = h5("Inapplicable tokens are:"), choices = list("Missing data (?)" = 1, "An extra state" = 2), selected = 1, inline = TRUE),
-            helpText("When treated as ?, - is equal to all states; when treated as an extra state, - is equal to a new character state."),
-            ## Which passes to show?
-            checkboxGroupInput("showPassFitch", label = h5("Show passes"),  choices = list("1st Downpass" = 1, "1st Uppass" = 2), selected = c(1,2))
-          ),
-
-          ## Show activations/counts - input$counts
-          checkboxGroupInput("counts", label = "Show counts of:",  choices = list("Applicable regions" = 1, "State changes" = 2), selected = c(1, 2)),
+          ## Metric - input$level1
+          selectInput("metric1", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), selected = "sum"),
+          ## Metric - input$level2
+          selectInput("metric2", label = "Metric 2", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), selected = "variances"),
 
           hr(),
           ## Refresh button - input$refresh
