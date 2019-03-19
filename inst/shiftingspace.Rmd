@@ -1,6 +1,7 @@
 ---
 title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
 author: "Thomas Guillerme, Mark Puttick, Vera Weisbecker"
+bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -26,6 +27,8 @@ defaults <- list(pch = 20,
 ```
 
 # Introduction
+
+ * We will cite papers like this one [@disprity].
 
  * Disparity is used a lot since the 1990s [Definition blabla] and also in ecology
  * It is linked to funtional spaces in ecology (but not called disparity there)
@@ -340,3 +343,4 @@ Measuring the effect on tests
 
 
 
+# References
