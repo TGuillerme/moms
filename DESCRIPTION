@@ -7,6 +7,8 @@ Date: 2019-03-15
 Description: A shiny app for exploring measurements of multidimensional space occupancy (disparity).
 Depends:
 	R (>= 3.5.2),
+	graphics,
+	stats,
     dispRity
 License: GPL-3 | file LICENSE
 Suggests:

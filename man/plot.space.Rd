@@ -4,7 +4,7 @@
 \alias{plot.space}
 \title{Plot space}
 \usage{
-\method{plot}{space}(space, remove, main, defaults)
+\method{plot}{space}(space, remove, main, defaults, ...)
 }
 \arguments{
 \item{space}{the space to plot (matrix)}

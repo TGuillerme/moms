@@ -4,3 +4,4 @@ export(reduce.space)
 
 ## Utilities
 export(plot.space)
+export(plot.metrics)
