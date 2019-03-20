@@ -286,7 +286,7 @@ disparity ~ metric + reduction + dimensions + elements
 # Results
 
 
-```{r custom_substest, echo = FALSE}
+```{r custom_substest, echo = FALSE, fig.height = 10, fig.width = 8}
 set.seed(42)
 ## Space parameters
 elements <- 300
@@ -295,6 +295,13 @@ dimensions <- 10
 
 ## Disruption parameters
 remove <- 0.5
+
+
+### FUNCTION SIMULATE IN:
+
+simulate.metrics <- function(elements, dimension, distributions, remove, metrics_list) {
+}
+
 
 ## Trait space
 trait_space <- space.maker(elements, dimensions, distribution = distributions)
@@ -344,6 +351,15 @@ disparity_volumes <- lapply(volume_metrics, lapply.metric, space = reduced_space
 ## Naming the results
 names(disparity_volumes) <- names(volume_metrics)
 
+
+
+### FUNCTION SIMULATE OUT:
+
+
+
+### FUNCTION SUMARIZE IN:
+
+
 ## Extracting the disparity values
 results_matrix <- lapply(lapply(disparity_volumes, extract.dispRity), cbind)
 
@@ -361,8 +377,14 @@ results_matrices <- lapply(results_matrix, scale.metric)
 medians <- lapply(results_matrices, function(x) apply(x, 1, median))
 CIs <- lapply(results_matrices, function(x) apply(x, 1, quantile, prob = c(0.1, 0.2, 0.3, 0.4)))
 
+
+
+### FUNCTION SUMARIZE OUT:
+
+
+
 ## Plotting the results
-plot.metrics(medians, CIs, col, space, remove_list, defaults)
+plot.metrics(medians, CIs, col = palette(), space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
 ```
 
 
