@@ -23,7 +23,8 @@ defaults <- list(pch = 20,
                  col1 = "grey",
                  col2 = "black",
                  xlab = "Trait 1",
-                 ylab = "Trait 2")
+                 ylab = "Trait 2",
+                 cex = 1)
 ```
 
 # Introduction
@@ -145,27 +146,37 @@ plot(trait_space, pch = 20, xlim = c(-3, 3), ylim = c(-3, 3),
      main = "A - Original space", xlab = "Trait 1", ylab = "Trait 2")
 
 ## The randomly removed space
-to_remove <- reduce.space(trait_space, type = "random", remove = 0.5)
+random_rm <- reduce.space(trait_space, type = "random", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, to_remove, main = "B - Random removal", defaults)
+plot.space(trait_space, random_rm, main = "B - Random removal", defaults)
 
 ## The limit removal
-to_remove <- reduce.space(trait_space, type = "limit", remove = 0.5)
+limit_rm <- reduce.space(trait_space, type = "limit", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, to_remove, main = "C1 - Limit removal (minimal)", defaults)
-plot.space(trait_space, !to_remove, main = "C2 - Limit removal (maximal)", defaults)
+plot.space(trait_space, limit_rm, main = "C1 - Limit removal (minimal)", defaults)
+plot.space(trait_space, !limit_rm, main = "C2 - Limit removal (maximal)", defaults)
 
 ## The displacement removal
-to_remove <- reduce.space(trait_space, type = "displacement", remove = 0.5)
+displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
 ## Moving the space to the upper right corner (positive)
-plot.space(trait_space, to_remove, main = "D1 - Displacement (positive)", defaults)
-plot.space(trait_space, !to_remove, main = "D2 - Displacement (negative)", defaults)
+plot.space(trait_space, displace_rm, main = "D1 - Displacement (positive)", defaults)
+plot.space(trait_space, !displace_rm, main = "D2 - Displacement (negative)", defaults)
 
 ## The density removal
-to_remove <- reduce.space(trait_space, type = "density", remove = 0.5)
+density_rm <- reduce.space(trait_space, type = "density", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, to_remove, main = "E1 - Density (higher)", defaults)
-plot.space(trait_space, !to_remove, main = "E2 - Density (lower)", defaults)
+plot.space(trait_space, density_rm, main = "E1 - Density (higher)", defaults)
+plot.space(trait_space, !density_rm, main = "E2 - Density (lower)", defaults)
+
+## List of removals (for plotting the tables later)
+typical_removal <- list(space = trait_space,
+                        remove = list("random" = random_rm,
+                                      "limit(min)" = limit_rm,
+                                      "limit(max)" = !limit_rm,
+                                      "displace(positive)" = displace_rm,
+                                      "displace(negative)" = !displace_rm,
+                                      "density(high)" = density_rm,
+                                      "density(low)" = !density_rm))
 ```
 
  [TODO:]
@@ -216,6 +227,7 @@ some text | base|lattice
 :------|:-------------------------------:|-------------------------------:
 Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-1.png"), dpi = 800)`
 Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-2.png"), dpi = 800)`
+Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), rnorm(10))$p.value`
 
 
 #### Density metrics
@@ -246,8 +258,8 @@ density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), cent
                         "med.mana.dist.centre" = list(c(median, centroids),
                                                         centre = 0, method = "manhattan"),
                         "sum.mana.dist.centre" = list(c(sum, centroids),
-                                                        centre = 0, method = "manhattan"),
-                        "distance.from.prev" = "SPECIAL")
+                                                        centre = 0, method = "manhattan"))
+                        #"distance.from.prev" = "SPECIAL")
 ```
 
 
@@ -259,10 +271,23 @@ density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), cent
  * How are they effective to missing data (gapiness)
 
 
+
+
+
+
+In the end, the analysis should be a big GLM of
+
+disparity ~ metric + reduction + dimensions + elements
+
+
+
+
+
 # Results
 
 
 ```{r custom_substest, echo = FALSE}
+set.seed(42)
 ## Space parameters
 elements <- 300
 distributions <- rnorm
@@ -315,14 +340,29 @@ lapply.metric <- function(metric, space, verbose) {
 
 ## Running the volumes
 disparity_volumes <- lapply(volume_metrics, lapply.metric, space = reduced_space, verbose = FALSE)
-## Scaling the values
-disparity_volumes <- lapply(disparity_volumes, rescale.dispRity)
+
 ## Naming the results
 names(disparity_volumes) <- names(volume_metrics)
 
+## Extracting the disparity values
+results_matrix <- lapply(lapply(disparity_volumes, extract.dispRity), cbind)
+
+## Scaling the results (baseline being "all")
+scale.metric <- function(one_metric) {
+    ## Get the centre (the observed disparity in for the full morphospace)
+    centered <- apply(one_metric, 2, function(X) as.numeric(X) - as.numeric(X)[1])
+    scaled <- apply(centered, 2, function(X) X/(max(abs(X))))
+    return(scaled)
+}
+
+results_matrices <- lapply(results_matrix, scale.metric)
+
+## Temporary distributions
+medians <- lapply(results_matrices, function(x) apply(x, 1, median))
+CIs <- lapply(results_matrices, function(x) apply(x, 1, quantile, prob = c(0.1, 0.2, 0.3, 0.4)))
+
 ## Plotting the results
-plot(disparity_volumes[[1]])
-lapply(disparity_volumes[-1], plot.dispRity, add = TRUE, xlab = "", ylab = "")
+plot.metrics(medians, CIs, col, space, remove_list, defaults)
 ```
 
 
