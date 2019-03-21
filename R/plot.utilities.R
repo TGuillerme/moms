@@ -49,9 +49,9 @@ plot.metrics <- function(cent.tend, CIs, col, space, remove_list, defaults) {
         }
     }
 
-    add.points <- function(medians, one_reduction, col) {
+    add.points <- function(cent.tend, one_reduction, col) {
         ## Get the right values 
-        points_to_add <- as.numeric(lapply(medians, function(X, Y) return(X[Y]), Y = one_reduction))
+        points_to_add <- as.numeric(lapply(cent.tend, function(X, Y) return(X[Y]), Y = one_reduction))
         ## Plot the values
         points(x = points_to_add, y = 1:length(points_to_add), col = col, pch = 19)
     }
@@ -70,7 +70,7 @@ plot.metrics <- function(cent.tend, CIs, col, space, remove_list, defaults) {
         ## Plotting all the lines
         for(one_metric in 1:length(CIs)) {
             for(cis in 1:(quantiles_n/2)) {
-                lines(x_vals[[cis]][[one_metric]], y_vals[[one_metric]], col = col[one_metric], lty = (quantiles_n - cis + 1), lwd = cis * 1.5)
+                lines(x_vals[[cis]][[one_metric]], y_vals[[one_metric]], col = col[one_metric], lty = (quantiles_n/2 - cis + 1), lwd = cis * 1.5)
             }
         }
     }
@@ -90,13 +90,13 @@ plot.metrics <- function(cent.tend, CIs, col, space, remove_list, defaults) {
         ## All plots minus last
         empty.plot(n_metrics, names_metrics)
         add.lines(CIs, one_reduction, col)
-        add.points(medians, one_reduction, col)
+        add.points(cent.tend, one_reduction, col)
     }
 
     ## Last row
     empty.plot(n_metrics, names_metrics, is.last = TRUE)
     add.lines(CIs, one_reduction = n_reductions+1, col)
-    add.points(medians, one_reduction = n_reductions+1, col)
+    add.points(cent.tend, one_reduction = n_reductions+1, col)
 
     ## Plotting the space transformations in the following cells
     defaults$xlab <- defaults$ylab <- ""

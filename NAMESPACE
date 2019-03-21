@@ -1,3 +1,7 @@
+import(dispRity)
+import(stats)
+import(grDevices)
+import(graphics)
 
 ## Functions
 export(reduce.space)
@@ -5,3 +9,7 @@ export(reduce.space)
 ## Utilities
 export(plot.space)
 export(plot.metrics)
+
+## Analysis (paper)
+export(simulate.metrics)
+export(summarise.metrics)
