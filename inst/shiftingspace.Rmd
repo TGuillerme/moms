@@ -19,12 +19,18 @@ library(moms)
 ## Setting the default parameters for the space plots
 defaults <- list(pch = 20,
                  xlim = c(-3, 3),
-                 xlim = c(-3, 3),
+                 ylim = c(-3, 3),
                  col1 = "grey",
                  col2 = "black",
-                 xlab = "Trait 1",
-                 ylab = "Trait 2",
+                 xlab = "Trait",
+                 ylab = "Trait",
                  cex = 1)
+## Generating the default palette
+default.palette <- function(n) {
+    hues = seq(15, 375, length = n + 1)
+    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
 ```
 
 # Introduction
@@ -223,11 +229,13 @@ lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defau
 
 ```
 
+<!-- 
 some text | base|lattice
 :------|:-------------------------------:|-------------------------------:
 Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-1.png"), dpi = 800)`
 Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-2.png"), dpi = 800)`
 Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), rnorm(10))$p.value`
+ -->
 
 
 #### Density metrics
@@ -253,12 +261,12 @@ density_metrics <- list("med.eucl.pairwise.dist" = c(median, pairwise.dist),
 
 ```{r position_metrics_list, echo = FALSE}
 ## The list of volume density metrics
-density_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), centre = 0),
-                        "sum.eucl.dist.centre" = list(c(sum, centroids), centre = 0),
+position_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), centroid = 0),
+                        "sum.eucl.dist.centre" = list(c(sum, centroids), centroid = 0),
                         "med.mana.dist.centre" = list(c(median, centroids),
-                                                        centre = 0, method = "manhattan"),
+                                                        centroid = 0, method = "manhattan"),
                         "sum.mana.dist.centre" = list(c(sum, centroids),
-                                                        centre = 0, method = "manhattan"))
+                                                        centroid = 0, method = "manhattan"))
                         #"distance.from.prev" = "SPECIAL")
 ```
 
@@ -286,7 +294,7 @@ disparity ~ metric + reduction + dimensions + elements
 # Results
 
 
-```{r custom_substest, echo = FALSE, fig.height = 10, fig.width = 8}
+```{r run_metrics, echo = FALSE}
 set.seed(42)
 ## Space parameters
 elements <- 300
@@ -296,101 +304,59 @@ dimensions <- 10
 ## Disruption parameters
 remove <- 0.5
 
+## Running 20 simulations
+volumes_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, volume_metrics, verbose = TRUE)
+density_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, density_metrics, verbose = TRUE)
+positio_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, position_metrics, verbose = TRUE)
 
-### FUNCTION SIMULATE IN:
+## Summarising the data
+summar_vol <- summarise.metrics(volumes_300e_10d)
+summar_den <- summarise.metrics(density_300e_10d)
+summar_pos <- summarise.metrics(positio_300e_10d)
+```
 
-simulate.metrics <- function(elements, dimension, distributions, remove, metrics_list) {
-}
-
-
-## Trait space
-trait_space <- space.maker(elements, dimensions, distribution = distributions)
-## Adding rownames
-rownames(trait_space) <- 1:elements
-
-## Removing elements
-random <- reduce.space(trait_space, type = "random", remove = remove)
-limits <- reduce.space(trait_space, type = "limit", remove = remove)
-displa <- reduce.space(trait_space, type = "displacement", remove = remove)
-densit <- reduce.space(trait_space, type = "density", remove = remove)
-
-## Making the custom groups list
-custom_groups <- list("all" = rownames(trait_space),
-                      "random" = rownames(trait_space)[random],
-                      "limits.min" = rownames(trait_space)[limits],
-                      "limits.max" = rownames(trait_space)[!limits],
-                      "displa.min" = rownames(trait_space)[displa],
-                      "displa.max" = rownames(trait_space)[!displa],
-                      "densit.min" = rownames(trait_space)[densit],
-                      "densit.max" = rownames(trait_space)[!densit])
-
-## Making the custom groups
-reduced_space <- custom.subsets(trait_space, group = custom_groups)
-
-## Measuring disparity
-measured_disparity <- dispRity(reduced_space, metric = volume_metrics[[1]])
-
-## Wrapping function for the disparity metrics
-lapply.metric <- function(metric, space, verbose) {
-    if(is.null(names(metric))) {
-        ## If metrics is not a named list, no options needed
-        return(dispRity(space, metric = metric, verbose = verbose))
-    } else {
-        ## Get the main elements arguments list
-        args <- list("data" = space, "metric" = metric[[1]], "verbose" = verbose)
-        ## Add the optional arguments to the list
-        args <- c(args, metric[-1])
-        ## Run dispRity
-        return(do.call(dispRity,args))
-    }
-}
-
-## Running the volumes
-disparity_volumes <- lapply(volume_metrics, lapply.metric, space = reduced_space, verbose = FALSE)
-
-## Naming the results
-names(disparity_volumes) <- names(volume_metrics)
-
-
-
-### FUNCTION SIMULATE OUT:
-
-
-
-### FUNCTION SUMARIZE IN:
-
-
-## Extracting the disparity values
-results_matrix <- lapply(lapply(disparity_volumes, extract.dispRity), cbind)
-
-## Scaling the results (baseline being "all")
-scale.metric <- function(one_metric) {
-    ## Get the centre (the observed disparity in for the full morphospace)
-    centered <- apply(one_metric, 2, function(X) as.numeric(X) - as.numeric(X)[1])
-    scaled <- apply(centered, 2, function(X) X/(max(abs(X))))
-    return(scaled)
-}
-
-results_matrices <- lapply(results_matrix, scale.metric)
-
-## Temporary distributions
-medians <- lapply(results_matrices, function(x) apply(x, 1, median))
-CIs <- lapply(results_matrices, function(x) apply(x, 1, quantile, prob = c(0.1, 0.2, 0.3, 0.4)))
-
-
-
-### FUNCTION SUMARIZE OUT:
-
-
-
+```{r fig_volume_results, echo = FALSE, fig.height = 10, fig.width = 8}
+results <- summar_vol
 ## Plotting the results
-plot.metrics(medians, CIs, col = palette(), space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
+plot.metrics(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
+             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
+```
+
+```{r fig_density_results, echo = FALSE, fig.height = 10, fig.width = 8}
+results <- summar_den
+## Plotting the results
+plot.metrics(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
+             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
+```
+
+```{r fig_position_results, echo = FALSE, fig.height = 10, fig.width = 8}
+results <- summar_pos
+## Plotting the results
+plot.metrics(results[[1]], results[[2]], col = default.palette(length(summar_vol[[1]])),
+             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
 ```
 
 
+```{r, eval = FALSE, echo = FALSE}
+## Are the reductions working?
+defaults$xlim <- defaults$ylim <- NULL
+trait_space <- space.maker(elements, 3, distribution = runif)
+
+## The randomly removed space
+limit_rm <- reduce.space(trait_space[], type = "limit", remove = 0.5)
+## Plotting the reduction
+plot.space(trait_space, limit_rm, main = "", defaults, axis = c(1,2))
+plot.space(trait_space, limit_rm, main = "", defaults, axis = c(1,3))
+plot.space(trait_space, limit_rm, main = "", defaults, axis = c(2,3))
+
+plot.space(trait_space, limit_rm, main = "", defaults, axis = c(3,4))
+
+
+
+```
+
 
 ## What do the metrics measure?
-
 
 
 
@@ -406,3 +372,5 @@ Measuring the effect on tests
 
 
 # References
+
+
