@@ -4,16 +4,17 @@
 #' @param remove logical, the elements to remove or add (using !)
 #' @param main the title
 #' @param defaults a list of parameters for plot() and points()
+#' @param axis which axis to plot
 #' @examples
 
 ## Plot space function (utility shortcut)
-plot.space <- function(space, remove, main, defaults, ...) {
+plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
     ## Plot the first space
-    plot(space, pch = defaults$pch, xlim = defaults$xlim, ylim = defaults$ylim, col = defaults$col1,
-         main = main, xlab = defaults$xlab, ylab = defaults$ylab, cex = defaults$cex, ...)
+    plot(space[, axis], pch = defaults$pch, xlim = defaults$xlim, ylim = defaults$ylim, col = defaults$col1,
+         main = main, xlab = paste(defaults$xlab, axis[1]), ylab = paste(defaults$xlab, axis[2]), cex = defaults$cex, ...)
     
     ## Plot the second space
-    points(space[remove,], pch = defaults$pch, col = defaults$col2, cex = defaults$cex)
+    points(space[remove, axis], pch = defaults$pch, col = defaults$col2, cex = defaults$cex)
 }
 
 

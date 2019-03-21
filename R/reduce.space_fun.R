@@ -111,10 +111,10 @@ run.density.removal <- function(space, parameters) {
 # ' @param centre the centre from which to count the radius
 # ' @param radius the radius for removal
 # ' 
-point.in.circle <- function(point, centre = c(0,0), radius) {
+point.in.circle <- function(point, centre, radius) {
 
     ## Measure the distance from the center
-    distance <- sqrt((centre[1]-abs(point[1]))^2 + (centre[2]-abs(point[2]))^2)
+    distance <- as.numeric(dist(rbind(centre, point)))
 
     ## Results
     return(ifelse(distance < radius, TRUE, FALSE))

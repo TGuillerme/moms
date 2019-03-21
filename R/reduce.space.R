@@ -26,16 +26,6 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
 
     ## Add sanitizing
     type_available <- c("random", "limit", "displacement", "density")   
-
-    ## Simple removal (simple)
-    if(type == "random") {
-        ## Number of elements
-        elements <- nrow(space)
-        ## Return a portion of the space
-        to_remove <- sample(1:elements, elements*remove)
-        return(1:elements %in% to_remove)
-    }
-
     ## Tolerance
     if(missing(tuning)) {
         tuning <- list()
@@ -55,47 +45,54 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
         parameters <- list()
     }
 
-    ## Set parameters for specific cases
-    if(type == "limit") {
-        ## Type function
-        fun <- run.limit.removal
-        ## Parameters
-        if(is.null(parameters$centre)) {
-            parameters$centre <- rep(0, ncol(space))
-        } 
-        if(is.null(parameters$radius)) {
-            parameters$radius <- 1
-        }
-        ## Parameter to optimise
-        parameters$optimise <- parameters$radius
-        ## List of arguments
-        args <- list("space" = space, "parameters" = parameters)
-    }
 
-    if(type == "displacement") {
-        ## Type function
-        fun <- run.displacement.removal
-        ## Parameters
-        if(is.null(parameters$value)) {
-            parameters$value <- 1
-        } 
-        ## Parameter to optimise
-        parameters$optimise <- parameters$value
-    }
-
-    if(type == "density") {
-        ## Type function
-        fun <- run.density.removal
-        ## Parameters
-        if(is.null(parameters$distance)) {
-            parameters$distance <- as.matrix(dist(space))
+    switch(type,
+        random = {
+            ## Number of elements
+            elements <- nrow(space)
+            ## Return a portion of the space
+            to_remove <- sample(1:elements, elements*remove)
+            return(1:elements %in% to_remove)
+        },
+        limit = {
+            ## Type function
+            fun <- run.limit.removal
+            ## Parameters
+            if(is.null(parameters$centre)) {
+                parameters$centre <- apply(space, 2, mean)
+            } 
+            if(is.null(parameters$radius)) {
+                parameters$radius <- 1
+            }
+            ## Parameter to optimise
+            parameters$optimise <- parameters$radius
+            ## List of arguments
+            args <- list("space" = space, "parameters" = parameters)
+        },
+        displacement = {
+            ## Type function
+            fun <- run.displacement.removal
+            ## Parameters
+            if(is.null(parameters$value)) {
+                parameters$value <- 1
+            } 
+            ## Parameter to optimise
+            parameters$optimise <- parameters$value
+        },
+        density = {
+            ## Type function
+            fun <- run.density.removal
+            ## Parameters
+            if(is.null(parameters$distance)) {
+                parameters$distance <- as.matrix(dist(space))
+            }
+            if(is.null(parameters$diameter)) {
+                parameters$diameter <- 0.5
+            }  
+            ## Parameter to optimise
+            parameters$optimise <- parameters$diameter
         }
-        if(is.null(parameters$diameter)) {
-            parameters$diameter <- 0.5
-        }  
-        ## Parameter to optimise
-        parameters$optimise <- parameters$diameter
-    }
+    )
 
     ## List of arguments
     args <- list("space" = space, "parameters" = parameters)

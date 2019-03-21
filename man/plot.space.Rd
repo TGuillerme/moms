@@ -4,7 +4,7 @@
 \alias{plot.space}
 \title{Plot space}
 \usage{
-\method{plot}{space}(space, remove, main, defaults, ...)
+\method{plot}{space}(space, remove, main, defaults, axis = c(1, 2), ...)
 }
 \arguments{
 \item{space}{the space to plot (matrix)}
@@ -14,6 +14,8 @@
 \item{main}{the title}
 
 \item{defaults}{a list of parameters for plot() and points()}
+
+\item{axis}{which axis to plot}
 }
 \description{
 plotting the spaces changing
