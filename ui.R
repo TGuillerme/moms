@@ -26,35 +26,35 @@ shinyUI(fluidPage(
           ## Normal parameters
           conditionalPanel(condition = "input.distributions == \"Normal\"",
             ## Parameters
-            textInput("rnorm_mean", label = h5("mean"), value = 0),
-            textInput("rnorm_sd", label = h5("standard deviation"), value = 1)
+            numericInput("rnorm_mean", label = h5("mean"), value = 0),
+            numericInput("rnorm_sd", label = h5("standard deviation"), value = 1)
           ),
 
           ## LogNormal parameters
           conditionalPanel(condition = "input.distributions == \"LogNormal\"",
             ## Parameters
-            textInput("rlnorm_mean", label = h5("mean log"), value = 0),
-            textInput("rlnorm_sd", label = h5("standard deviation log"), value = 1)
+            numericInput("rlnorm_mean", label = h5("mean log"), value = 0),
+            numericInput("rlnorm_sd", label = h5("standard deviation log"), value = 1)
           ),
 
           ## Uniform parameters
           conditionalPanel(condition = "input.distributions == \"Uniform\"",
             ## Parameters
-            textInput("runif_min", label = h5("minimum"), value = 0),
-            textInput("runif_max", label = h5("maximum"), value = 1)
+            numericInput("runif_min", label = h5("minimum"), value = 0),
+            numericInput("runif_max", label = h5("maximum"), value = 1)
           ),
 
           ## Gamma parameters
           conditionalPanel(condition = "input.distributions == \"Gamma\"",
             ## Parameters
-            textInput("rgamma_shape", label = h5("shape (alpha)"), value = 5),
-            textInput("rgamma_rate", label = h5("rate (beta)"), value = 1)
+            numericInput("rgamma_shape", label = h5("shape (alpha)"), value = 5),
+            numericInput("rgamma_rate", label = h5("rate (beta)"), value = 1)
           ),
 
           ## Poisson parameters
           conditionalPanel(condition = "input.distributions == \"Poisson\"",
             ## Parameters
-            textInput("rpois_lambda", label = h5("lambda"), value = 5)
+            numericInput("rpois_lambda", label = h5("lambda"), value = 5)
           ),
 
           ## Multiple distributions
@@ -119,6 +119,11 @@ shinyUI(fluidPage(
           selectizeInput("metric", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
           helpText("Select one or two metrics (e.g. 'ellipsoid.volume' or 'sum variances')."),
           hr(),
+
+          h3("Display"),
+          numericInput("axis_1", label = h5("Horizontal axis"), value = 1, min = 1),
+          numericInput("axis_2", label = h5("Vertical axis"), value = 2, min = 1),
+
           ## Refresh button - input$refresh
           actionButton("refresh", label = "Refresh")
 
