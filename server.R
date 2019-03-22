@@ -105,7 +105,6 @@ shinyServer(
     function(input, space, output, session) {
         # Plotting function
         output$plot_out <- renderPlot({
-
             ## ~~~~~~~~~~
             ## Making the space
             ## ~~~~~~~~~~
@@ -131,10 +130,23 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Plotting the space
             ## ~~~~~~~~~~
+            ## Default plotting options
+            defaults <- list()
+            defaults$pch <- 19
+            defaults$col1 <- "black"
+            defaults$lab <- "Trait"
+            defaults$cex <- 1
+
             if(input$reduce == "None") {
-
-                plot(space[, c(input$axis_1, input$axis_2)])
-
+                plot(space[, c(input$axis_1, input$axis_2)],
+                    pch = defaults$pch,
+                    xlim = defaults$xlim,
+                    ylim = defaults$ylim,
+                    col = defaults$col1,
+                    main = NULL,
+                    xlab = paste(defaults$lab, input$axis_1),
+                    ylab = paste(defaults$lab, input$axis_2),
+                    cex = defaults$cex)
             } # else {
 
             #}
@@ -154,17 +166,18 @@ shinyServer(
         ## Output plot
         output$plot.ui <- renderUI({
 
+            error <- NULL
+
             ## Reset the seed when hitting the refresh button
             set.seed(seeds[(input$refresh)+1])
 
-            # if (class(tree) == "character") {
-            #     plotOutput("plot_out", width ="100%", height = "40px")
-            #     plotError(tree)
-            # } else {
-            #     n_tip <- length(tree$tip.label)
-            #     ## Set the plot window
-                plotOutput("plot_out")#, width ="100%", height = "100%")#paste(round((n_tip + 3.3) * 0.4) * 90L, "px", sep = ""))
-            # }
+            if (is.null(error)) {
+                plotOutput("plot_out", height = 750, width = 750)
+                #TODO: make the plot size dynamic!!!!
+            } else {
+                plotOutput("plot_out", width ="100%", height = "40px")
+                plotError(tree)
+            }
         })
     }
 )
