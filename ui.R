@@ -26,44 +26,64 @@ shinyUI(fluidPage(
           ## Normal parameters
           conditionalPanel(condition = "input.distributions == \"Normal\"",
             ## Parameters
-            numericInput("rnorm_mean", label = h5("mean"), value = 0),
-            numericInput("rnorm_sd", label = h5("standard deviation"), value = 1)
+            numericInput("rnorm_mean", label = "mean", value = 0),
+            numericInput("rnorm_sd", label = "standard deviation", value = 1)
           ),
 
           ## LogNormal parameters
           conditionalPanel(condition = "input.distributions == \"LogNormal\"",
             ## Parameters
-            numericInput("rlnorm_mean", label = h5("mean log"), value = 0),
-            numericInput("rlnorm_sd", label = h5("standard deviation log"), value = 1)
+            numericInput("rlnorm_mean", label = "mean log", value = 0),
+            numericInput("rlnorm_sd", label = "standard deviation log", value = 1)
           ),
 
           ## Uniform parameters
           conditionalPanel(condition = "input.distributions == \"Uniform\"",
             ## Parameters
-            numericInput("runif_min", label = h5("minimum"), value = 0),
-            numericInput("runif_max", label = h5("maximum"), value = 1)
+            numericInput("runif_min", label = "minimum", value = 0),
+            numericInput("runif_max", label = "maximum", value = 1)
           ),
 
           ## Gamma parameters
           conditionalPanel(condition = "input.distributions == \"Gamma\"",
             ## Parameters
-            numericInput("rgamma_shape", label = h5("shape (alpha)"), value = 5),
-            numericInput("rgamma_rate", label = h5("rate (beta)"), value = 1)
+            numericInput("rgamma_shape", label = "shape (alpha)", value = 5),
+            numericInput("rgamma_rate", label = "rate (beta)", value = 1)
           ),
 
           ## Poisson parameters
           conditionalPanel(condition = "input.distributions == \"Poisson\"",
             ## Parameters
-            numericInput("rpois_lambda", label = h5("lambda"), value = 5)
+            numericInput("rpois_lambda", label = "lambda", value = 5)
           ),
 
           ## Multiple distributions
           conditionalPanel(condition = "input.distributions == \"Specific\"",
             ## Distributions for D1
-            textInput("distribution_list", label = h5("Distribution list"), value = "rnorm, runif, rlnorm"),
+            textInput("distribution_list", label = "Distribution list", value = "rnorm, runif, rlnorm"),
             helpText("Enter the distributions as a list of function names from the 'stats' package separated by a comma (e.g. rnorm, runif for the normal distribution to be applied to D1 and the uniform distribution to by applied to D2). Make sure you enter the same number of distribution functions as the number of requested distributions.")
             ## TODO: add optional arguments
+          ),
+
+          ## Scree - input$scree
+          selectInput("scree", label = h5("Dimensions variance"), choices = list("Uniform", "Decreasing", "LogNormal"), selected = "Uniform"),
+          conditionalPanel(condition = "input.scree == \"Uniform\"",
+            ## Parameters
+            helpText("Variance is the same on each axis.")
+          ),
+          conditionalPanel(condition = "input.scree == \"Decreasing\"",
+            ## Parameters
+            helpText("Variance is uniformly decreasing on each axis.")
+          ),
+          conditionalPanel(condition = "input.scree == \"LogNormal\"",
+            ## Parameters
+            helpText("Variance is log-normally decreasing on each axis.")
           )
+
+          ## Correlation - input$correlation
+          # selectInput("correlation", label = "Dimensions correlation", choices = list("Uniform", "Decreasing", "LogNormal"), selected = "Uniform"),
+          # helpText("Variance is uniformly decreasing on each axis.")
+          # TODO: add correlation profiles.
         ),
 
         ## --------------------

@@ -1,7 +1,7 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$n_dimensions <- 2
+# input$n_dimensions <- 10
 # input$n_elements <- 300
 # input$distributions <- "Normal"
 # input$reduce <- "Random"
@@ -68,10 +68,24 @@ get.space <- function(input, session) {
         return("Multiple distributions not implemented yet.")
     }
 
+     switch(input$scree,
+        Uniform    = {
+            space_args$scree <- NULL
+        },
+        Decreasing = {
+            space_args$scree <- seq(from = 1, to = 0, length.out = (input$n_dimensions + 1))
+            space_args$scree <- (scree/sum(scree))[-(input$n_dimensions + 1)]
+        },
+        LogNormal   = {
+            return("Log normal scree does not work yet.")
+        }
+    )
+
+
     ## Default extra arguments
     length_args <- length(space_args)
-    space_args[length_args + 1] <- space_args[length_args + 2] <- list(NULL)
-    names(space_args)[length_args + 1:2] <- c("cor.matrix", "scree")
+    space_args[length_args + 1] <- list(NULL)
+    names(space_args)[length_args + 1] <- c("cor.matrix")
 
     ## Making the space
     space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
