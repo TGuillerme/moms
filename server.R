@@ -73,14 +73,13 @@ get.space <- function(input, session) {
             space_args$scree <- NULL
         },
         Decreasing = {
-            space_args$scree <- seq(from = 1, to = 0, length.out = (input$n_dimensions + 1))
+            scree <- seq(from = 1, to = 0, length.out = (input$n_dimensions + 1))
             space_args$scree <- (scree/sum(scree))[-(input$n_dimensions + 1)]
         },
         LogNormal   = {
             return("Log normal scree does not work yet.")
         }
     )
-
 
     ## Default extra arguments
     length_args <- length(space_args)
@@ -103,9 +102,24 @@ get.reduction <- function(input, space, session) {
     remove <- "Error in removing things."
 
     ## Set the parameters
+    switch(input$reduce,
+        Random = {
+
+        },
+        Limit = {
+
+        },
+        Displace = {
+
+        },
+        Density = {
+
+        }
+    )
+
 
     ## Reducing the space
-    remove <- reduce.space(space, type, remove, parameters, tuning, verbose = FALSE)
+    remove <- reduce.space(space, type, input$remove, parameters, tuning, verbose = FALSE)
 
 
     return(remove)
@@ -119,6 +133,10 @@ shinyServer(
     function(input, space, output, session) {
         # Plotting function
         output$plot_out <- renderPlot({
+
+            ## Reset the seed when hitting the refresh button
+            set.seed(seeds[(input$refresh)+1])
+
             ## ~~~~~~~~~~
             ## Making the space
             ## ~~~~~~~~~~
@@ -181,9 +199,6 @@ shinyServer(
         output$plot.ui <- renderUI({
 
             error <- NULL
-
-            ## Reset the seed when hitting the refresh button
-            set.seed(seeds[(input$refresh)+1])
 
             if (is.null(error)) {
                 plotOutput("plot_out", height = 750, width = 750)
