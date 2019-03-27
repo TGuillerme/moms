@@ -4,12 +4,14 @@
 # input$n_dimensions <- 10
 # input$n_elements <- 300
 # input$distributions <- "Normal"
-# input$reduce <- "Random"
+# input$reduce <- "Limit"
 # input$remove <- 0.5
 # input$rnorm_mean <- 2
 # input$rnorm_sd <- 10
 # input$axis_2 <- 2
 # input$axis_1 <- 1
+# input$scree <- "Uniform"
+
 
 
 library(shiny)
@@ -21,7 +23,7 @@ source("helpers.R")
 
 ## Get the space details
 ## Return a space, or an error message to be written to output.
-get.space <- function(input, session) {
+get.space <- function(input) {
 
     ## Default error
     space <- "Space parameters not specified."
@@ -68,16 +70,17 @@ get.space <- function(input, session) {
         return("Multiple distributions not implemented yet.")
     }
 
-     switch(input$scree,
+    switch(input$scree,
         Uniform    = {
             space_args$scree <- NULL
         },
         Decreasing = {
-            scree <- seq(from = 1, to = 0, length.out = (input$n_dimensions + 1))
-            space_args$scree <- (scree/sum(scree))[-(input$n_dimensions + 1)]
+            scree <- rev(cumsum(rep(1/input$n_dimensions, input$n_dimensions)))
+            space_args$scree <- scree/sum(scree)
         },
         LogNormal   = {
-            return("Log normal scree does not work yet.")
+            scree <- cumprod(rep(1/input$n_dimensions, input$n_dimensions))
+            space_args$scree <- scree/sum(scree)
         }
     )
 
@@ -104,25 +107,36 @@ get.reduction <- function(input, space, session) {
     ## Set the parameters
     switch(input$reduce,
         Random = {
-
+            ## Simple removal
+            return(reduce.space(space, type = "random", input$remove, verbose = FALSE, return.optim = FALSE))
         },
         Limit = {
-
+            type <- "limit"
         },
         Displace = {
-
+            type <- "displacement"
         },
         Density = {
-
+            type <- "density"
         }
     )
 
+    ## Default tuning
+    tuning <- list(max = 50, tol = 0.01)
+    #TG: make these parameters dynamic, the bigger the space, the rougher the parameter.
+    #TG: input$n_dimensions * input$n_elements
+
+
+    #TODO Check the parameters (if available go straight for it, if missing use optim)
+    #TODO + add to remove a "relative" option
 
     ## Reducing the space
-    remove <- reduce.space(space, type, input$remove, parameters, tuning, verbose = FALSE)
+    remove <- reduce.space(space, type, input$remove, tuning, verbose = FALSE, return.optim = TRUE)
+    ## Update the parameter value
+    shiny::updateNumericInput(session, "optimise", value = remove$optim)
 
 
-    return(remove)
+    return(remove$remove)
 }
 
 ## Generate the seeds for plotting
@@ -140,8 +154,7 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Making the space
             ## ~~~~~~~~~~
-
-            space <- get.space(input, session)
+            space <- get.space(input)
 
             ## Update number of dimensions (if required)
             if(input$axis_1 > input$n_dimensions) {
@@ -158,6 +171,9 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Reducing the space
             ## ~~~~~~~~~~
+            if(input$reduce != "None") {
+                to_remove <- get.reduction(input, space, session)
+            }
 
             ## ~~~~~~~~~~
             ## Plotting the space
@@ -169,29 +185,24 @@ shinyServer(
             defaults$lab <- "Trait"
             defaults$cex <- 1
 
-            if(input$reduce == "None") {
-                plot(space[, c(input$axis_1, input$axis_2)],
-                    pch = defaults$pch,
-                    xlim = defaults$xlim,
-                    ylim = defaults$ylim,
-                    col = defaults$col1,
-                    main = NULL,
-                    xlab = paste(defaults$lab, input$axis_1),
-                    ylab = paste(defaults$lab, input$axis_2),
-                    cex = defaults$cex)
-            } # else {
+            ## Background plot
+            plot(space[, c(input$axis_1, input$axis_2)],
+                pch = defaults$pch,
+                xlim = defaults$xlim,
+                ylim = defaults$ylim,
+                col = "black",
+                main = NULL,
+                xlab = paste(defaults$lab, input$axis_1),
+                ylab = paste(defaults$lab, input$axis_2),
+                cex = defaults$cex)
 
-            #}
-
-            # par(bty = "n")
-            # plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
-            #     ## Plot the first space
-            #     plot(space[, axis], pch = defaults$pch, xlim = defaults$xlim, ylim = defaults$ylim, col = defaults$col1,
-            #          main = main, xlab = paste(defaults$xlab, axis[1]), ylab = paste(defaults$xlab, axis[2]), cex = defaults$cex, ...)
-                
-            #     ## Plot the second space
-            #     points(space[remove, axis], pch = defaults$pch, col = defaults$col2, cex = defaults$cex)
-            # }
+            ## Removal plot
+            if(input$reduce != "None") {
+                points(space[to_remove, c(input$axis_1, input$axis_2)],
+                       pch = defaults$pch,
+                       col = "grey",
+                       cex = defaults$cex+0.1)
+            }
 
         })
 

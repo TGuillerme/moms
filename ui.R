@@ -101,8 +101,8 @@ shinyUI(fluidPage(
           ## Limit removal
           conditionalPanel(condition = "input.reduce == \"Limit\"",
             sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$limit_optimise
-            numericInput("limit_optimise", label = h5("Radius around the centre")),
+            ## input$optimise
+            numericInput("optimise", label = h5("Radius around the centre"), value = 0),
             helpText("The radius around the centre from which to keep or select the points. If this is left empty, it is estimated automatically to match the requested proportion."),
             ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
             checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
@@ -111,9 +111,9 @@ shinyUI(fluidPage(
           ## Displacement removal
           conditionalPanel(condition = "input.reduce == \"Displace\"",
             sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$displacement_optimise
-            numericInput("displacement_optimise", label = h5("Threshold")),
-            helpText("The threshold value from which to remove elements. If this is left empty, it is estimated automatically to match the requested proportion."),
+            ## input$optimise
+            # numericInput("optimise", label = h5("Threshold")),
+            # helpText("The threshold value from which to remove elements. If this is left empty, it is estimated automatically to match the requested proportion."),
             ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
             checkboxInput("diplacement_type", label = "Remove below the threshold", value = FALSE)
           ),
@@ -121,9 +121,9 @@ shinyUI(fluidPage(
           ## Displacement removal
           conditionalPanel(condition = "input.reduce == \"Density\"",
             sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$displacement_optimise
-            numericInput("density_optimise", label = h5("Tolerance")),
-            helpText("The tolerance from which to consider points are neighbours. If this is left empty, it is estimated automatically to match the requested proportion."),
+            ## input$optimise
+            # numericInput("optimise", label = h5("Tolerance")),
+            # helpText("The tolerance from which to consider points are neighbours. If this is left empty, it is estimated automatically to match the requested proportion."),
             ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
             checkboxInput("density_type", label = "Remove neighbours", value = FALSE)
           )
