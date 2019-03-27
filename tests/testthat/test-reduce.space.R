@@ -39,6 +39,15 @@ test_that("reduce.space works", {
 
     expect_equal(test1, test2)
 
+    set.seed(1)
+    test3 <- reduce.space(space, type = "limit", remove = 0.5, return.optim = TRUE)
+    expect_equal(test3[[2]], 1.21875)
+    expect_equal(length(which(test3[[1]])), 151)
+
+    expect_equal(test1, test3$remove)
+
+
+
 
     ## Displacement removal
     set.seed(1)
@@ -55,6 +64,14 @@ test_that("reduce.space works", {
     expect_equal(length(which(test2)), 150)
 
     expect_equal(test1, test2)
+
+    set.seed(1)
+    test3 <- reduce.space(space, type = "displacement", remove = 0.5, return.optim = TRUE, tuning = list("tol" = 0))
+    expect_equal(test3[[2]], 0.484375)
+    expect_equal(length(which(test3[[1]])), 150)
+
+    expect_equal(test1, test3$remove)
+
 
 
     ## Displacement removal
@@ -73,5 +90,11 @@ test_that("reduce.space works", {
 
     expect_equal(test1, test2)
 
+    set.seed(1)
+    test3 <- reduce.space(space, type = "density", remove = 0.5, return.optim = TRUE)
+    expect_equal(test3[[2]], 0.1015625)
+    expect_equal(length(which(test3[[1]])), 151)
+
+    expect_equal(test1, test3$remove)
 
 })

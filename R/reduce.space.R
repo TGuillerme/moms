@@ -6,7 +6,7 @@
 #' @param type how to reduce the space (either \code{"random"}, \code{"limit"}, \code{"displacement"} or \code{"density"})
 #' @param remove the proportion of elements to be removed (in probability)
 #' @param parameters the parameter(s) for removal selection (see details). If left empty, the \code{parameters} is estimated to reach the amount set by \code{remove}.
-#' @param tuning Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close) "good" for when to decide it's good enough (i.e. stop if it reaches the tuning after X number of times).
+#' @param tuning Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close), "inc.steps" for the initial increment value during optimisation (default = 2 - the bigger the value, the slower the increment).
 #' @param verbose
 #' @param return.optim logical, whether to also return the optimal value.
 #' 
@@ -110,7 +110,7 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
         }
 
         ## Optimise
-        to_remove <- optimise.results(to_remove, fun = fun, remove = remove, args = args, tuning = tuning, verbose = verbose, space = space)
+        to_remove <- optimise.results(to_remove, fun = fun, remove = remove, args = args, tuning = tuning, verbose = verbose, space = space, return.optim = return.optim)
     }
 
     if(!return.optim) {

@@ -16,7 +16,7 @@ reduce.space(space, type, remove, parameters, tuning, verbose = FALSE,
 
 \item{parameters}{the parameter(s) for removal selection (see details). If left empty, the \code{parameters} is estimated to reach the amount set by \code{remove}.}
 
-\item{tuning}{Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close) "good" for when to decide it's good enough (i.e. stop if it reaches the tuning after X number of times).}
+\item{tuning}{Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close), "inc.steps" for the initial increment value during optimisation (default = 2 - the bigger the value, the slower the increment).}
 
 \item{return.optim}{logical, whether to also return the optimal value.}
 }
