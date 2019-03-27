@@ -5,7 +5,7 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme, T., Puttick, M., and Smith, M. R. (2019). Some paper. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
+    p("Guillerme, T., Puttick, M., and Weisbecker, V (2019). Some paper. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
     hr(),
 
     fluidRow(
@@ -93,40 +93,21 @@ shinyUI(fluidPage(
           ## Modify space - input$reduce
           selectInput("reduce", label = h3("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density"), selected = "None"),
 
-          ## Random removal
-          conditionalPanel(condition = "input.reduce == \"Random\"",
-            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5)
-          ),
-
-          ## Limit removal
-          conditionalPanel(condition = "input.reduce == \"Limit\"",
+          ## All removals
+          conditionalPanel(condition = "input.reduce != \"None\"",
             sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$optimise
-            numericInput("optimise", label = h5("Radius around the centre"), value = 0),
-            helpText("The radius around the centre from which to keep or select the points. If this is left empty, it is estimated automatically to match the requested proportion."),
-            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
-            checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
-          ),
-
-          ## Displacement removal
-          conditionalPanel(condition = "input.reduce == \"Displace\"",
-            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$optimise
-            # numericInput("optimise", label = h5("Threshold")),
-            # helpText("The threshold value from which to remove elements. If this is left empty, it is estimated automatically to match the requested proportion."),
-            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
-            checkboxInput("diplacement_type", label = "Remove below the threshold", value = FALSE)
-          ),
-
-          ## Displacement removal
-          conditionalPanel(condition = "input.reduce == \"Density\"",
-            sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-            ## input$optimise
-            # numericInput("optimise", label = h5("Tolerance")),
-            # helpText("The tolerance from which to consider points are neighbours. If this is left empty, it is estimated automatically to match the requested proportion."),
-            ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
-            checkboxInput("density_type", label = "Remove neighbours", value = FALSE)
+            checkboxInput("inverse_remove", label = "Inverse removal", value = FALSE)
           )
+
+          # ## Limit removal
+          # conditionalPanel(condition = "input.reduce == \"Limit\"",
+          #   # sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
+          #   ## input$optimise
+          #   # numericInput("optimise", label = h5("Radius around the centre"), value = 0),
+          #   # helpText("The radius around the centre from which to keep or select the points. If this is left empty, it is estimated automatically to match the requested proportion."),
+          #   ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
+          #   checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
+          # ),
         ),
 
         ## -------

@@ -131,12 +131,11 @@ get.reduction <- function(input, space, session) {
     #TODO + add to remove a "relative" option
 
     ## Reducing the space
-    remove <- reduce.space(space, type, input$remove, tuning, verbose = FALSE, return.optim = TRUE)
+    remove <- reduce.space(space, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE)
     ## Update the parameter value
-    shiny::updateNumericInput(session, "optimise", value = remove$optim)
-
-
-    return(remove$remove)
+    # shiny::updateNumericInput(session, "optimise", value = remove$optim)
+    return(remove)
+    # return(remove$remove)
 }
 
 ## Generate the seeds for plotting
@@ -186,25 +185,55 @@ shinyServer(
             defaults$cex <- 1
 
             ## Background plot
-            plot(space[, c(input$axis_1, input$axis_2)],
-                pch = defaults$pch,
-                xlim = defaults$xlim,
-                ylim = defaults$ylim,
-                col = "black",
-                main = NULL,
-                xlab = paste(defaults$lab, input$axis_1),
-                ylab = paste(defaults$lab, input$axis_2),
-                cex = defaults$cex)
+            if(input$reduce == "None") {            
+                plot(space[, c(input$axis_1, input$axis_2)],
+                    pch = defaults$pch,
+                    xlim = defaults$xlim,
+                    ylim = defaults$ylim,
+                    col = "black",
+                    main = NULL,
+                    xlab = paste(defaults$lab, input$axis_1),
+                    ylab = paste(defaults$lab, input$axis_2),
+                    cex = defaults$cex)
 
-            ## Removal plot
-            if(input$reduce != "None") {
-                points(space[to_remove, c(input$axis_1, input$axis_2)],
+            } else {
+                ## Selecting which points to remove
+                if(input$inverse_remove) {
+                    points_remove <- !to_remove
+                } else {
+                    points_remove <- to_remove
+                }
+
+                plot(space[, c(input$axis_1, input$axis_2)],
+                    pch = defaults$pch,
+                    xlim = defaults$xlim,
+                    ylim = defaults$ylim,
+                    col = "grey",
+                    main = NULL,
+                    xlab = paste(defaults$lab, input$axis_1),
+                    ylab = paste(defaults$lab, input$axis_2),
+                    cex = defaults$cex)
+
+                ## Plotting the points
+                points(space[!points_remove, c(input$axis_1, input$axis_2)],
                        pch = defaults$pch,
-                       col = "grey",
-                       cex = defaults$cex+0.1)
+                       col = "black",
+                       cex = defaults$cex)
             }
 
+
+            ## ~~~~~~~~~~
+            ## Others (will be disparity)
+            ## ~~~~~~~~~~
+            ## Make some dummy table
+
+            ### Some dummy table
+            output$table_out <- renderTable(
+              head(space, n = 5)
+            )
+
         })
+
 
         ## Output plot
         output$plot.ui <- renderUI({
