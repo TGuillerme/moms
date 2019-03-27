@@ -4,7 +4,8 @@
 \alias{reduce.space}
 \title{Reduce space}
 \usage{
-reduce.space(space, type, remove, parameters, tuning, verbose = FALSE)
+reduce.space(space, type, remove, parameters, tuning, verbose = FALSE,
+  return.optim = FALSE)
 }
 \arguments{
 \item{space}{the trait space}
@@ -17,7 +18,7 @@ reduce.space(space, type, remove, parameters, tuning, verbose = FALSE)
 
 \item{tuning}{Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close) "good" for when to decide it's good enough (i.e. stop if it reaches the tuning after X number of times).}
 
-\item{verbose}{}
+\item{return.optim}{logical, whether to also return the optimal value.}
 }
 \description{
 Remove elements from a multidimensional space

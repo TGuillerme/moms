@@ -28,14 +28,14 @@ test_that("reduce.space works", {
     iter <- capture_output(test1 <- reduce.space(space, type = "limit", remove = 0.5, verbose = TRUE))
     expect_is(test1, "logical")
     expect_equal(length(test1), 300)
-    expect_equal(length(which(test1)), 150)
-    expect_equal(iter, "Run parameter optimisation:.......Done.")
+    expect_equal(length(which(test1)), 151)
+    expect_equal(iter, "Run parameter optimisation:........Done.")
 
     set.seed(1)
     test2 <- reduce.space(space, type = "limit", parameters = list("radius" = 1.21875))
     expect_is(test2, "logical")
     expect_equal(length(test2), 300)
-    expect_equal(length(which(test2)), 150)
+    expect_equal(length(which(test2)), 151)
 
     expect_equal(test1, test2)
 

@@ -8,6 +8,7 @@
 #' @param parameters the parameter(s) for removal selection (see details). If left empty, the \code{parameters} is estimated to reach the amount set by \code{remove}.
 #' @param tuning Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close) "good" for when to decide it's good enough (i.e. stop if it reaches the tuning after X number of times).
 #' @param verbose
+#' @param return.optim logical, whether to also return the optimal value.
 #' 
 #' @details
 #' - \code{limit.removal parameters}: a list of \code{parameters$centre}, the centre from which to count the radius (if missing, is set to \code{0}); and \code{parameters$radius}, the radius for removal.
@@ -22,10 +23,10 @@
 #' 
 #' @author Thomas Guillerme
 
-reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALSE) {
+reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALSE, return.optim = FALSE) {
 
     ## Add sanitizing
-    type_available <- c("random", "limit", "displacement", "density")   
+    type_available <- c("random", "limit", "displacement", "density")
     ## Tolerance
     if(missing(tuning)) {
         tuning <- list()
@@ -112,125 +113,9 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
         to_remove <- optimise.results(to_remove, fun = fun, remove = remove, args = args, tuning = tuning, verbose = verbose, space = space)
     }
 
-    return(to_remove)
+    if(!return.optim) {
+        return(to_remove)
+    } else {
+        return(list(remove = to_remove$remove, optim = to_remove$optim))
+    }
 }
-
-
-
-
-
-# #' @export
-# random.removal <- function(space, remove, parameters, tuning) {
-#     ## Count the elements
-#     elements <- nrow(space)
-#     ## Return a portion of the space
-#     to_remove <- sample(1:elements, elements*remove)
-#     return(1:elements %in% to_remove)
-# }
-
-# #' @export
-# limit.removal <- function(space, remove, parameters, tuning) {    
-    
-#     if(missing(parameters)) {
-#         parameters <- list()
-#     }
-
-#     ## Set the default centre
-#     if(is.null(parameters$centre)) {
-#         parameters$centre <- rep(0, ncol(space))
-#     } 
-
-#     ## Set the default centre
-#     if(is.null(parameters$radius)) {
-#         ## Default radius (will be optimised)
-#         parameters$radius <- 1
-#     } 
-
-
-#     ## Set the arguments
-#     args <- list("space" = space, "parameters" = parameters)
-#     args$parameters$optimise <- parameters$radius
-
-#     ## Select the bits to remove
-#     run.limit.removal <- function(space, parameters) {
-#         apply(space, 1, point.in.circle, centre = parameters$centre, radius = parameters$optimise)
-#     }
-
-#     ## Run the function
-#     to_remove <- do.call(run.limit.removal, args)
-#     ## Optimise the function (if necessary)
-#     to_remove <- optimise.results(to_remove, fun = run.limit.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
-
-#     return(to_remove)
-# }
-
-# #' @export
-# displacement.removal <- function(space, remove, parameters, tuning) {    
-   
-#     if(missing(parameters)) {
-#         parameters <- list()
-#     }
-
-
-#     ## Set the default centre
-#     if(is.null(parameters$value)) {
-#         ## Default value (will be optimised)
-#         parameters$value <- 1
-#     } 
-
-#     ## Set the arguments
-#     args <- list("space" = space, "parameters" = parameters)
-#     args$parameters$optimise <- parameters$value
-
-#     ## Select the bits to remove
-#     run.displacement.removal <- function(space, parameters) {
-#         apply(space, 1, select.value, value = parameters$optimise)
-#     }
-
-#     ## Run the function
-#     to_remove <- do.call(run.displacement.removal, args)
-#     ## Optimise the function (if necessary)
-#     to_remove <- optimise.results(to_remove, fun = run.displacement.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
-
-#     return(to_remove)
-# }
-
-
-# #' @export
-# density.removal <- function(space, remove, parameters, tuning) {  
-    
-#     if(missing(parameters)) {
-#         parameters <- list()
-#     }  
-
-#     ## Set the default what
-#     if(is.null(parameters$what)) {
-#         parameters$what <- "close"
-#     }
-#     ## Set the default output
-#     if(is.null(parameters$output)) {
-#         parameters$output <- "pairs"
-#     }
-#     ## Set the default centre
-#     if(is.null(parameters$diameter)) {
-#         ## Default value (will be optimised)
-#         parameters$diameter <- 1
-#     } 
-
-#     ## Set the arguments
-#     args <- list("space" = space, "parameters" = parameters)
-#     args$parameters$optimise <- parameters$diameter
-
-#     ## Select the bits to remove
-#     run.density.removal <- function(space, parameters) {
-#         close_neigbhours <- get.neigbhours(space, what = parameters$what, diameter = parameters$optimise, output = parameters$output)
-#         return(1:nrow(space) %in% close_neigbhours)
-#     }
-
-#     ## Run the function
-#     to_remove <- do.call(run.density.removal, args)
-#     ## Optimise the function (if necessary)
-#     to_remove <- optimise.results(to_remove, fun = run.density.removal, remove = remove, args = args, tuning = tuning, verbose = TRUE, space = space)
-
-#     return(to_remove)
-# }

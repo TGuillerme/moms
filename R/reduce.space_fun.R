@@ -72,7 +72,7 @@ optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
     return(args$parameters$optimise)
 }
 ## Wrapping optimisation function
-optimise.results <- function(to_remove, fun, remove, args, tuning, verbose = FALSE, space) {
+optimise.results <- function(to_remove, fun, remove, args, tuning, verbose = FALSE, space, return.optim = FALSE) {
 
     ## Set the optimality criterion
     criterion <- round(remove * nrow(space))
@@ -89,7 +89,12 @@ optimise.results <- function(to_remove, fun, remove, args, tuning, verbose = FAL
 
         if(verbose) cat("Done.\n")
     }
-    return(to_remove)
+
+    if(!return.optim) {
+        return(to_remove)
+    } else {
+        return(list(remove = to_remove, optim = args$parameters$optimise))
+    }
 }
 
 ## The different run functions
