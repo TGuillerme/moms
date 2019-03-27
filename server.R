@@ -223,15 +223,42 @@ shinyServer(
 
 
             ## ~~~~~~~~~~
-            ## Others (will be disparity)
+            ## Disparity
             ## ~~~~~~~~~~
             ## Make some dummy table
 
             ### Some dummy table
-            output$table_out <- renderTable(
-              head(space, n = 5)
-            )
+            output$table_out <- renderTable({
 
+                rownames(space) <- 1:input$n_elements
+
+                ## Make the disparity object
+                if(input$reduce == "None") {
+                    groups <- space
+                } else {
+                    groups <- dispRity::custom.subsets(space, group = list("Full space" = rownames(space),
+                                                                           "Reduced space" = rownames(space)[points_remove]))
+                }
+
+                ## Measure disparity
+                metric <- c(sum, dispRity::variances) ; warning("Fix metric input")
+                metric_name <- "sum of variances"
+
+                ## Measure disparity
+                disparity <- dispRity::dispRity(groups, metric = metric)
+
+                ## Rendering the output table
+                output <- summary(disparity)
+                #TODO: get the right number of digits
+                #TODO: add the values row by row.
+                
+                ## Add names
+                rownames(output) <- output$subsets
+                colnames(output)[3] <- metric_name
+
+                ## Print output
+                output[,-1]
+            })
         })
 
 
@@ -244,7 +271,7 @@ shinyServer(
                 plotOutput("plot_out", height = 750, width = 750)
                 #TODO: make the plot size dynamic!!!!
             } else {
-                plotOutput("plot_out", width ="100%", height = "40px")
+                plotOutput("plot_out")
                 plotError(tree)
             }
         })
