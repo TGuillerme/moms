@@ -1,47 +1,46 @@
-[![Build Status](https://travis-ci.org/TGuillerme/Inapp.svg?branch=master)](https://travis-ci.org/TGuillerme/Inapp)
+[![Build Status](https://travis-ci.org/TGuillerme/moms.svg?branch=master)](https://travis-ci.org/TGuillerme/moms)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![codecov](https://codecov.io/gh/TGuillerme/Inapp/branch/master/graph/badge.svg)](https://codecov.io/gh/TGuillerme/Inapp)
-[![DOI](https://zenodo.org/badge/84838115.svg)](https://zenodo.org/badge/latestdoi/84838115)
+[![codecov](https://codecov.io/gh/TGuillerme/moms/branch/master/graph/badge.svg)](https://codecov.io/gh/TGuillerme/moms)
+<!-- [![DOI](https://zenodo.org/badge/84838115.svg)](https://zenodo.org/badge/latestdoi/84838115)
+ -->
 
-**Inapp**: ancestral reconstruction and step counting for discrete characters with inapplicable data.
+**moms**: Measuring Occupancy in Multidimensional Space.
 
-<a href="https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
-Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222). 
+<!-- <a href="https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
+Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222). --> 
 
-This package allows to run the algorithm described in [this paper](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy083/5238046).
-You can either directly run the package on your web browser (Graphical User Interface mode!), or install it in `R` as a proper package (or both!).
+This shiny app helps understanding the multidimensional space occupancy metrics that can be used in ecology and evolution.
+This app is based on the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity).
 
-The `C` implementation of the algorithm is available in [morphylib](https://github.com/mbrazeau/morphylib) and the algorithm is implemented in the [TreeSearch](https://github.com/ms609/TreeSearch) `R` package.
-
-## Running Inapp on your web browser
+## Running moms on your web browser
 That's easy! In `R`, simply copy/paste the following:
 ```r
 if(!require(devtools)) install.packages("devtools")
 if(!require(shiny)) install.packages("shiny")
-runGitHub("Inapp", "TGuillerme")
+runGitHub("moms", "TGuillerme")
 ```
 <!-- Upload the whole thing on shiny servers -->
 
-## Running Inapp in your R console
+## Running moms in your R console
 Not much more complicated! In `R`, copy/paste the following:
 ```r
 ## Installing the App:
 if(!require(devtools)) install.packages("devtools")
-devtools::install_github("TGuillerme/Inapp")
+devtools::install_github("TGuillerme/moms")
 
 ## Running the App:
-Inapp::runInapp()
+moms::runmoms()
 ```
 
-Check out the package [vignette](https://tguillerme.github.io/inapp.html) for (many) more details on the GUI possibilities.
+<!-- Check out the package [vignette](https://tguillerme.github.io/moms.html) for (many) more details on the GUI possibilities. -->
 
 
 Authors
 -------
-[Thomas Guillerme](http://tguillerme.github.io), [Martin Brazeau](http://www.imperial.ac.uk/people/m.brazeau), [Martin Smith](https://community.dur.ac.uk/martin.smith/)
+[Thomas Guillerme](http://tguillerme.github.io), [Mark Puttick](https://puttickbiology.wordpress.com/), [Vera Weisbecker](http://weisbeckerlab.com.au/)
 
 
-Citations
+<!-- Citations
 -------
 If you are using this package, please cite both the published description of this algorithm:
 
@@ -49,4 +48,5 @@ If you are using this package, please cite both the published description of thi
 
 And the DOI of this package:
 
- * Guillerme T, Brazeau MD, Smith MR. (**2018**). Inapp: Reconstruction of Inapplicable Discrete Characters on Phylogenetic Trees. *Zenodo*. [doi:10.5281/zenodo.1484656](http://doi.org/10.5281/zenodo.1484656)
+ * Guillerme T, Brazeau MD, Smith MR. (**2018**). moms: Reconstruction of momslicable Discrete Characters on Phylogenetic Trees. *Zenodo*. [doi:10.5281/zenodo.1484656](http://doi.org/10.5281/zenodo.1484656)
+ -->
