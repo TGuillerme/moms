@@ -26,7 +26,7 @@ shinyUI(fluidPage(
         ## Distributions - input$distributions
         selectInput("distributions", label = "Distributions", choices = list("Normal", "LogNormal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
 
-        ## Normal parameters
+        ## Normal parameters
         conditionalPanel(condition = "input.distributions == \"Normal\"",
           ## Parameters
           numericInput("rnorm_mean", label = "mean", value = 0),
@@ -98,7 +98,13 @@ shinyUI(fluidPage(
         ## All removals
         conditionalPanel(condition = "input.reduce != \"None\"",
           sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-          checkboxInput("inverse_remove", label = "Inverse removal", value = FALSE)
+          checkboxInput("inverse_remove", label = "Inverse removal", value = FALSE),
+
+          conditionalPanel(condition = "input.scree != \"Uniform\"",
+              checkboxInput("proportion_remove", label = "Proportional removal", value = FALSE),
+              helpText("Whether to remove data uniformly across each dimensions (untick) or proportional (tick).")
+            )
+
         ),
 
         # ## Limit removal

@@ -1,5 +1,7 @@
 ## Display the error message
-plotError <- function(text, col='#cc6644', font=1, cex=1.2, ...) {
-  plot(-1, -1, xlim=c(0, 1), ylim=c(0,1), axes=F, xlab='', ylab='')
-  text(0, 1, pos=4, paste("Cannot plot results.", text), col=col, font=font, cex=cex, ...)
+plot.error <- function(text, col = "#cc6644", font = 1, cex = 1.2, ...) {
+    ## Empty plot
+    plot(NULL, xlim = c(0, 1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
+    ## Error message
+    text(0, 1, pos = 4, paste("Error:", text), col = col, font = font, cex = cex, ...)
 }

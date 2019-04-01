@@ -3,14 +3,15 @@
 # input <- list()
 # input$n_dimensions <- 10
 # input$n_elements <- 300
-# input$distributions <- "Normal"
+# input$distributions <- "Uniform"
 # input$reduce <- "Limit"
 # input$remove <- 0.5
-# input$rnorm_mean <- 2
-# input$rnorm_sd <- 10
+# input$runif_min <- 0
+# input$runif_max <- 1
 # input$axis_2 <- 2
 # input$axis_1 <- 1
-# input$scree <- "Uniform"
+# input$scree <- "Decreasing"
+# input$refresh <- 0
 
 
 
@@ -25,7 +26,7 @@ source("helpers.R")
 ## Return a space, or an error message to be written to output.
 get.space <- function(input) {
 
-    ## Default error
+    ## Default error
     space <- "Space parameters not specified."
 
     ## Getting the arguments
@@ -34,7 +35,7 @@ get.space <- function(input) {
     space_args$elements <- input$n_elements
     space_args$dimensions <- input$n_dimensions
 
-    ## Distributions
+    ## Distributions
     switch(input$distributions,
         Normal    = {
             single_distribution <- rnorm
@@ -62,7 +63,7 @@ get.space <- function(input) {
         }
     )
     if(!is.null(single_distribution)) {
-        ## Set a single distribution
+        ## Set a single distribution
         space_args$distribution <- single_distribution
         space_args$arguments <- single_parameters
     } else {
@@ -101,9 +102,6 @@ get.space <- function(input) {
 #'  a list (detailing the error message to be displayed) if there's an error.
 get.reduction <- function(input, space, session) {
 
-    ## Default error
-    remove <- "Error in removing things."
-
     ## Set the parameters
     switch(input$reduce,
         Random = {
@@ -132,6 +130,12 @@ get.reduction <- function(input, space, session) {
 
     ## Reducing the space
     remove <- reduce.space(space, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE)
+
+    if(all(remove == FALSE)) {
+        return("Impossible to remove data.\nTry changing the parameters combinations\n or the \"remove\" value.")
+    }
+
+
     ## Update the parameter value
     # shiny::updateNumericInput(session, "optimise", value = remove$optim)
     return(remove)
@@ -155,6 +159,12 @@ shinyServer(
             ## ~~~~~~~~~~
             space <- get.space(input)
 
+            ## Return error
+            if(class(space) == "character") {
+                plot.error(space)
+                return(NULL)
+            }
+
             ## Update number of dimensions (if required)
             if(input$axis_1 > input$n_dimensions) {
                 shiny::updateNumericInput(session, "axis_1", max = input$n_dimensions, value = input$n_dimensions)
@@ -172,6 +182,13 @@ shinyServer(
             ## ~~~~~~~~~~
             if(input$reduce != "None") {
                 to_remove <- get.reduction(input, space, session)
+
+                ## Return error
+                if(class(to_remove) == "character") {
+                    plot.error(to_remove)
+                    return(NULL)
+                }
+
             }
 
             ## ~~~~~~~~~~
@@ -180,24 +197,24 @@ shinyServer(
             ## Default plotting options
             defaults <- list()
             defaults$pch <- 19
-            defaults$col1 <- "black"
+            defaults$palette <- c("black", "grey")
             defaults$lab <- "Trait"
             defaults$cex <- 1
 
-            ## Background plot
+            ## Background plot
             if(input$reduce == "None") {            
                 plot(space[, c(input$axis_1, input$axis_2)],
                     pch = defaults$pch,
                     xlim = defaults$xlim,
                     ylim = defaults$ylim,
-                    col = "black",
+                    col = defaults$palette[1],
                     main = NULL,
                     xlab = paste(defaults$lab, input$axis_1),
                     ylab = paste(defaults$lab, input$axis_2),
                     cex = defaults$cex)
 
             } else {
-                ## Selecting which points to remove
+                ## Selecting which points to remove
                 if(input$inverse_remove) {
                     points_remove <- !to_remove
                 } else {
@@ -208,7 +225,7 @@ shinyServer(
                     pch = defaults$pch,
                     xlim = defaults$xlim,
                     ylim = defaults$ylim,
-                    col = "grey",
+                    col = defaults$palette[2],
                     main = NULL,
                     xlab = paste(defaults$lab, input$axis_1),
                     ylab = paste(defaults$lab, input$axis_2),
@@ -217,7 +234,7 @@ shinyServer(
                 ## Plotting the points
                 points(space[!points_remove, c(input$axis_1, input$axis_2)],
                        pch = defaults$pch,
-                       col = "black",
+                       col = defaults$palette[1],
                        cex = defaults$cex)
             }
 
@@ -236,8 +253,15 @@ shinyServer(
                 if(input$reduce == "None") {
                     groups <- space
                 } else {
-                    groups <- dispRity::custom.subsets(space, group = list("Full space" = rownames(space),
-                                                                           "Reduced space" = rownames(space)[points_remove]))
+
+                    if(exists("points_remove")) {
+                        return("Error in table.")
+                    }
+
+
+                    groups <- dispRity::custom.subsets(space,
+                                                       group = list("Full space" = rownames(space),
+                                                                    "Reduced space" = rownames(space)[points_remove]))
                 }
 
                 ## Measure disparity
@@ -256,7 +280,7 @@ shinyServer(
                 rownames(output) <- output$subsets
                 colnames(output)[3] <- metric_name
 
-                ## Print output
+                ## Print output
                 output[,-1]
             })
         })
@@ -264,16 +288,7 @@ shinyServer(
 
         ## Output plot
         output$plot.ui <- renderUI({
-
-            error <- NULL
-
-            if (is.null(error)) {
-                plotOutput("plot_out", height = 750, width = 750)
-                #TODO: make the plot size dynamic!!!!
-            } else {
-                plotOutput("plot_out")
-                plotError(tree)
-            }
+            plotOutput("plot_out")
         })
     }
 )
