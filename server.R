@@ -1,7 +1,7 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$n_dimensions <- 10
+# input$n_dimensions <- 3
 # input$n_elements <- 300
 # input$distributions <- "Uniform"
 # input$reduce <- "Limit"
@@ -10,7 +10,7 @@
 # input$runif_max <- 1
 # input$axis_2 <- 2
 # input$axis_1 <- 1
-# input$scree <- "Decreasing"
+# input$scree <- "LogNormal"
 # input$refresh <- 0
 
 
@@ -25,9 +25,6 @@ source("helpers.R")
 ## Get the space details
 ## Return a space, or an error message to be written to output.
 get.space <- function(input) {
-
-    ## Default error
-    space <- "Space parameters not specified."
 
     ## Getting the arguments
     space_args <- list()
@@ -72,16 +69,16 @@ get.space <- function(input) {
     }
 
     switch(input$scree,
-        Uniform    = {
+        "Uniform"    = {
             space_args$scree <- NULL
         },
-        Decreasing = {
+        "Decreasing" = {
             scree <- rev(cumsum(rep(1/input$n_dimensions, input$n_dimensions)))
-            space_args$scree <- scree/sum(scree)
+            space_args$scree <- scree#scree/sum(scree)
         },
-        LogNormal   = {
-            scree <- cumprod(rep(1/input$n_dimensions, input$n_dimensions))
-            space_args$scree <- scree/sum(scree)
+        "LogNormal"  = {
+            scree <- c(1, cumprod(rep(1/input$n_dimensions, input$n_dimensions)))[-input$n_dimensions+1]
+            space_args$scree <- scree#scree/sum(scree)
         }
     )
 
@@ -92,6 +89,11 @@ get.space <- function(input) {
 
     ## Making the space
     space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
+
+    if(!is.matrix(space)) {
+        return("Impossible to generate space.\nTry changing the parameters combinations\nor the distribution parameters.")
+    }
+
     return(space)
 }
 
@@ -121,25 +123,25 @@ get.reduction <- function(input, space, session) {
 
     ## Default tuning
     tuning <- list(max = 50, tol = 0.01)
-    #TG: make these parameters dynamic, the bigger the space, the rougher the parameter.
-    #TG: input$n_dimensions * input$n_elements
 
-
-    #TODO Check the parameters (if available go straight for it, if missing use optim)
-    #TODO + add to remove a "relative" option
-
-    ## Reducing the space
-    remove <- reduce.space(space, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE)
-
-    if(all(remove == FALSE)) {
-        return("Impossible to remove data.\nTry changing the parameters combinations\n or the \"remove\" value.")
+    ## Make the dimensions proportional?
+    if(input$proportion_remove) {
+        ## Getting the range per dimension
+        scree <- apply(space, 2, FUN = function(X) diff(range(X)))/diff(range(space[,1]))
+        ## Scaling each dimension to have the same range
+        space_to_reduce <- space %*% diag(1/scree)
+    } else {
+        space_to_reduce <- space
     }
 
+    ## Reducing the space
+    remove <- reduce.space(space_to_reduce, type, input$remove, tuning, verbose = TRUE, return.optim = FALSE)
 
-    ## Update the parameter value
-    # shiny::updateNumericInput(session, "optimise", value = remove$optim)
+    if(all(remove) || all(!remove)) {
+        return("Impossible to remove data.\nTry hitting the \"refresh\" button,\nchanging the parameters combinations\nor the \"remove\" value.")
+    }
+
     return(remove)
-    # return(remove$remove)
 }
 
 ## Generate the seeds for plotting
@@ -268,9 +270,9 @@ shinyServer(
                 metric_name <- "sum of variances"
 
                 ## Error handling in metrics
-                if(!exists("points_remove")) {
-                    return("Error in table.")
-                }
+                # if(!exists("points_remove")) {
+                #     return("Error in table.")
+                # }
 
                 ## Measure disparity
                 disparity <- dispRity::dispRity(groups, metric = metric)

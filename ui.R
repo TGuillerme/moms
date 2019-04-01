@@ -78,7 +78,7 @@ shinyUI(fluidPage(
           ## Parameters
           helpText("Variance is uniformly decreasing on each axis.")
         ),
-        conditionalPanel(condition = "input.scree == \"LogNormal\"",
+        conditionalPanel(condition = "input.scree == \"Log-normal\"",
           ## Parameters
           helpText("Variance is log-normally decreasing on each axis.")
         ),
@@ -141,16 +141,10 @@ shinyUI(fluidPage(
                       });
                       ')),
 
-        plotOutput("plot_out", width = "100%", height = "auto"),
-      
-        # fluidRow(  #TG: toggle on if necessary
-          # column(5, offset = 2,
-            ## Some results
-            h4("Observations"),
-            tableOutput("table_out")
-        #   )
-        # )
-      ),
+        plotOutput("plot_out", width = "100%", height = "auto"),    
+        h3("Multidimensional space occupancy (disparity):"),
+        tableOutput("table_out")
+    ),
 
       ## Main panel
       column(width = 2,
