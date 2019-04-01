@@ -254,11 +254,10 @@ shinyServer(
                     groups <- space
                 } else {
 
-                    if(exists("points_remove")) {
+                    ## Error in points remove
+                    if(!exists("points_remove")) {
                         return("Error in table.")
                     }
-
-
                     groups <- dispRity::custom.subsets(space,
                                                        group = list("Full space" = rownames(space),
                                                                     "Reduced space" = rownames(space)[points_remove]))
@@ -267,6 +266,11 @@ shinyServer(
                 ## Measure disparity
                 metric <- c(sum, dispRity::variances) ; warning("Fix metric input")
                 metric_name <- "sum of variances"
+
+                ## Error handling in metrics
+                if(!exists("points_remove")) {
+                    return("Error in table.")
+                }
 
                 ## Measure disparity
                 disparity <- dispRity::dispRity(groups, metric = metric)
@@ -283,12 +287,10 @@ shinyServer(
                 ## Print output
                 output[,-1]
             })
-        })
-
-
-        ## Output plot
-        output$plot.ui <- renderUI({
-            plotOutput("plot_out")
-        })
+        },
+        height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/6.5, 0))
+        # height = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0)),
+        # width = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0))
+        )
     }
 )

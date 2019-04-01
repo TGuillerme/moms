@@ -131,7 +131,17 @@ shinyUI(fluidPage(
       ## Main panel
       column(width = 6,
         ## Plots the algorithm results
-        uiOutput("plot.ui"),
+        # uiOutput("plot.ui", width = "auto"),
+
+        tags$head(tags$script('$(document).on("shiny:connected", function(e) {
+                      Shiny.onInputChange("innerWidth", window.innerWidth);
+                      });
+                      $(window).resize(function(e) {
+                      Shiny.onInputChange("innerWidth", window.innerWidth);
+                      });
+                      ')),
+
+        plotOutput("plot_out", width = "100%", height = "auto"),
       
         # fluidRow(  #TG: toggle on if necessary
           # column(5, offset = 2,
