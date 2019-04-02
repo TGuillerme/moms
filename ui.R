@@ -11,7 +11,7 @@ shinyUI(fluidPage(
     fluidRow(
 
       ## Side Bar
-      column(width = 4,
+      column(width = 3,
 
         ## ---------------
         ## Space parameters
@@ -126,27 +126,12 @@ shinyUI(fluidPage(
               helpText("Whether to remove data uniformly across each dimensions (untick) or proportional (tick).")
             )
 
-        ),
+        )
 
-        # ## Limit removal
-        # conditionalPanel(condition = "input.reduce == \"Limit\"",
-        #   # sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
-        #   ## input$optimise
-        #   # numericInput("optimise", label = h5("Radius around the centre"), value = 0),
-        #   # helpText("The radius around the centre from which to keep or select the points. If this is left empty, it is estimated automatically to match the requested proportion."),
-        #   ## input$reduce_type -> TRUE = to_remove, FALSE = !to_remove
-        #   checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
-        # ),
-
-        hr(),
-        ## -------
-        ## Disparity metric (and display)
-        ## -------
-        h2("Disparity metric"),
-
-        ## Metric - input$level1
-        selectizeInput("metric", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
-        helpText("Select one or two metrics (e.g. 'ellipsoid.volume' or 'sum variances').")
+        # hr(),
+        # ## -------
+        # ## Placeholder for dispRity metrics
+        # ## -------
 
       ),
 
@@ -170,7 +155,42 @@ shinyUI(fluidPage(
     ),
 
       ## Left panel
-      column(width = 2,
+      column(width = 3,
+
+        ## -------
+        ## Disparity metric (and display)
+        ## -------
+        h2("Disparity metric"),
+
+        ## Metric - input$level1
+        selectInput("metric_choice", label = "Metric type", choices = list("Volume", "Density", "Position", "Specific"), selected = "Volume"),
+
+        conditionalPanel(condition = "input.metric_choice == \"Volume\"",
+          selectInput("metric1", label = h5("Volume metric"), choices = list("Sum of variances", "Sum of ranges", "Product of variances", "Product of ranges", "Ellipsoid volume", "n-ball volume", "Median distance from centroid (Euclidean)", "Median distance from centroid (Manhattan)"), selected = "Sum of Variance")
+          ),
+
+        conditionalPanel(condition = "input.metric_choice == \"Density\"",
+          selectInput("metric2", label = h5("Density metric"), choices = list("Mean pairwise distance (Euclidean)", "Mean pairwise distance (Manhattan)", "Minimum spanning tree length"), selected = "Mean pairwise distance (Euclidean)")
+          ),
+
+        conditionalPanel(condition = "input.metric_choice == \"Position\"",
+          selectInput("metric3", label = h5("Position metric"), choices = list("Median distance from centre (Euclidean)", "Median distance from centre (Manhattan)"), selected = "Distance from centre (Euclidean)")
+          ),
+
+        #TODO: add the dtt and the geomorph metrics
+        conditionalPanel(condition = "input.metric_choice == \"Specific\"",
+          selectizeInput("metric4", label = "Personalised metric", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
+          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' or 'sum variances')."),
+          checkboxInput("metric_arguments", label = "Optional arguments", value = FALSE),
+          conditionalPanel(condition = "input.metric_arguments == true",
+            ## Parameters
+            textInput("metric_optional_arguments", label = "Optional arguments", value = "..."),
+            helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
+          )
+        ),
+
+        hr(),
+
         h3("Display"),
         numericInput("axis_1", label = h5("Horizontal axis"), value = 1, min = 1),
         numericInput("axis_2", label = h5("Vertical axis"), value = 2, min = 1),

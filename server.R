@@ -368,24 +368,89 @@ shinyServer(
 
                     ## Error in points remove
                     if(!exists("points_remove")) {
-                        return("Error in table.")
+                        return("Reduction parameter did not remove any points.\nTry different parameter combinations.")
                     }
                     groups <- dispRity::custom.subsets(space,
                                                        group = list("Full space" = rownames(space),
                                                                     "Reduced space" = rownames(space)[points_remove]))
                 }
 
-                ## Measure disparity
-                metric <- c(sum, dispRity::variances) ; warning("Fix metric input")
-                metric_name <- "sum of variances"
+                dispRity_args <- list(data = groups)
 
-                ## Error handling in metrics
-                # if(!exists("points_remove")) {
-                #     return("Error in table.")
-                # }
+                ## Metrics selection
+                switch(input$metric_choice,
+                    Volume = {
+                        switch(input$metric1,
+                            "Sum of variances" = {
+                                dispRity_args$metric <- c(sum, variances)
+                            },
+                            "Sum of ranges" = {
+                                dispRity_args$metric <- c(sum, ranges)
+                            },
+                            "Product of variances" = {
+                                dispRity_args$metric <- c(prod, variances)
+                            },
+                            "Product of ranges" = {
+                                dispRity_args$metric <- c(prod, ranges)
+                            },
+                            "Ellipsoid volume" = {
+                                dispRity_args$metric <- ellipse.volume
+                            },
+                            "n-ball volume" = {
+                                dispRity_args$metric <- n.ball.volume
+                            },
+                            "Median distance from centroid (Euclidean)" = {
+                                dispRity_args$metric <- c(median, centroids)
+                                dispRity_args$method <- "euclidean"
+                            },
+                            "Median distance from centroid (Manhattan)" = {
+                                dispRity_args$metric <- c(median, centroids)
+                                dispRity_args$method <- "manhattan"
+                            }
+                        )
+                    },
+                    Density = {
+                        switch(input$metric2,
+                            "Mean pairwise distance (Euclidean)" = {
+                                dispRity_args$metric <- c(median, pairwise.dist)
+                                dispRity_args$method <- "euclidean"
+                            },
+                            "Mean pairwise distance (Manhattan)" = {
+                                dispRity_args$metric <- c(median, pairwise.dist)
+                                dispRity_args$method <- "manhattan"
+                            },
+                            "Minimum spanning tree length" = {
+                                dispRity_args$metric <- span.tree.length
+                            }
+                        )
+                    },
+                    Position = {
+                        switch(input$metric3,
+                            "Median distance from centre (Euclidean)" = {
+                                dispRity_args$metric <- c(median, centroids)
+                                dispRity_args$method <- "euclidean"
+                                dispRity_args$centroid <- 0
+                            },
+                            "Median distance from centre (Manhattan)" = {
+                                dispRity_args$metric <- c(median, centroids)
+                                dispRity_args$method <- "manhattan"
+                                dispRity_args$centroid <- 0
+                            }
+                        )
+                    },
+                    Specific = {
+                        ## Personalised metric
+                        dispRity_args$metric <- eval(parse(text = input$metric4))
+                        ## Optional arguments
+                        if(input$metrics_arguments) {
+                            return("Optional arguments for personalised metrics are not yet available in this version.")
+                            # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
+                        }
+                    }
+                )
 
-                ## Measure disparity
-                disparity <- dispRity::dispRity(groups, metric = metric)
+                ## Measuring disparity
+                disparity <- do.call(dispRity, dispRity_args)
 
                 ## Rendering the output table
                 output <- summary(disparity)
@@ -394,12 +459,15 @@ shinyServer(
                 
                 ## Add names
                 rownames(output) <- output$subsets
-                colnames(output)[3] <- metric_name
+                colnames(output)[3] <- input$metric1
 
                 ## Print output
                 output[,-1]
             })
         },
+
+
+        ## Plot size
         height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/6.5, 0))
         # height = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0)),
         # width = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0))
