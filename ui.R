@@ -17,7 +17,7 @@ shinyUI(fluidPage(
         ## Space parameters
         ## ---------------
 
-        h3("Multidimensional space parameters"),
+        h2("Multidimensional space parameters"),
         ## Number of dimensions input - input$n_dimensions
         sliderInput("n_dimensions", label = "Number of dimensions:", min = 2, max = 100, value = 3),
         ## Number of elements input - input$n_elements
@@ -108,12 +108,13 @@ shinyUI(fluidPage(
         ),
 
 
+        hr(),
         ## --------------------
         ## Disrupt space
         ## --------------------
 
         ## Modify space - input$reduce
-        selectInput("reduce", label = h3("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density"), selected = "None"),
+        selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density"), selected = "None"),
 
         ## All removals
         conditionalPanel(condition = "input.reduce != \"None\"",
@@ -137,10 +138,11 @@ shinyUI(fluidPage(
         #   checkboxInput("reduce_type", label = "Remove outside the radius", value = FALSE)
         # ),
 
+        hr(),
         ## -------
         ## Disparity metric (and display)
         ## -------
-        h3("Disparity metric"),
+        h2("Disparity metric"),
 
         ## Metric - input$level1
         selectizeInput("metric", label = "Metric 1", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
@@ -153,6 +155,7 @@ shinyUI(fluidPage(
         ## Plots the algorithm results
         # uiOutput("plot.ui", width = "auto"),
 
+        ## Dynamic plot window resizing
         tags$head(tags$script('$(document).on("shiny:connected", function(e) {
                       Shiny.onInputChange("innerWidth", window.innerWidth);
                       });
@@ -166,11 +169,12 @@ shinyUI(fluidPage(
         tableOutput("table_out")
     ),
 
-      ## Main panel
+      ## Left panel
       column(width = 2,
         h3("Display"),
         numericInput("axis_1", label = h5("Horizontal axis"), value = 1, min = 1),
         numericInput("axis_2", label = h5("Vertical axis"), value = 2, min = 1),
+        selectInput("color_scheme", label = h5("Colours"), choices = list("Greyscale", "Contrast", "Pink", "Rainbow"), selected = "Greyscale"),
         
         ## Refresh button - input$refresh
         hr(),

@@ -220,7 +220,7 @@ get.reduction <- function(input, space, session) {
     }
 
     ## Reducing the space
-    remove <- try(reduce.space(space_to_reduce, type, input$remove, tuning, verbose = TRUE, return.optim = FALSE), silent = TRUE)
+    remove <- try(reduce.space(space_to_reduce, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE), silent = TRUE)
 
     if(class(remove)== "try-error") {
         return(remove)
@@ -293,9 +293,25 @@ shinyServer(
             ## Default plotting options
             defaults <- list()
             defaults$pch <- 19
-            defaults$palette <- c("black", "grey")
             defaults$lab <- "Trait"
             defaults$cex <- 1
+
+            ## colours
+            switch(input$color_scheme,
+                Greyscale = {
+                    defaults$palette <- list("black", "grey")
+                    },
+                Contrast  = {
+                    defaults$palette <- list("blue", "orange")
+                    },
+                Pink      = {
+                    defaults$palette <- list("purple", "pink")
+                    },
+                Rainbow   = {
+                    defaults$palette <- list(rainbow(input$n_elements*input$remove), "grey")
+                    }
+                )
+
 
             ## Background plot
             if(input$reduce == "None") {            
@@ -303,7 +319,7 @@ shinyServer(
                     pch = defaults$pch,
                     xlim = defaults$xlim,
                     ylim = defaults$ylim,
-                    col = defaults$palette[1],
+                    col = defaults$palette[[1]],
                     main = NULL,
                     xlab = paste(defaults$lab, input$axis_1),
                     ylab = paste(defaults$lab, input$axis_2),
@@ -321,7 +337,7 @@ shinyServer(
                     pch = defaults$pch,
                     xlim = defaults$xlim,
                     ylim = defaults$ylim,
-                    col = defaults$palette[2],
+                    col = defaults$palette[[2]],
                     main = NULL,
                     xlab = paste(defaults$lab, input$axis_1),
                     ylab = paste(defaults$lab, input$axis_2),
@@ -330,7 +346,7 @@ shinyServer(
                 ## Plotting the points
                 points(space[!points_remove, c(input$axis_1, input$axis_2)],
                        pch = defaults$pch,
-                       col = defaults$palette[1],
+                       col = defaults$palette[[1]],
                        cex = defaults$cex)
             }
 
