@@ -7,3 +7,5 @@
 *.rda
 *.RData
 .Rapp.history
+
+input_test.txt
