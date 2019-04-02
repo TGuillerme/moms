@@ -103,7 +103,8 @@ shinyUI(fluidPage(
         ),
         conditionalPanel(condition = "input.correlation == \"Upload\"",
           ## Parameters
-          helpText("Upload a correlation matrix in csv format.")
+          fileInput("correlation_value_csv", label = "Select a matrix in csv format."),
+          helpText("The matrix must have no header. The diagonal and the upper triangle are ignored.")
         ),
 
 

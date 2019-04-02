@@ -62,6 +62,8 @@ get.space <- function(input) {
             single_parameters <- NULL
         }
     )
+
+    ## Handle distribution arguments
     if(!is.null(single_distribution)) {
         ## Set a single distribution
         space_args$distribution <- single_distribution
@@ -148,7 +150,22 @@ get.space <- function(input) {
             space_args$cor.matrix <- cor.matrix
         },
         Upload       = {
-            return("Upload input not implemented yet.")
+            correlation_value_csv <- input$correlation_value_csv
+            if(!is.null(correlation_value_csv)) {
+                ## Read the matrix
+                cor.matrix <- as.matrix(read.csv(file = correlation_value_csv$name, header = FALSE))
+                diag(cor.matrix) <- 1
+                cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
+                if(any(cor.matrix > 1)) {
+                    return("Correlations cannot be > 1.")
+                }
+                if(ncol(cor.matrix) != input$n_dimensions) {
+                    return(paste0("Correlation matrix is ", ncol(cor.matrix), "x", ncol(cor.matrix), " but the number of dimensions is ", input$n_dimensions, "."))
+                }
+                space_args$cor.matrix <- cor.matrix
+            } else {
+                return("Impossible to read the uploaded csv file.\nTry another file or toggling to \"Vector\" or \"Matrix\" options.")
+            }
         }
     )
 
