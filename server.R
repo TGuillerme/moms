@@ -129,7 +129,23 @@ get.space <- function(input) {
             space_args$cor.matrix <- cor.matrix
         },
         Matrix       = {
-            return("Matrix input not implemented yet.")
+            ## Check if any value is > 1
+            if(any(input$cor.matrix > 1)) {
+                return("Correlations cannot be > 1.")
+            }
+            ## Error if more than 15 dimensions
+            if(any(input$cor.matrix > 1)) {
+                return("Correlation:Matrix option is limited to 15 dimensions.\nTry toggling to \"Vector\" or \"Upload\" options.")
+            }
+            cor.matrix <- input$cor.matrix
+            ## Mirroring the lower triangle
+            cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
+            ## Check if the Choleski decomposition
+            test <- try(chol(cor.matrix), silent = TRUE)
+            if(class(test) == "try-error") {
+                return("Correlation values lead to error in Choleski decomposition.\nTry with different values.")
+            }
+            space_args$cor.matrix <- cor.matrix
         },
         Upload       = {
             return("Upload input not implemented yet.")
@@ -137,8 +153,11 @@ get.space <- function(input) {
     )
 
     ## Making the space
-    space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
+    space <- try(do.call(dispRity::space.maker, space_args, quote = TRUE), silent = TRUE)
 
+    if(class(space) == "try-error") {
+        return(as.character(space))
+    }
     if(!is.matrix(space)) {
         return("Impossible to generate space.\nTry changing the parameters combinations\nor the distribution parameters.")
     }
@@ -210,11 +229,10 @@ shinyServer(
             ## ~~~~~~~~~~
             space <- get.space(input)
 
-            # ## Update the specific distributions
-            # shiny::updateTextInput(session, "distribution_list", value = paste0("list(", paste(sample(c("rnorm", "runif", "rlnorm"), input$n_dimensions, replace = TRUE), collapse = ", "), ")"))
-
-            # ## Update the correlation
-            # shiny::updateTextInput(session, "correlation_value_vector", value = paste(paste0("0.", seq(input$n_dimensions)), collapse = ","))
+            ## Update the matrix input
+            if(input$n_dimensions != nrow(input$cor.matrix) && input$n_dimensions < 15) {
+                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
+            }
 
             ## Return error
             if(class(space) == "character") {

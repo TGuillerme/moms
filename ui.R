@@ -97,8 +97,9 @@ shinyUI(fluidPage(
           helpText("Enter the correlation between each axis as the lower diagonal of a correlation matrix (separated by a comma). For example, for three dimensions D1, D2, D3, D4 enter 0.1,0.2,0.3,0.4,0.5,0.6 for a correlation of respectively 0.1 for D1 and D2; 0.2 for D1,D3; 0.3 for D1,D4;, 0.4 for D2,D3; 0.5 for D2,D4; and 0.6 for D3,D4.")
         ),
         conditionalPanel(condition = "input.correlation == \"Matrix\"",
+          shinyMatrix::matrixInput(inputId = "cor.matrix", value = diag(3), class = "numeric"),
           ## Parameters
-          helpText("Enter the correlation value between each axis. The upper triangle and the diagonal are ignored.")
+          helpText("Enter the correlation value between each axis. The upper triangle and the diagonal are ignored. Note that this input option is ignored if using more than 15 dimensions.")
         ),
         conditionalPanel(condition = "input.correlation == \"Upload\"",
           ## Parameters
