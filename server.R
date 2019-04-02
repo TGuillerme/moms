@@ -108,10 +108,33 @@ get.space <- function(input) {
         }
     )
 
-    ## Default extra arguments
-    length_args <- length(space_args)
-    space_args[length_args + 1] <- list(NULL)
-    names(space_args)[length_args + 1] <- c("cor.matrix")
+    ## Correlationa rgument
+    switch(input$correlation,
+        Uncorrelated = {
+            space_args$cor.matrix <- NULL
+        },
+        Vector       = {
+            correlation_values <- as.numeric(strsplit(input$correlation_value_vector, split = ",")[[1]])
+            cor.matrix <- matrix(1, input$n_dimensions, input$n_dimensions)
+            ## Check vector length
+            if(length(correlation_values) != length(which(lower.tri(cor.matrix)))) {
+                return(paste0("The number of correlations input does not match the ", length(which(lower.tri(cor.matrix))), " possible correlations."))
+            }
+            if(any(correlation_values > 1)) {
+                return("Correlations cannot be > 1.")
+            }
+            ## Fill the matrix
+            cor.matrix[lower.tri(cor.matrix)] <- correlation_values
+            cor.matrix[upper.tri(cor.matrix)] <- correlation_values
+            space_args$cor.matrix <- cor.matrix
+        },
+        Matrix       = {
+            return("Matrix input not implemented yet.")
+        },
+        Upload       = {
+            return("Upload input not implemented yet.")
+        }
+    )
 
     ## Making the space
     space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
@@ -186,6 +209,12 @@ shinyServer(
             ## Making the space
             ## ~~~~~~~~~~
             space <- get.space(input)
+
+            # ## Update the specific distributions
+            # shiny::updateTextInput(session, "distribution_list", value = paste0("list(", paste(sample(c("rnorm", "runif", "rlnorm"), input$n_dimensions, replace = TRUE), collapse = ", "), ")"))
+
+            # ## Update the correlation
+            # shiny::updateTextInput(session, "correlation_value_vector", value = paste(paste0("0.", seq(input$n_dimensions)), collapse = ","))
 
             ## Return error
             if(class(space) == "character") {

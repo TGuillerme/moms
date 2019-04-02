@@ -90,9 +90,21 @@ shinyUI(fluidPage(
         ),
 
         ## Correlation - input$correlation
-        # selectInput("correlation", label = "Dimensions correlation", choices = list("Uniform", "Decreasing", "LogNormal"), selected = "Uniform"),
-        # helpText("Variance is uniformly decreasing on each axis.")
-        # TODO: add correlation profiles.
+        selectInput("correlation", label = h5("Dimensions correlation"), choices = list("Uncorrelated", "Matrix", "Vector", "Upload"), selected = "Uncorrelated"),
+        conditionalPanel(condition = "input.correlation == \"Vector\"",
+          textInput("correlation_value_vector", label = "Correlations", value = "0.1,0.2,0.3"),
+          ## Parameters
+          helpText("Enter the correlation between each axis as the lower diagonal of a correlation matrix (separated by a comma). For example, for three dimensions D1, D2, D3, D4 enter 0.1,0.2,0.3,0.4,0.5,0.6 for a correlation of respectively 0.1 for D1 and D2; 0.2 for D1,D3; 0.3 for D1,D4;, 0.4 for D2,D3; 0.5 for D2,D4; and 0.6 for D3,D4.")
+        ),
+        conditionalPanel(condition = "input.correlation == \"Matrix\"",
+          ## Parameters
+          helpText("Enter the correlation value between each axis. The upper triangle and the diagonal are ignored.")
+        ),
+        conditionalPanel(condition = "input.correlation == \"Upload\"",
+          ## Parameters
+          helpText("Upload a correlation matrix in csv format.")
+        ),
+
 
         ## --------------------
         ## Disrupt space
