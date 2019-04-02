@@ -3,7 +3,10 @@
 # input <- list()
 # input$n_dimensions <- 3
 # input$n_elements <- 300
-# input$distributions <- "Uniform"
+# input$distributions <- "Specific"
+# input$distribution_list <- "list(rnorm, runif, rlnorm)"
+# input$optional_arguments <- TRUE
+# input$distribution_arguments <- "list(list(mean = 0, sd = 1), list(NULL), list(meanlog = 5))"
 # input$reduce <- "Limit"
 # input$remove <- 0.5
 # input$runif_min <- 0
@@ -65,7 +68,30 @@ get.space <- function(input) {
         space_args$arguments <- single_parameters
     } else {
         ## Use multiple distributions (needs check)
-        return("Multiple distributions not implemented yet.")
+        space_args$distribution <- eval(parse(text = input$distribution_list))
+
+        ## Check space_args$distributions dimension and class
+        if(length(space_args$distribution) != input$n_dimensions) {
+            return("The number of specific distributions does not match the number of dimensions.")
+        }
+        if(any(lapply(space_args$distribution, class) != "function")) {
+            return("At least one specific distribution is not a function from the stats package.")
+        }
+
+        ## Optional arguments
+        if(input$optional_arguments) {
+            space_args$arguments <- eval(parse(text = input$distribution_arguments))
+
+            ## Check space_args$arguments dimension and class
+            if(length(space_args$arguments) != input$n_dimensions) {
+                return("The number of specific optional arguments does not match the number of dimensions.")
+            }
+            if(any(lapply(space_args$arguments, class) != "list")) {
+                return("At least one specific optional argument is not a list.")
+            }
+        } else {
+            space_args$arguments <- NULL
+        }
     }
 
     switch(input$scree,

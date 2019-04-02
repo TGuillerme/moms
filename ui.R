@@ -63,8 +63,14 @@ shinyUI(fluidPage(
         ## Multiple distributions
         conditionalPanel(condition = "input.distributions == \"Specific\"",
           ## Distributions for D1
-          textInput("distribution_list", label = "Distribution list", value = "rnorm, runif, rlnorm"),
-          helpText("Enter the distributions as a list of function names from the 'stats' package separated by a comma (e.g. rnorm, runif for the normal distribution to be applied to D1 and the uniform distribution to by applied to D2). Make sure you enter the same number of distribution functions as the number of requested distributions.")
+          textInput("distribution_list", label = "Distribution list", value = "list(rnorm, runif, rlnorm)"),
+          helpText("Enter the distributions as a list of function names from the 'stats' package (e.g. rnorm for the normal distribution to be applied to dimensions 1, etc.)."),
+          checkboxInput("optional_arguments", label = "Optional arguments", value = FALSE),
+          conditionalPanel(condition = "input.optional_arguments == true",
+            ## Parameters
+            textInput("distribution_arguments", label = "Argument list", value = "list(list(mean = 0, sd = 1), list(), list(meanlog = 5))"),
+            helpText("Enter a list of arguments to be applied to each distribution above. The format should be \"c(list(arguments1), list(arguments2), etc..)\" where \"arguments1\" are used for the first distribution, etc. If one argument needs no specific argument (default), use an empty list: list().")
+          )
           ## TODO: add optional arguments
         ),
 
