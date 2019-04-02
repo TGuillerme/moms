@@ -203,7 +203,11 @@ get.reduction <- function(input, space, session) {
     }
 
     ## Reducing the space
-    remove <- reduce.space(space_to_reduce, type, input$remove, tuning, verbose = TRUE, return.optim = FALSE)
+    remove <- try(reduce.space(space_to_reduce, type, input$remove, tuning, verbose = TRUE, return.optim = FALSE), silent = TRUE)
+
+    if(class(remove)== "try-error") {
+        return(remove)
+    }
 
     if(all(remove) || all(!remove)) {
         return("Impossible to remove data.\nTry hitting the \"refresh\" button,\nchanging the parameters combinations\nor the \"remove\" value.")
