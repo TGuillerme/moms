@@ -1,237 +1,9 @@
-# ## DEBUG
-# stop("DEBUG server")
-# input <- list()
-# input$n_dimensions <- 3
-# input$n_elements <- 300
-# input$distributions <- "Specific"
-# input$distribution_list <- "list(rnorm, runif, rlnorm)"
-# input$optional_arguments <- TRUE
-# input$distribution_arguments <- "list(list(mean = 0, sd = 1), list(NULL), list(meanlog = 5))"
-# input$reduce <- "Limit"
-# input$remove <- 0.5
-# input$runif_min <- 0
-# input$runif_max <- 1
-# input$axis_2 <- 2
-# input$axis_1 <- 1
-# input$scree <- "LogNormal"
-# input$refresh <- 0
-
-
-
 library(shiny)
 library(dispRity)
 library(moms)
 
 ## Load the R functions
 source("helpers.R")
-
-## Get the space details
-## Return a space, or an error message to be written to output.
-get.space <- function(input) {
-
-    ## Getting the arguments
-    space_args <- list()
-    ## Base arguments
-    space_args$elements <- input$n_elements
-    space_args$dimensions <- input$n_dimensions
-
-    ## Distributions
-    switch(input$distributions,
-        Normal    = {
-            single_distribution <- rnorm
-            single_parameters <- list(list("mean" = input$rnorm_mean, "sd" = input$rnorm_sd))
-        },
-        LogNormal = {
-            single_distribution <- rlnorm
-            single_parameters <- list(list("meanlog" = input$rlnorm_mean, "sdlog" = input$rlnorm_sd))
-        },
-        Uniform   = {
-            single_distribution <- runif
-            single_parameters <- list(list("min" = input$runif_min, "max" = input$runif_max))
-        },
-        Gamma     = {
-            single_distribution <- rgamma
-            single_parameters <- list(list("shape" = input$rgamma_shape, "rate" = input$rgamma_rate))
-        },
-        Poisson   = {
-            single_distribution <- rpois
-            single_parameters <- list(list("lambda" = input$rpois_lambda))
-        },
-        Specific  = {
-            single_distribution <- NULL
-            single_parameters <- NULL
-        }
-    )
-
-    ## Handle distribution arguments
-    if(!is.null(single_distribution)) {
-        ## Set a single distribution
-        space_args$distribution <- single_distribution
-        space_args$arguments <- single_parameters
-    } else {
-        ## Use multiple distributions (needs check)
-        space_args$distribution <- eval(parse(text = input$distribution_list))
-
-        ## Check space_args$distributions dimension and class
-        if(length(space_args$distribution) != input$n_dimensions) {
-            return("The number of specific distributions does not match the number of dimensions.")
-        }
-        if(any(lapply(space_args$distribution, class) != "function")) {
-            return("At least one specific distribution is not a function from the stats package.")
-        }
-
-        ## Optional arguments
-        if(input$optional_arguments) {
-            space_args$arguments <- eval(parse(text = input$distribution_arguments))
-
-            ## Check space_args$arguments dimension and class
-            if(length(space_args$arguments) != input$n_dimensions) {
-                return("The number of specific optional arguments does not match the number of dimensions.")
-            }
-            if(any(lapply(space_args$arguments, class) != "list")) {
-                return("At least one specific optional argument is not a list.")
-            }
-        } else {
-            space_args$arguments <- NULL
-        }
-    }
-
-    switch(input$scree,
-        "Uniform"    = {
-            space_args$scree <- NULL
-        },
-        "Decreasing" = {
-            scree <- rev(cumsum(rep(1/input$n_dimensions, input$n_dimensions)))
-            space_args$scree <- scree#scree/sum(scree)
-        },
-        "LogNormal"  = {
-            scree <- c(1, cumprod(rep(1/input$n_dimensions, input$n_dimensions)))[-input$n_dimensions+1]
-            space_args$scree <- scree#scree/sum(scree)
-        }
-    )
-
-    ## Correlationa rgument
-    switch(input$correlation,
-        Uncorrelated = {
-            space_args$cor.matrix <- NULL
-        },
-        Vector       = {
-            correlation_values <- as.numeric(strsplit(input$correlation_value_vector, split = ",")[[1]])
-            cor.matrix <- matrix(1, input$n_dimensions, input$n_dimensions)
-            ## Check vector length
-            if(length(correlation_values) != length(which(lower.tri(cor.matrix)))) {
-                return(paste0("The number of correlations input does not match the ", length(which(lower.tri(cor.matrix))), " possible correlations."))
-            }
-            if(any(correlation_values > 1)) {
-                return("Correlations cannot be > 1.")
-            }
-            ## Fill the matrix
-            cor.matrix[lower.tri(cor.matrix)] <- correlation_values
-            cor.matrix[upper.tri(cor.matrix)] <- correlation_values
-            space_args$cor.matrix <- cor.matrix
-        },
-        Matrix       = {
-            ## Check if any value is > 1
-            if(any(input$cor.matrix > 1)) {
-                return("Correlations cannot be > 1.")
-            }
-            ## Error if more than 15 dimensions
-            if(any(input$cor.matrix > 1)) {
-                return("Correlation:Matrix option is limited to 15 dimensions.\nTry toggling to \"Vector\" or \"Upload\" options.")
-            }
-            cor.matrix <- input$cor.matrix
-            ## Mirroring the lower triangle
-            cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
-            ## Check if the Choleski decomposition
-            test <- try(chol(cor.matrix), silent = TRUE)
-            if(class(test) == "try-error") {
-                return("Correlation values lead to error in Choleski decomposition.\nTry with different values.")
-            }
-            space_args$cor.matrix <- cor.matrix
-        },
-        Upload       = {
-            correlation_value_csv <- input$correlation_value_csv
-            if(!is.null(correlation_value_csv)) {
-                ## Read the matrix
-                cor.matrix <- as.matrix(read.csv(file = correlation_value_csv$name, header = FALSE))
-                diag(cor.matrix) <- 1
-                cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
-                if(any(cor.matrix > 1)) {
-                    return("Correlations cannot be > 1.")
-                }
-                if(ncol(cor.matrix) != input$n_dimensions) {
-                    return(paste0("Correlation matrix is ", ncol(cor.matrix), "x", ncol(cor.matrix), " but the number of dimensions is ", input$n_dimensions, "."))
-                }
-                space_args$cor.matrix <- cor.matrix
-            } else {
-                return("Impossible to read the uploaded csv file.\nTry another file or toggling to \"Vector\" or \"Matrix\" options.")
-            }
-        }
-    )
-
-    ## Making the space
-    space <- try(do.call(dispRity::space.maker, space_args, quote = TRUE), silent = TRUE)
-
-    if(class(space) == "try-error") {
-        return(as.character(space))
-    }
-    if(!is.matrix(space)) {
-        return("Impossible to generate space.\nTry changing the parameters combinations\nor the distribution parameters.")
-    }
-
-    return(space)
-}
-
-
-#' Getting the character details
-#' @param session Shiny session (to allow updating of character selection)
-#' @return a character string if character extracted correctly,
-#'  a list (detailing the error message to be displayed) if there's an error.
-get.reduction <- function(input, space, session) {
-
-    ## Set the parameters
-    switch(input$reduce,
-        Random = {
-            ## Simple removal
-            return(reduce.space(space, type = "random", input$remove, verbose = FALSE, return.optim = FALSE))
-        },
-        Limit = {
-            type <- "limit"
-        },
-        Displace = {
-            type <- "displacement"
-        },
-        Density = {
-            type <- "density"
-        }
-    )
-
-    ## Default tuning
-    tuning <- list(max = 50, tol = 0.01)
-
-    ## Make the dimensions proportional?
-    if(input$proportion_remove) {
-        ## Getting the range per dimension
-        scree <- apply(space, 2, FUN = function(X) diff(range(X)))/diff(range(space[,1]))
-        ## Scaling each dimension to have the same range
-        space_to_reduce <- space %*% diag(1/scree)
-    } else {
-        space_to_reduce <- space
-    }
-
-    ## Reducing the space
-    remove <- try(reduce.space(space_to_reduce, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE), silent = TRUE)
-
-    if(class(remove)== "try-error") {
-        return(remove)
-    }
-
-    if(all(remove) || all(!remove)) {
-        return("Impossible to remove data.\nTry hitting the \"refresh\" button,\nchanging the parameters combinations\nor the \"remove\" value.")
-    }
-
-    return(remove)
-}
 
 ## Generate the seeds for plotting
 seeds <- sample(1:200)*sample(1:10)
@@ -375,91 +147,145 @@ shinyServer(
                                                                     "Reduced space" = rownames(space)[points_remove]))
                 }
 
-                dispRity_args <- list(data = groups)
+                # dispRity_args <- list(data = groups)
+
+                metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
 
                 ## Metrics selection
-                switch(input$metric_choice,
-                    Volume = {
-                        switch(input$metric1,
-                            "Sum of variances" = {
-                                dispRity_args$metric <- c(sum, variances)
-                            },
-                            "Sum of ranges" = {
-                                dispRity_args$metric <- c(sum, ranges)
-                            },
-                            "Product of variances" = {
-                                dispRity_args$metric <- c(prod, variances)
-                            },
-                            "Product of ranges" = {
-                                dispRity_args$metric <- c(prod, ranges)
-                            },
-                            "Ellipsoid volume" = {
-                                dispRity_args$metric <- ellipse.volume
-                            },
-                            "n-ball volume" = {
-                                dispRity_args$metric <- n.ball.volume
-                            },
-                            "Median distance from centroid (Euclidean)" = {
-                                dispRity_args$metric <- c(median, centroids)
-                                dispRity_args$method <- "euclidean"
-                            },
-                            "Median distance from centroid (Manhattan)" = {
-                                dispRity_args$metric <- c(median, centroids)
-                                dispRity_args$method <- "manhattan"
-                            }
-                        )
-                    },
-                    Density = {
-                        switch(input$metric2,
-                            "Mean pairwise distance (Euclidean)" = {
-                                dispRity_args$metric <- c(median, pairwise.dist)
-                                dispRity_args$method <- "euclidean"
-                            },
-                            "Mean pairwise distance (Manhattan)" = {
-                                dispRity_args$metric <- c(median, pairwise.dist)
-                                dispRity_args$method <- "manhattan"
-                            },
-                            "Minimum spanning tree length" = {
-                                dispRity_args$metric <- span.tree.length
-                            }
-                        )
-                    },
-                    Position = {
-                        switch(input$metric3,
-                            "Median distance from centre (Euclidean)" = {
-                                dispRity_args$metric <- c(median, centroids)
-                                dispRity_args$method <- "euclidean"
-                                dispRity_args$centroid <- 0
-                            },
-                            "Median distance from centre (Manhattan)" = {
-                                dispRity_args$metric <- c(median, centroids)
-                                dispRity_args$method <- "manhattan"
-                                dispRity_args$centroid <- 0
-                            }
-                        )
-                    },
-                    Specific = {
-                        ## Personalised metric
-                        dispRity_args$metric <- eval(parse(text = input$metric4))
-                        ## Optional arguments
-                        if(input$metrics_arguments) {
-                            return("Optional arguments for personalised metrics are not yet available in this version.")
-                            # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
-                        }
-                    }
-                )
+                # switch(input$metric_choice,
+                #     Volume = {
+                #         metric_name <- input$metric1
+                #         switch(input$metric1,
+                #             "Ellipsoid volume" = {
+                #                 dispRity_args$metric <- ellipse.volume
+                #             },
+                #             "Convex hull surface" = {
+                #                 if(input$n_dimensions > 15) {
+                #                     return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
+                #                 }
+                #                 dispRity_args$metric <- convhull.surface
+                #             },
+                #             "Convex hull volume" = {
+                #                 if(input$n_dimensions > 15) {
+                #                     return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
+                #                 }
+                #                 dispRity_args$metric <- convhull.volume
+                #             },
+                #             "Median distance from centroid (Euclidean)" = {
+                #                 dispRity_args$metric <- c(median, centroids)
+                #                 dispRity_args$method <- "euclidean"
+                #             },
+                #             "Median distance from centroid (Manhattan)" = {
+                #                 dispRity_args$metric <- c(median, centroids)
+                #                 dispRity_args$method <- "manhattan"
+                #             },
+                #             "n-ball volume" = {
+                #                 dispRity_args$metric <- n.ball.volume
+                #             },
+                #             "Procrustes variance (geomorph::morphol.disparity)" = {
+                #                 dispRity_args$metric <- function(X) return(sum(X^2)/nrow(X))
+                #             },
+                #             "Product of variances" = {
+                #                 dispRity_args$metric <- c(prod, variances)
+                #             },
+                #             "Product of ranges" = {
+                #                 dispRity_args$metric <- c(prod, ranges)
+                #             },
+                #             "Sum of ranges" = {
+                #                 dispRity_args$metric <- c(sum, ranges)
+                #             },
+                #             "Sum of variances" ={
+                #                 dispRity_args$metric <- c(sum, variances)
+                #             }
+                #         )
+                #     },
+                #     Density = {
+                #         metric_name <- input$metric2
+                #         switch(input$metric2,
+                #             "Average Manhattan distance (geiger::dtt)" = {
+                #                 dispRity_args$metric <- c(mean, pairwise.dist)
+                #                 dispRity_args$method <- "manhattan"
+                #             },
+                #             "Average squared Euclidean distance (geiger::dtt)" = {
+                #                 dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
+                #             },
+                #             "Mean pairwise distance (Euclidean)" = {
+                #                 dispRity_args$metric <- c(median, pairwise.dist)
+                #                 dispRity_args$method <- "euclidean"
+                #             },
+                #             "Mean pairwise distance (Manhattan)" = {
+                #                 dispRity_args$metric <- c(median, pairwise.dist)
+                #                 dispRity_args$method <- "manhattan"
+                #             },
+                #             "Minimum spanning tree length" = {
+                #                 dispRity_args$metric <- span.tree.length
+                #             }
+                #         )
+                #     },
+                #     Position = {
+                #         metric_name <- input$metric3
+                #         switch(input$metric3,
+                #             "Median distance from centre (Euclidean)" = {
+                #                 dispRity_args$metric <- c(median, centroids)
+                #                 dispRity_args$method <- "euclidean"
+                #                 dispRity_args$centroid <- 0
+                #             },
+                #             "Median distance from centre (Manhattan)" = {
+                #                 dispRity_args$metric <- c(median, centroids)
+                #                 dispRity_args$method <- "manhattan"
+                #                 dispRity_args$centroid <- 0
+                #             }
+                #         )
+                #     },
+                #     User = {
+                #         ## Personalised metric
+                #         metric_name <- input$metric_specific1
+                #         print("Pre-condition:")
+                #         print(input$metric_specific1)
+                #         print(input$metric_specific2)
+
+                #         if(input$metric_specific2 == "NULL") {
+
+                #             print("condition 1")
+                #             print(input$metric_specific1)
+                #             print(eval(parse(text = input$metric_specific1)))
+                #             dispRity_args$metric <- eval(parse(text = input$metric_specific1))
+
+                #             print(metric_name)
+                #             print(dispRity_args[-1])
+
+
+                #         } else {
+
+                #             print("condition 2")
+                #             print(input$metric_specific2)
+                #             print(eval(parse(text = input$metric_specific2)))
+                #             print(c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2))))
+                #             dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
+                #             metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
+
+                #             print(metric_name)
+                #             print(dispRity_args[-1])
+                #         }
+
+
+                #         ## Optional arguments
+                #         if(input$metrics_arguments) {
+                #             return("Optional arguments for personalised metrics are not yet available in this version.")
+                #             # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
+                #         }
+                #     }
+                # )
 
                 ## Measuring disparity
-                disparity <- do.call(dispRity, dispRity_args)
+                disparity <- do.call(dispRity, metrics_handle$args)
 
                 ## Rendering the output table
                 output <- summary(disparity)
-                #TODO: get the right number of digits
-                #TODO: add the values row by row.
                 
                 ## Add names
                 rownames(output) <- output$subsets
-                colnames(output)[3] <- input$metric1
+                colnames(output)[3] <- metrics_handle$name
 
                 ## Print output
                 output[,-1]
@@ -468,7 +294,7 @@ shinyServer(
 
 
         ## Plot size
-        height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/6.5, 0))
+        height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))
         # height = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0)),
         # width = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0))
         )
