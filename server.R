@@ -65,7 +65,7 @@ shinyServer(
             ## Default plotting options
             defaults <- list()
             defaults$pch <- 19
-            defaults$lab <- "Trait"
+            defaults$lab <- "Dimension"
             defaults$cex <- 1
 
             ## colours
@@ -126,156 +126,32 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Disparity
             ## ~~~~~~~~~~
-            ## Make some dummy table
 
-            ### Some dummy table
+            ## Some dummy table
             output$table_out <- renderTable({
 
+                ## Name the elements
                 rownames(space) <- 1:input$n_elements
 
                 ## Make the disparity object
                 if(input$reduce == "None") {
+                    ## Simple space
                     groups <- space
                 } else {
-
                     ## Error in points remove
                     if(!exists("points_remove")) {
                         return("Reduction parameter did not remove any points.\nTry different parameter combinations.")
                     }
-                    groups <- dispRity::custom.subsets(space,
-                                                       group = list("Full space" = rownames(space),
-                                                                    "Reduced space" = rownames(space)[points_remove]))
+                    ## Custom subsets
+                    groups <- custom.subsets(space,
+                                    group = list("Full space" = rownames(space),
+                                                 "Reduced space" = rownames(space)[points_remove]))
                 }
 
-                # dispRity_args <- list(data = groups)
+                # if(input$add.metric)
 
+                ## Handling the disparity metrics                
                 metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
-
-                ## Metrics selection
-                # switch(input$metric_choice,
-                #     Volume = {
-                #         metric_name <- input$metric1
-                #         switch(input$metric1,
-                #             "Ellipsoid volume" = {
-                #                 dispRity_args$metric <- ellipse.volume
-                #             },
-                #             "Convex hull surface" = {
-                #                 if(input$n_dimensions > 15) {
-                #                     return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
-                #                 }
-                #                 dispRity_args$metric <- convhull.surface
-                #             },
-                #             "Convex hull volume" = {
-                #                 if(input$n_dimensions > 15) {
-                #                     return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
-                #                 }
-                #                 dispRity_args$metric <- convhull.volume
-                #             },
-                #             "Median distance from centroid (Euclidean)" = {
-                #                 dispRity_args$metric <- c(median, centroids)
-                #                 dispRity_args$method <- "euclidean"
-                #             },
-                #             "Median distance from centroid (Manhattan)" = {
-                #                 dispRity_args$metric <- c(median, centroids)
-                #                 dispRity_args$method <- "manhattan"
-                #             },
-                #             "n-ball volume" = {
-                #                 dispRity_args$metric <- n.ball.volume
-                #             },
-                #             "Procrustes variance (geomorph::morphol.disparity)" = {
-                #                 dispRity_args$metric <- function(X) return(sum(X^2)/nrow(X))
-                #             },
-                #             "Product of variances" = {
-                #                 dispRity_args$metric <- c(prod, variances)
-                #             },
-                #             "Product of ranges" = {
-                #                 dispRity_args$metric <- c(prod, ranges)
-                #             },
-                #             "Sum of ranges" = {
-                #                 dispRity_args$metric <- c(sum, ranges)
-                #             },
-                #             "Sum of variances" ={
-                #                 dispRity_args$metric <- c(sum, variances)
-                #             }
-                #         )
-                #     },
-                #     Density = {
-                #         metric_name <- input$metric2
-                #         switch(input$metric2,
-                #             "Average Manhattan distance (geiger::dtt)" = {
-                #                 dispRity_args$metric <- c(mean, pairwise.dist)
-                #                 dispRity_args$method <- "manhattan"
-                #             },
-                #             "Average squared Euclidean distance (geiger::dtt)" = {
-                #                 dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
-                #             },
-                #             "Mean pairwise distance (Euclidean)" = {
-                #                 dispRity_args$metric <- c(median, pairwise.dist)
-                #                 dispRity_args$method <- "euclidean"
-                #             },
-                #             "Mean pairwise distance (Manhattan)" = {
-                #                 dispRity_args$metric <- c(median, pairwise.dist)
-                #                 dispRity_args$method <- "manhattan"
-                #             },
-                #             "Minimum spanning tree length" = {
-                #                 dispRity_args$metric <- span.tree.length
-                #             }
-                #         )
-                #     },
-                #     Position = {
-                #         metric_name <- input$metric3
-                #         switch(input$metric3,
-                #             "Median distance from centre (Euclidean)" = {
-                #                 dispRity_args$metric <- c(median, centroids)
-                #                 dispRity_args$method <- "euclidean"
-                #                 dispRity_args$centroid <- 0
-                #             },
-                #             "Median distance from centre (Manhattan)" = {
-                #                 dispRity_args$metric <- c(median, centroids)
-                #                 dispRity_args$method <- "manhattan"
-                #                 dispRity_args$centroid <- 0
-                #             }
-                #         )
-                #     },
-                #     User = {
-                #         ## Personalised metric
-                #         metric_name <- input$metric_specific1
-                #         print("Pre-condition:")
-                #         print(input$metric_specific1)
-                #         print(input$metric_specific2)
-
-                #         if(input$metric_specific2 == "NULL") {
-
-                #             print("condition 1")
-                #             print(input$metric_specific1)
-                #             print(eval(parse(text = input$metric_specific1)))
-                #             dispRity_args$metric <- eval(parse(text = input$metric_specific1))
-
-                #             print(metric_name)
-                #             print(dispRity_args[-1])
-
-
-                #         } else {
-
-                #             print("condition 2")
-                #             print(input$metric_specific2)
-                #             print(eval(parse(text = input$metric_specific2)))
-                #             print(c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2))))
-                #             dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
-                #             metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
-
-                #             print(metric_name)
-                #             print(dispRity_args[-1])
-                #         }
-
-
-                #         ## Optional arguments
-                #         if(input$metrics_arguments) {
-                #             return("Optional arguments for personalised metrics are not yet available in this version.")
-                #             # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
-                #         }
-                #     }
-                # )
 
                 ## Measuring disparity
                 disparity <- do.call(dispRity, metrics_handle$args)
@@ -287,16 +163,33 @@ shinyServer(
                 rownames(output) <- output$subsets
                 colnames(output)[3] <- metrics_handle$name
 
+                ## Adding and removing metrics
+                # if(input$add.metric){
+                #     new_metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
+
+                #     ## Measuring disparity
+                #     new_disparity <- do.call(dispRity, new_metrics_handle$args)
+
+                #     ## Rendering the output table
+                #     new_output <- summary(new_disparity)
+                    
+                #     ## Add names
+                #     rownames(output) <- output$subsets
+                #     colnames(output)[3] <- metrics_handle$name
+                # }
+                # if(input$remove.metric){
+                #     print("remove metric")
+                #     print(input$remove.metric)
+                # }
+
+
                 ## Print output
                 output[,-1]
+
             })
         },
-
-
         ## Plot size
         height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))
-        # height = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0)),
-        # width = reactive(ifelse(!is.null(input$innerWidth),ifelse(input$innerWidth < 6, input$innerWidth*2, input$innerWidth/2.25),0))
         )
     }
 )

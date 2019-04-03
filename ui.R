@@ -5,7 +5,7 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme, T., Puttick, M., and Weisbecker, V (2019). Some paper. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
+    p("Guillerme, T., Puttick, M., and Weisbecker, V (2019). Moms: a exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
     hr(),
 
     fluidRow(
@@ -19,9 +19,9 @@ shinyUI(fluidPage(
 
         h2("Multidimensional space parameters"),
         ## Number of dimensions input - input$n_dimensions
-        sliderInput("n_dimensions", label = "Number of dimensions:", min = 2, max = 100, value = 3),
+        sliderInput("n_dimensions", label = "Number of dimensions (traits):", min = 2, max = 100, value = 3),
         ## Number of elements input - input$n_elements
-        sliderInput("n_elements", label = "Number of elements:", min = 3, max = 1000, value = 300),
+        sliderInput("n_elements", label = "Number of elements (observations):", min = 3, max = 1000, value = 300),
 
         ## Distributions - input$distributions
         selectInput("distributions", label = "Distributions", choices = list("Normal", "LogNormal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
@@ -179,7 +179,7 @@ shinyUI(fluidPage(
                                     "Product of ranges",
                                     "Sum of ranges",
                                     "Sum of variances"
-                                    ), selected = "Sum of Variance")
+                                    ), selected = "Sum of variances")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"Density\"",
@@ -198,22 +198,9 @@ shinyUI(fluidPage(
                       choices = list(
                                     "Median distance from centre (Euclidean)",
                                     "Median distance from centre (Manhattan)"
-                                    ), selected = "Distance from centre (Euclidean)")
+                                    ), selected = "Median distance from centre (Euclidean)")
           ),
 
-        # avg.sq is average squared Euclidean distance among all pairs of points; this is the most common distance metric for disparity in macroevolution
-        # average.sq <- function(X) mean(pairwise.dist(X)^2)
-        
-        # avg.manhattan is average Manhattan distance among all pairs of points
-        # 
-
-        # function(X) return(sum(X^2)/nrow(X))  -> Procrustes variance (overall)
-
-
-
-
-
-        #TODO: add the dtt and the geomorph metrics
         conditionalPanel(condition = "input.metric_choice == \"User\"",
           selectInput("metric_specific1", label = "Dimension level 1 metrics:",
                       choices = list(#"NULL",
@@ -246,6 +233,9 @@ shinyUI(fluidPage(
             helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
           )
         ),
+
+        # actionButton("add.metric", label = "Add a metric"),
+        # actionButton("remove.metric", label = "Remove last metric"),
 
         h4("dispRity code snippets"),
         selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
