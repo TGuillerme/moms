@@ -246,18 +246,20 @@ handle.metrics <- function(input, dispRity_args) {
                     dispRity_code <- "ellipse.volume"
                 },
                 "Convex hull surface" = {
-                    if(input$n_dimensions > 15) {
-                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
+                    if(input$n_dimensions > 10) {
+                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
+                    } else {
+                        dispRity_args$metric <- convhull.surface
+                        dispRity_code <- "convhull.surface"
                     }
-                    dispRity_args$metric <- convhull.surface
-                    dispRity_code <- "convhull.surface"
                 },
                 "Convex hull volume" = {
-                    if(input$n_dimensions > 15) {
-                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
+                    if(input$n_dimensions > 10) {
+                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
+                    } else {
+                        dispRity_args$metric <- convhull.volume
+                        dispRity_code <- "convhull.volume"
                     }
-                    dispRity_args$metric <- convhull.volume
-                    dispRity_code <- "convhull.volume"
                 },
                 "Median distance from centroid (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
@@ -364,7 +366,7 @@ handle.metrics <- function(input, dispRity_args) {
         }
     )
 
-    return(list(args = dispRity_args, name = metric_name, code = dispRity_codey))
+    return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }
 
 

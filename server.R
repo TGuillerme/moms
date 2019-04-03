@@ -153,16 +153,32 @@ shinyServer(
                 ## Handling the disparity metrics
                 metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
 
+                ## Errors from metrics_handle
+                if(class(metrics_handle) == "character") {
+                    return(metrics_handle)
+                }
+
                 ## Measuring disparity
                 disparity <- do.call(dispRity, metrics_handle$args)
 
                 ## Rendering the output table
-                output <- summary(disparity)
-                
-                ## Add names
-                rownames(output) <- output$subsets
-                colnames(output)[3] <- metrics_handle$name
+                table_out <- summary(disparity)
 
+
+                ## Add names
+                rownames(table_out) <- table_out$subsets
+                colnames(table_out)[3] <- metrics_handle$name
+
+                if(input$reduce != "None") {
+                    ## Get the proportional change
+                    proportional_change <- table_out[2,3]/table_out[1,3]*100-100
+
+                    ## Adding the proportional change
+                    table_out <- cbind(table_out, c("", paste(round(proportional_change, 2), "%")))
+                    ## Change the column name
+                    colnames(table_out)[4] <- "change"
+                }
+                
                 ## Adding and removing metrics
                 # if(input$add.metric){
                 #     new_metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
@@ -184,7 +200,7 @@ shinyServer(
 
 
                 ## Print output
-                output[,-1]
+                table_out[,-1]
 
             })
         },
