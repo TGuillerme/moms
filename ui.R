@@ -237,9 +237,9 @@ shinyUI(fluidPage(
         # actionButton("add.metric", label = "Add a metric"),
         # actionButton("remove.metric", label = "Remove last metric"),
 
-        h4("dispRity code snippets"),
-        selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
-        helpText("This bit will have options to export code."),
+        # h4("dispRity code snippets"),
+        # selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
+        # helpText("This bit will have options to export code."),
 
         hr(),
 

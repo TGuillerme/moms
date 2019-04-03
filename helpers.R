@@ -243,44 +243,55 @@ handle.metrics <- function(input, dispRity_args) {
             switch(input$metric1,
                 "Ellipsoid volume" = {
                     dispRity_args$metric <- ellipse.volume
+                    dispRity_code <- "ellipse.volume"
                 },
                 "Convex hull surface" = {
                     if(input$n_dimensions > 15) {
                         return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
                     }
                     dispRity_args$metric <- convhull.surface
+                    dispRity_code <- "convhull.surface"
                 },
                 "Convex hull volume" = {
                     if(input$n_dimensions > 15) {
                         return("For saving computational time, this version cannot\ncalculate convex hull for more than 15 dimensions.")
                     }
                     dispRity_args$metric <- convhull.volume
+                    dispRity_code <- "convhull.volume"
                 },
                 "Median distance from centroid (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
+                    dispRity_code <- list("c(median, centroids)", "method = euclidean")
                 },
                 "Median distance from centroid (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
+                    dispRity_code <- list("c(median, centroids)", "method = manhattan")
                 },
                 "n-ball volume" = {
                     dispRity_args$metric <- n.ball.volume
+                    dispRity_code <- "n.ball.volume"
                 },
                 "Procrustes variance (geomorph::morphol.disparity)" = {
                     dispRity_args$metric <- function(X) return(sum(X^2)/nrow(X))
+                    dispRity_code <- list("function(X) return(sum(X^2)/nrow(X))")
                 },
                 "Product of variances" = {
                     dispRity_args$metric <- c(prod, variances)
+                    dispRity_code <- list("c(prod, variances)")
                 },
                 "Product of ranges" = {
                     dispRity_args$metric <- c(prod, ranges)
+                    dispRity_code <- list("c(prod, ranges)")
                 },
                 "Sum of ranges" = {
                     dispRity_args$metric <- c(sum, ranges)
+                    dispRity_code <- list("c(sum, ranges)")
                 },
                 "Sum of variances" ={
                     dispRity_args$metric <- c(sum, variances)
+                    dispRity_code <- list("c(sum, variances)")
                 }
             )
         },
@@ -290,20 +301,25 @@ handle.metrics <- function(input, dispRity_args) {
                 "Average Manhattan distance (geiger::dtt)" = {
                     dispRity_args$metric <- c(mean, pairwise.dist)
                     dispRity_args$method <- "manhattan"
+                    dispRity_code <- list("c(mean, pairwise.dist)", "method = manhattan")
                 },
                 "Average squared Euclidean distance (geiger::dtt)" = {
                     dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
+                    dispRity_code <- "function(X) mean(pairwise.dist(X)^2)"
                 },
                 "Mean pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "euclidean"
+                    dispRity_code <- list("c(median, pairwise.dist)", "method = euclidean")
                 },
                 "Mean pairwise distance (Manhattan)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "manhattan"
+                    dispRity_code <- list("c(median, pairwise.dist)", "method = manhattan")
                 },
                 "Minimum spanning tree length" = {
                     dispRity_args$metric <- span.tree.length
+                    dispRity_code <- "span.tree.length"
                 }
             )
         },
@@ -314,11 +330,13 @@ handle.metrics <- function(input, dispRity_args) {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
                     dispRity_args$centroid <- 0
+                    dispRity_code <- list("c(median, centroids)", "method = euclidean", "centroid = 0")
                 },
                 "Median distance from centre (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
                     dispRity_args$centroid <- 0
+                    dispRity_code <- list("c(median, centroids)", "method = manhattan", "centroid = 0")
                 }
             )
         },
@@ -342,10 +360,11 @@ handle.metrics <- function(input, dispRity_args) {
                 return("Optional arguments for personalised metrics are not yet available in this version.")
                 # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
             }
+            dispRity_code <- metric_name
         }
     )
 
-    return(list(args = dispRity_args, name = metric_name))
+    return(list(args = dispRity_args, name = metric_name, code = dispRity_codey))
 }
 
 

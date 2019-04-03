@@ -150,7 +150,7 @@ shinyServer(
 
                 # if(input$add.metric)
 
-                ## Handling the disparity metrics                
+                ## Handling the disparity metrics
                 metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
 
                 ## Measuring disparity
