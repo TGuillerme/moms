@@ -136,7 +136,7 @@ shinyUI(fluidPage(
       ),
 
       ## Main panel
-      column(width = 6,
+      column(width = 5,
         ## Plots the algorithm results
         # uiOutput("plot.ui", width = "auto"),
 
@@ -163,24 +163,82 @@ shinyUI(fluidPage(
         h2("Disparity metric"),
 
         ## Metric - input$level1
-        selectInput("metric_choice", label = "Metric type", choices = list("Volume", "Density", "Position", "Specific"), selected = "Volume"),
+        selectInput("metric_choice", label = "Metric type", choices = list("Volume", "Density", "Position", "User"), selected = "Volume"),
 
         conditionalPanel(condition = "input.metric_choice == \"Volume\"",
-          selectInput("metric1", label = h5("Volume metric"), choices = list("Sum of variances", "Sum of ranges", "Product of variances", "Product of ranges", "Ellipsoid volume", "n-ball volume", "Median distance from centroid (Euclidean)", "Median distance from centroid (Manhattan)"), selected = "Sum of Variance")
+          selectInput("metric1", label = h5("Volume metric"),
+                      choices = list(
+                                    "Ellipsoid volume",
+                                    "Convex hull surface",
+                                    "Convex hull volume",
+                                    "Median distance from centroid (Euclidean)",
+                                    "Median distance from centroid (Manhattan)",
+                                    "n-ball volume",
+                                    "Procrustes variance (geomorph::morphol.disparity)",
+                                    "Product of variances",
+                                    "Product of ranges",
+                                    "Sum of ranges",
+                                    "Sum of variances"
+                                    ), selected = "Sum of Variance")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"Density\"",
-          selectInput("metric2", label = h5("Density metric"), choices = list("Mean pairwise distance (Euclidean)", "Mean pairwise distance (Manhattan)", "Minimum spanning tree length"), selected = "Mean pairwise distance (Euclidean)")
+          selectInput("metric2", label = h5("Density metric"),
+                      choices = list(
+                                    "Average Manhattan distance (geiger::dtt)",
+                                    "Average squared Euclidean distance (geiger::dtt)",
+                                    "Mean pairwise distance (Euclidean)",
+                                    "Mean pairwise distance (Manhattan)",
+                                    "Minimum spanning tree length"
+                                    ), selected = "Mean pairwise distance (Euclidean)")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"Position\"",
-          selectInput("metric3", label = h5("Position metric"), choices = list("Median distance from centre (Euclidean)", "Median distance from centre (Manhattan)"), selected = "Distance from centre (Euclidean)")
+          selectInput("metric3", label = h5("Position metric"),
+                      choices = list(
+                                    "Median distance from centre (Euclidean)",
+                                    "Median distance from centre (Manhattan)"
+                                    ), selected = "Distance from centre (Euclidean)")
           ),
 
+        # avg.sq is average squared Euclidean distance among all pairs of points; this is the most common distance metric for disparity in macroevolution
+        # average.sq <- function(X) mean(pairwise.dist(X)^2)
+        
+        # avg.manhattan is average Manhattan distance among all pairs of points
+        # 
+
+        # function(X) return(sum(X^2)/nrow(X))  -> Procrustes variance (overall)
+
+
+
+
+
         #TODO: add the dtt and the geomorph metrics
-        conditionalPanel(condition = "input.metric_choice == \"Specific\"",
-          selectizeInput("metric4", label = "Personalised metric", choices = list("centroids", "diagonal", "ellipse.volume", "max", "mean", "median", "min", "n.ball.volume", "pairwise.dist", "prod", "ranges", "sd", "span.tree.length", "sum", "variances"), multiple = TRUE, options = list(maxItems = 2)),
-          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' or 'sum variances')."),
+        conditionalPanel(condition = "input.metric_choice == \"User\"",
+          selectInput("metric_specific1", label = "Dimension level 1 metrics:",
+                      choices = list(#"NULL",
+                                    "convhull.volume",
+                                    "convhull.surface",
+                                    "diagonal",
+                                    "ellipse.volume",
+                                    "max",
+                                    "mean",
+                                    "median",
+                                    "min",
+                                    "n.ball.volume",
+                                    "prod",
+                                    "sd",
+                                    "span.tree.length",
+                                    "sum",
+                                    "mode.val"), selected = "mean"),
+          selectInput("metric_specific2", label = "Dimension level 2 metrics:",
+                      choices = list("NULL",
+                                    "centroids",
+                                    "pairwise.dist",
+                                    "radius",
+                                    "ranges",
+                                    "variances"), selected = "NULL"),
+          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances')."),
           checkboxInput("metric_arguments", label = "Optional arguments", value = FALSE),
           conditionalPanel(condition = "input.metric_arguments == true",
             ## Parameters
@@ -188,6 +246,10 @@ shinyUI(fluidPage(
             helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
           )
         ),
+
+        h4("dispRity code snippets"),
+        selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
+        helpText("This bit will have options to export code."),
 
         hr(),
 
