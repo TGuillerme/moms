@@ -22,6 +22,13 @@ shinyServer(
             ## ~~~~~~~~~~
             space <- get.space(input)
 
+
+            ## Update the dimensions if matrix is input
+            if(input$use_input_matrix && !is.null(input$upload_input_matrix)) {
+                shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
+                shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
+            }
+
             ## Update the matrix input
             if(input$n_dimensions != nrow(input$cor.matrix) && input$n_dimensions < 15) {
                 shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
@@ -208,29 +215,29 @@ shinyServer(
             ## ~~~~~~~~~
             ## Code snippet
             ## ~~~~~~~~~
-            if(input$display_code_snippet) {
-                output$code_snippet  <- renderText({
-                    ## Get the code snippet
-                    snippet_out <- render.snippet(input)
+            # if(input$display_code_snippet) {
+            #     output$code_snippet  <- renderText({
+            #         ## Get the code snippet
+            #         snippet_out <- render.snippet(input)
 
-                    ## Export
-                    switch(input$export_code_snippet,
-                        "In app display" = {
-                            ## Export the code text
-                            snippet_out
-                        },
-                        "R code" = {
-                            ## Export the R code file
-                            "Not implemented yet"
-                        },
-                        "R markdown" = {
-                            ## Export the R markdown file
-                            "Not implemented yet"
-                        }
-                    )
+            #         ## Export
+            #         switch(input$export_code_snippet,
+            #             "In app display" = {
+            #                 ## Export the code text
+            #                 snippet_out
+            #             },
+            #             "R code" = {
+            #                 ## Export the R code file
+            #                 "Not implemented yet"
+            #             },
+            #             "R markdown" = {
+            #                 ## Export the R markdown file
+            #                 "Not implemented yet"
+            #             }
+            #         )
 
-                })
-            }
+            #     })
+            # }
 
         },
         ## Plot size

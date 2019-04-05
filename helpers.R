@@ -27,7 +27,20 @@
 
 ## Get the space details
 ## Return a space, or an error message to be written to output.
-get.space <- function(input, args.only = FALSE) {
+get.space <- function(input, args.only = FALSE){
+
+    if(input$use_input_matrix && !is.null(input$upload_input_matrix)){
+        ## Load the file
+        space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = FALSE))
+        ## Check class and space
+        if(class(space) != "matrix" && any(is.na(space))) {
+            return("Impossible to read the input matrix.\nThe input matrix should have no missing characters, only numeric values and no column and row names.")
+        }
+        if(!is.numeric(space)) {
+            return("Input matrix does not contain only numeric values.")
+        }
+        return(space)
+    }
 
     ## Getting the arguments
     space_args <- list()

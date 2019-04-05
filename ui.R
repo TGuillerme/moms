@@ -106,7 +106,12 @@ shinyUI(fluidPage(
           fileInput("correlation_value_csv", label = "Select a matrix in csv format."),
           helpText("The matrix must have no header. The diagonal and the upper triangle are ignored.")
         ),
-
+        checkboxInput("use_input_matrix", label = h3("Input user matrix"), value = FALSE),
+        
+        conditionalPanel(condition = "input.use_input_matrix == true",
+          fileInput("upload_input_matrix", label = "Select a multidimensional matrix in csv format."),
+          helpText("Upload your own multidimensional matrix! The matrix must be in csv format, with numeric values and no row names or column names")
+        ),
 
         hr(),
         ## --------------------
@@ -237,21 +242,21 @@ shinyUI(fluidPage(
         # actionButton("add.metric", label = "Add a metric"),
         # actionButton("remove.metric", label = "Remove last metric"),
 
-        h4("dispRity code snippets"),
-        # selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
-        # helpText("This interface is based on three functions: dispRity::space.maker to generate parametrised multidimensional spaces, moms::reduce.space to remove elements from a multidimensional space using various removal algorithm and dispRity::dispRity to measure disparity! Have a look at each functions manuals in R or on the related vignettes."),
-        checkboxInput("display_code_snippet", label = "Display code", value = FALSE),
-        conditionalPanel(condition = "input.display_code_snippet == true",
-          selectInput("export_code_snippet", label = "Export snippet", choices = list("In app display", "R code", "R markdown"), selected = "In app display"),
-          conditionalPanel(condition = "input.export_code_snippet == \"In app display\"",
-            ## Display code in line
-            verbatimTextOutput("code_snippet")
-          )
-          # conditionalPanel(condition = "input.display_code_snippet != \"In app display\"",
-          #   ## Export code file
-          #   verbatimTextOutput("code_snippet")
-          # )
-        ),
+        # h4("dispRity code snippets"),
+        # # selectInput("metric_choice", label = "Output type", choices = list("R code snippet", "R code file", "R markdown file"), selected = "R code snippet"),
+        # # helpText("This interface is based on three functions: dispRity::space.maker to generate parametrised multidimensional spaces, moms::reduce.space to remove elements from a multidimensional space using various removal algorithm and dispRity::dispRity to measure disparity! Have a look at each functions manuals in R or on the related vignettes."),
+        # checkboxInput("display_code_snippet", label = "Display code", value = FALSE),
+        # conditionalPanel(condition = "input.display_code_snippet == true",
+        #   selectInput("export_code_snippet", label = "Export snippet", choices = list("In app display", "R code", "R markdown"), selected = "In app display"),
+        #   conditionalPanel(condition = "input.export_code_snippet == \"In app display\"",
+        #     ## Display code in line
+        #     verbatimTextOutput("code_snippet")
+        #   )
+        #   # conditionalPanel(condition = "input.display_code_snippet != \"In app display\"",
+        #   #   ## Export code file
+        #   #   verbatimTextOutput("code_snippet")
+        #   # )
+        # ),
   
         hr(),
 
