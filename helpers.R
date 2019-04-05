@@ -27,7 +27,7 @@
 
 ## Get the space details
 ## Return a space, or an error message to be written to output.
-get.space <- function(input) {
+get.space <- function(input, args.only = FALSE) {
 
     ## Getting the arguments
     space_args <- list()
@@ -168,6 +168,11 @@ get.space <- function(input) {
             }
         }
     )
+
+    ## Return only the arguments
+    if(args.only) {
+        return(space_args)
+    }
 
     ## Making the space
     space <- try(do.call(dispRity::space.maker, space_args, quote = TRUE), silent = TRUE)
@@ -369,7 +374,36 @@ handle.metrics <- function(input, dispRity_args) {
     return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }
 
+## Rendering the code snippet
+render.snippet <- function(input) {
+    ## Libraries
+    libraries_head <- "## Loading the libraries"
+    libraries <- "library(dispRity) ; library(moms)"
 
+    ## Space maker
+    space_maker_head <- "## Simulating a multidimensional space"
+    space_args <- get.space(input, args.only = TRUE)
+    space_maker <- paste0("space <- dispRity::space.maker(", paste(c("arg1", "arg2"), collapse = ", "), ")")
+
+    ## Reduce space
+    reduce_space_head <- "## Reduce the space"
+    reduce_args <- input
+    reduce_space <- paste0("remove <- moms::reduce.space(", paste(c("arg1", "arg2"), collapse = ", "), ")")
+
+    ## Make groups
+    custom_groups_head <- "## Make groups"
+    custom_groups <- paste0("groups <- dispRity::custom.subsets(space, groups = ", paste(c("arg1", "arg2"), collapse = ", "), ")")
+
+    ## Measure disparity
+    meas_disparity_head <- "## Measure disparity"
+    meas_disparity <- paste0("disparity <- dispRity::dispRity(groups, metric = ", paste(c("arg1", "arg2"), collapse = ", "), ")")
+
+    ## Summarise
+    sum_disparity_head <- "## Summarising the results"
+    sum_disparity <- paste0("summary(disparity)")
+
+    return(paste(c(libraries_head, libraries, space_maker_head, space_maker, reduce_space_head, reduce_space, custom_groups_head, custom_groups, meas_disparity_head, meas_disparity, sum_disparity_head, sum_disparity), collapse = "\n"))
+}
 
 
 ## Display the error message

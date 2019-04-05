@@ -203,6 +203,35 @@ shinyServer(
                 table_out[,-1]
 
             })
+
+
+            ## ~~~~~~~~~
+            ## Code snippet
+            ## ~~~~~~~~~
+            if(input$display_code_snippet) {
+                output$code_snippet  <- renderText({
+                    ## Get the code snippet
+                    snippet_out <- render.snippet(input)
+
+                    ## Export
+                    switch(input$export_code_snippet,
+                        "In app display" = {
+                            ## Export the code text
+                            snippet_out
+                        },
+                        "R code" = {
+                            ## Export the R code file
+                            "Not implemented yet"
+                        },
+                        "R markdown" = {
+                            ## Export the R markdown file
+                            "Not implemented yet"
+                        }
+                    )
+
+                })
+            }
+
         },
         ## Plot size
         height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))
