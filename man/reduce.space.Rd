@@ -31,6 +31,27 @@ Remove elements from a multidimensional space
 - \code{density.removal parameters}: a list of \code{parameters$what} "close" (default) for close neighbours or "distant" for distant ones; \code{parameters$diameter} the diameter for considering closeness or distance; \code{parameters$output} either "singles" or "pairs" to return the pairs of neighbours or one of them only (the first).
 }
 \examples{
+set.seed(1)
+## Creating a two dimensional space
+space <- dispRity::space.maker(100, 2, distribution = stats::rnorm)
+
+## Generating the four types of reductions
+random <- reduce.space(space, "random", remove = 0.5)
+limit <- reduce.space(space, "limit", remove = 0.5)
+displacement <- reduce.space(space, "displacement", remove = 0.5)
+density <- reduce.space(space, "density", remove = 0.5)
+
+## Plotting the four different results
+par(mfrow = c(2,2))
+plot(space, pch = 19, col = c("grey", "black")[as.factor(random)],
+     main = "Random removal") 
+plot(space, pch = 19, col = c("grey", "black")[as.factor(limit)],
+     main = "Limit removal")
+plot(space, pch = 19, col = c("grey", "black")[as.factor(displacement)],
+     main = "Displacement removal")
+plot(space, pch = 19, col = c("grey", "black")[as.factor(density)],
+     main = "Density removal")
+
 
 }
 \seealso{

@@ -51,30 +51,27 @@ test_that("reduce.space works", {
 
     ## Displacement removal
     set.seed(1)
-    iter <- capture_output(test1 <- reduce.space(space, type = "displacement", remove = 0.5, verbose = TRUE, tuning = list("tol" = 0)))
+    iter <- capture_output(test1 <- reduce.space(space, type = "displacement", remove = 0.5, verbose = TRUE, tuning = list("tol" = 0.1)))
     expect_is(test1, "logical")
     expect_equal(length(test1), 300)
-    expect_equal(length(which(test1)), 150)
+    expect_equal(length(which(test1)), 152)
     expect_equal(iter, "Run parameter optimisation:........Done.")
 
     set.seed(1)
-    test2 <- reduce.space(space, type = "displacement", parameters = list("value" = 0.484375))
+    test2 <- reduce.space(space, type = "displacement", parameters = list("radius" = 4.390509))
     expect_is(test2, "logical")
     expect_equal(length(test2), 300)
-    expect_equal(length(which(test2)), 150)
+    expect_equal(length(which(test2)), 152)
 
     expect_equal(test1, test2)
 
     set.seed(1)
     test3 <- reduce.space(space, type = "displacement", remove = 0.5, return.optim = TRUE, tuning = list("tol" = 0))
-    expect_equal(test3[[2]], 0.484375)
-    expect_equal(length(which(test3[[1]])), 150)
-
-    expect_equal(test1, test3$remove)
+    expect_equal(round(test3[[2]], 6), 4.390509)
+    expect_equal(length(which(test3[[1]])), 152)
 
 
-
-    ## Displacement removal
+    ## Density removal
     set.seed(1)
     iter <- capture_output(test1 <- reduce.space(space, type = "density", remove = 0.5, verbose = TRUE))
     expect_is(test1, "logical")

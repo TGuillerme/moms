@@ -128,7 +128,8 @@ point.in.circle <- function(point, centre, radius) {
 # ' @param value the threshold value
 # ' 
 select.value <- function(point, value) {
-    return(ifelse(point[1] > value && point[2] > value, TRUE, FALSE))
+    ## Get a point above a certain value
+    return(ifelse(all(point > value), TRUE, FALSE))
 }
 
 # ' @description Selects pairs of nearest neighbours
@@ -137,6 +138,10 @@ select.value <- function(point, value) {
 # ' @param diameter the diameter for cosidering closeness or distance
 # '
 get.neigbhours <- function(trait_space, distance, diameter = 0.1) {
+
+
+    ## Generalise to n dimensions
+
 
     ## Get the neighbors
     neighbors <- which(distance < diameter, arr.ind = TRUE)
