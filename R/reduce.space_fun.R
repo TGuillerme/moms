@@ -105,7 +105,7 @@ run.limit.removal <- function(space, parameters) {
 #     return(apply(space, 1, select.value, value = parameters$optimise* ))
 # }
 run.density.removal <- function(space, parameters, scree) {
-    close_neigbhours <- get.neigbhours(space, distance = parameters$distance, diameter = parameters$optimise)
+    close_neigbhours <- get.neigbhours(distance = parameters$distance, diameter = parameters$optimise)
     return(1:nrow(space) %in% close_neigbhours)
 }
 
@@ -137,11 +137,7 @@ point.in.circle <- function(point, centre, radius) {
 # ' @param distance a distance matrix of the trait space
 # ' @param diameter the diameter for cosidering closeness or distance
 # '
-get.neigbhours <- function(trait_space, distance, diameter = 0.1) {
-
-
-    ## Generalise to n dimensions
-
+get.neigbhours <- function(distance, diameter = 0.1) {
 
     ## Get the neighbors
     neighbors <- which(distance < diameter, arr.ind = TRUE)
