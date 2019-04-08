@@ -101,9 +101,9 @@ optimise.results <- function(to_remove, fun, remove, args, tuning, verbose = FAL
 run.limit.removal <- function(space, parameters) {
     return(apply(space, 1, point.in.circle, centre = parameters$centre, radius = parameters$optimise))
 }
-run.displacement.removal <- function(space, parameters, scree) {
-    return(apply(space, 1, select.value, value = parameters$optimise*-1))
-}
+# run.displacement.removal <- function(space, parameters, scree) {
+#     return(apply(space, 1, select.value, value = parameters$optimise* ))
+# }
 run.density.removal <- function(space, parameters, scree) {
     close_neigbhours <- get.neigbhours(space, distance = parameters$distance, diameter = parameters$optimise)
     return(1:nrow(space) %in% close_neigbhours)
@@ -127,10 +127,10 @@ point.in.circle <- function(point, centre, radius) {
 # ' @param point a point in space
 # ' @param value the threshold value
 # ' 
-select.value <- function(point, value) {
-    ## Get a point above a certain value
-    return(ifelse(all(point > value), TRUE, FALSE))
-}
+# select.value <- function(point, value) {
+#     ## Get a point above a certain value
+#     return(ifelse(all(point > value), TRUE, FALSE))
+# }
 
 # ' @description Selects pairs of nearest neighbours
 # ' @param trait_space the space

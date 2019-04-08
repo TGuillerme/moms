@@ -264,6 +264,7 @@ shinyUI(fluidPage(
         numericInput("axis_1", label = h5("Horizontal axis"), value = 1, min = 1),
         numericInput("axis_2", label = h5("Vertical axis"), value = 2, min = 1),
         selectInput("color_scheme", label = h5("Colours"), choices = list("Greyscale", "Contrast", "Pink", "Rainbow"), selected = "Greyscale"),
+        checkboxInput("scale_axis", label = "Axis with the same scale", value = FALSE),
         
         ## Refresh button - input$refresh
         hr(),

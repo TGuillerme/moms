@@ -14,6 +14,9 @@ shinyServer(
         # Plotting function
         output$plot_out <- renderPlot({
 
+            # ## Profiling
+            # Rprof(moms_profiling <- "moms_profiling.log", memory.profiling = TRUE )
+
             ## Reset the seed when hitting the refresh button
             set.seed(seeds[(input$refresh)+1])
 
@@ -22,17 +25,18 @@ shinyServer(
             ## ~~~~~~~~~~
             space <- get.space(input)
 
-
             ## Update the dimensions if matrix is input
             if(input$use_input_matrix && !is.null(input$upload_input_matrix)) {
                 shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
                 shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
             }
+            ## Profiling toggle off
 
             ## Update the matrix input
             if(input$n_dimensions != nrow(input$cor.matrix) && input$n_dimensions < 15) {
                 shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
             }
+            ## Profiling toggle off
 
             ## Return error
             if(class(space) == "character") {
@@ -51,16 +55,17 @@ shinyServer(
             } else {
                 shiny::updateNumericInput(session, "axis_2", max = input$n_dimensions)
             }
-
+            ## Profiling toggle off
+            
             ## ~~~~~~~~~~
             ## Reducing the space
             ## ~~~~~~~~~~
             if(input$reduce != "None") {
-                to_remove <- get.reduction(input, space, session)
+                reduced_space <- get.reduction(input, space, session)
 
                 ## Return error
-                if(class(to_remove) == "character") {
-                    plot.error(to_remove)
+                if(class(reduced_space) == "character") {
+                    plot.error(reduced_space)
                     return(NULL)
                 }
 
@@ -74,6 +79,13 @@ shinyServer(
             defaults$pch <- 19
             defaults$lab <- "Dimension"
             defaults$cex <- 1
+            defaults$xlim <- range(space[, (input$axis_1)])
+            defaults$ylim <- range(space[, (input$axis_2)])
+            if(input$scale_axis) {
+                ## Make both axis the same scale
+                defaults$xlim <- defaults$ylim <- range(space[, c(input$axis_1, input$axis_2)])
+            }
+
 
             ## colours
             switch(input$color_scheme,
@@ -89,7 +101,7 @@ shinyServer(
                 Rainbow   = {
                     defaults$palette <- list(rainbow(input$n_elements*input$remove), "grey")
                     }
-                )
+            )
 
 
             ## Background plot
@@ -107,12 +119,12 @@ shinyServer(
             } else {
                 ## Selecting which points to remove
                 if(input$inverse_remove) {
-                    points_remove <- !to_remove
+                    reduced_space_points <- !reduced_space
                 } else {
-                    points_remove <- to_remove
+                    reduced_space_points <- reduced_space
                 }
 
-                plot(space[, c(input$axis_1, input$axis_2)],
+                plot(space[!reduced_space_points, c(input$axis_1, input$axis_2)],
                     pch = defaults$pch,
                     xlim = defaults$xlim,
                     ylim = defaults$ylim,
@@ -123,7 +135,7 @@ shinyServer(
                     cex = defaults$cex)
 
                 ## Plotting the points
-                points(space[!points_remove, c(input$axis_1, input$axis_2)],
+                points(space[reduced_space_points, c(input$axis_1, input$axis_2)],
                        pch = defaults$pch,
                        col = defaults$palette[[1]],
                        cex = defaults$cex)
@@ -136,6 +148,7 @@ shinyServer(
 
             ## Some dummy table
             output$table_out <- renderTable({
+            # Profiling toggle off
 
                 ## Name the elements
                 rownames(space) <- 1:input$n_elements
@@ -145,14 +158,10 @@ shinyServer(
                     ## Simple space
                     groups <- space
                 } else {
-                    ## Error in points remove
-                    if(!exists("points_remove")) {
-                        return("Reduction parameter did not remove any points.\nTry different parameter combinations.")
-                    }
                     ## Custom subsets
                     groups <- custom.subsets(space,
                                     group = list("Full space" = rownames(space),
-                                                 "Reduced space" = rownames(space)[points_remove]))
+                                                 "Reduced space" = rownames(space)[reduced_space_points]))
                 }
 
                 # if(input$add.metric)
@@ -209,7 +218,11 @@ shinyServer(
                 ## Print output
                 table_out[,-1]
 
+                # Profiling (done)
+                # Rprof (NULL) ; print(summaryRprof(moms_profiling))
+
             })
+            ## Profiling toggle off
 
 
             ## ~~~~~~~~~

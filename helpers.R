@@ -8,6 +8,7 @@
 # input$rnorm_sd <- 1
 # input$scree <- "Uniform"
 # input$correlation <- "Uncorrelated"
+# input$use_input_matrix <- FALSE
 
 
 # input$reduce <- "Limit"
@@ -24,6 +25,8 @@
 # input$refresh <- 0
 # input$axis_2 <- 2
 # input$axis_1 <- 1
+# input$color_scheme <- "Greyscale"
+# input$scale_axis <- FALSE
 
 ## Get the space details
 ## Return a space, or an error message to be written to output.
@@ -155,11 +158,6 @@ get.space <- function(input, args.only = FALSE){
             cor.matrix <- input$cor.matrix
             ## Mirroring the lower triangle
             cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
-            ## Check if the Choleski decomposition
-            test <- try(chol(cor.matrix), silent = TRUE)
-            if(class(test) == "try-error") {
-                return("Correlation values lead to error in Choleski decomposition.\nTry with different values.")
-            }
             space_args$cor.matrix <- cor.matrix
         },
         Upload       = {
@@ -188,11 +186,8 @@ get.space <- function(input, args.only = FALSE){
     }
 
     ## Making the space
-    space <- try(do.call(dispRity::space.maker, space_args, quote = TRUE), silent = TRUE)
+    space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
 
-    if(class(space) == "try-error") {
-        return(as.character(space))
-    }
     if(!is.matrix(space)) {
         return("Impossible to generate space.\nTry changing the parameters combinations\nor the distribution parameters.")
     }
@@ -238,11 +233,7 @@ get.reduction <- function(input, space, session) {
     }
 
     ## Reducing the space
-    remove <- try(reduce.space(space_to_reduce, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE), silent = TRUE)
-
-    if(class(remove)== "try-error") {
-        return(remove)
-    }
+    remove <- reduce.space(space_to_reduce, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE)
 
     if(all(remove) || all(!remove)) {
         return("Impossible to remove data.\nTry hitting the \"refresh\" button,\nchanging the parameters combinations\nor the \"remove\" value.")
