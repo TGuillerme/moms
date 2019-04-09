@@ -192,10 +192,10 @@ shinyUI(fluidPage(
                       choices = list(
                                     "Average Manhattan distance (geiger::dtt)",
                                     "Average squared Euclidean distance (geiger::dtt)",
-                                    "Mean pairwise distance (Euclidean)",
-                                    "Mean pairwise distance (Manhattan)",
+                                    "Median pairwise distance (Euclidean)",
+                                    "Median pairwise distance (Manhattan)",
                                     "Minimum spanning tree length"
-                                    ), selected = "Mean pairwise distance (Euclidean)")
+                                    ), selected = "Median pairwise distance (Euclidean)")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"Position\"",

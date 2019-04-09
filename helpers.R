@@ -318,12 +318,12 @@ handle.metrics <- function(input, dispRity_args) {
                     dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
                     dispRity_code <- "function(X) mean(pairwise.dist(X)^2)"
                 },
-                "Mean pairwise distance (Euclidean)" = {
+                "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "euclidean"
                     dispRity_code <- list("c(median, pairwise.dist)", "method = euclidean")
                 },
-                "Mean pairwise distance (Manhattan)" = {
+                "Median pairwise distance (Manhattan)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "manhattan"
                     dispRity_code <- list("c(median, pairwise.dist)", "method = manhattan")
