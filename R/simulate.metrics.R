@@ -9,6 +9,8 @@
 #' @param remove the percentage of elements to remove
 #' @param metrics_list the list of metrics
 #' @param verbose 
+#' @param scree variance per axis (see dispRity::space.maker)
+#' @param cor correlation between axis (see dispRity::space.maker)
 #' 
 #' @examples
 #'
@@ -17,15 +19,15 @@
 #' @author Thomas Guillerme
 #' @export
 
-simulate.metrics <- function(replicates, elements, dimensions, distributions, remove, metrics_list, verbose = FALSE) {
+simulate.metrics <- function(replicates, elements, dimensions, distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL) {
 
     if(verbose) cat(paste0("Running ", replicates, " replicates:"))
 
     ## Run one simulation
-    one.simulation <- function(elements, dimensions, distributions, remove, metrics_list, verbose) {
+    one.simulation <- function(elements, dimensions, distributions, remove, metrics_list, verbose, scree, cor.matrix) {
 
         ## Simulate the space
-        space <- space.maker(elements, dimensions, distribution = distributions)
+        space <- space.maker(elements, dimensions, distribution = distributions, scree = scree, cor.matrix = cor.matrix)
         ## Adding rownames
         rownames(space) <- 1:elements
 
@@ -78,7 +80,7 @@ simulate.metrics <- function(replicates, elements, dimensions, distributions, re
     }
 
     ## Run all simulations
-    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, remove, metrics_list, verbose = TRUE), simplify = FALSE)
+    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, remove, metrics_list, verbose, scree, cor.matrix), simplify = FALSE)
 
     ## Merging into a single list
     for(list in 2:replicates) {
