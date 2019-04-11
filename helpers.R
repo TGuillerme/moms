@@ -296,6 +296,10 @@ handle.metrics <- function(input, dispRity_args) {
                     dispRity_args$metric <- c(prod, ranges)
                     dispRity_code <- list("c(prod, ranges)")
                 },
+                "Product of quantiles" = {
+                    dispRity_args$metric <- c(prod, quantiles)
+                    dispRity_code <- list("c(prod, quantiles)")
+                },
                 "Sum of ranges" = {
                     dispRity_args$metric <- c(sum, ranges)
                     dispRity_code <- list("c(sum, ranges)")
@@ -303,6 +307,10 @@ handle.metrics <- function(input, dispRity_args) {
                 "Sum of variances" ={
                     dispRity_args$metric <- c(sum, variances)
                     dispRity_code <- list("c(sum, variances)")
+                },
+                "Sum of quantiles" = {
+                    dispRity_args$metric <- c(sum, quantiles)
+                    dispRity_code <- list("c(sum, quantiles)")
                 }
             )
         },
@@ -317,6 +325,15 @@ handle.metrics <- function(input, dispRity_args) {
                 "Average squared Euclidean distance (geiger::dtt)" = {
                     dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
                     dispRity_code <- "function(X) mean(pairwise.dist(X)^2)"
+                },
+                "Average nearest neighbours distance (Euclidean)" = {
+                    dispRity_args$metric <- c(median, neighbours)
+                    dispRity_code <- list("c(median, neighbours)")
+                },
+                "Average nearest neighbours distance (Manhattan)" = {
+                    dispRity_args$metric <- c(median, neighbours)
+                    dispRity_args$method <- "manhattan"
+                    dispRity_code <- list("c(median, neighbours)", "method = manhattan")
                 },
                 "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
@@ -337,6 +354,15 @@ handle.metrics <- function(input, dispRity_args) {
         Position = {
             metric_name <- input$metric3
             switch(input$metric3,
+                "Average displacement (Euclidean)" = {
+                    dispRity_args$metric <- c(median, displacements)
+                    dispRity_code <- list("c(median, displacements)")
+                },
+                "Average displacement (Manhattan)" = {
+                    dispRity_args$metric <- c(median, displacements)
+                    dispRity_args$method <- "manhattan"
+                    dispRity_code <- list("c(median, displacements)", "method = manhattan")
+                },
                 "Median distance from centre (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"

@@ -43,8 +43,8 @@ shinyUI(fluidPage(
         ## Uniform parameters
         conditionalPanel(condition = "input.distributions == \"Uniform\"",
           ## Parameters
-          numericInput("runif_min", label = "minimum", value = 0),
-          numericInput("runif_max", label = "maximum", value = 1)
+          numericInput("runif_min", label = "minimum", value = -0.5),
+          numericInput("runif_max", label = "maximum", value = 0.5)
         ),
 
         ## Gamma parameters
@@ -180,8 +180,10 @@ shinyUI(fluidPage(
                                     "Median distance from centroid (Manhattan)",
                                     "n-ball volume",
                                     "Procrustes variance (geomorph::morphol.disparity)",
-                                    "Product of variances",
+                                    "Product of quantiles",
                                     "Product of ranges",
+                                    "Product of variances",
+                                    "Sum of quantiles",
                                     "Sum of ranges",
                                     "Sum of variances"
                                     ), selected = "Sum of variances")
@@ -192,18 +194,22 @@ shinyUI(fluidPage(
                       choices = list(
                                     "Average Manhattan distance (geiger::dtt)",
                                     "Average squared Euclidean distance (geiger::dtt)",
+                                    "Average nearest neighbours distance (Euclidean)",
+                                    "Average nearest neighbours distance (Manhattan)",
                                     "Median pairwise distance (Euclidean)",
                                     "Median pairwise distance (Manhattan)",
                                     "Minimum spanning tree length"
-                                    ), selected = "Median pairwise distance (Euclidean)")
+                                    ), selected = "Median nearest neighbours distance (Euclidean)")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"Position\"",
           selectInput("metric3", label = h5("Position metric"),
                       choices = list(
+                                    "Average displacement (Euclidean)",
+                                    "Average displacement (Manhattan)",
                                     "Median distance from centre (Euclidean)",
                                     "Median distance from centre (Manhattan)"
-                                    ), selected = "Median distance from centre (Euclidean)")
+                                    ), selected = "Median displacement (Euclidean)")
           ),
 
         conditionalPanel(condition = "input.metric_choice == \"User\"",
@@ -226,7 +232,10 @@ shinyUI(fluidPage(
           selectInput("metric_specific2", label = "Dimension level 2 metrics:",
                       choices = list("NULL",
                                     "centroids",
+                                    "displacements",
+                                    "neighbours",
                                     "pairwise.dist",
+                                    "quantiles",
                                     "radius",
                                     "ranges",
                                     "variances"), selected = "NULL"),
