@@ -119,27 +119,44 @@ par(op)
 
 # Methods
 
-## Making shifting spaces
+## Generating spaces
 
- * We generate a series of spaces following some specific transformations.
+We generated 7 spaces using the following parameters.
+Each space is are then reduced to 3, 5, 10, 50, 100, 300 dimensions and 10, 50, 100, 500 elements resulting in 168 parameter combinations.
 
- * First we generate a space with *n* elements and *k* dimensions and a general distribution *D*
-
- * We then remove 50% of the elements in the space 
-
- * We then modify this space following these four scenarios
-    1. Random: This represents a loss in diversity within the space (or gain).
-    2. By limit: selectively removing the centre or the edges
-    3. By displacement: selectively removing one or three corners
-    4. By density: increasing or reducing density
-
-
-
+| space name | size   | distribution(s) | dimensions variance | correlation |
+|------------|--------|-----------------|---------------------|-------------|
+| PCA        |500*300| Normal (mean = 0, sd = 1)| Decrease lognormally| none        |
+| PCO        |500*300| Normal          | Decrease normally   | none        |
+|    Normal  |500*300| Normal          | Constant            | none        |
+| Normal correlated |500*300| Normal          | Constant            | Random (between 0.1 and 0.9) |
+|   Uniform  |500*300| Uniform (min = 0, max = 1)| Constant            | none        |
+|   Uniform  |500*300| Uniform         | Constant            | Random (between 0.1 and 0.9) |
+|   Random   |500*300| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
 
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide'}
+## Shifting spaces
+
+We then reduced the removed 80%, 50% and 20% of elements for the 168 parameters combinations following these four methods (resulting in 2520 combinations of parameters and space shifts):
+
+ * **Randomly:** by randomly removing 80%, 50% or 20% of elements.  Figure 2A.
+  
+ * **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 80%, 50% or 20% or elements are selected).  Figure 2B.
+
+ * **Displacement:** by removing points similarly as above but using the distance from the furthest point from the centre (max point). Figure 2C.
+
+ * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 80%, 50% or 20% or elements are selected). Figure 2D.
+
+The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
+We used mirror results for the limit, displacement and density reduction (i.e. the opposite data was also used).
+For example, when using the limit reduction that includes 80% of the elements greater than $\rho$, we also used a limit reduction taht includes 20% of the elements lower than $\rho$.
+
+This resulted in 3528 parameters.
+
+
+```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide'}
 set.seed(42)
-op <- par(mfrow = c(4,2), bty = "n")
+op <- par(mfrow = c(2,2), bty = "n")
 ## The elements
 elements <- 300
 ## The amount to remove
@@ -147,32 +164,29 @@ remove <- 0.5
 
 ## Trait space
 trait_space <- space.maker(elements, 2, distribution = rnorm)
-## The original space
-plot(trait_space, pch = 20, xlim = c(-3, 3), ylim = c(-3, 3),
-     main = "A - Original space", xlab = "Trait 1", ylab = "Trait 2")
+# ## The original space
+# plot(trait_space, pch = 20, xlim = c(-3, 3), ylim = c(-3, 3),
+#      main = "A - Original space", xlab = "Trait 1", ylab = "Trait 2")
 
 ## The randomly removed space
 random_rm <- reduce.space(trait_space, type = "random", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, random_rm, main = "B - Random removal", defaults)
+plot.space(trait_space, random_rm, main = "A - Random removal", defaults)
 
 ## The limit removal
 limit_rm <- reduce.space(trait_space, type = "limit", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, limit_rm, main = "C1 - Limit removal (minimal)", defaults)
-plot.space(trait_space, !limit_rm, main = "C2 - Limit removal (maximal)", defaults)
+plot.space(trait_space, limit_rm, main = "B - Limit", defaults)
 
 ## The displacement removal
 displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
 ## Moving the space to the upper right corner (positive)
-plot.space(trait_space, displace_rm, main = "D1 - Displacement (positive)", defaults)
-plot.space(trait_space, !displace_rm, main = "D2 - Displacement (negative)", defaults)
+plot.space(trait_space, displace_rm, main = "C - Displacement", defaults)
 
 ## The density removal
 density_rm <- reduce.space(trait_space, type = "density", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, density_rm, main = "E1 - Density (higher)", defaults)
-plot.space(trait_space, !density_rm, main = "E2 - Density (lower)", defaults)
+plot.space(trait_space, density_rm, main = "D - Density", defaults)
 
 ## List of removals (for plotting the tables later)
 typical_removal <- list(space = trait_space,
@@ -185,32 +199,14 @@ typical_removal <- list(space = trait_space,
                                       "density(low)" = !density_rm))
 ```
 
- [TODO:]
-  - Should the dimensions be independent? Correlated? Screed (i.e. with decreasing variance)
-  - Should we change the distributions *D* or leave it always fixed (normal)
+We repeated each step (and the following disparity measurements) 15 times.
 
-
- * We then extrapolate these changes for different points
-    * number of elements *n*: 10, 50, 100, 500, 1000
-    * number of dimensions *k*: 10, 50, 100, 500, 1000
 
 ## What do the metrics measure?
 
  * Include fable with: 1) name of the metric, 2) broad category, 3) what they measure, 4) their formula.
 
 #### Volume metrics
-
-```{r volume_metrics_list, echo = FALSE}
-## The list of volume metrics used
-volume_metrics <- list("ellispoid.volume" = ellipse.volume,
-                       #"convhull.volume" = convhull.volume,
-                       "n.ball.volume" = n.ball.volume,
-                       "prod.range" = c(prod, ranges),
-                       "prod.variance" = c(prod, variances),
-                       "sum.range" = c(sum, ranges),
-                       "sum.variance" = c(sum, variances),
-                       "diagonal" = diagonal)
-```
 
 ```{r fable_metrics, fig.show='hide'}
 library(knitr)
@@ -234,53 +230,37 @@ some text | base|lattice
 :------|:-------------------------------:|-------------------------------:
 Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-1.png"), dpi = 800)`
 Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-2.png"), dpi = 800)`
-Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), rnorm(10))$p.value`
+Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), distributions = rnorm(10))$p.value`
  -->
 
 
 #### Density metrics
 
-```{r density_metrics_list, echo = FALSE}
-## The list of volume density metrics
-density_metrics <- list("med.eucl.pairwise.dist" = c(median, pairwise.dist),
-                        "sum.eucl.pairwise.dist" = c(sum, pairwise.dist),
-                        "med.mana.pairwise.dist" = list(c(median, pairwise.dist),
-                                                          method = "manhattan"),
-                        "med.man.pairwise.dist" = list(c(sum, pairwise.dist),
-                                                         method = "manhattan"),
-                        "med.eucl.centroids" = c(median, centroids),
-                        "sum.eucl.centroids" = c(sum, centroids),
-                        "med.mana.centroids" = list(c(median, centroids), method = "manhattan"),
-                        "sum.mana.centroids" = list(c(sum, centroids), method = "manhattan"),
-                        "minimum.span.tree" = span.tree.length)
-```
-
 
 #### Position metrics
 
 
-```{r position_metrics_list, echo = FALSE}
-## The list of volume density metrics
-position_metrics <- list("med.eucl.dist.centre" = list(c(median, centroids), centroid = 0),
-                        "sum.eucl.dist.centre" = list(c(sum, centroids), centroid = 0),
-                        "med.mana.dist.centre" = list(c(median, centroids),
-                                                        centroid = 0, method = "manhattan"),
-                        "sum.mana.dist.centre" = list(c(sum, centroids),
-                                                        centroid = 0, method = "manhattan"))
-                        #"distance.from.prev" = "SPECIAL")
+
+```{r, all_metric, echo = FALSE}
+
+## All metrics (exploration)
+metrics_list <- list(
+    "av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+    "SoR" = c(sum, ranges),
+    "SoV" = c(sum, variances),
+    "PoQ" = c(prod, quantiles),
+    "SoQ" = c(sum, quantiles),
+    "av.displac" = c(mean, displacements),
+    "av.neighbo" = c(mean, neighbours)
+)
+
+metric_names <- c("Average squared distance", "Procrustes variance", "Sum of Ranges", "Sum of Variances", "Product of Quantiles", "Sum of Quantiles", "Mean displacement", "Mean nearest neighbours distance")
 ```
 
 
 
-## How good ("resilient") are the metrics?
-
- * How are they effective to the number of specimens (sample size 1)
- * How are they effective to the number of dimensions (sample size 2) - curse of multidimensionality
- * How are they effective to missing data (gapiness)
-
-
-
-
+## Effect of dimensionality
 
 
 In the end, the analysis should be a big GLM of
@@ -289,71 +269,71 @@ disparity ~ metric + reduction + dimensions + elements
 
 
 
-
-
 # Results
 
-
-```{r run_metrics, echo = FALSE}
+  
+```{r run_metrics, echo = FALSE, warning = FALSE}
 set.seed(42)
-## Space parameters
-elements <- 300
-distributions <- rnorm
-dimensions <- 10
+## Bundle simulations 
+remove_05 <- simulation.bundle(remove = 0.5, replicates = 20, metrics_list = metrics_list)
+remove_08 <- simulation.bundle(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+remove_02 <- simulation.bundle(remove = 0.8, replicates = 20, metrics_list = metrics_list)
 
-## Disruption parameters
-remove <- 0.5
+## Summarise the data
+remove_05 <- lapply(remove_05, summarise.metrics)
+remove_08 <- lapply(remove_08, summarise.metrics)
+remove_02 <- lapply(remove_02, summarise.metrics)
 
-## Running 20 simulations
-volumes_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, volume_metrics, verbose = TRUE)
-density_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, density_metrics, verbose = TRUE)
-positio_300e_10d <- simulate.metrics(20, elements, dimensions, distributions, remove, position_metrics, verbose = TRUE)
+```
+ 
+## Results per space (05)
 
-## Summarising the data
-summar_vol <- summarise.metrics(volumes_300e_10d)
-summar_den <- summarise.metrics(density_300e_10d)
-summar_pos <- summarise.metrics(positio_300e_10d)
+```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.5
+plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults)
 ```
 
-```{r fig_volume_results, echo = FALSE, fig.height = 10, fig.width = 8}
-results <- summar_vol
+## Results per space (08)
+
+```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.8
+plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults)
+```
+
+
+## Results per space (02)
+
+```{r fig_results_02, echo = FALSE, fig.height = 8, fig.width = 10}
+## Plotting the results for 0.2
+plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults)
+```
+<!-- ## Alternative plotting (per results) -->
+
+```{r fig_volume_results_unif2d05, echo = FALSE, fig.height = 21, fig.width = 8, eval = FALSE}
+results <- summar_all_runif2d05
 ## Plotting the results
-plot.metrics(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
+plot.results(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
              space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
 ```
 
-```{r fig_density_results, echo = FALSE, fig.height = 10, fig.width = 8}
+
+
+
+
+<!-- ```{r fig_density_results, echo = FALSE, fig.height = 10, fig.width = 8, eval = FALSE}
 results <- summar_den
 ## Plotting the results
-plot.metrics(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
+plot.results(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
              space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
 ```
 
-```{r fig_position_results, echo = FALSE, fig.height = 10, fig.width = 8}
+```{r fig_position_results, echo = FALSE, fig.height = 10, fig.width = 8, eval = FALSE}
 results <- summar_pos
 ## Plotting the results
-plot.metrics(results[[1]], results[[2]], col = default.palette(length(summar_vol[[1]])),
+plot.results(results[[1]], results[[2]], col = default.palette(length(summar_vol[[1]])),
              space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
 ```
-
-
-```{r, eval = FALSE, echo = FALSE}
-## Are the reductions working?
-defaults$xlim <- defaults$ylim <- NULL
-trait_space <- space.maker(elements, 3, distribution = runif)
-
-## The randomly removed space
-limit_rm <- reduce.space(trait_space[], type = "limit", remove = 0.5)
-## Plotting the reduction
-plot.space(trait_space, limit_rm, main = "", defaults, axis = c(1,2))
-plot.space(trait_space, limit_rm, main = "", defaults, axis = c(1,3))
-plot.space(trait_space, limit_rm, main = "", defaults, axis = c(2,3))
-
-plot.space(trait_space, limit_rm, main = "", defaults, axis = c(3,4))
-
-
-
-```
+ -->
 
 
 ## What do the metrics measure?
@@ -367,10 +347,27 @@ Measuring the effect on tests
 # Results
 
 
-# Acknowledgments
+# Acknowledgements
 
-
+Money from the ARC.
 
 # References
 
+
+
+# Supplementary material
+
+## Algorithm for selecting the parameters to reduce the space ($radius$, $displacement$, $density$) {#Appendix_algorithm_reduce}
+
+We used a recursive algorithm for selecting the parameter that removes $P$ elements: 80%, 50% or 20%.
+
+1. Select a random reduction parameters $R$.
+2. Remove elements from the space using $R$ resulting in $P'$ removed elements.
+    If the remaining number of elements is to the required proportion $P$ ; exit the algorithm;
+    Else go to 3.
+3. Get the different between the proportion of removed elements $P'$ and $P$.
+    If the difference is positive set the increment parameter $R$ to $R = 1.1 \times R$, then go to 2.
+    Else set $R = 0.9 \times R$, then go to 2.
+
+The algorithm is implemented in the `optimise.parameter` function in [reduce.space_fun.R](@@@).
 
