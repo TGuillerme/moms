@@ -4,8 +4,9 @@
 \alias{simulate.metrics}
 \title{Simulate metrics}
 \usage{
-\method{simulate}{metrics}(replicates, elements, dimensions, distributions,
-  remove, metrics_list, verbose = FALSE)
+\method{simulate}{metrics}(replicates, elements, dimensions,
+  arguments = list(NULL), distributions, remove, metrics_list,
+  verbose = FALSE, scree = NULL, cor.matrix = NULL)
 }
 \arguments{
 \item{replicates}{number of simulations}
@@ -21,6 +22,10 @@
 \item{metrics_list}{the list of metrics}
 
 \item{verbose}{}
+
+\item{scree}{variance per axis (see dispRity::space.maker)}
+
+\item{cor}{correlation between axis (see dispRity::space.maker)}
 }
 \description{
 Run the metrics simulations

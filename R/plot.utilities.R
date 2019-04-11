@@ -11,7 +11,7 @@
 plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
     ## Plot the first space
     plot(space[, axis], pch = defaults$pch, xlim = defaults$xlim, ylim = defaults$ylim, col = defaults$col1,
-         main = main, xlab = paste(defaults$xlab, axis[1]), ylab = paste(defaults$xlab, axis[2]), cex = defaults$cex, ...)
+         main = main, xlab = ifelse(defaults$xlab == "", "", paste(defaults$xlab, axis[1])), ylab = ifelse(defaults$ylab == "", "", paste(defaults$xlab, axis[1])), cex = defaults$cex, ...)
     
     ## Plot the second space
     points(space[remove, axis], pch = defaults$pch, col = defaults$col2, cex = defaults$cex)
@@ -29,7 +29,7 @@ plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
 #' @examples
 
 
-plot.metrics <- function(cent.tend, CIs, col, space, remove_list, defaults) {
+plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 
     empty.plot <- function(n_metrics, names_metrics, is.last = FALSE) {
         ## Plot margins
@@ -106,4 +106,181 @@ plot.metrics <- function(cent.tend, CIs, col, space, remove_list, defaults) {
         par(bty = "n", mar = c(ifelse(removal != length(remove_list), 1, 4),2,1,2))
         plot.space(space, remove_list[[removal]], main = names(remove_list)[removal], defaults, xaxt = "n", yaxt = "n")
     }
+}
+
+
+#' @title Plot the results fable for the metrics analysis
+#' @description plotting the spaces changing
+#' @param space_results a named list of results from different simulated spaces
+#' @param col the colours for the results (i.e. for the different spaces)
+#' @param remove the proportion of elements removed
+#' @param metrics_names optional, a list of metrics_names
+#' @param defaults a list of arguments for plot.space
+#' @param reduce.distribution the function for making the spaces for the row "names"
+#' @examples
+
+plot.metrics <- function(space_results, col, remove, metrics_names, defaults, reduce.distribution = rnorm) {
+
+    ## Set the colours
+    if(class(col) == "function") {
+        col <- col(length(space_results))
+    }
+    
+    if(missing(metrics_names)) {
+        metrics_names <- names(space_results[[1]][[1]])
+    }
+
+    ## Randomly make some removal plots as column "names"
+    make.reductions <- function(remove, reduce.distribution) {
+        space <- space.maker(200, 2, reduce.distribution)
+        ## Do the space reductions
+        random <- reduce.space(space, type = "random", remove = remove)
+        limit <- reduce.space(space, type = "limit", remove = remove)
+        displacement <- reduce.space(space, type = "displacement", remove = remove)
+        density <- reduce.space(space, type = "density", remove = remove)
+        ## Return every "row"
+        return(list(space = space,
+                    reductions = list(
+                                "random" = random,
+                                "limit (inner)" = limit,
+                                "limit (outer)" = !limit,
+                                "displace (+)" = displacement,
+                                "displace (-)" = !displacement,
+                                "density (high)" = density,
+                                "density (low)" = !density)))
+    }
+
+    ## Making the general plot window
+    make.plot.window <- function(rows, cols) {
+        ## Variables
+        n_rows <- length(rows[[2]])
+        ## Cols
+        n_cols <- length(cols[[1]][[1]])+1
+        ## Making the plot window
+        layout_matrix <- matrix(c(1:(n_rows * n_cols)), nrow = n_rows, ncol = n_cols)
+        ## Cell parameters
+        col_spaces_width <- 1
+        col_result_width <- rep(1, (n_cols-1))
+        first_row_height <- 1.3
+        last_row_height <- 1.4
+        middle_row_heights <- rep(1, (n_rows - 2))
+        ## Making the layout
+        layout <- layout(layout_matrix,
+                        c(col_spaces_width, col_result_width),
+                        c(first_row_height, middle_row_heights, last_row_height))
+        return(invisible())
+        #layout.show(layout)
+    }
+
+    ## Plotting the spaces (i.e. row names)
+    plot.reduction <- function(removal, reductions, defaults) {
+        ## Update the defaults
+        defaults$ylab <- ""
+        defaults$xlab <- ""
+        defaults$cex <- 0.3
+        
+        ## Plot window
+        par(bty = "n",
+            mar = c(bottom = ifelse(removal != length(reductions$reductions), 1, 4),
+                    left   = 1,
+                    top    = ifelse(removal != 1, 1, 4),
+                    right  = 1)
+            )
+
+        ## Plot space change
+
+        plot.space(reductions$space, reductions$reductions[[removal]], main = names(reductions$reductions[removal]), defaults, xaxt = "n", yaxt = "n")
+        return(invisible())
+    }
+
+    ## Plot one result
+    empty.plot <- function(space_results, overal_range, is.last, is.first, main) {
+        
+        ## Set margins (auto)
+        par(bty ="l",
+            mar = c(bottom = ifelse(is.last, 4, 1),
+                    left   = 1,
+                    top    = ifelse(is.first, 4, 1),
+                    right  = 1))
+
+        ## Make plot (empty)
+        plot(NULL, ylim = 1:length(space_results[[1]]), xlim = overal_range,
+            ylab = "", xaxt = "n", yaxt = "n", 
+            xlab = ifelse(is.last, "Difference", ""), 
+            main = ifelse(is.first, main, ""))
+
+        ## Adding lines
+        abline(v = 0, lty = 2, col = "grey")
+
+        ## If last axis ad values on x
+        if(is.last) {
+            axis(1)
+        }
+        return(invisible())
+    }
+
+    ## Add the CIs and median
+    add.lines.points <- function(one_space, space_results, one_metric, reduce, col) {
+        ## Extract the results for one metric and one space
+        CIs <- space_results[[one_space]]$CI[[one_metric]]
+        point <- space_results[[one_space]]$cent.tend[[one_metric]]
+        ## Number of quantiles
+        quantiles_n <- nrow(CIs)
+        ## Extract the values for x and y
+        x_vals <- CIs[, reduce]
+        y_vals <- rep((one_space/length(space_results)+1), 2)
+        ## Plot the lines
+        for(cis in 1:(quantiles_n/2)) {
+            lines(x = x_vals[c(cis, (quantiles_n:1)[cis])],
+                  y = y_vals,
+                  lty = (quantiles_n/2 - cis + 1),
+                  lwd = cis * 1.5,
+                  col = col[one_space])
+        }
+        points(x = point[reduce], y = (one_space/length(space_results)+1), pch = 19, col = col[one_space])
+        return(invisible())
+    }
+
+    ## Making results plots (for one column)
+    make.results.plots <- function(one_metric, space_results, overal_range, col, main) {
+        ## Initial parameters
+        is.last <- FALSE
+        is.first <- FALSE
+
+        ## Loop through the results of each 
+        for(reduce in 2:length(space_results[[1]][[1]][[1]])) {
+            ## Update if last or first
+            is.last <- ifelse(reduce == length(space_results[[1]][[1]][[1]]), TRUE, FALSE)
+            is.first <- ifelse(reduce == 2, TRUE, FALSE)
+
+            ## Empty plot
+            empty.plot(space_results, overal_range, is.last, is.first, main)
+            ## Add lines
+            for(n_space in 1:length(space_results)) {
+                add.lines.points(n_space, space_results, one_metric, reduce, col)
+            }
+        }
+    }
+
+    ## Get the reductions (rows)
+    reductions <- make.reductions(remove = remove, reduce.distribution = reduce.distribution)
+
+    ## Make the plot layout
+    make.plot.window(rows = reductions, cols = space_results)
+
+    ## Plotting the space transformations in the following cells
+    silent <- lapply(as.list(1:length(reductions$reductions)), plot.reduction, reductions = reductions, defaults = defaults)
+
+    ## Get the overall range
+    all_values <- unlist(space_results)
+    if(any(all_values[-which(is.na(all_values))] == Inf)) {
+        all_values[-which(all_values == Inf)]
+    }
+    overal_range <- round(range(all_values, na.rm = TRUE), digits = 1)
+
+    ## Plot all results
+    for(one_metric in 1:length(space_results[[1]][[1]])) {
+        make.results.plots(one_metric, space_results, overal_range, col, main = metrics_names[one_metric])
+    }
+    return(invisible())
 }

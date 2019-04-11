@@ -19,23 +19,45 @@
 #' @author Thomas Guillerme
 #' @export
 
-simulate.metrics <- function(replicates, elements, dimensions, distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL) {
+simulate.metrics <- function(replicates, elements, dimensions, arguments = list(NULL), distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL) {
 
     if(verbose) cat(paste0("Running ", replicates, " replicates:"))
 
     ## Run one simulation
-    one.simulation <- function(elements, dimensions, distributions, remove, metrics_list, verbose, scree, cor.matrix) {
+    one.simulation <- function(elements, dimensions, distributions, arguments, remove, metrics_list, verbose, scree, cor.matrix) {
 
         ## Simulate the space
-        space <- space.maker(elements, dimensions, distribution = distributions, scree = scree, cor.matrix = cor.matrix)
+        if(is.null(arguments[[1]])) {
+            space <- space.maker(elements, dimensions, distribution = distributions, scree = scree, cor.matrix = cor.matrix)
+        } else {
+            space <- space.maker(elements, dimensions, distribution = distributions, arguments = arguments, scree = scree, cor.matrix = cor.matrix)
+        }
         ## Adding rownames
         rownames(space) <- 1:elements
 
+        ## Double check for full TRUE or full FALSE
+        double.check.reduce <- function(reduction, space, type, remove, verbose) {
+            if(all(reduction == "TRUE") || all(reduction == "FALSE")) {
+                if(verbose) cat(paste0("Double checking reduction for ", type, ":"))
+                while(all(reduction == TRUE) || all(reduction == FALSE)) {
+                    if(verbose) cat(".")
+                    reduction <- reduce.space(space, type = type, remove = remove)
+                }
+                if(verbose) cat("Done.\n")
+            }
+            return(reduction)
+        }
+
+
         ## Removing elements
         random <- reduce.space(space, type = "random", remove = remove)
+        random <- double.check.reduce(random, space, type = "random", remove = remove, verbose = TRUE)
         limits <- reduce.space(space, type = "limit", remove = remove)
+        limits <- double.check.reduce(limits, space, type = "limit", remove = remove, verbose = TRUE)
         displa <- reduce.space(space, type = "displacement", remove = remove)
+        displa <- double.check.reduce(displa, space, type = "displacement", remove = remove, verbose = TRUE)
         densit <- reduce.space(space, type = "density", remove = remove)
+        densit <- double.check.reduce(densit, space, type = "density", remove = remove, verbose = TRUE)
 
         ## Making the custom groups list
         custom_groups <- list("all" = rownames(space),
@@ -46,6 +68,7 @@ simulate.metrics <- function(replicates, elements, dimensions, distributions, re
                               "displa.max" = rownames(space)[!displa],
                               "densit.min" = rownames(space)[densit],
                               "densit.max" = rownames(space)[!densit])
+
         ## Coercing into numerics
         custom_groups <- lapply(custom_groups, as.numeric)
 
@@ -80,7 +103,7 @@ simulate.metrics <- function(replicates, elements, dimensions, distributions, re
     }
 
     ## Run all simulations
-    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, remove, metrics_list, verbose, scree, cor.matrix), simplify = FALSE)
+    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, arguments = arguments, remove, metrics_list, verbose, scree, cor.matrix), simplify = FALSE)
 
     ## Merging into a single list
     for(list in 2:replicates) {

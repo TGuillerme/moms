@@ -4,20 +4,21 @@
 \alias{plot.metrics}
 \title{Plot the results fable for the metrics analysis}
 \usage{
-\method{plot}{metrics}(cent.tend, CIs, col, space, remove_list, defaults)
+\method{plot}{metrics}(space_results, col, remove, metrics_names, defaults,
+  reduce.distribution = rnorm)
 }
 \arguments{
-\item{cent.tend}{the analysis central tendencies}
+\item{space_results}{a named list of results from different simulated spaces}
 
-\item{CIs}{the analysis CIs}
+\item{col}{the colours for the results (i.e. for the different spaces)}
 
-\item{col}{the colours for the results (i.e. for the different metrics)}
+\item{remove}{the proportion of elements removed}
 
-\item{space}{the space to be plotted on the side (plot.space)}
-
-\item{remove_list}{a list of elements to remove in the space (plot.space)}
+\item{metrics_names}{optional, a list of metrics_names}
 
 \item{defaults}{a list of arguments for plot.space}
+
+\item{reduce.distribution}{the function for making the spaces for the row "names"}
 }
 \description{
 plotting the spaces changing

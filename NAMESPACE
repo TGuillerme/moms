@@ -8,8 +8,10 @@ export(reduce.space)
 
 ## Utilities
 export(plot.space)
+export(plot.results)
 export(plot.metrics)
 
 ## Analysis (paper)
+export(simulation.bundle)
 export(simulate.metrics)
 export(summarise.metrics)

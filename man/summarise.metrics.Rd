@@ -5,7 +5,7 @@
 \title{Summarise metrics}
 \usage{
 summarise.metrics(results_list, cent.tend = median, quantiles = c(95, 50),
-  scale = TRUE)
+  scale = TRUE, relative = FALSE)
 }
 \arguments{
 \item{results_list}{the list of results}
@@ -14,7 +14,7 @@ summarise.metrics(results_list, cent.tend = median, quantiles = c(95, 50),
 
 \item{quantiles}{the quantiles to display}
 
-\item{sale}{whether to center and scale the results}
+\item{relative}{whether to make the results relative to the non-changed space}
 }
 \description{
 Summarises the metric simulations the results for plotting and tables
