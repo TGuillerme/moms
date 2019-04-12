@@ -126,13 +126,13 @@ Each space is are then reduced to 3, 5, 10, 50, 100, 300 dimensions and 10, 50, 
 
 | space name | size   | distribution(s) | dimensions variance | correlation |
 |------------|--------|-----------------|---------------------|-------------|
-| PCA        |500*300| Normal (mean = 0, sd = 1)| Decrease lognormally| none        |
-| PCO        |500*300| Normal          | Decrease normally   | none        |
-|    Normal  |500*300| Normal          | Constant            | none        |
-| Normal correlated |500*300| Normal          | Constant            | Random (between 0.1 and 0.9) |
-|   Uniform  |500*300| Uniform (min = 0, max = 1)| Constant            | none        |
-|   Uniform  |500*300| Uniform         | Constant            | Random (between 0.1 and 0.9) |
-|   Random   |500*300| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
+| PCA        |300*50| Normal (mean = 0, sd = 1)| Decrease lognormally| none        |
+| PCO        |300*50| Normal          | Decrease normally   | none        |
+|    Normal  |300*50| Normal          | Constant            | none        |
+| Normal correlated |300*50| Normal          | Constant            | Random (between 0.1 and 0.9) |
+|   Uniform  |300*50| Uniform (min = -0.5, max = 0.5)| Constant            | none        |
+|   Uniform  |300*50| Uniform         | Constant            | Random (between 0.1 and 0.9) |
+|   Random   |300*50| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
 
 
 ## Shifting spaces
@@ -258,7 +258,10 @@ metrics_list <- list(
 metric_names <- c("Average squared distance", "Procrustes variance", "Sum of Ranges", "Sum of Variances", "Product of Quantiles", "Sum of Quantiles", "Mean displacement", "Mean nearest neighbours distance")
 ```
 
-
+```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
+complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
+                                                     centroid = 0, method = "manhattan"))
+```
 
 ## Effect of dimensionality
 
@@ -300,13 +303,16 @@ plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults
 plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults)
 ```
 
-
 ## Results per space (02)
 
 ```{r fig_results_02, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.2
 plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults)
 ```
+
+
+
+
 <!-- ## Alternative plotting (per results) -->
 
 ```{r fig_volume_results_unif2d05, echo = FALSE, fig.height = 21, fig.width = 8, eval = FALSE}
