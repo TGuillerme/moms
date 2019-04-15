@@ -242,7 +242,6 @@ Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), distribu
 
 
 ```{r, all_metric, echo = FALSE}
-
 ## All metrics (exploration)
 metrics_list <- list(
     "av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
@@ -276,39 +275,123 @@ disparity ~ metric + reduction + dimensions + elements
 
   
 ```{r run_metrics, echo = FALSE, warning = FALSE}
-set.seed(42)
-## Bundle simulations 
-remove_05 <- simulation.bundle(remove = 0.5, replicates = 20, metrics_list = metrics_list)
-remove_08 <- simulation.bundle(remove = 0.8, replicates = 20, metrics_list = metrics_list)
-remove_02 <- simulation.bundle(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+## Toggle data generation or not
+generate_data <- TRUE
+
+if(generate_data) {
+    set.seed(42)
+    ## Bundle simulations 
+    remove_05 <- simulation.spaces(remove = 0.5, replicates = 20, metrics_list = metrics_list)
+    remove_08 <- simulation.spaces(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+    remove_02 <- simulation.spaces(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+
+    ## Save simulations
+    save.results(remove_05)
+    save.results(remove_08)
+    save.results(remove_02)
+} else {
+    ## Load results
+    remove_05 <- load.results("remove_05")
+    remove_08 <- load.results("remove_08")
+    remove_02 <- load.results("remove_02")
+}
 
 ## Summarise the data
 remove_05 <- lapply(remove_05, summarise.metrics)
 remove_08 <- lapply(remove_08, summarise.metrics)
 remove_02 <- lapply(remove_02, summarise.metrics)
-
 ```
  
 ## Results per space (05)
 
 ```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 9}
 ## Plotting the results for 0.5
-plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults)
+plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults, text.in.cell = TRUE)
 ```
 
 ## Results per space (08)
 
 ```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 9}
 ## Plotting the results for 0.8
-plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults)
+plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults, text.in.cell = TRUE)
 ```
 
 ## Results per space (02)
 
 ```{r fig_results_02, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.2
-plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults)
+plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults, text.in.cell = TRUE)
 ```
+
+## Rarefaction
+
+```{r run_rarefaction, echo = FALSE, warning = FALSE}
+## Toggle data generation or not
+generate_data <- TRUE
+
+if(generate_data) {
+    set.seed(42)
+    ## Bundle simulations
+    rarefy_05 <- simulation.rarefaction(remove = 0.5, replicates = 20, metrics_list = metrics_list)
+    rarefy_08 <- simulation.rarefaction(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+    rarefy_02 <- simulation.rarefaction(remove = 0.2, replicates = 20, metrics_list = metrics_list)
+
+    ## Save simulations
+    save.results(rarefy_05)
+    save.results(rarefy_08)
+    save.results(rarefy_02)
+} else {
+    ## Load results
+    load.results("rarefy_05")
+    load.results("rarefy_08")
+    load.results("rarefy_02")
+}
+
+## Summarise the data
+rarefy_05 <- lapply(rarefy_05, summarise.metrics)
+rarefy_08 <- lapply(rarefy_08, summarise.metrics)
+rarefy_02 <- lapply(rarefy_02, summarise.metrics)
+```
+
+ 
+## Rarefied results for normal space (D = 50, remove 05)
+
+```{r fig_results_05_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.5
+plot.metrics(rarefy_05, col = heat.colors, remove = 0.5, defaults = defaults, text.in.cell = TRUE)
+```
+
+## Results per space (08)
+
+```{r fig_results_08_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.8
+plot.metrics(rarefy_08, col = heat.colors, remove = 0.8, defaults = defaults, text.in.cell = TRUE)
+```
+
+## Results per space (02)
+
+```{r fig_results_02_rare, echo = FALSE, fig.height = 8, fig.width = 10}
+## Plotting the results for 0.2
+plot.metrics(rarefy_02, col = heat.colors, remove = 0.2, defaults = defaults, text.in.cell = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
