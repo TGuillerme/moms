@@ -11,6 +11,7 @@
 #' @param verbose 
 #' @param scree variance per axis (see dispRity::space.maker)
 #' @param cor correlation between axis (see dispRity::space.maker)
+#' @param rare.dim the number of dimensions to use (not to generate)
 #' 
 #' @examples
 #'
@@ -19,12 +20,16 @@
 #' @author Thomas Guillerme
 #' @export
 
-simulate.metrics <- function(replicates, elements, dimensions, arguments = list(NULL), distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL) {
+simulate.metrics <- function(replicates, elements, dimensions, arguments = list(NULL), distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim = rare.dim) {
 
     if(verbose) cat(paste0("Running ", replicates, " replicates:"))
 
+    if(missing(rare.dim)) {
+        rare.dim <- dimensions
+    }
+
     ## Run one simulation
-    one.simulation <- function(elements, dimensions, distributions, arguments, remove, metrics_list, verbose, scree, cor.matrix) {
+    one.simulation <- function(elements, dimensions, distributions, arguments, remove, metrics_list, verbose, scree, cor.matrix, rare.dim) {
 
         ## Simulate the space
         if(is.null(arguments[[1]])) {
@@ -35,49 +40,15 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
         ## Adding rownames
         rownames(space) <- 1:elements
 
-        ## Double check for full TRUE or full FALSE
-        double.check.reduce <- function(reduction, space, type, remove, verbose) {
-            if(all(reduction == "TRUE") || all(reduction == "FALSE")) {
-                if(verbose) cat(paste0("Double checking reduction for ", type, ":"))
-                while(all(reduction == TRUE) || all(reduction == FALSE)) {
-                    if(verbose) cat(".")
-                    reduction <- reduce.space(space, type = type, remove = remove)
-                }
-                if(verbose) cat("Done.\n")
-            }
-            return(reduction)
-        }
-
-
-        ## Removing elements
-        random <- reduce.space(space, type = "random", remove = remove)
-        random <- double.check.reduce(random, space, type = "random", remove = remove, verbose = TRUE)
-        limits <- reduce.space(space, type = "limit", remove = remove)
-        limits <- double.check.reduce(limits, space, type = "limit", remove = remove, verbose = TRUE)
-        displa <- reduce.space(space, type = "displacement", remove = remove)
-        displa <- double.check.reduce(displa, space, type = "displacement", remove = remove, verbose = TRUE)
-        densit <- reduce.space(space, type = "density", remove = remove)
-        densit <- double.check.reduce(densit, space, type = "density", remove = remove, verbose = TRUE)
-
-        ## Making the custom groups list
-        custom_groups <- list("all" = rownames(space),
-                              "random" = rownames(space)[random],
-                              "limits.min" = rownames(space)[limits],
-                              "limits.max" = rownames(space)[!limits],
-                              "displa.min" = rownames(space)[displa],
-                              "displa.max" = rownames(space)[!displa],
-                              "densit.min" = rownames(space)[densit],
-                              "densit.max" = rownames(space)[!densit])
-
-        ## Coercing into numerics
-        custom_groups <- lapply(custom_groups, as.numeric)
+        ## Reducing the spaces
+        custom_groups <- run.reduce.spaces(space, remove = remove)
 
         ## Fast disparity calculation
-        fast.disparity <- function(metric, space, groups) {
+        fast.disparity <- function(metric, space, groups, rare.dim) {
             ## Function for disparity on one group
-            group.disparity <- function(group, space, metric) {
+            group.disparity <- function(group, space, metric, rare.dim) {
                 ## Setting up the default args
-                args <- list(matrix = space[group,])
+                args <- list(matrix = space[group, 1:rare.dim])
                 ## Simple level 1 metric
                 if(length(metric) == 1) {
                     return(do.call(metric, args))
@@ -96,14 +67,15 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
                 ## Level 2 + 1 metric + args
                 return(metric[[1]][[1]](do.call(metric[[1]][[2]], args)))
             }
-            return(matrix(unlist(lapply(groups, group.disparity, space, metric)), ncol = 1, dimnames = list(names(groups))))
+            return(matrix(unlist(lapply(groups, group.disparity, space, metric, rare.dim)), ncol = 1, dimnames = list(names(groups))))
         }
+
         if(verbose) cat(".")
-        return(lapply(metrics_list, fast.disparity, space = space, groups = custom_groups))
+        return(lapply(metrics_list, fast.disparity, space = space, groups = custom_groups, rare.dim = rare.dim))
     }
 
     ## Run all simulations
-    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, arguments = arguments, remove, metrics_list, verbose, scree, cor.matrix), simplify = FALSE)
+    disparity_results <- replicate(replicates, one.simulation(elements, dimensions, distributions, arguments = arguments, remove, metrics_list, verbose, scree, cor.matrix, rare.dim = rare.dim), simplify = FALSE)
 
     ## Merging into a single list
     for(list in 2:replicates) {
@@ -113,4 +85,58 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
     if(verbose) cat("Done\n")
 
     return(disparity_results[[1]])
+}
+
+#' @title Reduce spaces
+#'
+#' @description Run the different space reductions
+#'
+#' @param space a space
+#' @param remove percentage to remove
+#' 
+#' @examples
+#'
+#' @seealso
+#' 
+#' @author Thomas Guillerme
+#' @export
+
+run.reduce.spaces <- function(space, remove) {
+
+    ## Double check for full TRUE or full FALSE
+    double.check.reduce <- function(reduction, space, type, remove, verbose) {
+        if(all(reduction == "TRUE") || all(reduction == "FALSE")) {
+            if(verbose) cat(paste0("Double checking reduction for ", type, ":"))
+            while(all(reduction == TRUE) || all(reduction == FALSE)) {
+                if(verbose) cat(".")
+                reduction <- reduce.space(space, type = type, remove = remove+sample(c(0.01, -0.01), 1))
+            }
+            if(verbose) cat("Done.\n")
+        }
+        return(reduction)
+    }
+
+    ## Removing elements
+    random <- reduce.space(space, type = "random", remove = remove)
+    random <- double.check.reduce(random, space, type = "random", remove = remove, verbose = TRUE)
+    limits <- reduce.space(space, type = "limit", remove = remove)
+    limits <- double.check.reduce(limits, space, type = "limit", remove = remove, verbose = TRUE)
+    displa <- reduce.space(space, type = "displacement", remove = remove)
+    displa <- double.check.reduce(displa, space, type = "displacement", remove = remove, verbose = TRUE)
+    densit <- reduce.space(space, type = "density", remove = remove)
+    densit <- double.check.reduce(densit, space, type = "density", remove = remove, verbose = TRUE)
+
+    ## Making the custom groups list
+    custom_groups <- list("all" = rownames(space),
+                          "random" = rownames(space)[random],
+                          "limits.min" = rownames(space)[limits],
+                          "limits.max" = rownames(space)[!limits],
+                          "displa.min" = rownames(space)[displa],
+                          "displa.max" = rownames(space)[!displa],
+                          "densit.min" = rownames(space)[densit],
+                          "densit.max" = rownames(space)[!densit])
+
+    ## Coercing into numerics
+    custom_groups <- lapply(custom_groups, as.numeric)
+    return(custom_groups)
 }

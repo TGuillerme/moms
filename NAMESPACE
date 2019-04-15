@@ -6,12 +6,16 @@ import(graphics)
 ## Functions
 export(reduce.space)
 
-## Utilities
+## Plot utilities
 export(plot.space)
 export(plot.results)
 export(plot.metrics)
 
 ## Analysis (paper)
-export(simulation.bundle)
+export(run.reduce.spaces)
 export(simulate.metrics)
 export(summarise.metrics)
+export(simulation.spaces)
+export(simulation.rarefaction)
+export(save.results)
+export(load.results)

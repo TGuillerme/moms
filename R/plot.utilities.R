@@ -117,13 +117,14 @@ plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 #' @param metrics_names optional, a list of metrics_names
 #' @param defaults a list of arguments for plot.space
 #' @param reduce.distribution the function for making the spaces for the row "names"
+#' @param text.in.cell logical, whether to add text in the first cell (i.e. legend)
 #' @examples
 
-plot.metrics <- function(space_results, col, remove, metrics_names, defaults, reduce.distribution = rnorm) {
+plot.metrics <- function(space_results, col, remove, metrics_names, defaults, reduce.distribution = rnorm, text.in.cell = FALSE) {
 
     ## Set the colours
     if(class(col) == "function") {
-        col <- col(length(space_results))
+        col <- rev(col(length(space_results)))
     }
     
     if(missing(metrics_names)) {
@@ -220,7 +221,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
     }
 
     ## Add the CIs and median
-    add.lines.points <- function(one_space, space_results, one_metric, reduce, col) {
+    add.lines.points <- function(one_space, space_results, one_metric, reduce, col, y.val, text.in.cell) {
         ## Extract the results for one metric and one space
         CIs <- space_results[[one_space]]$CI[[one_metric]]
         point <- space_results[[one_space]]$cent.tend[[one_metric]]
@@ -228,7 +229,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
         quantiles_n <- nrow(CIs)
         ## Extract the values for x and y
         x_vals <- CIs[, reduce]
-        y_vals <- rep((one_space/length(space_results)+1), 2)
+        y_vals <- rep(y.val, 2)
         ## Plot the lines
         for(cis in 1:(quantiles_n/2)) {
             lines(x = x_vals[c(cis, (quantiles_n:1)[cis])],
@@ -237,12 +238,15 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
                   lwd = cis * 1.5,
                   col = col[one_space])
         }
-        points(x = point[reduce], y = (one_space/length(space_results)+1), pch = 19, col = col[one_space])
+        points(x = point[reduce], y = y_vals[1], pch = 21, bg = col[one_space], col = "black")
+        if(text.in.cell) {
+            text(x = point[reduce], y = y_vals[1], pos = 4, labels = names(space_results)[one_space])
+        }
         return(invisible())
     }
 
     ## Making results plots (for one column)
-    make.results.plots <- function(one_metric, space_results, overal_range, col, main) {
+    make.results.plots <- function(one_metric, space_results, overal_range, col, main, text.in.cell) {
         ## Initial parameters
         is.last <- FALSE
         is.first <- FALSE
@@ -255,9 +259,13 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
 
             ## Empty plot
             empty.plot(space_results, overal_range, is.last, is.first, main)
-            ## Add lines
-            for(n_space in 1:length(space_results)) {
-                add.lines.points(n_space, space_results, one_metric, reduce, col)
+
+            ## Get the y_values
+            y_vals <- seq(from = 1, to = 2, length.out = length(space_results))
+
+            # Add lines
+            for(one_space in 1:length(space_results)) {
+                add.lines.points(one_space, space_results, one_metric, reduce, col, y.val = y_vals[one_space], text.in.cell = ifelse((text.in.cell && reduce == 2), TRUE, FALSE))
             }
         }
     }
@@ -280,7 +288,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
 
     ## Plot all results
     for(one_metric in 1:length(space_results[[1]][[1]])) {
-        make.results.plots(one_metric, space_results, overal_range, col, main = metrics_names[one_metric])
+        make.results.plots(one_metric, space_results, overal_range, col, main = metrics_names[one_metric], text.in.cell = ifelse(text.in.cell, ifelse(one_metric == 1, TRUE, FALSE), FALSE))
     }
     return(invisible())
 }

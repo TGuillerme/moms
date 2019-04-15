@@ -5,7 +5,7 @@
 \title{Plot the results fable for the metrics analysis}
 \usage{
 \method{plot}{metrics}(space_results, col, remove, metrics_names, defaults,
-  reduce.distribution = rnorm)
+  reduce.distribution = rnorm, text.in.cell = FALSE)
 }
 \arguments{
 \item{space_results}{a named list of results from different simulated spaces}
@@ -19,6 +19,8 @@
 \item{defaults}{a list of arguments for plot.space}
 
 \item{reduce.distribution}{the function for making the spaces for the row "names"}
+
+\item{text.in.cell}{logical, whether to add text in the first cell (i.e. legend)}
 }
 \description{
 plotting the spaces changing

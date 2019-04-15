@@ -6,7 +6,7 @@
 \usage{
 \method{simulate}{metrics}(replicates, elements, dimensions,
   arguments = list(NULL), distributions, remove, metrics_list,
-  verbose = FALSE, scree = NULL, cor.matrix = NULL)
+  verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim = rare.dim)
 }
 \arguments{
 \item{replicates}{number of simulations}
@@ -24,6 +24,8 @@
 \item{verbose}{}
 
 \item{scree}{variance per axis (see dispRity::space.maker)}
+
+\item{rare.dim}{the number of dimensions to use (not to generate)}
 
 \item{cor}{correlation between axis (see dispRity::space.maker)}
 }
