@@ -6,7 +6,7 @@
 \usage{
 \method{simulate}{metrics}(replicates, elements, dimensions,
   arguments = list(NULL), distributions, remove, metrics_list,
-  verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim = rare.dim)
+  verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim)
 }
 \arguments{
 \item{replicates}{number of simulations}

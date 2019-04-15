@@ -20,7 +20,7 @@
 #' @author Thomas Guillerme
 #' @export
 
-simulate.metrics <- function(replicates, elements, dimensions, arguments = list(NULL), distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim = rare.dim) {
+simulate.metrics <- function(replicates, elements, dimensions, arguments = list(NULL), distributions, remove, metrics_list, verbose = FALSE, scree = NULL, cor.matrix = NULL, rare.dim) {
 
     if(verbose) cat(paste0("Running ", replicates, " replicates:"))
 
@@ -30,6 +30,44 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
 
     ## Run one simulation
     one.simulation <- function(elements, dimensions, distributions, arguments, remove, metrics_list, verbose, scree, cor.matrix, rare.dim) {
+
+        ## Sort the correlation matrix
+        if(!is.null(cor.matrix)) {
+            
+            if(cor.matrix == "random"){
+                test <- NA
+                class(test) <- "try-error"
+    
+                while(class(test) == "try-error"){
+                    ## Set random correlation values
+                    correlations_values <- round(runif(dimensions, min = 0.1, max = 0.9), 1)
+                    cor.matrix <- matrix(1, dimensions, dimensions)
+                    cor.matrix[lower.tri(cor.matrix)] <- cor.matrix[upper.tri(cor.matrix)] <- correlations_values
+        
+                    ## Make sure the Choleski decomposition will work
+                    test <- try(chol(cor.matrix), silent = TRUE)
+                    cat(".")
+                }
+            }
+
+        }
+
+        ## Sort the dimensions (if random)
+        if(length(distributions) == 1 && class(distributions) != "function") {
+            if(distributions == "random") {
+                distributions <- sample(c(rnorm,runif,rlnorm), dimensions, replace = TRUE)
+                distribution_names <- lapply(distributions, function(fun) gsub("C_", "", as.character(body(fun)[[2]])))
+                ## Set the arguments
+                get.args <- function(fun) {
+                    switch(fun,
+                        runif = {return(list("min" = -0.5, "max" = 0.5))},
+                        rnorm = {return(list("mean" = 0, "sd" = 1))},
+                        rlnorm = {return(list("meanlog" = 0, "sdlog" = 1))}
+                    )
+                }
+                arguments <- lapply(distribution_names, get.args)
+            }
+        }
 
         ## Simulate the space
         if(is.null(arguments[[1]])) {
