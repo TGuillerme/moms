@@ -274,7 +274,7 @@ disparity ~ metric + reduction + dimensions + elements
 # Results
 
   
-```{r run_metrics, echo = FALSE, warning = FALSE}
+```{r run_metrics, echo = FALSE, warning = FALSE, results = 'hide'}
 ## Toggle data generation or not
 generate_data <- TRUE
 
@@ -325,7 +325,7 @@ plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults
 
 ## Rarefaction
 
-```{r run_rarefaction, echo = FALSE, warning = FALSE}
+```{r run_rarefaction, echo = FALSE, warning = FALSE, results = 'hide'}
 ## Toggle data generation or not
 generate_data <- TRUE
 
