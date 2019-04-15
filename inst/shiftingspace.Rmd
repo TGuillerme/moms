@@ -124,15 +124,17 @@ par(op)
 We generated 7 spaces using the following parameters.
 Each space is are then reduced to 3, 5, 10, 50, 100, 300 dimensions and 10, 50, 100, 500 elements resulting in 168 parameter combinations.
 
-| space name | size   | distribution(s) | dimensions variance | correlation |
-|------------|--------|-----------------|---------------------|-------------|
-| PCA        |300*50| Normal (mean = 0, sd = 1)| Decrease lognormally| none        |
-| PCO        |300*50| Normal          | Decrease normally   | none        |
-|    Normal  |300*50| Normal          | Constant            | none        |
-| Normal correlated |300*50| Normal          | Constant            | Random (between 0.1 and 0.9) |
-|   Uniform  |300*50| Uniform (min = -0.5, max = 0.5)| Constant            | none        |
-|   Uniform  |300*50| Uniform         | Constant            | Random (between 0.1 and 0.9) |
+| space name | size | distribution(s)                | dimensions variance | correlation |
+|------------|------|--------------------------------|---------------------|-------------|
+|   Uniform  |300*2 | Uniform (min = -0.5, max = 0.5)| Constant            | none        |
+|   Uniform  |300*50| Uniform                        | Constant            | none        |
+|   Uniform  |300*50| Uniform                        | Constant            | Random (between 0.1 and 0.9) |
+|    Normal  |300*2 | Normal  (mean = 0, sd = 1)     | Constant            | none        |
+|    Normal  |300*50| Normal                         | Constant            | none        |
+|    Normal  |300*50| Normal                         | Constant            | Random (between 0.1 and 0.9) |
 |   Random   |300*50| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
+| PCA        |300*50| Normal                         | Lognormal           | none        |
+| PCO        |300*50| Normal                         | Normal              | none        |
 
 
 ## Shifting spaces
@@ -327,7 +329,7 @@ plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults
 
 ```{r run_rarefaction, echo = FALSE, warning = FALSE, results = 'hide'}
 ## Toggle data generation or not
-generate_data <- TRUE
+generate_data <- FALSE
 
 if(generate_data) {
     set.seed(42)
@@ -342,9 +344,9 @@ if(generate_data) {
     save.results(rarefy_02)
 } else {
     ## Load results
-    load.results("rarefy_05")
-    load.results("rarefy_08")
-    load.results("rarefy_02")
+    rarefy_05 <- load.results("rarefy_05")
+    rarefy_08 <- load.results("rarefy_08")
+    rarefy_02 <- load.results("rarefy_02")
 }
 
 ## Summarise the data
