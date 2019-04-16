@@ -28,7 +28,7 @@ simulation.spaces <- function(remove, replicates, metrics_list) {
                                   metrics_list = metrics_list,
                                   verbose = TRUE,
                                   scree = NULL,
-                                  cor.matrix = "random")
+                                  cor.matrix = NULL)
     d50_unif_cor <- simulate.metrics(replicates = replicates,
                                   elements = elements,
                                   dimensions = dimensions,
@@ -38,7 +38,7 @@ simulation.spaces <- function(remove, replicates, metrics_list) {
                                   metrics_list = metrics_list,
                                   verbose = TRUE,
                                   scree = NULL,
-                                  cor.matrix = NULL)
+                                  cor.matrix = "random")
     d2_normal <- simulate.metrics(replicates = replicates,
                                   elements = elements,
                                   dimensions = 2,
@@ -68,11 +68,11 @@ simulation.spaces <- function(remove, replicates, metrics_list) {
                                   metrics_list = metrics_list,
                                   verbose = TRUE,
                                   scree = NULL,
-                                  cor.matrix = NULL)
+                                  cor.matrix = "random")
     d50_random <- simulate.metrics(replicates = replicates,
                                   elements = elements,
                                   dimensions = dimensions,
-                                  distributions = rnorm,
+                                  distributions = "random",
                                   arguments = centre_rnorm,
                                   remove = remove,
                                   metrics_list = metrics_list,

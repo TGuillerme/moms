@@ -35,19 +35,11 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
         if(!is.null(cor.matrix)) {
             
             if(cor.matrix == "random"){
-                test <- NA
-                class(test) <- "try-error"
-    
-                while(class(test) == "try-error"){
-                    ## Set random correlation values
-                    correlations_values <- round(runif(dimensions, min = 0.1, max = 0.9), 1)
-                    cor.matrix <- matrix(1, dimensions, dimensions)
-                    cor.matrix[lower.tri(cor.matrix)] <- cor.matrix[upper.tri(cor.matrix)] <- correlations_values
-        
-                    ## Make sure the Choleski decomposition will work
-                    test <- try(chol(cor.matrix), silent = TRUE)
-                    cat(".")
-                }
+                ## Set random correlation values
+                correlations_values <- round(runif((dimensions*dimensions)/2-(dimensions/2), min = 0.1, max = 0.9), 1)
+                cor.matrix <- matrix(1, dimensions, dimensions)
+                cor.matrix[upper.tri(cor.matrix)] <- correlations_values
+                cor.matrix[lower.tri(cor.matrix)] <- correlations_values
             }
 
         }
