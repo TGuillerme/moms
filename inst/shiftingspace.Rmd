@@ -210,7 +210,7 @@ We repeated each step (and the following disparity measurements) 15 times.
 
 #### Volume metrics
 
-```{r fable_metrics, fig.show='hide'}
+```{r fable_metrics, fig.show='hide', echo= FALSE}
 library(knitr)
 par(margin = c(0,0,0,0), bty = "n")
 ## The volume
@@ -242,13 +242,15 @@ Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), distribu
 #### Position metrics
 
 
-
 ```{r, all_metric, echo = FALSE}
 ## All metrics (exploration)
 metrics_list <- list(
     "av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+    "Volume" = ellipse.volume,
+    "PoR" = c(prod, ranges),
     "SoR" = c(sum, ranges),
+    "PoV" = c(prod, variances),
     "SoV" = c(sum, variances),
     "PoQ" = c(prod, quantiles),
     "SoQ" = c(sum, quantiles),
@@ -256,7 +258,7 @@ metrics_list <- list(
     "av.neighbo" = c(mean, neighbours)
 )
 
-metric_names <- c("Average squared distance", "Procrustes variance", "Sum of Ranges", "Sum of Variances", "Product of Quantiles", "Sum of Quantiles", "Mean displacement", "Mean nearest neighbours distance")
+metric_names <- c("Ellipsoid volume", "Average squared distance", "Procrustes variance", "Product of Range", "Sum of Ranges", "Product of Variances", "Sum of Variances", "Product of Quantiles", "Sum of Quantiles", "Mean displacement", "Mean nearest neighbours distance")
 ```
 
 ```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
@@ -265,6 +267,48 @@ complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
 ```
 
 ## Effect of dimensionality
+
+Curse of dimensionality: the more the dimensions the more sparse the data becomes.
+
+For example:
+
+```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide'}
+set.seed(42)
+## Make a 50 dimensions space
+space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
+
+## Function wrappers
+disparity <- function(metric, dimensions, space) {
+    fast.disparity(group = 1:nrow(space), space = space, metric = metric, rare.dim = dimensions)
+}
+lapply.fun <- function(dimensions, metrics_list, space) {
+  unlist(lapply(metrics_list, disparity, dimensions = dimensions, space = space))
+}
+
+## Curse results
+curse_results <- sapply(2:50, lapply.fun, metrics_list = metrics_list, space = space)
+curse_results <- apply(curse_results, 1, function(x) return(x/max(x)))
+
+## Empty plot
+hue_colors <- default.palette(ncol(curse_results))
+par(bty = "n")
+plot(NULL, xlim = c(2,50), ylim = c(0,1),
+    xlab = "Dimensions (decreasing variance)",
+    ylab = "Scaled disparity")
+for(metric in 1:ncol(curse_results)) {
+  lines(curse_results[, metric], col = hue_colors[metric])
+}
+legend("bottomleft", colnames(curse_results), lty = 1, col = hue_colors)
+```
+
+
+
+
+
+
+
+
+
 
 
 In the end, the analysis should be a big GLM of
@@ -278,14 +322,14 @@ disparity ~ metric + reduction + dimensions + elements
   
 ```{r run_metrics, echo = FALSE, warning = FALSE, results = 'hide'}
 ## Toggle data generation or not
-generate_data <- TRUE
+generate_data <- FALSE
 
 if(generate_data) {
     set.seed(42)
     ## Bundle simulations 
     remove_05 <- simulation.spaces(remove = 0.5, replicates = 20, metrics_list = metrics_list)
     remove_08 <- simulation.spaces(remove = 0.8, replicates = 20, metrics_list = metrics_list)
-    remove_02 <- simulation.spaces(remove = 0.8, replicates = 20, metrics_list = metrics_list)
+    remove_02 <- simulation.spaces(remove = 0.2, replicates = 20, metrics_list = metrics_list)
 
     ## Save simulations
     save.results(remove_05)
@@ -378,7 +422,13 @@ plot.metrics(rarefy_02, col = heat.colors, remove = 0.2, defaults = defaults, te
 ```
 
 
+## Stats
 
+Check whether a metric changes:
+
+1 - By reduction (i.e. whether the resulting metric is positive or negative)
+2 - By space (i.e. whether the metric is constant for different spaces)
+3 - By dimensions (i.e. whether the metric is constant for different number of dimensions)
 
 
 
