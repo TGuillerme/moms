@@ -240,7 +240,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
         }
         points(x = point[reduce], y = y_vals[1], pch = 21, bg = col[one_space], col = "black")
         if(text.in.cell) {
-            text(x = point[reduce], y = y_vals[1], pos = 4, labels = names(space_results)[one_space], cex = 0.75)
+            text(x = point[reduce], y = y_vals[1], pos = 4, labels = names(space_results)[one_space], cex = 0.1)
         }
         return(invisible())
     }

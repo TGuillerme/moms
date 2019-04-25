@@ -1,3 +1,38 @@
+#' @title Fast disparity
+#' 
+#' @description Fast disparity calculation (skips all the sanitizing and formatting of dispRity)
+#' 
+#' @param group The elements to select in space
+#' @param space The space
+#' @param metric The metric (in dispRity format)
+#' @param rare.dim The dimensions to select in space
+#' 
+#' @details Prefer using the proper \code{\link[dispRity]{dispRity}} function.
+#' This function is a quick shortcut that can create unwanted problems in disparity pipelines.
+
+fast.disparity <- function(group, space, metric, rare.dim) {
+    ## Setting up the default args
+    args <- list(matrix = space[group, 1:rare.dim])
+    ## Simple level 1 metric
+    if(length(metric) == 1) {
+        return(do.call(metric, args))
+    } 
+    ## Simple level 2 + 1 metric
+    if(is.null(names(metric))) {
+        return(metric[[1]](do.call(metric[[2]], args)))
+    }
+    ## Handle the named arguments
+    args <- c(args, metric[-1])
+
+    ## Level 1 metric + args
+    if(length(metric[[1]]) == 1) {
+        return(do.call(metric[[1]], args))
+    } 
+    ## Level 2 + 1 metric + args
+    return(metric[[1]][[1]](do.call(metric[[1]][[2]], args)))
+}
+
+
 #' @title Simulate metrics
 #'
 #' @description Run the metrics simulations
@@ -74,34 +109,12 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
         custom_groups <- run.reduce.spaces(space, remove = remove)
 
         ## Fast disparity calculation
-        fast.disparity <- function(metric, space, groups, rare.dim) {
-            ## Function for disparity on one group
-            group.disparity <- function(group, space, metric, rare.dim) {
-                ## Setting up the default args
-                args <- list(matrix = space[group, 1:rare.dim])
-                ## Simple level 1 metric
-                if(length(metric) == 1) {
-                    return(do.call(metric, args))
-                } 
-                ## Simple level 2 + 1 metric
-                if(is.null(names(metric))) {
-                    return(metric[[1]](do.call(metric[[2]], args)))
-                }
-                ## Handle the named arguments
-                args <- c(args, metric[-1])
-
-                ## Level 1 metric + args
-                if(length(metric[[1]]) == 1) {
-                    return(do.call(metric[[1]], args))
-                } 
-                ## Level 2 + 1 metric + args
-                return(metric[[1]][[1]](do.call(metric[[1]][[2]], args)))
-            }
-            return(matrix(unlist(lapply(groups, group.disparity, space, metric, rare.dim)), ncol = 1, dimnames = list(names(groups))))
+        group.disparity <- function(metric, space, groups, rare.dim) {
+            return(matrix(unlist(lapply(groups, fast.disparity, space, metric, rare.dim)), ncol = 1, dimnames = list(names(groups))))
         }
 
         if(verbose) cat(".")
-        return(lapply(metrics_list, fast.disparity, space = space, groups = custom_groups, rare.dim = rare.dim))
+        return(lapply(metrics_list, group.disparity, space = space, groups = custom_groups, rare.dim = rare.dim))
     }
 
     ## Run all simulations

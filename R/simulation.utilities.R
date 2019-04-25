@@ -113,11 +113,12 @@ simulation.spaces <- function(remove, replicates, metrics_list) {
 
 
 ## Running simulations for one space with rarefaction
-simulation.rarefaction <- function(remove, replicates, metrics_list) {
+simulation.rarefaction <- function(remove, replicates, metrics_list, what) {
   
     elements <- 300
     dimensions <- 50
     distributions <- rnorm
+    normal_scree <- rev(cumsum(rep(1/dimensions, dimensions)))
     
     ## Getting the arguments list
     simulate_arguments <- list(replicates = replicates,
@@ -128,19 +129,34 @@ simulation.rarefaction <- function(remove, replicates, metrics_list) {
                                remove = remove,
                                metrics_list = metrics_list,
                                verbose = TRUE,
-                               scree = NULL,
+                               scree = normal_scree,
                                cor.matrix = NULL)
 
-    ## Lapply wrapper for the rarefactions
-    run.rarefactions <- function(rarefaction, simulate_arguments) {
-        ## Update the arguments list
-        simulate_arguments$rare.dim <- rarefaction
-        ## Return the results
-        return(do.call(simulate.metrics, simulate_arguments))
+    if(what == "dimensions") {
+        ## Lapply wrapper for the rarefactions
+        run.rarefactions <- function(rarefaction, simulate_arguments) {
+            ## Update the arguments list
+            simulate_arguments$rare.dim <- rarefaction
+            ## Return the results
+            return(do.call(simulate.metrics, simulate_arguments))
+        }
+        
+        ## Get the rarefaction numbers
+        rarefaction <- round(seq(from = 2, to = dimensions, length.out = 10))
     }
-    
-    ## Get the rarefaction numbers
-    rarefaction <- round(seq(from = 2, to = dimensions, length.out = 10))
+
+    if(what == "elements") {
+        ## Lapply wrapper for the rarefactions
+        run.rarefactions <- function(rarefaction, simulate_arguments) {
+            ## Update the arguments list
+            simulate_arguments$elements <- rarefaction
+            ## Return the results
+            return(do.call(simulate.metrics, simulate_arguments))
+        }
+        
+        ## Get the rarefaction numbers
+        rarefaction <- round(seq(from = elements*0.1, to = elements, length.out = 10))
+    }
 
     ## Run the rarefactions
     rars <- lapply(as.list(rarefaction), run.rarefactions, simulate_arguments)
