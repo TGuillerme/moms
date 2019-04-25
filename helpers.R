@@ -327,18 +327,18 @@ handle.metrics <- function(input, dispRity_args) {
                     dispRity_code <- "function(X) mean(pairwise.dist(X)^2)"
                 },
                 "Average nearest neighbours distance (Euclidean)" = {
-                    dispRity_args$metric <- c(median, neighbours)
-                    dispRity_code <- list("c(median, neighbours)")
+                    dispRity_args$metric <- c(mean, neighbours)
+                    dispRity_code <- list("c(mean, neighbours)")
                 },
                 "Average nearest neighbours distance (Manhattan)" = {
-                    dispRity_args$metric <- c(median, neighbours)
+                    dispRity_args$metric <- c(mean, neighbours)
                     dispRity_args$method <- "manhattan"
                     dispRity_code <- list("c(median, neighbours)", "method = manhattan")
                 },
                 "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "euclidean"
-                    dispRity_code <- list("c(median, pairwise.dist)", "method = euclidean")
+                    dispRity_code <- list("c(mean, pairwise.dist)", "method = euclidean")
                 },
                 "Median pairwise distance (Manhattan)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
