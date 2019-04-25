@@ -1,0 +1,236 @@
+---
+title: "Shifting space - supplementary results"
+author: "Thomas Guillerme"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_width: 12
+    fig_height: 6
+---
+
+```{r header, echo = FALSE}
+## Loading the packages
+library(knitr)
+library(ape)
+library(dispRity)
+library(moms)
+
+## Setting the default parameters for the space plots
+defaults <- list(pch = 20,
+                 xlim = c(-3, 3),
+                 ylim = c(-3, 3),
+                 col1 = "grey",
+                 col2 = "black",
+                 xlab = "Trait",
+                 ylab = "Trait",
+                 cex = 1)
+## Generating the default palette
+default.palette <- function(n) {
+    hues = seq(15, 375, length = n + 1)
+    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+```
+
+# Supplementary results
+
+This section contains all the results and calculations (and plots them).
+The whole analysis takes approximatively @@@ times to run (single core 2.2 GHz).
+
+## Metrics analysed
+
+```{r metrics_list, echo = FALSE}
+## All metrics
+metrics_list <- list(
+    "av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+    "Volume" = ellipse.volume,
+    "PoR" = c(prod, ranges),
+    "SoR" = c(sum, ranges),
+    "PoV" = c(prod, variances),
+    "SoV" = c(sum, variances),
+    "PoQ" = c(prod, quantiles),
+    "SoQ" = c(sum, quantiles),
+    "av.displac" = c(mean, displacements),
+    "av.neighbo" = c(mean, neighbours)
+)
+
+metric_names <- c("Ellipsoid volume", "Average squared distance", "Procrustes variance",
+                  "Product of Range", "Sum of Ranges", "Product of Variances", "Sum of Variances",
+                  "Product of Quantiles", "Sum of Quantiles", "Mean displacement",
+                  "Mean nearest neighbours distance")
+```
+
+The metrics analysed are the `r paste(metric_names, collapse = ", ")`.
+
+## Generating the data
+
+This section runs and summarises the simulations.
+The simulations are run silently in this markdown file (and are not printed on the compiled version of this document).
+The code is available within this R markdown file (un-compiled).
+
+```{r toggle_simulations, echo = FALSE}
+## This arguments allows to toggle the data generation on (TRUE) or off (FALSE)
+generate_data <- TRUE
+
+## Set the overall number of replicates
+n_repliates <- 20
+```
+
+```{r run_metrics, echo = FALSE, warning = FALSE, results = 'hide'}
+if(generate_data) {
+    set.seed(42)
+    ## Bundle simulations 
+    remove_05 <- simulation.spaces(remove = 0.5, replicates = n_replicates,
+                                   metrics_list = metrics_list)
+    remove_08 <- simulation.spaces(remove = 0.8, replicates = n_replicates,
+                                   metrics_list = metrics_list)
+    remove_02 <- simulation.spaces(remove = 0.2, replicates = n_replicates,
+                                   metrics_list = metrics_list)
+
+    ## Save simulations
+    save.results(remove_05)
+    save.results(remove_08)
+    save.results(remove_02)
+} else {
+    ## Load results
+    remove_05 <- load.results("remove_05")
+    remove_08 <- load.results("remove_08")
+    remove_02 <- load.results("remove_02")
+}
+
+## Summarise the data
+remove_05 <- lapply(remove_05, summarise.metrics)
+remove_08 <- lapply(remove_08, summarise.metrics)
+remove_02 <- lapply(remove_02, summarise.metrics)
+```
+
+```{r run_rarefaction_dimensions, echo = FALSE, warning = FALSE, results = 'hide'}
+if(generate_data) {
+    set.seed(42)
+    ## Bundle simulations
+    rarefy_dim_05 <- simulation.rarefaction(remove = 0.5, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "dimensions")
+    rarefy_dim_08 <- simulation.rarefaction(remove = 0.8, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "dimensions")
+    rarefy_dim_02 <- simulation.rarefaction(remove = 0.2, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "dimensions")
+
+    ## Save simulations
+    save.results(rarefy_dim_05)
+    save.results(rarefy_dim_08)
+    save.results(rarefy_dim_02)
+} else {
+    ## Load results
+    rarefy_dim_05 <- load.results("rarefy_dim_05")
+    rarefy_dim_08 <- load.results("rarefy_dim_08")
+    rarefy_dim_02 <- load.results("rarefy_dim_02")
+}
+
+## Summarise the data
+rarefy_dim_05 <- lapply(rarefy_dim_05, summarise.metrics)
+rarefy_dim_08 <- lapply(rarefy_dim_08, summarise.metrics)
+rarefy_dim_02 <- lapply(rarefy_dim_02, summarise.metrics)
+```
+
+```{r run_rarefaction_elements, echo = FALSE, warning = FALSE, results = 'hide'}
+## Toggle data generation or not
+generate_data <- FALSE
+
+if(generate_data) {
+    set.seed(42)
+    ## Bundle simulations
+    rarefy_ele_05 <- simulation.rarefaction(remove = 0.5, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "elements")
+    rarefy_ele_08 <- simulation.rarefaction(remove = 0.8, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "elements")
+    rarefy_ele_02 <- simulation.rarefaction(remove = 0.2, replicates = n_replicates,
+                                            metrics_list = metrics_list,
+                                            what = "elements")
+
+    ## Save simulations
+    save.results(rarefy_ele_05)
+    save.results(rarefy_ele_08)
+    save.results(rarefy_ele_02)
+} else {
+    ## Load results
+    rarefy_ele_05 <- load.results("rarefy_ele_05")
+    rarefy_ele_08 <- load.results("rarefy_ele_08")
+    rarefy_ele_02 <- load.results("rarefy_ele_02")
+}
+
+## Summarise the data
+rarefy_ele_05 <- lapply(rarefy_ele_05, summarise.metrics)
+rarefy_ele_08 <- lapply(rarefy_ele_08, summarise.metrics)
+rarefy_ele_02 <- lapply(rarefy_ele_02, summarise.metrics)
+```
+
+## Plotting data data
+
+### Results per space (remove = 50%)
+```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.5
+plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Results per space (remove = 20%)
+```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.8
+plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Results per space (remove = 80%)
+```{r fig_results_02, echo = FALSE, fig.height = 8, fig.width = 10}
+## Plotting the results for 0.2
+plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Dimensions rarefied results for PCO space (remove = 50%)
+```{r fig_results_05_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.5
+plot.metrics(rarefy_dim_05, col = heat.colors, remove = 0.5, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Dimensions rarefied results for PCO space (remove = 20%)
+```{r fig_results_08_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.8
+plot.metrics(rarefy_dim_08, col = heat.colors, remove = 0.8, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Dimensions rarefied results for PCO space (remove = 80%)
+```{r fig_results_02_rare, echo = FALSE, fig.height = 8, fig.width = 10}
+## Plotting the results for 0.2
+plot.metrics(rarefy_dim_02, col = heat.colors, remove = 0.2, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Elements rarefied results for PCO space (remove = 50%)
+```{r fig_results_05_dim, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.5
+plot.metrics(rarefy_ele_05, col = heat.colors, remove = 0.5, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Elements rarefied results for PCO space (remove = 20%)
+```{r fig_results_08_dim, echo = FALSE, fig.height = 8, fig.width = 9}
+## Plotting the results for 0.8
+plot.metrics(rarefy_ele_08, col = heat.colors, remove = 0.8, defaults = defaults,
+    text.in.cell = TRUE)
+```
+
+### Elements rarefied results for PCO space (remove = 80%)
+```{r fig_results_02_dim, echo = FALSE, fig.height = 8, fig.width = 10}
+## Plotting the results for 0.2
+plot.metrics(rarefy_ele_02, col = heat.colors, remove = 0.2, defaults = defaults,
+    text.in.cell = TRUE)
+```
