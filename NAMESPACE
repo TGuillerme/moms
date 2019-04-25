@@ -12,6 +12,7 @@ export(plot.results)
 export(plot.metrics)
 
 ## Analysis (paper)
+export(fast.disparity)
 export(run.reduce.spaces)
 export(simulate.metrics)
 export(summarise.metrics)
