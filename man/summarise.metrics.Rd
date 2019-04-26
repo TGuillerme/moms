@@ -14,6 +14,8 @@ summarise.metrics(results_list, cent.tend = median, quantiles = c(95, 50),
 
 \item{quantiles}{the quantiles to display}
 
+\item{scale}{whether to scale the metrics (relative to the observed disparity for the full space)}
+
 \item{relative}{whether to make the results relative to the non-changed space}
 }
 \description{

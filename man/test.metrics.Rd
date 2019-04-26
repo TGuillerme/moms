@@ -4,14 +4,14 @@
 \alias{test.metrics}
 \title{Test metrics}
 \usage{
-test.metrics()
+test.metrics(all_results, test, scale = TRUE)
 }
 \arguments{
-\item{results_list}{the list of results}
-
 \item{test}{the test to apply}
 
-\item{relative}{whether to make the results relative to the non-changed space}
+\item{scale}{whether to scale and centre the results around the non-reduced spaces}
+
+\item{results_list}{the list of results}
 }
 \description{
 Applies an test to the results lists

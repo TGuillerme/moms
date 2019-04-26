@@ -114,6 +114,7 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
         }
 
         if(verbose) cat(".")
+        
         return(lapply(metrics_list, group.disparity, space = space, groups = custom_groups, rare.dim = rare.dim))
     }
 
@@ -148,9 +149,9 @@ run.reduce.spaces <- function(space, remove) {
 
     ## Double check for full TRUE or full FALSE
     double.check.reduce <- function(reduction, space, type, remove, verbose) {
-        if(all(reduction == "TRUE") || all(reduction == "FALSE")) {
+        if(all(reduction == "TRUE") || all(reduction == "FALSE") || length(which(reduction)) == 1 || length(which(!reduction)) == 1) {
             if(verbose) cat(paste0("Double checking reduction for ", type, ":"))
-            while(all(reduction == TRUE) || all(reduction == FALSE)) {
+            while(all(reduction == TRUE) || all(reduction == FALSE) || length(which(reduction)) == 1 || length(which(!reduction)) == 1) {
                 if(verbose) cat(".")
                 reduction <- reduce.space(space, type = type, remove = remove+sample(c(0.01, -0.01), 1))
             }

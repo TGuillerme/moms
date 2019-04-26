@@ -5,6 +5,7 @@
 #' @param results_list the list of results
 #' @param cent.tend the central tendency to use
 #' @param quantiles the quantiles to display
+#' @param scale whether to scale the metrics (relative to the observed disparity for the full space)
 #' @param relative whether to make the results relative to the non-changed space
 #' 
 #' @examples
