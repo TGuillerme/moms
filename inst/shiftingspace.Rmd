@@ -319,107 +319,112 @@ disparity ~ metric + reduction + dimensions + elements
 
 # Results
 
-  
-```{r run_metrics, echo = FALSE, warning = FALSE, results = 'hide'}
-## Toggle data generation or not
-generate_data <- FALSE
+```{r loading_results, echo = FALSE}
+## Loading the results
+remove_05 <- load.results("remove_05")
+remove_08 <- load.results("remove_08")
+remove_02 <- load.results("remove_02")
 
-if(generate_data) {
-    set.seed(42)
-    ## Bundle simulations 
-    remove_05 <- simulation.spaces(remove = 0.5, replicates = 20, metrics_list = metrics_list)
-    remove_08 <- simulation.spaces(remove = 0.8, replicates = 20, metrics_list = metrics_list)
-    remove_02 <- simulation.spaces(remove = 0.2, replicates = 20, metrics_list = metrics_list)
+## Loading the results
+rarefy_dim_05 <- load.results("rarefy_dim_05")
+rarefy_dim_08 <- load.results("rarefy_dim_08")
+rarefy_dim_02 <- load.results("rarefy_dim_02")
+```
 
-    ## Save simulations
-    save.results(remove_05)
-    save.results(remove_08)
-    save.results(remove_02)
-} else {
-    ## Load results
-    remove_05 <- load.results("remove_05")
-    remove_08 <- load.results("remove_08")
-    remove_02 <- load.results("remove_02")
+```{r running_tests, echo = FALSE}
+## Anova function
+anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
+
+## Running the tests
+test_space05 <- test.metrics(remove_05, test = anova.fun, scale = TRUE)
+test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
+```
+
+```{r fable_results, fig.show='hide', echo= FALSE}
+## Plotting all the results as individual plot (for the table)
+elements <- 300
+## The amount to remove
+remove <- 0.5
+
+## Trait space
+trait_space <- space.maker(elements, 2, distribution = rnorm)
+
+
+library(knitr)
+par(margin = c(0,0,0,0), bty = "n")
+## The volume
+plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
+
+## The volume
+plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
+
+```
+
+
+```{r, echo = FALSE}
+## Helper functions for plotting the mini-plots in the table
+plot.id <- function(plot.ID, path = "fig.path", chain = "fable_results", resolution = 800) {
+    knitr::include_graphics(path = paste0(opts_chunk$get(path), paste0(chain, "-", plot.ID, ".png")),
+                            dpi = resolution)
 }
 
-## Summarise the data
-remove_05 <- lapply(remove_05, summarise.metrics)
-remove_08 <- lapply(remove_08, summarise.metrics)
-remove_02 <- lapply(remove_02, summarise.metrics)
-```
- 
-## Results per space (05)
-
-```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 9}
-## Plotting the results for 0.5
-plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults, text.in.cell = TRUE)
-```
-
-## Results per space (08)
-
-```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 9}
-## Plotting the results for 0.8
-plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults, text.in.cell = TRUE)
-```
-
-## Results per space (02)
-
-```{r fig_results_02, echo = FALSE, fig.height = 8, fig.width = 10}
-## Plotting the results for 0.2
-plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults, text.in.cell = TRUE)
-```
-
-## Rarefaction
-
-```{r run_rarefaction, echo = FALSE, warning = FALSE, results = 'hide'}
-## Toggle data generation or not
-generate_data <- FALSE
-
-if(generate_data) {
-    set.seed(42)
-    ## Bundle simulations
-    rarefy_05 <- simulation.rarefaction(remove = 0.5, replicates = 20, metrics_list = metrics_list)
-    rarefy_08 <- simulation.rarefaction(remove = 0.8, replicates = 20, metrics_list = metrics_list)
-    rarefy_02 <- simulation.rarefaction(remove = 0.2, replicates = 20, metrics_list = metrics_list)
-
-    ## Save simulations
-    save.results(rarefy_05)
-    save.results(rarefy_08)
-    save.results(rarefy_02)
-} else {
-    ## Load results
-    rarefy_05 <- load.results("rarefy_05")
-    rarefy_08 <- load.results("rarefy_08")
-    rarefy_02 <- load.results("rarefy_02")
+## Helper function for summarising the tests
+s.test <- function(metric.ID, type, test.results = list("s" = test_space05, "r" = test_raref05)) { 
+    ## Select the results
+    test_results <- test.results[[type]]
+    ## Coerce the results into a data.frame
+    print_results <- test_results[[metric.ID]][[1]]
+    class(print_results) <- "data.frame"
+    ## Rounding
+    print_results <- as.matrix(round(print_results, digits = 3))
+    ## White spaces
+    rownames(print_results) <- c("f.", "res.")
+    print_results <- ifelse(is.na(print_results), "", print_results)
+    ## Add the tokens
+    p_val <- as.numeric(print_results[1,5])
+    if(p_val < 0.001) {
+        print_results <- cbind(print_results, c("***", ""))
+    } else {
+        if(p_val < 0.01) {
+            print_results <- cbind(print_results, c("**", ""))
+        } else {
+            if(p_val < 0.05) {
+                print_results <- cbind(print_results, c("*", ""))
+            } else {
+                if(p_val < 0.1) {
+                    print_results <- cbind(print_results, c(".", ""))
+                } else {
+                    print_results <- cbind(print_results, c("", ""))
+                }
+            }
+        }
+    }
+    ## Display the results
+    output <- paste(c(
+              paste(c("", colnames(print_results)), collapse = "\t"),
+              paste(c(rownames(print_results)[1], unname(print_results[1,])), collapse = "\t"),
+              paste(c(rownames(print_results)[2], unname(print_results[2,])), collapse = "\t")
+              , collapse = "\n"))
+    return(noquote(output))
 }
-
-## Summarise the data
-rarefy_05 <- lapply(rarefy_05, summarise.metrics)
-rarefy_08 <- lapply(rarefy_08, summarise.metrics)
-rarefy_02 <- lapply(rarefy_02, summarise.metrics)
 ```
 
- 
-## Rarefied results for normal space (D = 50, remove 05)
 
-```{r fig_results_05_rare, echo = FALSE, fig.height = 8, fig.width = 9}
-## Plotting the results for 0.5
-plot.metrics(rarefy_05, col = heat.colors, remove = 0.5, defaults = defaults, text.in.cell = TRUE)
-```
+Metric | Random change | Volume change | Position change | Density change | Distribution effect | Dimensions effect
+:------|---------------|---------------|-----------------|----------------|---------------------|-------------------
+metric1|`r plot.id(1)` |`r plot.id(2)` |`r plot.id(2)`   |`r plot.id(2)`  | `r s.test(1, "s")`  | `r s.test(1, "r")`
+metric2|`r plot.id(1)` |`r plot.id(2)` |`r plot.id(2)`   |`r plot.id(2)`  | `r cat(1)`  | 1  
 
-## Results per space (08)
 
-```{r fig_results_08_rare, echo = FALSE, fig.height = 8, fig.width = 9}
-## Plotting the results for 0.8
-plot.metrics(rarefy_08, col = heat.colors, remove = 0.8, defaults = defaults, text.in.cell = TRUE)
-```
 
-## Results per space (02)
 
-```{r fig_results_02_rare, echo = FALSE, fig.height = 8, fig.width = 10}
-## Plotting the results for 0.2
-plot.metrics(rarefy_02, col = heat.colors, remove = 0.2, defaults = defaults, text.in.cell = TRUE)
-```
+
 
 
 ## Stats
