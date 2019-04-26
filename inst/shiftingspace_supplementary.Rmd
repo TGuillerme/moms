@@ -29,13 +29,12 @@ default.palette <- function(n) {
     hues = seq(15, 375, length = n + 1)
     grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
 }
-
 ```
 
 # Supplementary results
 
 This section contains all the results and calculations (and plots them).
-The whole analysis takes approximatively @@@ times to run (single core 2.2 GHz).
+The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz).
 
 ## Metrics analysed
 
@@ -74,12 +73,15 @@ The code is available within this R markdown file (un-compiled).
 generate_data <- TRUE
 
 ## Set the overall number of replicates
-n_repliates <- 20
+n_replicates <- 20
+
+## Simulation seed
+set.seed(42)
 ```
 
 ```{r run_metrics, echo = FALSE, warning = FALSE, results = 'hide'}
+#, results = 'hide'}
 if(generate_data) {
-    set.seed(42)
     ## Bundle simulations 
     remove_05 <- simulation.spaces(remove = 0.5, replicates = n_replicates,
                                    metrics_list = metrics_list)
@@ -106,8 +108,8 @@ remove_02 <- lapply(remove_02, summarise.metrics)
 ```
 
 ```{r run_rarefaction_dimensions, echo = FALSE, warning = FALSE, results = 'hide'}
+#, results = 'hide'}
 if(generate_data) {
-    set.seed(42)
     ## Bundle simulations
     rarefy_dim_05 <- simulation.rarefaction(remove = 0.5, replicates = n_replicates,
                                             metrics_list = metrics_list,
@@ -136,12 +138,12 @@ rarefy_dim_08 <- lapply(rarefy_dim_08, summarise.metrics)
 rarefy_dim_02 <- lapply(rarefy_dim_02, summarise.metrics)
 ```
 
-```{r run_rarefaction_elements, echo = FALSE, warning = FALSE, results = 'hide'}
+```{r run_rarefaction_elements, echo = FALSE, warning = FALSE, eval = FALSE, results = 'hide'}
+#, results = 'hide'}
 ## Toggle data generation or not
 generate_data <- FALSE
 
 if(generate_data) {
-    set.seed(42)
     ## Bundle simulations
     rarefy_ele_05 <- simulation.rarefaction(remove = 0.5, replicates = n_replicates,
                                             metrics_list = metrics_list,
@@ -168,19 +170,20 @@ if(generate_data) {
 rarefy_ele_05 <- lapply(rarefy_ele_05, summarise.metrics)
 rarefy_ele_08 <- lapply(rarefy_ele_08, summarise.metrics)
 rarefy_ele_02 <- lapply(rarefy_ele_02, summarise.metrics)
+
 ```
 
 ## Plotting data data
 
 ### Results per space (remove = 50%)
-```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 9}
+```{r fig_results_05, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.5
 plot.metrics(remove_05, col = default.palette, remove = 0.5, defaults = defaults,
     text.in.cell = TRUE)
 ```
 
 ### Results per space (remove = 20%)
-```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 9}
+```{r fig_results_08, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.8
 plot.metrics(remove_08, col = default.palette, remove = 0.8, defaults = defaults,
     text.in.cell = TRUE)
@@ -194,14 +197,14 @@ plot.metrics(remove_02, col = default.palette, remove = 0.2, defaults = defaults
 ```
 
 ### Dimensions rarefied results for PCO space (remove = 50%)
-```{r fig_results_05_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+```{r fig_results_05_rare, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.5
 plot.metrics(rarefy_dim_05, col = heat.colors, remove = 0.5, defaults = defaults,
     text.in.cell = TRUE)
 ```
 
 ### Dimensions rarefied results for PCO space (remove = 20%)
-```{r fig_results_08_rare, echo = FALSE, fig.height = 8, fig.width = 9}
+```{r fig_results_08_rare, echo = FALSE, fig.height = 8, fig.width = 10}
 ## Plotting the results for 0.8
 plot.metrics(rarefy_dim_08, col = heat.colors, remove = 0.8, defaults = defaults,
     text.in.cell = TRUE)
@@ -214,22 +217,25 @@ plot.metrics(rarefy_dim_02, col = heat.colors, remove = 0.2, defaults = defaults
     text.in.cell = TRUE)
 ```
 
-### Elements rarefied results for PCO space (remove = 50%)
-```{r fig_results_05_dim, echo = FALSE, fig.height = 8, fig.width = 9}
+<!-- ### Elements rarefied results for PCO space (remove = 50%) -->
+
+```{r fig_results_05_dim, echo = FALSE, fig.height = 8, fig.width = 10, eval = FALSE}
 ## Plotting the results for 0.5
 plot.metrics(rarefy_ele_05, col = heat.colors, remove = 0.5, defaults = defaults,
     text.in.cell = TRUE)
 ```
 
-### Elements rarefied results for PCO space (remove = 20%)
-```{r fig_results_08_dim, echo = FALSE, fig.height = 8, fig.width = 9}
+<!-- ### Elements rarefied results for PCO space (remove = 20%) -->
+
+```{r fig_results_08_dim, echo = FALSE, fig.height = 8, fig.width = 10, eval = FALSE}
 ## Plotting the results for 0.8
 plot.metrics(rarefy_ele_08, col = heat.colors, remove = 0.8, defaults = defaults,
     text.in.cell = TRUE)
 ```
 
-### Elements rarefied results for PCO space (remove = 80%)
-```{r fig_results_02_dim, echo = FALSE, fig.height = 8, fig.width = 10}
+<!-- ### Elements rarefied results for PCO space (remove = 80%) -->
+
+```{r fig_results_02_dim, echo = FALSE, fig.height = 8, fig.width = 10, eval = FALSE}
 ## Plotting the results for 0.2
 plot.metrics(rarefy_ele_02, col = heat.colors, remove = 0.2, defaults = defaults,
     text.in.cell = TRUE)
