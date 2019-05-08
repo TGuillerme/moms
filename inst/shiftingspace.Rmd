@@ -33,6 +33,22 @@ default.palette <- function(n) {
 
 ```
 
+# Abstract
+
+Analysis of the diversity of morphological shapes (aka disparity analysis) are now a common toolkit in macroevolution.
+Disparity analysis are based on the analysis of a morphospace (i.e. a multidimensional space summarising all possible shapes achieved or not) and a disparity metric (or index) to measure the occupancy of a group of taxa in that morphospace.
+Such analysis have been commonly used to look at how a group of taxa changes through time, relatively to another group or as a response to some event (e.g. mass extinction).
+
+However, disparity metrics are not often thoroughly described and thus can have a nebulous mathematical meaning.
+This can make interpretation of changes in disparity often unclear beyond "a change in multidimensional space occupancy".
+In fact, different aspect of spatial occupancy can be of interest in different studies.
+For example, some questions might focus in changes in the volume of the morphospace whilst some other might focus on the position of a group in the morphospace or its density (or all three together).
+
+Here we propose a user friendly tool to Measure Occupancy in Multidimensional Spaces (moms) that allows to visualise numerical changes of many disparity metrics following space transformations (e.g. contraction, displacement, etc.) as well as visualising a 2D projection of the associated space changes.
+This tool thus allows researchers to explore and visualise the properties of disparity metrics under various parameters.
+Furthermore, we propose a thorough review of the behaviour of seven common and two new disparity metrics regarding various spacial properties (i.e. distribution, transformation, dimensionality).
+As expected, we found that different metrics are more appropriated to be used in different disparity analysis.
+
 # Introduction
 
  * We will cite papers like this one [@disprity].
