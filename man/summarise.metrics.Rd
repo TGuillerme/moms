@@ -4,8 +4,8 @@
 \alias{summarise.metrics}
 \title{Summarise metrics}
 \usage{
-summarise.metrics(results_list, cent.tend = median, quantiles = c(95, 50),
-  scale = TRUE, relative = FALSE)
+summarise.metrics(results_list, cent.tend = median, quantiles = c(95,
+  50), scale = TRUE, relative = FALSE)
 }
 \arguments{
 \item{results_list}{the list of results}

@@ -36,7 +36,7 @@ summarise.metrics <- function(results_list, cent.tend = median, quantiles = c(95
         return(apply(one_metric, 2, function(X) (X/X[1]-1)))
     }
 
-    ## Scaling
+    ## Scaling
     if(scale){
         results_list <- lapply(results_list, scale.metric)
     }

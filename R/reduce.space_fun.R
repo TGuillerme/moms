@@ -47,7 +47,7 @@ optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
             ## Re-do the second run
             new_difference <- length(which(do.call(fun, args))) - criterion
             
-            ## Increment the counter
+            ## Increment the counter
             if(counter < tuning$max) {
                 counter <- counter + 1
                 if(verbose) cat(".")
@@ -59,7 +59,7 @@ optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
         ## Update the difference
         difference <- new_difference
 
-        ## Increment the counter
+        ## Increment the counter
         if(counter < tuning$max) {
             counter <- counter + 1
             if(verbose) cat(".")

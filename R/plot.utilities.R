@@ -32,7 +32,7 @@ plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
 plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 
     empty.plot <- function(n_metrics, names_metrics, is.last = FALSE) {
-        ## Plot margins
+
         par(bty = "n", mar = c(ifelse(is.last, 4, 0),10,0.5,0))
         ## Plot size
         if(!is.last) {
@@ -44,7 +44,7 @@ plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
         abline(v = 0, lty = 2, col = "grey")
         ## Adding the y axis
         axis(2, at = 1:n_metrics, labels = names_metrics, las = 2)
-        ## Adding the x axis
+        ## Adding the x axis
         if(!is.last) {
             axis(1, labels = FALSE, tick = TRUE, col.ticks = "white", col = "grey")
         }
@@ -59,7 +59,7 @@ plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 
     add.lines <- function(CIs, one_reduction, col) {
 
-        ## Number of quantiles
+        ## Number of quantiles
         quantiles_n <- nrow(CIs[[1]])
         ## Extract the values for y
         y_vals <- lapply(as.list(1:length(CIs)), function(X) rep(X, 2))
@@ -153,7 +153,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
 
     ## Making the general plot window
     make.plot.window <- function(rows, cols) {
-        ## Variables
+        ## Variables
         n_rows <- length(rows[[2]])
         ## Cols
         n_cols <- length(cols[[1]][[1]])+1
@@ -165,7 +165,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
         first_row_height <- 1.3
         last_row_height <- 1.4
         middle_row_heights <- rep(1, (n_rows - 2))
-        ## Making the layout
+        ## Making the layout
         layout <- layout(layout_matrix,
                         c(col_spaces_width, col_result_width),
                         c(first_row_height, middle_row_heights, last_row_height))
@@ -173,7 +173,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
         #layout.show(layout)
     }
 
-    ## Plotting the spaces (i.e. row names)
+    ## Plotting the spaces (i.e. row names)
     plot.reduction <- function(removal, reductions, defaults) {
         ## Update the defaults
         defaults$ylab <- ""
@@ -204,7 +204,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
                     top    = ifelse(is.first, 4, 1),
                     right  = 1))
 
-        ## Make plot (empty)
+        ## Make plot (empty)
         plot(NULL, ylim = 1:length(space_results[[1]]), xlim = overal_range,
             ylab = "", xaxt = "n", yaxt = "n", 
             xlab = ifelse(is.last, "Difference", ""), 
@@ -222,10 +222,10 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
 
     ## Add the CIs and median
     add.lines.points <- function(one_space, space_results, one_metric, reduce, col, y.val, text.in.cell) {
-        ## Extract the results for one metric and one space
+        ## Extract the results for one metric and one space
         CIs <- space_results[[one_space]]$CI[[one_metric]]
         point <- space_results[[one_space]]$cent.tend[[one_metric]]
-        ## Number of quantiles
+        ## Number of quantiles
         quantiles_n <- nrow(CIs)
         ## Extract the values for x and y
         x_vals <- CIs[, reduce]
@@ -245,7 +245,7 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
         return(invisible())
     }
 
-    ## Making results plots (for one column)
+    ## Making results plots (for one column)
     make.results.plots <- function(one_metric, space_results, overal_range, col, main, text.in.cell) {
         ## Initial parameters
         is.last <- FALSE

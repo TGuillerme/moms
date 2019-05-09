@@ -13,11 +13,11 @@
 fast.disparity <- function(group, space, metric, rare.dim) {
     ## Setting up the default args
     args <- list(matrix = space[group, 1:rare.dim])
-    ## Simple level 1 metric
+    ## Simple level 1 metric
     if(length(metric) == 1) {
         return(do.call(metric, args))
     } 
-    ## Simple level 2 + 1 metric
+    ## Simple level 2 + 1 metric
     if(is.null(names(metric))) {
         return(metric[[1]](do.call(metric[[2]], args)))
     }
@@ -28,7 +28,7 @@ fast.disparity <- function(group, space, metric, rare.dim) {
     if(length(metric[[1]]) == 1) {
         return(do.call(metric[[1]], args))
     } 
-    ## Level 2 + 1 metric + args
+    ## Level 2 + 1 metric + args
     return(metric[[1]][[1]](do.call(metric[[1]][[2]], args)))
 }
 
@@ -63,7 +63,7 @@ simulate.metrics <- function(replicates, elements, dimensions, arguments = list(
         rare.dim <- dimensions
     }
 
-    ## Run one simulation
+    ## Run one simulation
     one.simulation <- function(elements, dimensions, distributions, arguments, remove, metrics_list, verbose, scree, cor.matrix, rare.dim) {
 
         ## Sort the correlation matrix

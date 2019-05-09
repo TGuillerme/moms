@@ -72,7 +72,7 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
         random = {
             ## Number of elements
             elements <- nrow(space)
-            ## Return a portion of the space
+            ## Return a portion of the space
             to_remove <- sample(1:elements, elements*remove)
             return(1:elements %in% to_remove)
         },
@@ -86,7 +86,7 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
             if(is.null(parameters$radius)) {
                 parameters$radius <- 1
             }
-            ## Parameter to optimise
+            ## Parameter to optimise
             parameters$optimise <- parameters$radius
             ## List of arguments
             args <- list("space" = space, "parameters" = parameters)
@@ -101,7 +101,7 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
             if(is.null(parameters$radius)) {
                 parameters$radius <- 1
             }
-            ## Parameter to optimise
+            ## Parameter to optimise
             parameters$optimise <- parameters$radius
             ## List of arguments
             args <- list("space" = space, "parameters" = parameters)
@@ -116,7 +116,7 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
             if(is.null(parameters$diameter)) {
                 parameters$diameter <- 0.5
             }  
-            ## Parameter to optimise
+            ## Parameter to optimise
             parameters$optimise <- parameters$diameter
         }
     )
