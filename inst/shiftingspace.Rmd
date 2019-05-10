@@ -9,7 +9,15 @@ output:
     fig_height: 6
 ---
 
-```{r header, echo = FALSE}
+
+```{r header, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
+## Repeatability note:
+## This whole paper is entirely reproducible and compiles as a single document. The data, figures
+## and tables are all generated through the code snippets in this file. Note that the first time
+## that this paper is compiled, it will generate the data which will take some substantial time
+## by running the shiftingspace_supplementary.Rmd file first (~30 minutes). Subsequent compilations
+## will be much faster!
+
 ## Loading the packages
 library(knitr)
 library(ape)
@@ -226,7 +234,7 @@ We repeated each step (and the following disparity measurements) 15 times.
 
 #### Volume metrics
 
-```{r fable_metrics, fig.show='hide', echo= FALSE}
+```{r fable_metrics, fig.show='hide', echo= FALSE, eval = FALSE}
 library(knitr)
 par(margin = c(0,0,0,0), bty = "n")
 ## The volume
@@ -268,13 +276,18 @@ metrics_list <- list(
     "SoR" = c(sum, ranges),
     "PoV" = c(prod, variances),
     "SoV" = c(sum, variances),
-    "PoQ" = c(prod, quantiles),
-    "SoQ" = c(sum, quantiles),
+    # "PoQ" = c(prod, quantiles),
+    # "SoQ" = c(sum, quantiles),
     "av.displac" = c(mean, displacements),
     "av.neighbo" = c(mean, neighbours)
 )
 
-metric_names <- c("Ellipsoid volume", "Average squared distance", "Procrustes variance", "Product of Range", "Sum of Ranges", "Product of Variances", "Sum of Variances", "Product of Quantiles", "Sum of Quantiles", "Mean displacement", "Mean nearest neighbours distance")
+metric_names <- c("Average squared distance", "Procrustes variance", "Ellipsoid volume", 
+                  "Product of Range", "Sum of Ranges", "Product of Variances", "Sum of Variances",
+                  "Mean displacement", "Mean nearest neighbours distance")
+## Shorter vector name version (for clarity in the fable)
+name <- metric_names
+#"Product of Quantiles", "Sum of Quantiles", 
 ```
 
 ```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
@@ -338,13 +351,10 @@ disparity ~ metric + reduction + dimensions + elements
 ```{r loading_results, echo = FALSE}
 ## Loading the results
 remove_05 <- load.results("remove_05")
-remove_08 <- load.results("remove_08")
-remove_02 <- load.results("remove_02")
-
-## Loading the results
 rarefy_dim_05 <- load.results("rarefy_dim_05")
-rarefy_dim_08 <- load.results("rarefy_dim_08")
-rarefy_dim_02 <- load.results("rarefy_dim_02")
+
+## Scale the results
+
 ```
 
 ```{r running_tests, echo = FALSE}
@@ -354,93 +364,40 @@ anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
 ## Running the tests
 test_space05 <- test.metrics(remove_05, test = anova.fun, scale = TRUE)
 test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
+
+#TODO: Generate the aov tables in the supplementary
+
 ```
 
 ```{r fable_results, fig.show='hide', echo= FALSE}
-## Plotting all the results as individual plot (for the table)
-elements <- 300
-## The amount to remove
-remove <- 0.5
+## Making a list of parameters for each mini plot
+plot.param <- list(scaler = 5,
+                   bg.col = "black",
+                   col = c("grey", "orange", "blue"),
+                   quantiles = c(95, 50),
+                   cent.tend = median,
+                   pch = 19)
 
-## Trait space
-trait_space <- space.maker(elements, 2, distribution = rnorm)
-
-
-library(knitr)
-par(margin = c(0,0,0,0), bty = "n")
-## The volume
-plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
-## The range lines
-lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
-lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
-
-## The volume
-plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
-## The range lines
-lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
-lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
+## Looping through each mini plot for every metric
+for(metric in 1:length(metrics_list)) {
+    generate.fable.plot(data = remove_05, metric = metric, what = "limits", plot.param = plot.param)
+    generate.fable.plot(data = remove_05, metric = metric, what = "displa", plot.param = plot.param)
+    generate.fable.plot(data = remove_05, metric = metric, what = "densit", plot.param = plot.param)
+}
 
 ```
 
-
-```{r, echo = FALSE}
-## Helper functions for plotting the mini-plots in the table
-plot.id <- function(plot.ID, path = "fig.path", chain = "fable_results", resolution = 800) {
-    knitr::include_graphics(path = paste0(opts_chunk$get(path), paste0(chain, "-", plot.ID, ".png")),
-                            dpi = resolution)
-}
-
-## Helper function for summarising the tests
-s.test <- function(metric.ID, type, test.results = list("s" = test_space05, "r" = test_raref05)) { 
-    ## Select the results
-    test_results <- test.results[[type]]
-    ## Coerce the results into a data.frame
-    print_results <- test_results[[metric.ID]][[1]]
-    class(print_results) <- "data.frame"
-    ## Rounding
-    print_results <- as.matrix(round(print_results, digits = 3))
-    ## White spaces
-    rownames(print_results) <- c("f.", "res.")
-    print_results <- ifelse(is.na(print_results), "", print_results)
-    ## Add the tokens
-    p_val <- as.numeric(print_results[1,5])
-    if(p_val < 0.001) {
-        print_results <- cbind(print_results, c("***", ""))
-    } else {
-        if(p_val < 0.01) {
-            print_results <- cbind(print_results, c("**", ""))
-        } else {
-            if(p_val < 0.05) {
-                print_results <- cbind(print_results, c("*", ""))
-            } else {
-                if(p_val < 0.1) {
-                    print_results <- cbind(print_results, c(".", ""))
-                } else {
-                    print_results <- cbind(print_results, c("", ""))
-                }
-            }
-        }
-    }
-    ## Display the results
-    output <- paste(c(
-              paste(c("", colnames(print_results)), collapse = "\t"),
-              paste(c(rownames(print_results)[1], unname(print_results[1,])), collapse = "\t"),
-              paste(c(rownames(print_results)[2], unname(print_results[2,])), collapse = "\t")
-              , collapse = "\n"))
-    return(noquote(output))
-}
-```
-
-
-Metric | Random change | Volume change | Position change | Density change | Distribution effect | Dimensions effect
-:------|---------------|---------------|-----------------|----------------|---------------------|-------------------
-metric1|`r plot.id(1)` |`r plot.id(2)` |`r plot.id(2)`   |`r plot.id(2)`  | `r s.test(1, "s")`  | `r s.test(1, "r")`
-metric2|`r plot.id(1)` |`r plot.id(2)` |`r plot.id(2)`   |`r plot.id(2)`  | `r cat(1)`  | 1  
-
-
-
-
-
+Metric      | Volume change  | Position change | Density change | Distribution effect | Dimensions effect
+:-----------|----------------|-----------------|----------------|---------------------|-------------------
+`r name[1]` |`r plot.id(1)`  |`r plot.id(2)`   |`r plot.id(3)`  | `r s.test(1, "s")`  | `r s.test(1, "r")`
+`r name[2]` |`r plot.id(4)`  |`r plot.id(5)`   |`r plot.id(6)`  | `r s.test(2, "s")`  | `r s.test(2, "r")`
+`r name[3]` |`r plot.id(7)`  |`r plot.id(8)`   |`r plot.id(9)`  | `r s.test(3, "s")`  | `r s.test(3, "r")`
+`r name[4]` |`r plot.id(10)` |`r plot.id(11)`  |`r plot.id(12)` | `r s.test(4, "s")`  | `r s.test(4, "r")`
+`r name[5]` |`r plot.id(13)` |`r plot.id(14)`  |`r plot.id(15)` | `r s.test(5, "s")`  | `r s.test(5, "r")`
+`r name[6]` |`r plot.id(16)` |`r plot.id(17)`  |`r plot.id(18)` | `r s.test(6, "s")`  | `r s.test(6, "r")`
+`r name[7]` |`r plot.id(19)` |`r plot.id(20)`  |`r plot.id(21)` | `r s.test(7, "s")`  | `r s.test(7, "r")`
+`r name[8]` |`r plot.id(22)` |`r plot.id(23)`  |`r plot.id(24)` | `r s.test(8, "s")`  | `r s.test(8, "r")`
+`r name[9]` |`r plot.id(25)` |`r plot.id(26)`  |`r plot.id(27)` | `r s.test(9, "s")`  | `r s.test(9, "r")`
 
 
 ## Stats
