@@ -5,6 +5,8 @@
 #' @param data the disparity data
 #' @param metric the metric ID
 #' @param what the name of the chain as given pas the code snippet generating the plots
+#' @param scale whether to scale and centre the results around the non-reduced spaces
+#' @param overlap whether to add the Bhattacharyya Coefficients or not
 #' @param plot.param the plot parameters
 #'
 #' @examples
@@ -14,97 +16,102 @@
 #' @author Thomas Guillerme
 #' @export
 
-generate.fable.plot <- function(data, metric, what, plot.param) {
+generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALSE, plot.param) {
 
-    # data = remove_05
-    # metric = 1
-    # what = "random"
 
-    pool.data <- function(data, metric, what) {
+    pool.data <- function(data, metric, what, scale) {
         ## Extract the metric
         pooled_metric <- lapply(remove_05, function(X, metric) return(X[[metric]]), metric = metric)
 
+        if(scale){
+            ## Centre the results
+            centre.fun <- function(result) {
+                output <- apply(result, 2, function(X) as.numeric(X) - as.numeric(X)[1])
+                output <- apply(output, 2, function(X) X/(max(abs(X))))
+                output <- output[-1, ]
+                rownames(output) <- rownames(result)[-1]
+                return(output)
+            }
+            pooled_metric <- lapply(pooled_metric, centre.fun)
+        }
+
         ## Extract the category
-        get.category <- function(data, what) {
+        get.category <- function(data, what, scale) {
             ## Get the right categories
             categories <- grep(what, rownames(data))
-            ## Add the random category (number 2)
-            categories <- c(2, categories)
+            ## Add the random category (number 2 or 1 - if scaled)
+            categories <- c(ifelse(scale, 1, 2), categories)
             ## Return a matrix
             return(sapply(categories, function(X, data) {return(data[X,])}, data = data))
         }
 
         ## Get the pooled data
-        pooled_data <- lapply(pooled_metric, get.category, what = what)
+        pooled_data <- lapply(pooled_metric, get.category, what = what, scale = scale)
         return(do.call(rbind, pooled_data))
     }
 
-
-
-
-
-
-    ## Get the data
-    pooled_data <- pool.data(data, metric = metric, what = what)
-
-    empty.plot()
-    add.lines()
-    add.points()
-
-
-
-
-
-
-
-
-
-
-
-    empty.plot <- function() {
+    empty.plot <- function(plot.param) {
         ## Plot margins
-        par(bty = "n", mar = c(2,1,1,1))
+        par(bty = "n", mar = c(3,1,1,1))
         ## Plot size
-        plot(NULL, ylim = range(1:n_metrics), pch = 19, xlim = c(-1,1), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
-
-
-
+        plot(NULL, ylim = range(1:3), pch = 19, xlim = c(-1,1), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
         ## Adding lines
-        abline(v = 0, lty = 2, col = "grey")
-        ## Adding the y axis
-        axis(2, at = 1:n_metrics, labels = names_metrics, las = 2)
+        abline(v = 0, lty = 2, col = plot.param$bg.col, lwd = 1 + plot.param$scaler)
+
         ## Adding the x axis
-        if(!is.last) {
-            axis(1, labels = FALSE, tick = TRUE, col.ticks = "white", col = "grey")
-        }
+        axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = c(-1, NA, 0, NA, 1), tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col)
     }
 
-    add.points <- function(cent.tend, one_reduction, col) {
-        ## Get the right values 
-        points_to_add <- as.numeric(lapply(cent.tend, function(X, Y) return(X[Y]), Y = one_reduction))
-        ## Plot the values
-        points(x = points_to_add, y = 1:length(points_to_add), col = col, pch = 19)
-    }
+    add.data <- function(data, plot.param) {
+        ## Get the quantiles
+        quantiles <- sort(c(50-plot.param$quantiles/2, 50+plot.param$quantiles/2)/100)
 
-    add.lines <- function(CIs, one_reduction, col) {
-        ## Number of quantiles
-        quantiles_n <- nrow(CIs[[1]])
-        ## Extract the values for y
-        y_vals <- lapply(as.list(1:length(CIs)), function(X) rep(X, 2))
-        ## Extract the values for x
-        x_vals <- list()
-        for(cis in 1:(quantiles_n/2)) {
-            x_vals[[cis]] <- lapply(CIs, function(X, Y, cis, quantiles_n) return(X[(1:quantiles_n)[c(cis, quantiles_n-(cis-1))],Y]), Y = one_reduction, cis, quantiles_n)
-        }
-        ## Plotting all the lines
-        for(one_metric in 1:length(CIs)) {
-            for(cis in 1:(quantiles_n/2)) {
-                lines(x_vals[[cis]][[one_metric]], y_vals[[one_metric]], col = col[one_metric], lty = (quantiles_n/2 - cis + 1), lwd = cis * 1.5)
+        ## Get the X values (quantiles or central tendency)
+        quantile_vals <- apply(data, 2, quantile, probs = quantiles, na.rm = TRUE)
+        centtend_vals <- apply(data, 2, plot.param$cent.tend, na.rm = TRUE)
+
+        ## Loop through the lines
+        for(column in 1:ncol(data)) {
+            ## Get the x y values
+            line_x_vals <- quantile_vals[, column]
+            line_y_vals <- rep(column, 2)
+
+            ## Add the lines
+            n_cis <- length(quantiles)
+            for(ci in 1:(n_cis/2)) {
+                lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * (1+plot.param$scaler), col = plot.param$col[column])
             }
         }
+
+        ## Add the points
+        points(x = centtend_vals, y = 1:ncol(data), pch = plot.param$pch, col = plot.param$col, cex = 1 + plot.param$scaler)
+
+        return(invisible())
     }
 
+    ## Get the data
+    pooled_data <- pool.data(data, metric = metric, what = what, scale = scale)
 
+    ## Plot the results
+    empty.plot(plot.param)
+    add.data(pooled_data, plot.param)
+
+    if(overlap) {
+        ## Get the Bhattacharrya coefficients
+        coefs <- apply(pooled_data, 2, function(X, data) return(bhatt.coeff(X, pooled_data[,1])))[-1]
+        ## Round the coefficients
+        coefs <- round(coefs, 2)
+        ## y text positions
+        y_pos <- c(1:ncol(pooled_data))[-1]
+        ## x text positions
+        x_pos <- vector()
+        for(column in y_pos) {
+            x_pos[column-1] <- ifelse(mean(pooled_data[, column]) < 0, 0.5, -0.5)
+        }
+        ## Add the text
+        text(x = x_pos, y = y_pos, labels = coefs, cex = 1 + plot.param$scaler)
+
+    }
 }
 
 #' @title Plotting distribution by ID

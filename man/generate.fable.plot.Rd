@@ -4,7 +4,8 @@
 \alias{generate.fable.plot}
 \title{Generates fable plots}
 \usage{
-generate.fable.plot(data, metric, what)
+generate.fable.plot(data, metric, what, scale = TRUE, overlap = FALSE,
+  plot.param)
 }
 \arguments{
 \item{data}{the disparity data}
@@ -13,7 +14,11 @@ generate.fable.plot(data, metric, what)
 
 \item{what}{the name of the chain as given pas the code snippet generating the plots}
 
-\item{resolution}{the plot resolution in the fable}
+\item{scale}{whether to scale and centre the results around the non-reduced spaces}
+
+\item{overlap}{whether to add the Bhattacharyya Coefficients or not}
+
+\item{plot.param}{the plot parameters}
 }
 \description{
 Generates the plots for the fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
