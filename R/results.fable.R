@@ -54,12 +54,12 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
         ## Plot margins
         par(bty = "n", mar = c(3,1,1,1))
         ## Plot size
-        plot(NULL, ylim = range(1:3), pch = 19, xlim = c(-1,1), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+        plot(NULL, ylim = c(0.8, 3.2), pch = 19, xlim = c(-1,1), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
         ## Adding lines
         abline(v = 0, lty = 2, col = plot.param$bg.col, lwd = 1 + plot.param$scaler)
 
         ## Adding the x axis
-        axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = c(-1, NA, 0, NA, 1), tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col)
+        axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = c(-1, NA, 0, NA, 1), tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col, cex = 0.5 + plot.param$scaler)
     }
 
     add.data <- function(data, plot.param) {
