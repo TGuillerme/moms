@@ -9,3 +9,5 @@
 .Rapp.history
 
 input_test.txt
+
+inst/shiftingspace_files/*
