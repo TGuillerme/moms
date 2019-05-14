@@ -360,7 +360,10 @@ $\text{Effect of metric} = 1 - BC(metric_{focal}, metric_{random})$
 
 ### Measuring the effect of space and dimensionality
 
-To measure the effect of the different space distributions 
+To measure the effect of the different space distributions we run two analysis of variance: each individual disparity metric function of the different seven different spaces and each individual disparity metric function of the 10 different rarefaction levels.
+The results (_p_-values) are reported in Table 3.
+
+TODO: report the full tests
 
 # Results
 
@@ -399,6 +402,8 @@ for(metric in 1:length(metrics_list)) {
 }
 
 ```
+Table 3: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different disparity metrics.
+Figures: the dots represent the median disparity values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the negative reductions (i.e. discarding the black dots in Figure 2) and in blue the positive reductions (i.e. discarding the grey dots in Figure 2). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs disparity ~ distributions and disparity ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
 Metric      | Volume change  | Position change | Density change | Distribution effect | Dimensions effect
 :-----------|----------------|-----------------|----------------|---------------------|-------------------
@@ -413,25 +418,40 @@ Metric      | Volume change  | Position change | Density change | Distribution e
 `r name[9]` |`r plot.id(25)` |`r plot.id(26)`  |`r plot.id(27)` | `r s.test(9, "s")`  | `r s.test(9, "r")`
 
 
-## Stats
-
-Check whether a metric changes:
-
-1 - By reduction (i.e. whether the resulting metric is positive or negative)
-2 - By space (i.e. whether the metric is constant for different spaces)
-3 - By dimensions (i.e. whether the metric is constant for different number of dimensions)
+# Discussion
 
 
+ * Average squared distances: all right metric for measuring density (increase/decrease picked up). Not great for volume (i.e. volume decreases when the morphospace becomes hollow). Not at all good for position (both negative/positive are picked up the same way). Affected by the distributions but not the dimensions.
 
-## What do the metrics measure?
+ * Procrustes variances: similar to the average squared distances although even worth for position (often close to random changes). Clearly not affect by the distributions and the dimensions.
+ 
+ * Ellispsoid volume: Not great for picking up anything, probably because of the curse of multidimensionality. This metric is clearly affected both by the distributions and the number of dimensions. This metric is probably best used with a low number of dimensions ($<10$).
 
+ * Product of ranges: Same as the ellipsoid volume.
 
+ * Sum of ranges: Picks a only negative change in volume (but not hollowness) and bat for measuring changes in position and density. This metric is clearly affected by the distributions and also by the number of dimensions (albeit less clearly).
 
-A Table with different metrics and the things tested: 1- What is it
-capturing (size, position, density) 2- Effect of dimensionality 3-
-Measuring the effect on tests
+ * Product of variances: Positive decrease in volume (hollowness) is picked up. But not much signal from change in position or density. This metric is clearly affected by the distributions and the dimensions.
+ 
+ * Sum of variances: Similar behaviour than the Procrustes variance. Picks up great differences in volume. Bad for position on average, not bad for density. 
 
-# Results
+ * Mean displacement: Picks up reduction in volume (increased metric), not great for change in position and density. This metric is clearly affected by both the distributions and the number of dimensions.
+
+ * Mean nearest neighbour distances: Picks up reduction in volume. Not great for change in position. OK for change in density. This metric is affected by the distributions but not the number of dimensions.
+
+## Caveat of the analysis
+
+ * Data not simulated using evolutionary models (TODO: maybe TODO?)
+ * Response to reduction is often more specific to distribution/dimensions/reduction for each metric and these fine differences are not displayed here.
+ *
+
+# Conclusion
+
+There are non one-size-fits-all disparity metric.
+It is important to use the disparity metric that will best capture the problem at hand (e.g. if interested in the position of the morphospace, don't use the product of variances).
+
+Furthermore, all these different metrics are "disparity metrics" even though they represent widely different aspects.
+We thus suggest that future disparity analysis authors abstain from using the term "disparity" to designate the "disparity metric" but rather use "position in the morphospace", or, directly the name of the used metric to avoid confusion.
 
 
 # Acknowledgements
