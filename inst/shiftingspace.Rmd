@@ -182,6 +182,8 @@ We generated 7 spaces using the following parameters:
 | PCA-like   |300*50| Normal                         | Lognormal           | none        |
 | PCO-like   |300*50| Normal                         | Normal              | none        |
 
+Table 1: different simulated space distributions.
+
 The five first spaces reflect specific distributions to understand the baseline effect of the metric on controlled variables.
 The two last spaces (PCA and PCO-like) reflect spaces commonly used to measure changes in disparity in the macroevolutionary literature.
 
@@ -300,14 +302,18 @@ complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
 ## Effect of dimensionality
 
 Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
-Curse of dimensionality: the more the dimensions the more sparse the data becomes.
+This is link to the fact that the more dimensions, the more sparse the data becomes.
+In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
+Thus this probability decreases as a product of the number of dimensions.
+This "curse" can make the interpretation of high dimensional data counter-intuitive.
 
-For example, the product of range is expected to be highly sensible to the "curse of multidimensionality" [@Butler2012]: 1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. the more elements on one dimension, the chance of increasing the range); 2) multiplying by 0.
+For example, the product of range is expected to decrease with the number of dimensions, regardless of the number of elements on each dimensions.
+This is counter-intuitive because:
+1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. increasing the number of observations on one dimension can only increase the range, never decrease it);
+2) second, products are a classical example of the "curse" where multiplying a higher number of dimensions with a non-null probability of having a range of zero will irremediably result in 0 (i.e. an infinite number of positive values by 0 is still 0).
 
 
-For example:
-
-```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide'}
+```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
 set.seed(42)
 ## Make a 50 dimensions space
 space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
@@ -333,30 +339,28 @@ plot(NULL, xlim = c(2,50), ylim = c(0,1),
 for(metric in 1:ncol(curse_results)) {
   lines(curse_results[, metric], col = hue_colors[metric])
 }
-legend("bottomleft", colnames(curse_results), lty = 1, col = hue_colors)
+legend("bottomleft", metric_names, lty = 1, col = hue_colors)
 ```
 
-
-## Measuring the effect of the metric, space, transformation and dimensionality
+## Measuring the effect of space reduction, distribution and dimensionality on the metric
 
 ### Scaling disparity
 
+To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non reduced space for each dimension distributions or number of dimensions.
+To do so, we subtracted the observed disparity with no space reduction (i.e. base disparity) to all the disparity measurements of the reduced spaces and then divided it by the resulting maximum observed disparity.
+This way, our disparity metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the disparity metric value.
+
 ### Measuring the effect of the metric
+
+TODO: probably simply do a Bhattacharyya coefficient to see how much the disparity from the reduced space overlaps with the randomly reduced disparity.
+High values will indicate low effect and low values, high effects.
+TODO: probably flip that metric over so that low values = low effects and high values = high effects
+
+$\text{Effect of metric} = 1 - BC(metric_{focal}, metric_{random})$
 
 ### Measuring the effect of space and dimensionality
 
-
-
-
-
-
-
-
-In the end, the analysis should be a big GLM of
-
-disparity ~ metric + reduction + dimensions + elements
-
-
+To measure the effect of the different space distributions 
 
 # Results
 
@@ -364,9 +368,6 @@ disparity ~ metric + reduction + dimensions + elements
 ## Loading the results
 remove_05 <- load.results("remove_05")
 rarefy_dim_05 <- load.results("rarefy_dim_05")
-
-## Scale the results
-
 ```
 
 ```{r running_tests, echo = FALSE}
