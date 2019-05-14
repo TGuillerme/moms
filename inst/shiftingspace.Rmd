@@ -7,6 +7,10 @@ output:
   html_document:
     fig_width: 6
     fig_height: 6
+    keep_tex: true
+    self_contained: false
+    line_numbers: true
+    fig_caption: true
 ---
 
 
@@ -38,7 +42,6 @@ default.palette <- function(n) {
     hues = seq(15, 375, length = n + 1)
     grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
 }
-
 ```
 
 # Abstract
@@ -59,10 +62,11 @@ As expected, we found that different metrics are more appropriated to be used in
 
 # Introduction
 
- * We will cite papers like this one [@disprity].
 
  * Disparity is used a lot since the 1990s [Definition blabla] and also in ecology
- * It is linked to funtional spaces in ecology (but not called disparity there)
+ * Although many definitions have been used in ecology (e.g. diversity of functional niches) or in evolution (e.g. diversity of morphological shapes), disparity is fundamentally a way to measure
+ * It is linked to functional spaces in ecology (but not called disparity there)
+
  * Here we will try to approach both aspects (but more like macroevolution) by defining disparity as: "multidimensional trait-space occupancy".
  * In macroevolution, disparity is used to test hypothesis on how one or multiple groups occupy a morphospace (either through time or space or both)
  * It has been used to answer classical questions such as 1) does disparity of one group changes through time or in response to extinction or 2) do groups A and B have different disparity.
@@ -72,10 +76,13 @@ As expected, we found that different metrics are more appropriated to be used in
  * For example, in 1) a group's disparity (e.g. sum of variance) might not change through time but it's density might (suggesting that the morphospace is more/less tightly packed); in 2) two groups's disparities (e.g. sum of ranges) might be different but they might be situated in the same region of the morphospace.
  * Here we are going to classify disparity metrics into two broad spatial occupancy categories that might change independently: the volume, the density and the position. All of them are a distribution of distance in the space (whether Euclidean, Manhattan or others) and are traditionally summarised into a central tendency (e.g. the **sum** of variances, the **mean** pairwise distance), etc...
 
+ * Here we propose to test the effect of We will cite papers like this one [@disprity].
+
+
 
 ## Disparity metrics
 
-```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide'}
+```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by disparity metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).")}
 set.seed(11)
 ## Plot space function (utility shortcut)
 ## The elements
@@ -112,41 +119,56 @@ points(trait_space, pch = defaults$pch)
 par(op)
 ```
 
+Disparity metrics (or indices) can capture different aspects of the multidimensional space occupancy.
+The three fundamental informations that can be captured are:
+
 #### 1. The volume
 
- * This type of metrics measures the spread of a group in the trait-space. In biological terms, the bigger this metric, the more a group achieved more extreme morphologies.
- * This can be typically the hyper-volume, ellispsoid volume, product of ranges or product of variance.
+This type of metrics measures the spread of a group in the trait-space.
+In biological terms, the bigger this metric, the more a group achieved more extreme morphologies.
+This can be typically the hyper-volume, ellispsoid volume, product of ranges or product of variance.
+This metric has widely been used since the advent of disparity analysis namely through the implementation of @Wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
 
 #### 2. The density
 
- * This type of metrics measures the "packness" of a group in the trait-space. In biological terms, the bigger this metric, the more different morphologies are (i.e. heterogeneous).
- * This can be typically the mean pairwise distance, median distance from centroid, etc.
+This type of metrics measures the "packness" of a group in the trait-space.
+In biological terms, the bigger this metric, the more different elements are from each other.
+This is typically measured by pairwise distances or nearest neigbhors distances.
+In macroevolution, this metric is generally used in disparity-through-time analysis based on extant taxa as implemented in @geiger2008 (`geiger::dtt`).
 
 #### 3. The position
 
- * This type of metrics measures where the group is in the morphospace, either relative to another group or relative to a fixed point in the morphospace. Biological interpretation depends on what the distance from is. If it's distance from the centre of the morphospace, the bigger the metric, the more "weird" specimens in a group are (i.e. the centre being the average morphology in an ordination).
- * This has been rarely used.
+This third type of metrics measures the particular position of the group in the morphospace, either relative to another group or relative to a fixed point in the morphospace.
+The biological interpretation will thus depend on what the metrics measures the distance from.
+For example if it's distance from the centre of the morphospace, the bigger the metric, the more "weird" (i.e. non-average) specimens in a group are (i.e. the centre being the average morphology in an ordination).
+To our knowledge, this metric has been rarely used.
 
+Of course, some metrics can be a combination of several of these three different and more.
+In an ideal word, the choice of the metric should be based on the properties of changes in the morphospace of interest while taking into account the properties of the morphospace (number of elements or/and dimensions and distribution of the data on each axis).
+However, it is highly unlikely that one such one-size-fits-all metric exists.
+To alleviate this problem we suggest using multiple metrics.
+For example, if the macroevolutionary question of interest is to look at how the morphospace changes in response to mass extinction, it is important to capture several expected effects through different metrics (e.g. a mass extinction making the specimens with extreme characteristics go extinct - e.g. big mammals in the megafauna extinction).
 
+Finally, additionally to the fact that different metrics will capture different aspects of the morphospace, it is important to know how such metrics will change in response to predicted or observed changes in the morphospace.
+For example, when measuring the volume of a morphospace, if the morphospace space decreases randomly by 50%, do we expect a reduction of the volume of 50% as well? Or merely a reduction in density?
+In this paper, we thoroughly analyse the effect of such changes of the morphospace on five commonly used disparity metrics and propose two novel metrics.
+We test both how these seven metrics change in response of different morphopace reduction scenarios but also how they respond to these changes depending on the space distributions and the number of dimensions.
 
- * Of course, different metrics can represent multiple aspects of these three main "axis".
- * Also, multiple scenarios can be predicted in macroevolutionary process to change the morphospace (e.g. a mass extinction making the specimens with extreme characteristics go extinct (e.g. big mammals in the megafauna extinction))
- * In this paper, we look at the effect of each spatial transformation on the different types of broad category metrics.
-
- * Furthermore, multidimensional spaces are in essence... multidimensional (here we mean beyond our 3 physical dimensions).
- * This adds another layer of complexity because some spatial properties do not change linerarly with the number of dimensions, especially with ordination techniques (where dimensions are ranked).
- * We thus also look at the effect of dimensions on the metrics + whether they are sensitive to sample size or missing data.
-
-<!-- * Finally, one other aspect can be comparing a group to another one  -->
-<!-- TG: Should we add stuff about comparing groups to each other? I.e. how to distinguish two groups, see Effect_of_metric_on_space.Rmd  -->
- 
+We found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario along with a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics.
 
 # Methods
 
+To test the effect of spatial change (see Shifting space below), dimensions and dimensions distributions on the seven disparity metrics we:
+
+ 1. generated 7 different spaces with variable parameters
+ 2. transformed these spaces by removing 50% of the elements following four different scenarios
+ 3. measured disparity on the resulted transformed spaces
+
+Each points are described in details below.
+
 ## Generating spaces
 
-We generated 7 spaces using the following parameters.
-Each space is are then reduced to 3, 5, 10, 50, 100, 300 dimensions and 10, 50, 100, 500 elements resulting in 168 parameter combinations.
+We generated 7 spaces using the following parameters:
 
 | space name | size | distribution(s)                | dimensions variance | correlation |
 |------------|------|--------------------------------|---------------------|-------------|
@@ -157,30 +179,32 @@ Each space is are then reduced to 3, 5, 10, 50, 100, 300 dimensions and 10, 50, 
 |    Normal  |300*50| Normal                         | Constant            | none        |
 |    Normal  |300*50| Normal                         | Constant            | Random (between 0.1 and 0.9) |
 |   Random   |300*50| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
-| PCA        |300*50| Normal                         | Lognormal           | none        |
-| PCO        |300*50| Normal                         | Normal              | none        |
+| PCA-like   |300*50| Normal                         | Lognormal           | none        |
+| PCO-like   |300*50| Normal                         | Normal              | none        |
 
+The five first spaces reflect specific distributions to understand the baseline effect of the metric on controlled variables.
+The two last spaces (PCA and PCO-like) reflect spaces commonly used to measure changes in disparity in the macroevolutionary literature.
 
 ## Shifting spaces
 
-We then reduced the removed 80%, 50% and 20% of elements for the 168 parameters combinations following these four methods (resulting in 2520 combinations of parameters and space shifts):
+We reduced the spaces by removing 50% of elements each time using the following algorithms
 
- * **Randomly:** by randomly removing 80%, 50% or 20% of elements.  Figure 2A.
+
+ * **Randomly:** by randomly removing 50% of elements.  Figure 2A.
   
- * **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 80%, 50% or 20% or elements are selected).  Figure 2B.
+ * **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected).  Figure 2B.
 
  * **Displacement:** by removing points similarly as above but using the distance from the furthest point from the centre (max point). Figure 2C.
 
- * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 80%, 50% or 20% or elements are selected). Figure 2D.
+ * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected). Figure 2D.
 
 The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
 We used mirror results for the limit, displacement and density reduction (i.e. the opposite data was also used).
-For example, when using the limit reduction that includes 80% of the elements greater than $\rho$, we also used a limit reduction taht includes 20% of the elements lower than $\rho$.
+For example, when increasing the **density** by removing the 50% most distant elements, we also run a transformation by removing 50% of the *closests* elements.
+This resulted in seven different transformation by reducing the space: randomly, by limit (positive or negative), by displacement (positive or negative) or by density (increased or decreased).
 
-This resulted in 3528 parameters.
 
-
-```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide'}
+```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays 50% of the data points removed (in grey) using the following algorithm: A - randomly; B - by limit (removing data from the centre); C - by displacement (removing data from one side of the plot); and D - by density (removing data to increase or decrease the density).")}
 set.seed(42)
 op <- par(mfrow = c(2,2), bty = "n")
 ## The elements
@@ -225,45 +249,23 @@ typical_removal <- list(space = trait_space,
                                       "density(low)" = !density_rm))
 ```
 
-We repeated each step (and the following disparity measurements) 15 times.
+We repeated each of the data generation process (generating the space and reducing it) 20 times to obtain variance on the simulated parameters.
 
+## Disparity metrics
 
-## What do the metrics measure?
+We then measured seven different metrics on the resulting transformed spaces:
 
- * Include fable with: 1) name of the metric, 2) broad category, 3) what they measure, 4) their formula.
-
-#### Volume metrics
-
-```{r fable_metrics, fig.show='hide', echo= FALSE, eval = FALSE}
-library(knitr)
-par(margin = c(0,0,0,0), bty = "n")
-## The volume
-plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
-## The range lines
-lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
-lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
-
-## The volume
-plot(trait_space, pch = defaults$pch, main = "", xlab = "", ylab = "")
-## The range lines
-lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1, lwd = 10)
-lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1, lwd = 10)
-
-```
-
-<!-- 
-some text | base|lattice
-:------|:-------------------------------:|-------------------------------:
-Some metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-1.png"), dpi = 800)`
-Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r include_graphics(paste0(opts_chunk$get("fig.path"), "fable_metrics-2.png"), dpi = 800)`
-Some other metric | $H_{0}: \Theta_{0} = \Theta$ | `r t.test(rnorm(10), distributions = rnorm(10))$p.value`
- -->
-
-
-#### Density metrics
-
-
-#### Position metrics
+Name          | Definition                      | Captures | Origin           | `dispRity` function
+:-------------|:-------------------------------:|----------|------------------|------|
+Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
+Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
+Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @DonohueDim | `dispRity::ellipse.volume(matrix)`
+Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `prod(dispRity::ranges(matrix))`
+Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `sum(dispRity::ranges(matrix))`
+Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @Wills2001 | `prod(dispRity::variances(matrix))`
+Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @Wills2001 | `sum(dispRity::variances(matrix))`
+Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
+Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
 
 
 ```{r, all_metric, echo = FALSE}
@@ -297,7 +299,11 @@ complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
 
 ## Effect of dimensionality
 
+Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
 Curse of dimensionality: the more the dimensions the more sparse the data becomes.
+
+For example, the product of range is expected to be highly sensible to the "curse of multidimensionality" [@Butler2012]: 1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. the more elements on one dimension, the chance of increasing the range); 2) multiplying by 0.
+
 
 For example:
 
@@ -331,7 +337,13 @@ legend("bottomleft", colnames(curse_results), lty = 1, col = hue_colors)
 ```
 
 
+## Measuring the effect of the metric, space, transformation and dimensionality
 
+### Scaling disparity
+
+### Measuring the effect of the metric
+
+### Measuring the effect of space and dimensionality
 
 
 
@@ -369,9 +381,9 @@ test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
 
 ```
 
-```{r fable_results, fig.show='hide', echo= FALSE}
+```{r fable_results, fig.show='hide', echo=FALSE, fig.height=1.5, fig.width=1.5}
 ## Making a list of parameters for each mini plot
-plot.param <- list(scaler = 5,
+plot.param <- list(scaler = 0.5,
                    bg.col = "black",
                    col = c("grey", "orange", "blue"),
                    quantiles = c(95, 50),
@@ -410,51 +422,6 @@ Check whether a metric changes:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ## Alternative plotting (per results) -->
-
-```{r fig_volume_results_unif2d05, echo = FALSE, fig.height = 21, fig.width = 8, eval = FALSE}
-results <- summar_all_runif2d05
-## Plotting the results
-plot.results(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
-             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
-```
-
-
-
-
-
-<!-- ```{r fig_density_results, echo = FALSE, fig.height = 10, fig.width = 8, eval = FALSE}
-results <- summar_den
-## Plotting the results
-plot.results(results[[1]], results[[2]], col = default.palette(length(results[[1]])),
-             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
-```
-
-```{r fig_position_results, echo = FALSE, fig.height = 10, fig.width = 8, eval = FALSE}
-results <- summar_pos
-## Plotting the results
-plot.results(results[[1]], results[[2]], col = default.palette(length(summar_vol[[1]])),
-             space = typical_removal[[1]], remove_list = typical_removal[[2]], defaults)
-```
- -->
-
-
 ## What do the metrics measure?
 
 
@@ -470,7 +437,12 @@ Measuring the effect on tests
 
 Money from the ARC.
 
+
+
+
 # References
+
+
 
 
 
