@@ -42,6 +42,15 @@ default.palette <- function(n) {
     hues = seq(15, 375, length = n + 1)
     grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
 }
+
+## Checking whether the data exists
+if(length(grep("remove_05.Rda", list.files("../data/"))) == 0 &&
+   length(grep("rarefy_dim_05.Rda", list.files("../data/"))) == 0) {
+    ## Run The supplementary material
+    rmarkdown::render("shiftingspace_supplementary.Rmd", html_document())
+}
+
+
 ```
 
 # Abstract
