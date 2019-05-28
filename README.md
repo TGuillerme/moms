@@ -50,9 +50,9 @@ This paper is also **fully reproducible!**
 
 To reproduce the paper you can follow these steps
 
- 1. Open the file /inst/shiftingspace.Rmd with your favourite Rmarkdown editor (Rstudio, Sublime, Atom, etc.).
+ 1. Open the file [`/inst/shiftingspace.Rmd`](https://github.com/TGuillerme/moms/blob/master/inst/shiftingspace.Rmd) with your favourite Rmarkdown editor (Rstudio, Sublime, Atom, etc.).
  2. Press on the compile button.
- 3. Your reproduced paper should now be in /inst/shiftingspace.pdf.
+ 3. Your reproduced paper should now be in `/inst/shiftingspace.pdf`.
 
 Authors
 -------
@@ -63,9 +63,9 @@ Authors
 -------
 If you are using this package, please cite both the published description of this algorithm:
 
-* Brazeau MD, Guillerme T, Smith MR. (**2018**) An algorithm for morphological phylogenetic analysis with inapplicable data. *Systematic Biology*. [doi:10.1093/sysbio/syy083](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy083/5238046)
+* Guillerme T, Puttick M, Weisbecker V. (**2018**) Shifting spaces: how to summarise multidimensional spaces occupancy?. *Methods in Ecology and Evolution*. [doi:]()
 
 And the DOI of this package:
 
- * Guillerme T, Brazeau MD, Smith MR. (**2018**). moms: Reconstruction of momslicable Discrete Characters on Phylogenetic Trees. *Zenodo*. [doi:10.5281/zenodo.1484656](http://doi.org/10.5281/zenodo.1484656)
+ * Guillerme T, Puttick M, Weisbecker V. (**2018**). moms: Measuring Occupacy in Multidimensional Spaces. *Zenodo*. [doi:10.5281/zenodo.1484656](http://doi.org/10.5281/zenodo.1484656)
  -->
