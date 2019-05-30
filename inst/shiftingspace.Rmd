@@ -59,11 +59,18 @@ Analysis of the diversity of morphological shapes (aka disparity analysis) are n
 Disparity analysis are based on the analysis of a morphospace (i.e. a multidimensional space summarising all possible shapes achieved or not) and a disparity metric (or index) to measure the occupancy of a group of taxa in that morphospace.
 Such analysis have been commonly used to look at how a group of taxa changes through time, relatively to another group or as a response to some event (e.g. mass extinction).
 
+
 However, disparity metrics are not often thoroughly described and thus can have a nebulous mathematical meaning.
 This can make interpretation of changes in disparity often unclear beyond "a change in multidimensional space occupancy".
 In fact, different aspect of spatial occupancy can be of interest in different studies.
 For example, some questions might focus in changes in the volume of the morphospace whilst some other might focus on the position of a group in the morphospace or its density (or all three together).
 
+
+ > VW: It seems to me that the review is more important than the tool. 
+ > VW: So I'd be tempted to go " Here we use X method to review the properties of several commonly used disparity metrics, and introduce two new ones. 
+ > VW: We do this in the context of a new tool which allows easy replication of the behaviours, and also allows a fully user-controlled interface for allowing the development and testing of metrics on a diversity of datasets"
+ > VW: Just delete what's hyperbole :-)
+ 
 Here we propose a user friendly tool to Measure Occupancy in Multidimensional Spaces (moms) that allows to visualise numerical changes of many disparity metrics following space transformations (e.g. contraction, displacement, etc.) as well as visualising a 2D projection of the associated space changes.
 This tool thus allows researchers to explore and visualise the properties of disparity metrics under various parameters.
 Furthermore, we propose a thorough review of the behaviour of seven common and two new disparity metrics regarding various spacial properties (i.e. distribution, transformation, dimensionality).
@@ -71,18 +78,18 @@ As expected, we found that different metrics are more appropriated to be used in
 
 # Introduction
 
-
  * Disparity is used a lot since the 1990s [Definition blabla] and also in ecology
  * Although many definitions have been used in ecology (e.g. diversity of functional niches) or in evolution (e.g. diversity of morphological shapes), disparity is fundamentally a way to measure
  * It is linked to functional spaces in ecology (but not called disparity there)
 
  * Here we will try to approach both aspects (but more like macroevolution) by defining disparity as: "multidimensional trait-space occupancy".
  * In macroevolution, disparity is used to test hypothesis on how one or multiple groups occupy a morphospace (either through time or space or both)
- * It has been used to answer classical questions such as 1) does disparity of one group changes through time or in response to extinction or 2) do groups A and B have different disparity.
+ * It has been used to answer classical questions such as 1) does disparity of one group change through time or in response to extinction or 2) do groups A and B have different disparity.
 
  * However, the problem is that it is unclear what is meant in these two questions: classically disparity has been measured as sum or product of ranges or variance.
  * This measures the "spread" of a group in a morphospace (the product of ranges is the hyper-rectangular volume) but many more aspects might be interesting to researchers.
  * For example, in 1) a group's disparity (e.g. sum of variance) might not change through time but it's density might (suggesting that the morphospace is more/less tightly packed); in 2) two groups's disparities (e.g. sum of ranges) might be different but they might be situated in the same region of the morphospace.
+ 
  * Here we are going to classify disparity metrics into two broad spatial occupancy categories that might change independently: the volume, the density and the position. All of them are a distribution of distance in the space (whether Euclidean, Manhattan or others) and are traditionally summarised into a central tendency (e.g. the **sum** of variances, the **mean** pairwise distance), etc...
 
  * Here we propose to test the effect of We will cite papers like this one [@disprity].
@@ -131,36 +138,43 @@ par(op)
 Disparity metrics (or indices) can capture different aspects of the multidimensional space occupancy.
 The three fundamental informations that can be captured are:
 
+> VW: In the below can we add stuff about where metrics have resulte in debates about a group's disparity; and/or specific informations on the types of data used ; or where people are using a bunch of metrics that are already criticized (like the ones with products in them that crash to 0).
+
 #### 1. The volume
 
-This type of metrics measures the spread of a group in the trait-space.
+This type of metric measures the spread of a group in the trait-space.
 In biological terms, the bigger this metric, the more a group achieved more extreme morphologies.
 This can be typically the hyper-volume, ellispsoid volume, product of ranges or product of variance.
 This metric has widely been used since the advent of disparity analysis namely through the implementation of @Wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
 
 #### 2. The density
 
-This type of metrics measures the "packness" of a group in the trait-space.
+This type of metrics measures the "packedess" of a group in the trait-space.
 In biological terms, the bigger this metric, the more different elements are from each other.
 This is typically measured by pairwise distances or nearest neigbhors distances.
 In macroevolution, this metric is generally used in disparity-through-time analysis based on extant taxa as implemented in @geiger2008 (`geiger::dtt`).
 
 #### 3. The position
 
-This third type of metrics measures the particular position of the group in the morphospace, either relative to another group or relative to a fixed point in the morphospace.
+This third, more rarely used, type of metric measures the particular position of the group in the morphospace, either relative to another group or relative to a fixed point in the morphospace.
 The biological interpretation will thus depend on what the metrics measures the distance from.
 For example if it's distance from the centre of the morphospace, the bigger the metric, the more "weird" (i.e. non-average) specimens in a group are (i.e. the centre being the average morphology in an ordination).
-To our knowledge, this metric has been rarely used.
+
+> VW: At the risk of sounding belligerent, the below 2 paragraphs could be more aggressive. Something like "Disparity metrics are often not designed for the question asked, but this can have serious consequences for the result. For example...[Scenario]
 
 Of course, some metrics can be a combination of several of these three different and more.
 In an ideal word, the choice of the metric should be based on the properties of changes in the morphospace of interest while taking into account the properties of the morphospace (number of elements or/and dimensions and distribution of the data on each axis).
-However, it is highly unlikely that one such one-size-fits-all metric exists.
+However, it is highly unlikely that a such one-size-fits-all metric exist; rather, it is important to assess the properties of a metric relative to the specific data used.
+ "
+
 To alleviate this problem we suggest using multiple metrics.
 For example, if the macroevolutionary question of interest is to look at how the morphospace changes in response to mass extinction, it is important to capture several expected effects through different metrics (e.g. a mass extinction making the specimens with extreme characteristics go extinct - e.g. big mammals in the megafauna extinction).
 
+> VW: but also, using your approach of multiple metrics provides opportunities for much finer-scaled hypothesis testing. So using different metrics allows the provision of space occupation information not just in one case, but several. As far as I am aware, this is new ground - e.g. you can use the kind of data you have to simulate different scenarios (e.g. to assess if an extinction was random) and then check back with your data. But it is late and have maybe just rubbished 20 years of existing disparity literature?
+
 Finally, additionally to the fact that different metrics will capture different aspects of the morphospace, it is important to know how such metrics will change in response to predicted or observed changes in the morphospace.
 For example, when measuring the volume of a morphospace, if the morphospace space decreases randomly by 50%, do we expect a reduction of the volume of 50% as well? Or merely a reduction in density?
-In this paper, we thoroughly analyse the effect of such changes of the morphospace on five commonly used disparity metrics and propose two novel metrics.
+In this paper, we analyse the effect of such changes of the morphospace on five commonly used disparity metrics and propose two novel metrics.
 We test both how these seven metrics change in response of different morphopace reduction scenarios but also how they respond to these changes depending on the space distributions and the number of dimensions.
 
 We found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario along with a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics.
@@ -178,6 +192,7 @@ Each points are described in details below.
 ## Generating spaces
 
 We generated 7 spaces using the following parameters:
+> VW: This needs justification or possibly a table column that cites a paper where such a scenario has been suggested/found/debated. Ideally from all the different areas of biology we can possibly reach with the paper.
 
 | space name | size | distribution(s)                | dimensions variance | correlation |
 |------------|------|--------------------------------|---------------------|-------------|
@@ -310,6 +325,8 @@ complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
 
 ## Effect of dimensionality
 
+> VW: I understand teh below but only just and it is hard to read. I can help simplify.
+
 Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
 This is link to the fact that the more dimensions, the more sparse the data becomes.
 In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
@@ -374,6 +391,9 @@ The results (_p_-values) are reported in Table 3.
 
 TODO: report the full tests
 
+> VW:Here or perhaps in the results, I think there needs to be an explicit expectation of what "good" behaviour is for each metric. Something like an expectation - for the disparity metric to work, what should it do? E.g. If you apply the "limit" scenario, the squared distance measure is expected to go down for the black dots and up for the grey dots. 
+
+
 # Results
 
 ```{r loading_results, echo = FALSE}
@@ -411,6 +431,9 @@ for(metric in 1:length(metrics_list)) {
 }
 
 ```
+
+> VW:I am stuck here. YOu show 4 scenarios but only 3 plots per metric and the names of the scenarios does not match. I want to make sure I understand this right.
+
 Table 3: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different disparity metrics.
 Figures: the dots represent the median disparity values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the negative reductions (i.e. discarding the black dots in Figure 2) and in blue the positive reductions (i.e. discarding the grey dots in Figure 2). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs disparity ~ distributions and disparity ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
@@ -466,7 +489,7 @@ We thus suggest that future disparity analysis authors abstain from using the te
 # Acknowledgements
 
 Money from the ARC.
-
+ARC DP170103227, FT180100634
 
 
 
