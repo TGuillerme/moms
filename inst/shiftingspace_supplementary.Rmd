@@ -8,7 +8,10 @@ output:
     fig_height: 6
 ---
 
-```{r header, echo = FALSE}
+
+
+```{r, echo = FALSE}
+## *** MNP edit *** {r, echo = FALSE} not {r header, echo = FALSE}
 ## Loading the packages
 library(knitr)
 library(ape)
