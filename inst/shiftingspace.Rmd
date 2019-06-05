@@ -23,14 +23,17 @@ fig_caption: true
 ## will be much faster!
 
 ## Loading the packages
-library(knitr)
-library(ape)
-library(dispRity)
-library(moms)
+if(!require(devtools)) install.packages("devtools")
+if(!require(knitr)) install.packages("knitr"); library(knitr)
+if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
+if(!require(ape)) install.packages("ape"); library(ape)
+if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(!require(moms)) devtools::install_github("TGuillerm/moms"); library(moms)
 
-# *** MNP edit *** 
-## create data directory
-dir.create(path="../data", showWarnings = FALSE)
+## Create data directory
+if(!dir.exists("../data")) {
+    dir.create(path="../data", showWarnings = FALSE)
+}
 
 ## Setting the default parameters for the space plots
 defaults <- list(pch = 20,
@@ -43,16 +46,15 @@ defaults <- list(pch = 20,
                  cex = 1)
 ## Generating the default palette
 default.palette <- function(n) {
-  hues = seq(15, 375, length = n + 1)
-  grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+    hues = seq(15, 375, length = n + 1)
+    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
 ## Checking whether the data exists
 if(length(grep("remove_05.Rda", list.files("../data/"))) == 0 &&
-   length(grep("rarefy_dim_05.Rda", list.files("../data/"))) == 0) {
-  ## Run The supplementary material
-  ## *** MNP edit ***  "html_document" not  html_document()
-  rmarkdown::render("shiftingspace_supplementary.Rmd", html_document())
+    length(grep("rarefy_dim_05.Rda", list.files("../data/"))) == 0) {
+    ## Run The supplementary material
+    rmarkdown::render("shiftingspace_supplementary.Rmd", "html_document") #html_document()
 }
 
 
