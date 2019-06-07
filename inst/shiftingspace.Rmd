@@ -1,6 +1,6 @@
 ---
-  title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
-author: "Thomas Guillerme, Mark Puttick, Vera Weisbecker"
+title: "Shifting spaces: how to summarise multidimensional spaces occupancy? With moms."
+author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
@@ -35,8 +35,8 @@ if(packageVersion("dispRity") < "1.2.4") {
 if(!require(moms)) devtools::install_github("TGuillerm/moms"); library(moms)
 
 ## Create data directory
-if(!dir.exists("../data")) {
-    dir.create(path="../data", showWarnings = FALSE)
+if(!dir.exists("../data/processed")) {
+    dir.create(path="../data/processed", showWarnings = FALSE)
 }
 
 ## Setting the default parameters for the space plots
@@ -55,8 +55,8 @@ default.palette <- function(n) {
 }
 
 ## Checking whether the data exists
-if(length(grep("remove_05.Rda", list.files("../data/"))) == 0 &&
-    length(grep("rarefy_dim_05.Rda", list.files("../data/"))) == 0) {
+if(length(grep("remove_05.Rda", list.files("../data/processed/"))) == 0 &&
+    length(grep("rarefy_dim_05.Rda", list.files("../data/processed/"))) == 0) {
     ## Run The supplementary material
     rmarkdown::render("shiftingspace_supplementary.Rmd", "html_document") #html_document()
 }
@@ -97,7 +97,7 @@ Here we propose a user friendly tool to Measure Occupancy in Multidimensional Sp
 This tool thus allows researchers to explore and visualise the properties of disparity metrics under various parameters.
 Furthermore, we propose a thorough review of the behaviour of seven common and two new disparity metrics regarding various spacial properties (i.e. distribution, transformation, dimensionality).
 As expected, we found that different metrics are more appropriated to be used in different disparity analysis.
-> MNP. Rather than just observing differences, may it be more important to (i) show what different metrics measure and can we actually relate this to underlying biology, and (ii) generate null changes with parameters of interest for a researcher's clade.
+<!-- > MNP. Rather than just observing differences, may it be more important to (i) show what different metrics measure and can we actually relate this to underlying biology, and (ii) generate null changes with parameters of interest for a researcher's clade. -->
 
 # Introduction
 
@@ -138,7 +138,7 @@ lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defau
 plot(trait_space, pch = defaults$pch, main = "B - Density", xlab = "Trait 1", ylab = "")
 ## Plotting the pairwise lines
 pair.line <- function(line, trait_space, defaults) {
-lines(x = trait_space[line,1], y = trait_space[line,2], col = defaults$col1)
+    lines(x = trait_space[line,1], y = trait_space[line,2], col = defaults$col1)
 }
 apply(combn(1:elements, 2), 2, pair.line, trait_space, defaults)
 points(trait_space, pch = defaults$pch)
@@ -152,6 +152,10 @@ points(trait_space, pch = defaults$pch)
 
 par(op)
 ```
+
+Trait space occupancy metrics can be summarised intro three main categories 
+
+
 
 Disparity metrics (or indices) can capture different aspects of the multidimensional space occupancy.
 The three fundamental informations that can be captured are:
@@ -192,6 +196,25 @@ In this paper, we analyse the effect of such changes of the morphospace on five 
 We test both how these seven metrics change in response of different morphopace reduction scenarios but also how they respond to these changes depending on the space distributions and the number of dimensions.
 
 We found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario along with a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Methods
 
@@ -402,6 +425,46 @@ The results (_p_-values) are reported in Table 3.
 TODO: report the full tests
 
 > VW:Here or perhaps in the results, I think there needs to be an explicit expectation of what "good" behaviour is for each metric. Something like an expectation - for the disparity metric to work, what should it do? E.g. If you apply the "limit" scenario, the squared distance measure is expected to go down for the black dots and up for the grey dots. 
+
+
+## Empirical examples
+
+We analysed the effect of the different space occupancy metrics on six different studies from palaeontology, @@@GMM, and ecology to cover a broad representative view of fields using trait-spaces analysis.
+
+<!-- Here, we design a new method for assessing the usefulness of various measures of trait space occupation to fields as diverse as palaeontology, ecology, and phylogenetics. To demonstrate the applicability of our disparity assessments to a diversity of data modalities, we apply our approach to examples of phylogenetic character matrices, multivariate ecological data, and procrustes shapes (geometric morphometrics) -->
+
+We used the dataset of each study 
+
+
+Study | Field | Taxonomic Group | Type of data | Trait-space | groups size | type of question
+------|-------|-----------------|--------------|-------------|-------------|------------------
+@beck2014 | palaeontology | Mammalia | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ vs. @@@ | Are crown mammals more disparate than stem mammals?
+@wright2017 | palaeontology | Crinoidea | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ vs. @@@ | Is there a difference in disparity before and after the Ordovician mass extinction?
+@marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ vs. @@@ | @@@Are these two groups of Gophers different?
+@@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ vs. @@@ | @@@
+@diaz2016 | Ecology | Plantae | Continuous data | Ordination (PCA) | @@@ vs. @@@ | Do woody and non-woody plants occupy different parts of the plant-space?
+@@@ | Ecology | @@@ | Continuous data | Ordination (PCA) | @@@ vs. @@@ | @@@
+
+
+We re-analised the data from the original studies in three different ways to obtain equivalent trait-spaces with two groups of roughly the same size.
+
+* **Palaeontology** [@beck2014, @wright2017]: 1) calculating a distance matrix (using MORD distances) and 2) ordinating the distance matrix using a PCoA (or PCO).
+* **Geometric morphometrics** [@marcy2016]: 1) running a General Procrustes Analysis and 2) ordinating the Procrustes data using a PCA.
+* **Ecology** [@diaz2016]: 1) scaling the data and 2) ordinating the scaled data using a PCA.
+
+Each procedure is described in more details in the supplementary materials.
+<!-- TODO: vignette to generate the trait-spaces -->
+
+
+
+```{r, echo = FALSE, eval = FALSE}
+## Getting the disparity data for each chain
+beck2014 <- prepare.disparity("Beck2014")
+brusatte
+
+
+```
+
 
 
 # Results
