@@ -34,7 +34,7 @@ default.palette <- function(n) {
 }
 ```
 
-# Supplementary results
+# Simulation data
 
 This section contains all the results and calculations (and plots them).
 The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz).
