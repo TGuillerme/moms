@@ -1,0 +1,97 @@
+#NEXUS
+[R-package APE, Thu Dec 21 12:39:04 2017]
+
+BEGIN TAXA;
+	DIMENSIONS NTAX = 42;
+	TAXLABELS
+		Aethocrinus
+		Alphacrinus
+		Amabilicrinus
+		Apektocrinus
+		Botryocrinus
+		Carabocrinus
+		Codiacrinus
+		Colpodecrinus
+		Corematocrinus
+		Crotalocrinites
+		Cupulocrinus
+		Dendrocrinus
+		Euspirocrinus
+		Eustenocrinus
+		Gasterocoma
+		Glossocrinus
+		Homalocrinus
+		Ibexocrinus
+		Hybocrinus
+		Hybocystites
+		Icthyocrinus
+		Iocrinus
+		Lecanocrinus
+		Lecythocrinus
+		Heviacrinus
+		Manicrinus
+		Mastigocrinus
+		Merocrinus
+		Metabolocrinus
+		Ottawacrinus
+		Petalocrinus
+		Plicodendrocrinus
+		Porocrinus
+		Proctothylacocrinus
+		Protaxocrinus
+		Rhenocrinus
+		Rutkowskicrinus
+		Sagenocrinites
+		Sphaerocrinus
+		Streblocrinus
+		Thalamocrinus
+		Thenarocrinus
+	;
+END;
+BEGIN TREES;
+	TRANSLATE
+		1	Aethocrinus,
+		2	Alphacrinus,
+		3	Amabilicrinus,
+		4	Apektocrinus,
+		5	Botryocrinus,
+		6	Carabocrinus,
+		7	Codiacrinus,
+		8	Colpodecrinus,
+		9	Corematocrinus,
+		10	Crotalocrinites,
+		11	Cupulocrinus,
+		12	Dendrocrinus,
+		13	Euspirocrinus,
+		14	Eustenocrinus,
+		15	Gasterocoma,
+		16	Glossocrinus,
+		17	Homalocrinus,
+		18	Ibexocrinus,
+		19	Hybocrinus,
+		20	Hybocystites,
+		21	Icthyocrinus,
+		22	Iocrinus,
+		23	Lecanocrinus,
+		24	Lecythocrinus,
+		25	Heviacrinus,
+		26	Manicrinus,
+		27	Mastigocrinus,
+		28	Merocrinus,
+		29	Metabolocrinus,
+		30	Ottawacrinus,
+		31	Petalocrinus,
+		32	Plicodendrocrinus,
+		33	Porocrinus,
+		34	Proctothylacocrinus,
+		35	Protaxocrinus,
+		36	Rhenocrinus,
+		37	Rutkowskicrinus,
+		38	Sagenocrinites,
+		39	Sphaerocrinus,
+		40	Streblocrinus,
+		41	Thalamocrinus,
+		42	Thenarocrinus
+	;
+	TREE * UNTITLED = [&R] (((1:0.2042212925,((((((((((((((3:5.055403384,9:5.055403384)n17:0.6465348635,16:5.701937506)n16:5.956950781,37:0.2042212925)n15:24.77828046,36:0.2042212925)n14:8.230319145,34:0.2042212925)n13:7.675383878,42:0.2042212925)n12:6.477209585,((5:0.2042212925,((((7:0.2042212925,15:2.039267599)n23:5.970367137,39:0.2042212925)n22:5.308537378,40:0.2042212925)n21:13.93203509,41:0.2042212925)n20:8.446866044)n19:2.949861896,27:0.2042212925)n18:3.926624383)n11:10.38834218,12:0.2042212925)n10:3.561736711,32:0.2042212925)n9:1.654794162,((((10:7.123718288,31:10.06862462)n27:5.088689451,26:0.2042212925)n26:7.957655625,13:0.2042212925)n25:2.283984862,24:1.818062955)n24:1.313011246)n8:6.38292102,(11:0.2042212925,(((17:0.2042212925,(23:0.2042212925,38:5.256774538)n32:3.86566425)n31:1.667243446,35:0.2042212925)n30:0.2042212925,21:4.230847625)n29:4.355346184)n28:3.154584914)n7:2.292769103,30:3.606383617)n6:7.700294096,8:0.2042212925)n5:6.606814315,(6:0.2042212925,((19:0.2042212925,20:1.988939002)n35:4.136513306,33:0.2042212925)n34:9.354011462)n33:3.938184334)n4:7.803871461)n3:6.033578933,(2:0.2042212925,((((14:7.712945775,25:0.2042212925)n40:5.579443203,18:0.2042212925)n39:3.428396295,22:0.2042212925)n38:0.2730681789,(28:0.2042212925,29:7.834945687)n41:4.818775799)n37:10.0651965)n36:4.640089042)n2:1.954786373,4:1.462669232)n1:0;
+END;
