@@ -13,6 +13,7 @@ export(plot.results)
 export(plot.metrics)
 
 ## Analysis (paper)
+export(prepare.disparity)
 export(generate.fable.plot)
 export(plot.id)
 export(s.test)
