@@ -1,5 +1,5 @@
 ---
-title: "Shifting spaces: how to summarise multidimensional spaces occupancy? With moms."
+title: "Shifting spaces: how to summarise multidimensional spaces occupancy? "
 author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
@@ -441,14 +441,14 @@ We analysed the effect of the different space occupancy metrics on six different
 We used the dataset of each study 
 
 
-Study | Field | Taxonomic Group | Type of data | Trait-space | groups size | type of question
+Study | Field | Taxonomic Group | Type of data | Trait-space | Dimensions | groups size | type of question
 ------|-------|-----------------|--------------|-------------|-------------|------------------
-@beck2014 | palaeontology | Mammalia | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ vs. @@@ | Are crown mammals more disparate than stem mammals?
-@wright2017 | palaeontology | Crinoidea | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ vs. @@@ | Is there a difference in disparity before and after the Ordovician mass extinction?
-@marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ vs. @@@ | @@@Are these two groups of Gophers different?
-@@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ vs. @@@ | @@@
-@diaz2016 | Ecology | Plantae | Continuous data | Ordination (PCA) | @@@ vs. @@@ | Do woody and non-woody plants occupy different parts of the plant-space?
-@@@ | Ecology | @@@ | Continuous data | Ordination (PCA) | @@@ vs. @@@ | @@@
+@beck2014 | palaeontology | Mammalia | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ | 52 crown vs. 50 stem | Are crown mammals more disparate than stem mammals?
+@wright2017 | palaeontology | Crinoidea | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?
+@marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@Are these two groups of Gophers different?
+@@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@
+@diaz2016 | Ecology | Plantae | Continuous data | Ordination (PCA) | @@@ |@@@ vs. @@@ | Do woody and non-woody plants occupy different parts of the plant-space?
+@@@ | Ecology | @@@ | Continuous data | Ordination (PCA) | @@@ | @@@ vs. @@@ | @@@
 
 
 We re-analised the data from the original studies in three different ways to obtain equivalent trait-spaces with two groups of roughly the same size.
