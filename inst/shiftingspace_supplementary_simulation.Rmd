@@ -11,12 +11,17 @@ output:
 # Supplementary material 1: simulations
 
 ```{r, echo = FALSE}
-## *** MNP edit *** {r, echo = FALSE} not {r header, echo = FALSE}
 ## Loading the packages
-library(knitr)
-library(ape)
-library(dispRity)
-library(moms)
+if(!require(devtools)) install.packages("devtools")
+if(!require(knitr)) install.packages("knitr"); library(knitr)
+if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
+if(!require(ape)) install.packages("ape"); library(ape)
+if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(packageVersion("dispRity") < "1.2.4") {
+    ## dispRity must be above v1.2.3
+    devtools::install_github("TGuillerme/dispRity"); library(dispRity)
+}
+if(!require(moms)) devtools::install_github("TGuillerm/moms"); library(moms)
 
 ## Setting the default parameters for the space plots
 defaults <- list(pch = 20,
