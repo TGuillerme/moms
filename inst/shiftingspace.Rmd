@@ -58,8 +58,13 @@ default.palette <- function(n) {
 if(length(grep("remove_05.Rda", list.files("../data/processed/"))) == 0 &&
     length(grep("rarefy_dim_05.Rda", list.files("../data/processed/"))) == 0) {
     ## Run The supplementary material
-    rmarkdown::render("shiftingspace_supplementary.Rmd", "html_document") #html_document()
+    rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")
 }
+# if(length(grep("remove_05.Rda", list.files("../data/processed/"))) == 0 &&
+#     length(grep("rarefy_dim_05.Rda", list.files("../data/processed/"))) == 0) {
+#     ## Run The supplementary material
+#     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
+# }
 ```
 
 # Abstract
@@ -455,18 +460,6 @@ We re-analised the data from the original studies in three different ways to obt
 Each procedure is described in more details in the supplementary materials.
 <!-- TODO: vignette to generate the trait-spaces -->
 
-
-
-```{r, echo = FALSE, eval = FALSE}
-## Getting the disparity data for each chain
-beck2014 <- prepare.disparity("Beck2014")
-brusatte
-
-
-```
-
-
-
 # Results
 
 ```{r loading_results, echo = FALSE}
@@ -486,6 +479,7 @@ test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
 #TODO: Generate the aov tables in the supplementary
 
 ```
+
 
 ```{r fable_results, fig.show='hide', echo=FALSE, fig.height=1.5, fig.width=1.5}
 ## Making a list of parameters for each mini plot
