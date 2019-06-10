@@ -11,13 +11,17 @@ output:
 # Supplementary material 2: empirical data
 
 ```{r, echo = FALSE}
-## *** MNP edit *** {r, echo = FALSE} not {r header, echo = FALSE}
 ## Loading the packages
-library(knitr)
-library(ape)
-library(dispRity)
-library(moms)
-
+if(!require(devtools)) install.packages("devtools")
+if(!require(knitr)) install.packages("knitr"); library(knitr)
+if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
+if(!require(ape)) install.packages("ape"); library(ape)
+if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(packageVersion("dispRity") < "1.2.4") {
+    ## dispRity must be above v1.2.3
+    devtools::install_github("TGuillerme/dispRity"); library(dispRity)
+}
+if(!require(moms)) devtools::install_github("TGuillerme/moms"); library(moms)
 ## Setting the default parameters for the space plots
 defaults <- list(pch = 20,
                  xlim = c(-3, 3),
@@ -36,6 +40,66 @@ default.palette <- function(n) {
 
 # Empirical data
 
+## Creating the trait spaces
+
+The following sections contains the methodology and the code to generate the six empirical trait-spaces analysed in the paper.
+The protocol for creating each space is detailed below.
+
+### Palaeontological (discrete) data
+
+For the discrete morphological data, we calculated a distance matrix from the original discrete morphological matrices from @beck2014 and @wright2017 using the maximum observable distance [@lloyd2016, @lehmann2019] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, gower1966, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
+This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ taxa. 
+
+```{r, eval = FALSE}
+## Creating the trait-spaces
+beck_traitspace <- Claddis.ordination("../data/matrices/Beck2014.nex", distance = "MORD")
+wright_traitspace <- Claddis.ordination("../data/matrices/Wright2017.nex", distance = "MORD")
+```
+
+For both datasets we created two groups, the crown versus the stem mammals for @beck2014 and the crinoids occuring before and after the Ordovician-Silurian boundary (455-430 million years ago - Mya).
+
+```{r, eval = FALSE}
+## Loading the tree from Beck and Lee 2014
+beck_tree <- read.nexus("../data/groups/Beck2014.tre")
+
+## Selecting the crown and stem mammals
+groups_beck <- crown.stem(beck_tree)
+
+## Loading the first and last occurence data from Wright 2017
+wright_ages <- read.csv("../data/groups/Wright2017.csv")
+
+## Separating taxa that went extinct half way through the Ordovician-Silurian extinction (442.5 Mya)
+groups_wright <- ifelse(wright_ages$LAD < 422.5, TRUE, FALSE)
+groups_wright <- list("Before" = as.character(wright_ages$species[which(groups_wright)]),
+                      "After" =  as.character(wright_ages$species[which(!groups_wright)]))
+
+## Creating the dispRity objects
+beck_traitspace <- custom.subsets(beck_traitspace, groups = groups_beck)
+wright_traitspace <- custom.subsets(wright_traitspace, groups = groups_wright)
+```
+
+### Geometric morphometric (landmark) data
+
+For the geometric morphometric data (landmark datasets) we used...
+
+```{r, eval = FALSE}
+## Using the geomorph package
+if(!require(geomorph)) install.packages("geomorph"); library(geomorph)
+
+## Loading the landmark data
+
+## Performing a Procrustes superimposition
+ <- geomorph::gpagen(plethodon$land, PrinAxes = FALSE, print.progress = FALSE)
+
+## Ordinating the data
+ <- geomorph.ordination()
+
+```
+
+### Ecological (continuous) data
 
 ```{r, eval = FALSE, message = FALSE, fig.width = 12, fig.height = 12, echo = FALSE}
 ```
+
+
+# References
