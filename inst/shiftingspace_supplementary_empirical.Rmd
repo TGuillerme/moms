@@ -50,7 +50,7 @@ The protocol for creating each space is detailed below.
 For the discrete morphological data, we calculated a distance matrix from the original discrete morphological matrices from @beck2014 and @wright2017 using the maximum observable distance [@lloyd2016, @lehmann2019] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, gower1966, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ taxa. 
 
-```{r, eval = FALSE}
+```{r}
 ## Creating the trait-spaces
 beck_traitspace <- Claddis.ordination("../data/matrices/Beck2014.nex", distance = "MORD")
 wright_traitspace <- Claddis.ordination("../data/matrices/Wright2017.nex", distance = "MORD")
@@ -58,7 +58,7 @@ wright_traitspace <- Claddis.ordination("../data/matrices/Wright2017.nex", dista
 
 For both datasets we created two groups, the crown versus the stem mammals for @beck2014 and the crinoids occuring before and after the Ordovician-Silurian boundary (455-430 million years ago - Mya).
 
-```{r, eval = FALSE}
+```{r}
 ## Loading the tree from Beck and Lee 2014
 beck_tree <- read.nexus("../data/groups/Beck2014.tre")
 
@@ -74,9 +74,14 @@ groups_wright <- list("Before" = as.character(wright_ages$species[which(groups_w
                       "After" =  as.character(wright_ages$species[which(!groups_wright)]))
 
 ## Creating the dispRity objects
-beck_traitspace <- custom.subsets(beck_traitspace, groups = groups_beck)
-wright_traitspace <- custom.subsets(wright_traitspace, groups = groups_wright)
+beck_traitspace <- custom.subsets(beck_traitspace, group = groups_beck)
+wright_traitspace <- custom.subsets(wright_traitspace, group = groups_wright)
+
+## Saving the data for the main analysis
+palaeo <- list("beck" = beck_traitspace, "wright" = wright_traitspace)
+save.results(palaeo)
 ```
+
 
 ### Geometric morphometric (landmark) data
 
@@ -96,10 +101,27 @@ if(!require(geomorph)) install.packages("geomorph"); library(geomorph)
 
 ```
 
+```{r, eval = FALSE}
+## Making the groups
+
+## Saving the data for the main analysis
+gmm <- list("beck" = beck_traitspace, "wright" = wright_traitspace)
+save.results(gmm)
+```
+
 ### Ecological (continuous) data
 
 ```{r, eval = FALSE, message = FALSE, fig.width = 12, fig.height = 12, echo = FALSE}
 ```
+
+```{r, eval = FALSE}
+## Making the groups
+
+## Saving the data for the main analysis
+ecol <- list("beck" = beck_traitspace, "wright" = wright_traitspace)
+save.results(ecol)
+```
+
 
 
 # References
