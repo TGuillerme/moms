@@ -5,8 +5,8 @@ bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
   html_document:
-  fig_width: 6
-fig_height: 6
+  fig_width: 8
+fig_height: 8
 keep_tex: true
 self_contained: false
 line_numbers: true
@@ -54,17 +54,18 @@ default.palette <- function(n) {
     grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
+## Setting the datapath
+DATA_PATH <- "../data/processed/"
+
 ## Checking whether the data exists
-if(length(grep("remove_05.Rda", list.files("../data/processed/"))) == 0 &&
-    length(grep("rarefy_dim_05.Rda", list.files("../data/processed/"))) == 0) {
-    ## Run The supplementary material
-    rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")
+if(!all(c("remove_05.Rda", "rarefy_dim_05.Rda") %in% list.files(DATA_PATH))) {
+    ## Run The supplementary material (simulation)
+    rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
-# if(length(grep("remove_05.Rda", list.files("../data/processed/"))) == 0 &&
-#     length(grep("rarefy_dim_05.Rda", list.files("../data/processed/"))) == 0) {
-#     ## Run The supplementary material
-#     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
-# }
+if(!all(c("palaeo.Rda", "gmm.Rda", "ecol.Rda") %in% list.files(DATA_PATH))) {
+    ## Run The supplementary material
+    rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
+}
 ```
 
 # Abstract
@@ -460,6 +461,7 @@ We re-analised the data from the original studies in three different ways to obt
 Each procedure is described in more details in the supplementary materials.
 <!-- TODO: vignette to generate the trait-spaces -->
 
+
 # Results
 
 ```{r loading_results, echo = FALSE}
@@ -515,6 +517,31 @@ Metric      | Volume change  | Position change | Density change | Distribution e
 `r name[7]` |`r plot.id(19)` |`r plot.id(20)`  |`r plot.id(21)` | `r s.test(7, "s")`  | `r s.test(7, "r")`
 `r name[8]` |`r plot.id(22)` |`r plot.id(23)`  |`r plot.id(24)` | `r s.test(8, "s")`  | `r s.test(8, "r")`
 `r name[9]` |`r plot.id(25)` |`r plot.id(26)`  |`r plot.id(27)` | `r s.test(9, "s")`  | `r s.test(9, "r")`
+
+
+```{r running_empirical, echo = FALSE}
+## Loading the data
+palaeo <- load.results("palaeo")
+#gmm <- load.results("gmm")
+#ecol <- load.results("ecol")
+
+## List of spaces
+trait_spaces <- unlist(list(palaeo, palaeo, palaeo), recursive = FALSE)
+# trait_spaces <- unlist(list(palaeo, gmm, ecol), recursive = FALSE)
+
+## Measuring space occupancy for all spaces and all metrics
+apply.disparity <- function(space, metrics) {
+    lapply(metrics, function(metric, space) dispRity(boot.matrix(space), metric), space)
+}
+disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
+
+## Extracting the observed space occupancies
+disparity_vals <- lapply(disparities, lapply, extract.dispRity, observed = FALSE)
+
+## Testing the differences for each distributions
+disparity_t_test <- lapply(disparities, lapply, test.dispRity,
+                           test = t.test, correction = "bonferroni")
+```
 
 
 # Discussion
