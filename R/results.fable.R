@@ -171,9 +171,11 @@ generate.fable.empirical <- function(data, test, plot.param, precision = 1e-16) 
 
     if(all(unlist(data$disparity) < precision)) {
         ## NA plot
+        par(bty = "n", mar = c(3,3,1,1))
         plot(NULL, ylim = c(0,1), xlim = c(0,1), xaxt = "n", yaxt = "n", xlab = "", ylab = "")
         text(0.5, 0.5, "NA", cex = 10)
     } else {
+        par(bty = "n", mar = c(3,3,1,1))
         ## Plotting the results
         plot(scale.vals(data), col = plot.param$col, ylim = c(0,1), xlab = "",ylab = "", xaxt = "n")
         ## Adding the difference (or not)
