@@ -114,6 +114,103 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
     }
 }
 
+
+#' @title Generates fable plots for the empirical data
+#'
+#' @description Generates the plots for the empirical example fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
+#'
+#' @param data the disparity data
+#' @param test the associated test with the data
+#' @param plot.param the plot parameters
+#' @param precision the value under which to consider values as zeros
+# @param data_names the names of the datasets (to be plotted)
+# @param metrics_names the names of the metrics (to be plotted)
+#'
+#' @examples
+#'
+#' @seealso
+#' 
+#' @author Thomas Guillerme
+#' @export
+
+generate.fable.empirical <- function(data, test, plot.param, precision = 1e-16) {
+
+    ## Scaling the disparity values between 0 and 1
+    scale.vals <- function(disparity) {
+        ## Centre
+        min_val <- min(unlist(disparity$disparity))
+        disparity$disparity <- lapply(disparity$disparity, lapply,
+                                      function(x, min) x-min, min = min_val)
+        # Scale
+        max_val <- max(unlist(disparity$disparity))
+        disparity$disparity <- lapply(disparity$disparity, lapply,
+                                      function(x, max) x/max, max = max_val)
+        return(disparity)
+    }
+
+    ## Get significance token
+    get.token <- function(test) {
+        if(test[[3]] < 0.001) {
+            return("***")
+        } else {
+            if(test[[3]] < 0.01) {
+                return("**")
+            } else {
+                if(test[[3]] < 0.05) {
+                    return("*")
+                } else {
+                    if(test[[4]] < 0.1) {
+                        return(".")
+                    } else {
+                        return("")
+                    }
+                }
+            }
+        }
+    }
+
+    if(all(unlist(data$disparity) < precision)) {
+        ## NA plot
+        plot(NULL, ylim = c(0,1), xlim = c(0,1), xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+        text(0.5, 0.5, "NA", cex = 10)
+    } else {
+        ## Plotting the results
+        plot(scale.vals(data), col = plot.param$col, ylim = c(0,1), xlab = "",ylab = "", xaxt = "n")
+        ## Adding the difference (or not)
+        text(1.5, 0.9, get.token(test), cex = plot.param$cex)
+    }
+
+    # ## Scaling the disparity
+    # data <- lapply(data, lapply, scale.vals)
+
+    # ## Setting the plot window
+    # layout_matrix <- matrix(1:(length(metric_names)*length(data_names)), nrow = length(metric_names), ncol = length(data_names))
+    # layout <- layout(layout_matrix, widths = 1, heights = 1)
+    # # layout.show(layout)
+
+    # ## Double looping through the plots (boooh!)
+    # for(dataset in 1:length(data_names)){
+    #     for(metric in 1:length(metric_names)){
+    #         ## Setting the plot position parameters
+    #         first_row <- ifelse(dataset == 1, TRUE, FALSE)
+    #         top_column <- ifelse(metric == 1, TRUE, FALSE)
+    #         bottom_column <- ifelse(metric == length(metric_names), TRUE, FALSE)
+        
+    #         ## Plotting the results
+    #         plot(data[[dataset]][[metric]], col = plot.param$col, ylim = c(0,1),
+    #             xaxt = ifelse(bottom_column, "s", ""),
+    #             xlab = "",
+    #             ylab = ifelse(first_row, metric_names[metric], ""),
+    #             main = ifelse(top_column, data_names[dataset], "")
+    #             )
+        
+    #         ## Adding the difference (or not)
+    #         text(1.5, 0.9, get.token(test[[dataset]][[metric]]), cex = plot.param$cex)
+    #     }
+    # }
+}
+
+
 #' @title Plotting distribution by ID
 #'
 #' @description Plots one distribution for the fable following the plot ID
