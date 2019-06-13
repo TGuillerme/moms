@@ -64,14 +64,14 @@ beck_tree <- read.nexus("../data/groups/Beck2014.tre")
 
 ## Selecting the crown and stem mammals
 groups_beck <- crown.stem(beck_tree)
-groups_beck <- unlist(list(list("all" = beck_tree$tip.label), groups_beck), recursive = FALSE)
+# groups_beck <- unlist(list(list("all" = beck_tree$tip.label), groups_beck), recursive = FALSE)
 
 ## Loading the first and last occurence data from Wright 2017
 wright_ages <- read.csv("../data/groups/Wright2017.csv")
 
 ## Separating taxa that went extinct half way through the Ordovician-Silurian extinction (442.5 Mya)
 groups_wright <- ifelse(wright_ages$LAD < 422.5, TRUE, FALSE)
-groups_wright <- list("all" = as.character(wright_ages$species),
+groups_wright <- list(#"all" = as.character(wright_ages$species),
                       "before" = as.character(wright_ages$species[which(groups_wright)]),
                       "after" =  as.character(wright_ages$species[which(!groups_wright)]))
 
