@@ -240,7 +240,8 @@ generate.fable.empirical <- function(data, test, plot.param, data_names, metrics
 #' 
 #' @author Thomas Guillerme
 #' @export
-plot.id <- function(plot.ID, path = "fig.path", chain = "fable_results", resolution = 800, type = ".pdf") {
+plot.id <- function(plot.ID, path = "fig.path", chain = "fable_results", resolution = 800) {
+    type <- ".pdf"
     knitr::include_graphics(path = paste0(opts_chunk$get(path), paste0(chain, "-", plot.ID, type)),
                             dpi = resolution)
 }
