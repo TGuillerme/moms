@@ -4,7 +4,8 @@
 \alias{generate.fable.empirical}
 \title{Generates fable plots for the empirical data}
 \usage{
-generate.fable.empirical(data, test, plot.param, precision = 1e-16)
+generate.fable.empirical(data, test, plot.param, data_names, metrics_names,
+  precision = 1e-16)
 }
 \arguments{
 \item{data}{the disparity data}
@@ -12,6 +13,10 @@ generate.fable.empirical(data, test, plot.param, precision = 1e-16)
 \item{test}{the associated test with the data}
 
 \item{plot.param}{the plot parameters}
+
+\item{data_names}{the names of the datasets (to be plotted)}
+
+\item{metrics_names}{the names of the metrics (to be plotted)}
 
 \item{precision}{the value under which to consider values as zeros}
 }
