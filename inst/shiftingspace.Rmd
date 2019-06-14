@@ -562,7 +562,7 @@ disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)
 ```
 
 
-```{r fable_results_empirical, fig.height=12, fig.width=18}
+```{r fable_results_empirical, fig.height=13, fig.width=10}
 ## Making a list of parameters for each mini plot
 plot.param <- list(cex = 1,
                    col = c("#F7B27E", "#BFE4E3"),
