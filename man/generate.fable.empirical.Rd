@@ -4,21 +4,20 @@
 \alias{generate.fable.empirical}
 \title{Generates fable plots for the empirical data}
 \usage{
-generate.fable.empirical(data, test, plot.param, data_names, metrics_names,
-  precision = 1e-16)
+generate.fable.empirical(data, test, precision, plot.param)
 }
 \arguments{
 \item{data}{the disparity data}
 
 \item{test}{the associated test with the data}
 
+\item{precision}{the value under which to consider values as zeros}
+
 \item{plot.param}{the plot parameters}
 
 \item{data_names}{the names of the datasets (to be plotted)}
 
 \item{metrics_names}{the names of the metrics (to be plotted)}
-
-\item{precision}{the value under which to consider values as zeros}
 }
 \description{
 Generates the plots for the empirical example fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
