@@ -79,17 +79,18 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 # Abstract
 
 <!-- Eco/Evo option: -->
-<!-- Trait multidimensional analysis are now a common tool-kit in ecology and evolution.
+Trait multidimensional analysis are now a common tool-kit in ecology and evolution.
 Such analysis are based on a multidimensional where each dimension represent a trait (or a transformation thereof) thus summarising all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
 To quantify the overall occupation of such trait-spaces, researchers apply one or more metrics that summarise the way in which organisms inhabit that 'trait-space'.
 Using these metrics, researchers have investigated at how trait space occupancy changes through time, in relation to other groups of organisms or in response to global environmental changes (e.g. global warming events or mass extinctions).
 
-Although few well defined space occupancy metrics are used in ecology, we lack a general description of the majority of those metrics, especially in macroevolution (often called disparity metrics).
-Therefore the mathematical and biological meaning of such trait-space occupancy metrics can be bague.
+Although few well defined space occupancy metrics are used in ecology and evolution, we lack a general description of the majority of those metrics, especially in macroevolution (often called disparity metrics).
+Therefore the mathematical and biological meaning of such trait-space occupancy metrics can be vague.
 This as consequences when interpreting changes in trait-space occupancy and linking them to biological phenomenon.
-For example, does a reduction in volume in trait-space corresponds to episodes of extinction or changes in traits distribution? -->
+For example, does a reduction in volume in trait-space corresponds to episodes of extinction or changes in traits distribution?
+Does an overlap in trait-space means overlapping niches?
 
-<!-- Evo only option: -->
+<!-- Evo only option:
 Analysis of the diversity of morphological shapes (aka disparity analysis) are now a common toolkit in macroevolution.
 Disparity analysis are based on the analysis of a morphospace which is a multidimensional space summarising all real or potential shapes.
 To quantify the overall occupation of morphospace, researchers apply one or more disparity metrics that summarise the way in which taxa inhabit 'trait space'.
@@ -100,7 +101,7 @@ Thus when we interpret changes in disparity metric values we can only interpret 
 
 Seperate measures of spatial occupancy can be of particular interest in different studies.
 For example, some questions might focus in changes in the volume of the morphospace whilst some other might focus on the position of a group in the morphospace or its density (or all three together).
-
+ -->
 <!-- > VW: It seems to me that the review is more important than the tool. 
 > VW: So I'd be tempted to go " Here we use X method to review the properties of several commonly used disparity metrics, and introduce two new ones. 
 > VW: We do this in the context of a new tool which allows easy replication of the behaviours, and also allows a fully user-controlled interface for allowing the development and testing of metrics on a diversity of datasets"
@@ -115,6 +116,41 @@ As expected, we found that different metrics are more appropriated to be used in
 
 # Introduction
 
+
+Life on earth is essentially multidimensional.
+Both organisms and the environments in which they evolve are a combination of a multitude of traits whether phenotypic, phylogenetic, chemical, physiological, behavioural etc.
+Since the last 20 years, an emerging consensus is that these traits should be analysed all together into *trait-spaces* rather than in isolation [e.g. @donohue2013, @hopkins2017 ].
+This has led to and explosion of trait space approaches facilitated by increased computational power and statistical methods [SomeBigDataCite] as well as by the implementation of statistical methods in R packages [@oksanen2007vegan, @adams2013geomorph, @blonder2018, @disprity].
+
+Such trait-space approach has been successfully used across many sub-disciplines in Biology to either explore properties of the data or test hypothesis.
+For example, in palaeobiology, @wright2017 looked at blablabla;
+in evolutionary biology @marcy2016 looked at blabalbalbal;
+in ecology @jones2015 looked at blalbla.
+-> In macroevolution it's often refered as disparity or morphospace analysis
+-> In ecology it can be dissimilarity analysis, functional niche, etc..
+-> In math, it's just the same mathematical objects with each column representing a trait (or a transformation thereof) and each row representing an observation (taxon, field site, etc.) [@disprity].
+
+<!-- All the fields differ, the methods remain really similar -->
+One further similarity of this trait-space approach are what researchers are doing with the trait-space.
+In all fields they look at the occupancy of observations in this trait space [e.g. using disparity metrics @wills2001, @hopkins2017, @disprity in evolution; or hypervolume approaches @blonder2018,@mammola2019 in ecology].
+However, surprisingly few work has been published on the behaviour of these metrics of multidimensional space occupancy [but see @ciampaglio2001, @mammola2019].
+<!-- This is entering the danger zone! -->
+In fact in many papers, people have been using the default method without thought on what to capture.
+Often, a default space occupancy metric is used regardless of the question used.
+For example, if the question in 
+-> using the wrong metric for the wrong question
+
+
+
+However, the specific justification of using each tool is often disregarded or dismissed
+    -> What is the question? What to measure?
+Here we propose a novel classification of occupancy metrics and look at what they pick up
+-> In simulations
+-> In empirical data
+
+
+
+<!-- 
 * Disparity has been a key area of research in palaeontology, biology (Runnegar 1987; Foote 1991;...etc), and evology for the last 30 years.
 * Disparity is a measure of trait variance. However, many definitions have been used in ecology (e.g. diversity of functional niches) or in evolution (e.g. diversity of morphological shapes).
 * In ecology, the concept is linked to functional spaces
@@ -125,7 +161,7 @@ As expected, we found that different metrics are more appropriated to be used in
 * For example, a group's disparity measured using the sum of variances might not change through time, but a seperate meaure can indicate a change in disparity density suggesting that the morphospace is more/less tightly packed. Additionally, the disparity of two groups measured in the Sum Of Ranges may differ even though both clades occupy the same region of the morphospace.
 * Here we are going to classify disparity metrics into two broad spatial occupancy categories that can change independently: the volume, the density, and the position. All of these metrics measure the distribution of distances in trait space (e.g., Euclidean, Manhattan, or others) taht are traditionally summarised into a central tendency (e.g. the **sum** of variances, the **mean** pairwise distance), etc...
 * Here we propose to test the effect of We will cite papers like this one [@disprity].
-
+ -->
 
 
 ## Disparity metrics
@@ -335,7 +371,7 @@ Name          | Definition                      | Captures | Origin           | 
 :-------------|:-------------------------------:|----------|------------------|------|
 Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
 Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
-Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @DonohueDim | `dispRity::ellipse.volume(matrix)`
+Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
 Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `prod(dispRity::ranges(matrix))`
 Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `sum(dispRity::ranges(matrix))`
 Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @Wills2001 | `prod(dispRity::variances(matrix))`
@@ -456,7 +492,7 @@ Study | Field | Taxonomic Group | Type of data | Trait-space | Dimensions | grou
 @wright2017 | palaeontology | Crinoidea | discrete phylogenetic data | Ordination of a distance matrix (PCO) | @@@ | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
 @marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@Are these two groups of Gophers different?|
 @@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@|
-@diaz2016 | Ecology | Plantae | Continuous data | Ordination (PCA) | @@@ |@@@ vs. @@@ | Do woody and non-woody plants occupy different parts of the plant-space?|
+@jones2015 | Ecology | Plantae | | | | | |
 @@@ | Ecology | @@@ | Continuous data | Ordination (PCA) | @@@ | @@@ vs. @@@ | @@@|
 
 
@@ -464,7 +500,7 @@ We re-analised the data from the original studies in three different ways to obt
 
 * **Palaeontology** [@beck2014, @wright2017]: 1) calculating a distance matrix (using MORD distances) and 2) ordinating the distance matrix using a PCoA (or PCO).
 * **Geometric morphometrics** [@marcy2016]: 1) running a General Procrustes Analysis and 2) ordinating the Procrustes data using a PCA.
-* **Ecology** [@diaz2016]: 1) scaling the data and 2) ordinating the scaled data using a PCA.
+* **Ecology** [@jones2015]: 1) scaling the data and 2) ordinating the scaled data using a PCA.
 
 Each procedure is described in more details in the supplementary materials.
 <!-- TODO: vignette to generate the trait-spaces -->
@@ -588,7 +624,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 ```
 
 
-Metric      | Beck and Lee 2014  | Wright 2017 | Mary et al. 2016 | Somebody       | Diaz et al. 2016 | Somebody       |
+Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Somebody       |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
 `r name[1]` |`r plot.id(1)`  |`r plot.id(10)`  |`r plot.id(19)`   |`r plot.id(28)` |`r plot.id(37)`   |`r plot.id(46)` |
 `r name[2]` |`r plot.id(2)`  |`r plot.id(11)`  |`r plot.id(20)`   |`r plot.id(29)` |`r plot.id(38)`   |`r plot.id(47)` |
