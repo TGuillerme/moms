@@ -379,28 +379,43 @@ handle.metrics <- function(input, dispRity_args) {
         },
         User = {
             ## Personalised metric
-            ## Get name
-            metric_name <- input$metric_specific1
-            
-            ## Get functions
-            if(input$metric_specific2 == "NULL") {
-                dispRity_args$metric <- eval(parse(text = input$metric_specific1))
-            } else {
-                ## Update function
-                dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
-                ## Update name
-                metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
-            }
+            if(input$type_metric == FALSE) {
+                ## Get name
+                metric_name <- input$metric_specific1
+                
+                ## Get functions
+                if(input$metric_specific2 == "NULL") {
+                    dispRity_args$metric <- eval(parse(text = input$metric_specific1))
+                } else {
+                    ## Update function
+                    dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
+                    ## Update name
+                    metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
+                }
 
-            ## Optional arguments
-            if(input$metric_arguments) {
-                return("Optional arguments for personalised metrics are not yet available in this version.")
-                # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
+                ## Optional arguments
+                if(input$metric_arguments) {
+                    return("Optional arguments for personalised metrics are not yet available in this version.")
+                    # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
+                }
+
+                ## Export the code (for eventual display)
+                dispRity_code <- metric_name
+            } else {
+                ## Metric is user made
+                dispRity_args$metric <- eval(parse(text = input$manually_enter_metric))
+
+                ## Check if metric works
+                if(!is.numeric(dispRity_args$metric(matrix(1, 5, 5)))) {
+                    return("Incorrect user metric format.")
+                }
+                ## Name is user made
+                metric_name <- "user metric"
+                ## Export the code (for eventual display)
+                dispRity_code <- input$manually_enter_metric
             }
-            dispRity_code <- metric_name
         }
     )
-
     return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }
 

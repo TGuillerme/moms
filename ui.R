@@ -5,7 +5,7 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme, T., Puttick, M., and Weisbecker, V (2019). Moms: a exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
+    p("Guillerme T, Puttick M, Marcy A, and Weisbecker V (2019). Moms: a exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
     hr(),
 
     fluidRow(
@@ -240,11 +240,17 @@ shinyUI(fluidPage(
                                     "ranges",
                                     "variances"), selected = "NULL"),
           helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances')."),
-          checkboxInput("metric_arguments", label = "Optional arguments", value = FALSE),
+          checkboxInput("metric_arguments", label = "Optional arguments", value = FALSE), 
           conditionalPanel(condition = "input.metric_arguments == true",
             ## Parameters
             textInput("metric_optional_arguments", label = "Optional arguments", value = "..."),
             helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
+          ),
+          checkboxInput("type_metric", label = "Manually enter a metric", value = FALSE),
+          conditionalPanel(condition = "input.type_metric == true",
+            ## Parameters
+            textAreaInput("manually_enter_metric", label = "Metric", value = "user.metric <- function(matrix) {\n\tmean(matrix)\n}"),
+            helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
           )
         ),
 
@@ -261,10 +267,6 @@ shinyUI(fluidPage(
         #     ## Display code in line
         #     verbatimTextOutput("code_snippet")
         #   )
-        #   # conditionalPanel(condition = "input.display_code_snippet != \"In app display\"",
-        #   #   ## Export code file
-        #   #   verbatimTextOutput("code_snippet")
-        #   # )
         # ),
   
         hr(),
