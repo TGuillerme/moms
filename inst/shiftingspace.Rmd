@@ -130,25 +130,19 @@ in ecology @jones2015 looked at blalbla.
 -> In ecology it can be dissimilarity analysis, functional niche, etc..
 -> In math, it's just the same mathematical objects with each column representing a trait (or a transformation thereof) and each row representing an observation (taxon, field site, etc.) [@disprity].
 
-<!-- All the fields differ, the methods remain really similar -->
 One further similarity of this trait-space approach are what researchers are doing with the trait-space.
-In all fields they look at the occupancy of observations in this trait space [e.g. using disparity metrics @wills2001, @hopkins2017, @disprity in evolution; or hypervolume approaches @blonder2018,@mammola2019 in ecology].
+In all fields they look at the occupancy of observations in this trait space [e.g. using disparity metrics @wills2001, @hopkins2017, @disprity in evolution; or hypervolume approaches @donohue2013, @blonder2018, @mammola2019 in ecology].
 However, surprisingly few work has been published on the behaviour of these metrics of multidimensional space occupancy [but see @ciampaglio2001, @mammola2019].
 <!-- This is entering the danger zone! -->
-In fact in many papers, people have been using the default method without thought on what to capture.
-Often, a default space occupancy metric is used regardless of the question used.
-For example, if the question in 
--> using the wrong metric for the wrong question
+In fact, and unsurprisingly, using different space occupancy metrics will capture different aspects of the trait-space.
+In many studies in ecology and evolution authors have focused on measuring the volume of the trait-space (or a function thereof; e.g. ellipsoid volume @donohue2013, hypervolume @diaz2016, product of variance @wright2017, Procrustes variance @marcy2016), yet this only represent a single aspects of multidimensional occupancy that exclude other aspects that can be of interest (e.g. the density, @geiger2008; the position @wills2001, @ciampaglio2001; or dissimilarity between groups @oksanen2007vegan, @close2015).
+This lack of diversity in multidimensional occupancy metrics may restrain the potential of multidimensional analysis.
 
 
-
-However, the specific justification of using each tool is often disregarded or dismissed
-    -> What is the question? What to measure?
-Here we propose a novel classification of occupancy metrics and look at what they pick up
--> In simulations
--> In empirical data
-
-
+Here we propose a broad classification of space occupancy metrics as used across ecology and evolution and analyse their power to detect changes in multidimensional space occupancy in empirical and simulated data.
+We propose a review of each broad type of space occupancy metrics and a unified terminology aiming to foster easier communication between ecology and evolution.
+Unsurprisingly, we found that 
+Finally, we propose a new user friendly visual tool to build, modify and test multidimensional space occupancy metrics.
 
 <!-- 
 * Disparity has been a key area of research in palaeontology, biology (Runnegar 1987; Foote 1991;...etc), and evology for the last 30 years.
@@ -214,7 +208,7 @@ The three fundamental informations that can be captured are:
 
 #### 1. The volume
 
-This type of metric measures the spread of a group in the trait-space. The common metrics quantify the hyper-volume, ellipsoid volume, and product of variances or ranges. In biological terms, larger values for these metrics indicate a clade exhibits more extreme morphologies. This metric has widely been used since the advent of disparity analysis due to its implementationinf @Wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
+This type of metric measures the spread of a group in the trait-space. The common metrics quantify the hyper-volume, ellipsoid volume, and product of variances or ranges. In biological terms, larger values for these metrics indicate a clade exhibits more extreme morphologies. This metric has widely been used since the advent of disparity analysis due to its implementationinf @wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
 
 #### 2. The density
 
@@ -372,10 +366,10 @@ Name          | Definition                      | Captures | Origin           | 
 Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
 Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
 Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
-Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `prod(dispRity::ranges(matrix))`
-Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @Wills2001 | `sum(dispRity::ranges(matrix))`
-Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @Wills2001 | `prod(dispRity::variances(matrix))`
-Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @Wills2001 | `sum(dispRity::variances(matrix))`
+Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
+Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
+Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))`
+Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
 Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
 
