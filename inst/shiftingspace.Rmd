@@ -118,44 +118,32 @@ As expected, we found that different metrics are more appropriated to be used in
 
 
 Life on earth is essentially multidimensional.
-Both organisms and the environments in which they evolve are a combination of a multitude of traits whether phenotypic, phylogenetic, chemical, physiological, behavioural etc.
-Since the last 20 years, an emerging consensus is that these traits should be analysed all together into *trait-spaces* rather than in isolation [e.g. @donohue2013, @hopkins2017 ].
-This has led to and explosion of trait space approaches facilitated by increased computational power and statistical methods [SomeBigDataCite] as well as by the implementation of statistical methods in R packages [@oksanen2007vegan, @adams2013geomorph, @blonder2018, @disprity].
+Both organisms and their environments are a combination of multiple of traits whether they are phenotypic, physiological, phylogenetic, behavioural, etc.
+In fact since the advent of Biology, it has been acknowledged that groups of species and environments share specific, easily recognisable, correlated characteristics (e.g. guilds or biomes).
+In fact, a consensus is emerging that organisms or environments should be studied as a set of traits rather than some specific traits in isolation [e.g. @donohue2013, @hopkins2017].
+This has led to and explosion of multiple traits studies approaches facilitated by increased computational power and statistical methods [SomeBigDataCite] as well as by the implementation of statistical methods in R packages [@oksanen2007vegan, @adams2013geomorph, @blonder2018, @disprity].
 
-Such trait-space approach has been successfully used across many sub-disciplines in Biology to either explore properties of the data or test hypothesis.
-For example, in palaeobiology, @wright2017 looked at blablabla;
-in evolutionary biology @marcy2016 looked at blabalbalbal;
-in ecology @jones2015 looked at blalbla.
--> In macroevolution it's often refered as disparity or morphospace analysis
--> In ecology it can be dissimilarity analysis, functional niche, etc..
--> In math, it's just the same mathematical objects with each column representing a trait (or a transformation thereof) and each row representing an observation (taxon, field site, etc.) [@disprity].
+One popular way to analyse all these traits in concert is to use ordination (or dimensionality reduction) techniques [see @legendre2012 for a summary] to create a trait-space of the studied system.
+Such trait-space approach has been successfully used across many sub-disciplines in biology to either explore properties of the data or test hypothesis.
+For example, in palaeobiology, such trait spaces can be used to look how groups of species change in terms of shared characteristics through time [e.g. @wright2017];
+in ecology, it can be used to compare two populations and see whether their overlap can be related to ecological processes such as competition [e.g. @jones2015].
+However, different fields use a different set of terms and approaches for such trait-space approaches.
+In macroevolution, for example, such trait-spaces are commonly referred to as "morphospaces" (with the whole procedure often being often called "disparity analysis") [e.g. @adams2013geomorph, @marcy2016, @wright2017], while in ecology, such trait-spaces can be called "functional spaces" (and "dissimilarity analysis") [e.g. @diaz2016, @mammola2019].
+Nonetheless, they are the same mathematical objects: matrices with columns representing a trait (or a transformation thereof) and rows representing observations (taxon, field site, etc.) [@disprity].
 
-One further similarity of this trait-space approach are what researchers are doing with the trait-space.
-In all fields they look at the occupancy of observations in this trait space [e.g. using disparity metrics @wills2001, @hopkins2017, @disprity in evolution; or hypervolume approaches @donohue2013, @blonder2018, @mammola2019 in ecology].
-However, surprisingly few work has been published on the behaviour of these metrics of multidimensional space occupancy [but see @ciampaglio2001, @mammola2019].
-<!-- This is entering the danger zone! -->
-In fact, and unsurprisingly, using different space occupancy metrics will capture different aspects of the trait-space.
+Furthermore, researchers working on ecology or evolution are also using trait-spaces for similar reasons.
+Across many sub-disciplines they will look at how their observations occupy the trait-space.
+In fact, they often are interested in the same fundamental questions: are two groups overlapping in the trait-space? Are some regions of the trait space not occupied? Or how does specific factors influence the occupancy of the trait-space?
+This is achieved in various ways such as using disparity metrics (or indices) in macroevolution [@wills2001, @hopkins2017, @disprity] or comparing hypervolumes in ecology [@donohue2013, @diaz2016, @blonder2018, @mammola2019].
+Although these trait-space occupancy metrics are common in ecology and evolution, surprisingly little work has been published on their behaviour [but see @ciampaglio2001, @mammola2019].
+This can seem trivial but (unsurprisingly) different space occupancy metrics will capture different aspects of the trait-space.
 In many studies in ecology and evolution authors have focused on measuring the volume of the trait-space (or a function thereof; e.g. ellipsoid volume @donohue2013, hypervolume @diaz2016, product of variance @wright2017, Procrustes variance @marcy2016), yet this only represent a single aspects of multidimensional occupancy that exclude other aspects that can be of interest (e.g. the density, @geiger2008; the position @wills2001, @ciampaglio2001; or dissimilarity between groups @oksanen2007vegan, @close2015).
-This lack of diversity in multidimensional occupancy metrics may restrain the potential of multidimensional analysis.
-
+Therefore, this lack of diversity in multidimensional occupancy metrics may restrain the potential of multidimensional analysis.
 
 Here we propose a broad classification of space occupancy metrics as used across ecology and evolution and analyse their power to detect changes in multidimensional space occupancy in empirical and simulated data.
 We propose a review of each broad type of space occupancy metrics and a unified terminology aiming to foster easier communication between ecology and evolution.
-Unsurprisingly, we found that 
-Finally, we propose a new user friendly visual tool to build, modify and test multidimensional space occupancy metrics.
-
-<!-- 
-* Disparity has been a key area of research in palaeontology, biology (Runnegar 1987; Foote 1991;...etc), and evology for the last 30 years.
-* Disparity is a measure of trait variance. However, many definitions have been used in ecology (e.g. diversity of functional niches) or in evolution (e.g. diversity of morphological shapes).
-* In ecology, the concept is linked to functional spaces
-* Here we approach both interpretations of disparity, but with more focus on macroevolution, by defining disparity as: "multidimensional trait-space occupancy".
-* In macroevolution, disparity is used to test hypothesis on how the occupancy of morphospace for one or more groups changes through time and/or space.
-* In macroevolution, researchers typically form hypotheses to ask questions such as 'does disparity of one group change through time or in response to extinction?' or 'do groups A and B differ significantly in disparity?'.
-* The most widely-used metrics are the sum or product of ranges and variance that measures the "spread" of a group in a morphospace (the product of ranges is the hyper-rectangular volume). However, different metrics of disparity are likely to provide more biologically-meaningful measures of change.
-* For example, a group's disparity measured using the sum of variances might not change through time, but a seperate meaure can indicate a change in disparity density suggesting that the morphospace is more/less tightly packed. Additionally, the disparity of two groups measured in the Sum Of Ranges may differ even though both clades occupy the same region of the morphospace.
-* Here we are going to classify disparity metrics into two broad spatial occupancy categories that can change independently: the volume, the density, and the position. All of these metrics measure the distribution of distances in trait space (e.g., Euclidean, Manhattan, or others) taht are traditionally summarised into a central tendency (e.g. the **sum** of variances, the **mean** pairwise distance), etc...
-* Here we propose to test the effect of We will cite papers like this one [@disprity].
- -->
+Unsurprisingly, we found that there is no one-size-fits-all metric and that they are often dependent on the characteristics of the space and the question at hand.
+Because they can potentially be as many metrics than they are trait-spaces and studies, it would be a daunting task to propose clear generalities to space occupancy metrics behaviour, therefore, we propose a user friendly tool allowing researchers to design, experiment and visual their own space occupancy metric tailored for their specific project.
 
 
 ## Disparity metrics
