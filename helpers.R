@@ -244,7 +244,8 @@ get.reduction <- function(input, space, session) {
 
 
 ## Handles the dispRity metric
-handle.metrics <- function(input, dispRity_args) {
+handle.metrics <- function(input, dispRity_args, session) {
+
     ## Metrics selection
     switch(input$metric_choice,
         Volume = {
@@ -252,14 +253,14 @@ handle.metrics <- function(input, dispRity_args) {
             switch(input$metric1,
                 "Ellipsoid volume" = {
                     dispRity_args$metric <- ellipse.volume
-                    dispRity_code <- "ellipse.volume"
+                    dispRity_code <- "dispRity::ellipse.volume(matrix)"
                 },
                 "Convex hull surface" = {
                     if(input$n_dimensions > 10) {
                         return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
                     } else {
                         dispRity_args$metric <- convhull.surface
-                        dispRity_code <- "convhull.surface"
+                        dispRity_code <- "dispRity::convhull.surface(matrix)"
                     }
                 },
                 "Convex hull volume" = {
@@ -267,50 +268,50 @@ handle.metrics <- function(input, dispRity_args) {
                         return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
                     } else {
                         dispRity_args$metric <- convhull.volume
-                        dispRity_code <- "convhull.volume"
+                        dispRity_code <- "dispRity::convhull.volume(matrix)"
                     }
                 },
                 "Median distance from centroid (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
-                    dispRity_code <- list("c(median, centroids)", "method = euclidean")
+                    dispRity_code <- "stats::median(dispRity::centroids(matrix))"
                 },
                 "Median distance from centroid (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- list("c(median, centroids)", "method = manhattan")
+                    dispRity_code <- "stats::median(dispRity::centroids(matrix, method = \"manhattan\"))"
                 },
                 "n-ball volume" = {
                     dispRity_args$metric <- n.ball.volume
-                    dispRity_code <- "n.ball.volume"
+                    dispRity_code <- "dispRity::n.ball.volume(matrix)"
                 },
                 "Procrustes variance (geomorph::morphol.disparity)" = {
                     dispRity_args$metric <- function(X) return(sum(X^2)/nrow(X))
-                    dispRity_code <- list("function(X) return(sum(X^2)/nrow(X))")
+                    dispRity_code <- "sum(matrix^2)/nrow(matrix)"
                 },
                 "Product of variances" = {
                     dispRity_args$metric <- c(prod, variances)
-                    dispRity_code <- list("c(prod, variances)")
+                    dispRity_code <- "prod(dispRity::variances(matrix))"
                 },
                 "Product of ranges" = {
                     dispRity_args$metric <- c(prod, ranges)
-                    dispRity_code <- list("c(prod, ranges)")
+                    dispRity_code <- "prod(dispRity::ranges(matrix))"
                 },
                 "Product of quantiles" = {
                     dispRity_args$metric <- c(prod, quantiles)
-                    dispRity_code <- list("c(prod, quantiles)")
+                    dispRity_code <- "prod(dispRity::quantiles(matrix))"
                 },
                 "Sum of ranges" = {
                     dispRity_args$metric <- c(sum, ranges)
-                    dispRity_code <- list("c(sum, ranges)")
+                    dispRity_code <- "sum(dispRity::ranges(matrix))"
                 },
                 "Sum of variances" ={
                     dispRity_args$metric <- c(sum, variances)
-                    dispRity_code <- list("c(sum, variances)")
+                    dispRity_code <- "sum(dispRity::variances(matrix))"
                 },
                 "Sum of quantiles" = {
                     dispRity_args$metric <- c(sum, quantiles)
-                    dispRity_code <- list("c(sum, quantiles)")
+                    dispRity_code <- "sum(dispRity::quantiles(matrix))"
                 }
             )
         },
@@ -320,34 +321,34 @@ handle.metrics <- function(input, dispRity_args) {
                 "Average Manhattan distance (geiger::dtt)" = {
                     dispRity_args$metric <- c(mean, pairwise.dist)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- list("c(mean, pairwise.dist)", "method = manhattan")
+                    dispRity_code <- "mean(dispRity::pairwise.dist(matrix, method = \"manhattan\"))"
                 },
                 "Average squared Euclidean distance (geiger::dtt)" = {
                     dispRity_args$metric <- function(X) mean(pairwise.dist(X)^2)
-                    dispRity_code <- "function(X) mean(pairwise.dist(X)^2)"
+                    dispRity_code <- "mean(dispRity::pairwise.dist(matrix)^2)"
                 },
                 "Average nearest neighbours distance (Euclidean)" = {
                     dispRity_args$metric <- c(mean, neighbours)
-                    dispRity_code <- list("c(mean, neighbours)")
+                    dispRity_code <- "mean(dispRity::neighbours(matrix))"
                 },
                 "Average nearest neighbours distance (Manhattan)" = {
                     dispRity_args$metric <- c(mean, neighbours)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- list("c(median, neighbours)", "method = manhattan")
+                    dispRity_code <- "mean(dispRity::neighbours(matrix, method = \"manhattan\"))"
                 },
                 "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "euclidean"
-                    dispRity_code <- list("c(mean, pairwise.dist)", "method = euclidean")
+                    dispRity_code <- "stats::median(dispRity::pairwise.dist(matrix))"
                 },
                 "Median pairwise distance (Manhattan)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- list("c(median, pairwise.dist)", "method = manhattan")
+                    dispRity_code <- "stats::median(dispRity::pairwise.dist(matrix, method = \"manhattan\"))"
                 },
                 "Minimum spanning tree length" = {
                     dispRity_args$metric <- span.tree.length
-                    dispRity_code <- "span.tree.length"
+                    dispRity_code <- "dispRity::span.tree.length(matrix)"
                 }
             )
         },
@@ -355,67 +356,75 @@ handle.metrics <- function(input, dispRity_args) {
             metric_name <- input$metric3
             switch(input$metric3,
                 "Average displacement (Euclidean)" = {
-                    dispRity_args$metric <- c(median, displacements)
-                    dispRity_code <- list("c(median, displacements)")
+                    dispRity_args$metric <- c(mean, displacements)
+                    dispRity_code <- "mean(dispRity::displacements(matrix))"
                 },
                 "Average displacement (Manhattan)" = {
-                    dispRity_args$metric <- c(median, displacements)
+                    dispRity_args$metric <- c(mean, displacements)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- list("c(median, displacements)", "method = manhattan")
+                    dispRity_code <- "mean(dispRity::displacements(matrix, method = \"manhattan\"))"
                 },
                 "Median distance from centre (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
                     dispRity_args$centroid <- 0
-                    dispRity_code <- list("c(median, centroids)", "method = euclidean", "centroid = 0")
+                    dispRity_code <- "stats::median(dispRity::centroids(matrix, centroid = 0))"
                 },
                 "Median distance from centre (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
                     dispRity_args$centroid <- 0
-                    dispRity_code <- list("c(median, centroids)", "method = manhattan", "centroid = 0")
+                    dispRity_code <- "stats::median(dispRity::centroids(matrix, centroid = 0, method = \"manhattan\"))"
                 }
             )
         },
         User = {
-            ## Personalised metric
-            if(input$type_metric == FALSE) {
-                ## Get name
-                metric_name <- input$metric_specific1
-                
-                ## Get functions
-                if(input$metric_specific2 == "NULL") {
-                    dispRity_args$metric <- eval(parse(text = input$metric_specific1))
-                } else {
-                    ## Update function
-                    dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
-                    ## Update name
-                    metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
-                }
-
-                ## Optional arguments
-                if(input$metric_arguments) {
-                    return("Optional arguments for personalised metrics are not yet available in this version.")
-                    # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
-                }
-
+            ## Get name
+            metric_name <- input$metric_specific1
+            
+            ## Get functions
+            if(input$metric_specific2 == "NULL") {
+                dispRity_args$metric <- eval(parse(text = input$metric_specific1))
                 ## Export the code (for eventual display)
-                dispRity_code <- metric_name
+                dispRity_code <- paste0(metric_name, "(matrix)")
             } else {
-                ## Metric is user made
-                dispRity_args$metric <- eval(parse(text = input$manually_enter_metric))
-
-                ## Check if metric works
-                if(!is.numeric(dispRity_args$metric(matrix(1, 5, 5)))) {
-                    return("Incorrect user metric format.")
-                }
-                ## Name is user made
-                metric_name <- "user metric"
+                ## Update function
+                dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
+                ## Update name
+                metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
                 ## Export the code (for eventual display)
-                dispRity_code <- input$manually_enter_metric
+                dispRity_code <- c(dispRity_code, dispRity_code)
+                dispRity_code <- paste0(input$metric_specific2, "(", paste0(input$metric_specific1, "(matrix)"), ")")
+            }
+
+            ## Optional arguments
+            if(input$metric_arguments) {
+                return("Optional arguments for personalised metrics are not yet available in this version.")
+                # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
             }
         }
     )
+
+    if(input$edit_metric == TRUE) {
+        ## Update the metric display
+        update_value <- paste0("user.metric <- function(matrix) {\n\t", dispRity_code, "\n}")
+        # print("update value to:")
+        # print(update_value)
+        shiny::updateTextAreaInput(session, "manually_enter_metric", label = "Metric", value = "update_value")
+
+        ## Metric is user made
+        dispRity_args$metric <- eval(parse(text = input$manually_edit_metric))
+
+        ## Check if metric works
+        if(!is.numeric(dispRity_args$metric(matrix(1, 5, 5)))) {
+            return("Incorrect user metric format.")
+        }
+        ## Name is user made
+        metric_name <- "user metric"
+        ## Export the code (for eventual display)
+        dispRity_code <- input$manually_edit_metric
+    }
+
     return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }
 

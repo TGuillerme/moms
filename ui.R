@@ -187,7 +187,7 @@ shinyUI(fluidPage(
                                     "Sum of ranges",
                                     "Sum of variances"
                                     ), selected = "Sum of variances")
-          ),
+        ),
 
         conditionalPanel(condition = "input.metric_choice == \"Density\"",
           selectInput("metric2", label = h5("Density metric"),
@@ -200,7 +200,7 @@ shinyUI(fluidPage(
                                     "Median pairwise distance (Manhattan)",
                                     "Minimum spanning tree length"
                                     ), selected = "Median nearest neighbours distance (Euclidean)")
-          ),
+        ),
 
         conditionalPanel(condition = "input.metric_choice == \"Position\"",
           selectInput("metric3", label = h5("Position metric"),
@@ -210,7 +210,7 @@ shinyUI(fluidPage(
                                     "Median distance from centre (Euclidean)",
                                     "Median distance from centre (Manhattan)"
                                     ), selected = "Median displacement (Euclidean)")
-          ),
+        ),
 
         conditionalPanel(condition = "input.metric_choice == \"User\"",
           selectInput("metric_specific1", label = "Dimension level 1 metrics:",
@@ -245,13 +245,15 @@ shinyUI(fluidPage(
             ## Parameters
             textInput("metric_optional_arguments", label = "Optional arguments", value = "..."),
             helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
-          ),
-          checkboxInput("type_metric", label = "Manually enter a metric", value = FALSE),
-          conditionalPanel(condition = "input.type_metric == true",
-            ## Parameters
-            textAreaInput("manually_enter_metric", label = "Metric", value = "user.metric <- function(matrix) {\n\tmean(matrix)\n}"),
-            helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
           )
+        ),
+
+        ## Edit the metric
+        checkboxInput("edit_metric", label = "Manually edit the metric", value = FALSE),
+        conditionalPanel(condition = "input.edit_metric == true",
+          ## Parameters
+          textAreaInput("manually_edit_metric", label = "Metric", value = "user.metric <- function(matrix) {\n\tsum(variances(matrix))\n}"),
+          helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
         ),
 
         # actionButton("add.metric", label = "Add a metric"),

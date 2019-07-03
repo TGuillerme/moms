@@ -164,20 +164,8 @@ shinyServer(
                                                  "Reduced space" = rownames(space)[reduced_space_points]))
                 }
 
-                # ## User typed metric
-                # if(input$type_metric == TRUE) {
-                #     shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))    
-                # }
-
                 ## Handling the disparity metrics
-                metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
-
-                ## Update user type
-                if(input$type_metric == TRUE) {
-                    ## Update the user metric
-                    update_value <- paste0("user.metric <- function(matrix) {\n\t", input$metric_specific1, "(matrix)\n}")
-                    shiny::updateTextAreaInput(session, "manually_enter_metric", label = "Metric", value = update_value)
-                }
+                metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups), session)
 
                 ## Errors from metrics_handle
                 if(class(metrics_handle) == "character") {
