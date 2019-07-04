@@ -146,7 +146,12 @@ Unsurprisingly, we found that there is no one-size-fits-all metric and that they
 Because they can potentially be as many metrics than they are trait-spaces and studies, it would be a daunting task to propose clear generalities to space occupancy metrics behaviour, therefore, we propose a user friendly tool allowing researchers to design, experiment and visual their own space occupancy metric tailored for their specific project.
 
 
-## Disparity metrics
+## Trait-space data
+
+
+
+
+## Space occupancy metrics
 
 ```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by disparity metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).")}
 set.seed(11)
@@ -185,15 +190,11 @@ points(trait_space, pch = defaults$pch)
 par(op)
 ```
 
-Trait space occupancy metrics can be summarised intro three main categories 
+Observations (or elements) in the trait-space can be summarised into three broad categories: the volume (i.e. how much space are the observations taking in the trait-space); the density (i.e. how are observations distributed in the trait-space); and the position (i.e. where are the observations in the trait space).
+Of course any combination of these three categories is possible (i.e. how and where are observations distributed?).
 
-
-
-Disparity metrics (or indices) can capture different aspects of the multidimensional space occupancy.
-The three fundamental informations that can be captured are:
-
-> VW: In the below can we add stuff about where metrics have resulte in debates about a group's disparity; and/or specific informations on the types of data used ; or where people are using a bunch of metrics that are already criticized (like the ones with products in them that crash to 0).
-
+<!-- VW: In the below can we add stuff about where metrics have resulted in debates about a group's disparity; and/or specific informations on the types of data used ; or where people are using a bunch of metrics that are already criticized (like the ones with products in them that crash to 0).
+ -->
 #### 1. The volume
 
 This type of metric measures the spread of a group in the trait-space. The common metrics quantify the hyper-volume, ellipsoid volume, and product of variances or ranges. In biological terms, larger values for these metrics indicate a clade exhibits more extreme morphologies. This metric has widely been used since the advent of disparity analysis due to its implementationinf @wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
