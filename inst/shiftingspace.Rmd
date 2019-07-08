@@ -551,10 +551,10 @@ Table caption goes here
 ## Loading the data
 palaeo <- load.results("palaeo")
 #gmm <- load.results("gmm")
-#ecol <- load.results("ecol")
+ecol <- load.results("ecol")
 
 ## List of spaces
-trait_spaces <- unlist(list(palaeo, palaeo, palaeo), recursive = FALSE)
+trait_spaces <- unlist(list(palaeo, palaeo, ecol), recursive = FALSE)
 # trait_spaces <- unlist(list(palaeo, gmm, ecol), recursive = FALSE)
 
 ## Measuring space occupancy for all spaces and all metrics
@@ -668,6 +668,7 @@ We thus suggest that future disparity analysis authors abstain from using the te
 
 # Acknowledgements
 
+Thanks to Natalie Jones for helping finding/sorting the ecological data.
 Money from the ARC.
 ARC DP170103227, FT180100634
 
