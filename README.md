@@ -48,15 +48,22 @@ This paper is also **fully reproducible!**
 
 ### How to reproduce the paper?
 
-To reproduce the paper you can follow these steps
+To reproduce the paper you can follow these steps:
 
  1. Open the file [`/inst/shiftingspace.Rmd`](https://github.com/TGuillerme/moms/blob/master/inst/shiftingspace.Rmd) with your favourite Rmarkdown editor (Rstudio, Sublime, Atom, etc.).
  2. Press on the compile button.
- 3. Your reproduced paper should now be in `/inst/shiftingspace.pdf`.
+ 3. Your reproduced paper should now be in the `inst/` directory.
+
+Alternatively, you can directly compile the paper in html from the `R` console using:
+
+```r
+## Compiling the paper in html
+rmarkdown::render("inst/shiftingspace.Rmd", html_document())
+```
 
 Authors
 -------
-[Thomas Guillerme](http://tguillerme.github.io), [Mark Puttick](https://puttickbiology.wordpress.com/), [Vera Weisbecker](http://weisbeckerlab.com.au/)
+[Thomas Guillerme](http://tguillerme.github.io), [Mark Puttick](https://puttickbiology.wordpress.com/), [Ariel Marcy](https://github.com/miracleray), [Vera Weisbecker](http://weisbeckerlab.com.au/)
 
 
 <!-- Citations
