@@ -113,17 +113,62 @@ save.results(gmm)
 
 ### Ecological (continuous) data
 
-```{r, eval = FALSE, message = FALSE, fig.width = 12, fig.height = 12, echo = FALSE}
+### Jones et al. 2015 data
+
+For the @jones2015 dataset, we converted the spreadsheet "aspen & grass richness & abund" from the data from @jones2015 available at @jones2015data into a .csv file (now available in `/data/matrices`).
+We then selected only the `wholeplot` entries and separated the studied plot between `aspen` and `grassland` and converted the species presence data into a presence/absence matrix.
+From this matrix we calculated a Jaccard distance matrix [@oksanen2007vegan] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
+This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ field sites. 
+
+```{r, eval = TRUE}
+## Reading the community composition data from Jones et al 2015
+jones_communities <- read.csv("../data/matrices/Jones2015.csv")
+
+## Selecting only the whole plots and the plot number, habitat and species
+jones_whole_com <- jones_communities[which(jones_communities$mptype == "wholeplot"), c(1,2,3)]
+
+## Separate each plot into aspen/grassland
+jones_whole_com$plot <- paste(jones_whole_com$plot, jones_whole_com$habitat, sep = ".")
+
+## Making the community matrix
+plot_names <- unique(jones_whole_com$plot)
+sp_codes <- unique(jones_whole_com$species.code)
+community <- matrix(NA, nrow = length(plot_names),
+                        ncol = length(sp_codes),
+                        dimnames = list(plot_names, sp_codes))
+
+## Populate the matrix
+for(one_plot in rownames(community)) {
+    ## Get the community composition
+    composition <- match(colnames(community),
+                        jones_whole_com[which(jones_whole_com$plot == one_plot), 3])
+    ## Fill the plot row with presence/absence data
+    community[which(rownames(community) == one_plot), ] <- ifelse(is.na(composition), 0, 1)
+}
+
+## Calculate the distance matrix
+distance_matrix <- as.matrix(vegan::vegdist(community, method = "jaccard"))
+
+## Ordinating the data
+jones_traitspace <- stats::cmdscale(distance_matrix,
+                                    k = ncol(distance_matrix)- 1, add = TRUE)$points
 ```
+
+### Making the ecological trait-space groups
+
+We separated the @jones2015 dataset into `aspen` and `grassland` groups.
 
 ```{r, eval = FALSE}
 ## Making the groups
+jones_groups <- list("aspen" = grep("aspen", rownames(jones_traitspace)),
+                     "grassland" = grep("grassland", rownames(jones_traitspace)))
+
+## Making the dispRity objects
+jones_traitspace <- custom.subsets(jones_traitspace, group = jones_groups)
 
 ## Saving the data for the main analysis
-ecol <- list("beck" = beck_traitspace, "wright" = wright_traitspace)
+ecol <- list("jones" = jones_traitspace, "ecodata" = jones_traitspace)
 save.results(ecol)
 ```
-
-
 
 # References
