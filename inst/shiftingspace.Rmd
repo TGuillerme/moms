@@ -6,11 +6,12 @@ date: "`r Sys.Date()`"
 output:
   html_document:
   fig_width: 8
-fig_height: 8
-keep_tex: true
-self_contained: false
-line_numbers: true
-fig_caption: true
+  fig_height: 8
+  keep_tex: true
+  self_contained: false
+  line_numbers: true
+  fig_caption: true
+  lineno: linenumbers
 ---
 
 <!-- When toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
@@ -74,7 +75,6 @@ if(!all(c("remove_05.Rda", "rarefy_dim_05.Rda") %in% list.files(DATA_PATH))) {
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
-
 
 # Abstract
 
@@ -145,15 +145,18 @@ We propose a review of each broad type of space occupancy metrics and a unified 
 Unsurprisingly, we found that there is no one-size-fits-all metric and that they are often dependent on the characteristics of the space and the question at hand.
 Because they can potentially be as many metrics than they are trait-spaces and studies, it would be a daunting task to propose clear generalities to space occupancy metrics behaviour, therefore, we propose a user friendly tool allowing researchers to design, experiment and visual their own space occupancy metric tailored for their specific project.
 
-
-## Trait-space data
-
-
-
-
 ## Space occupancy metrics
 
-```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by disparity metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).")}
+As mentioned before, we will call trait-spaces any matrix where rows are observations and columns are traits.
+This traits can widely vary in number and types.
+For example traits could be discrete observations on an organism (e.g. presence of absence of a bone; @beck2014, @wright2017), continuous ones (e.g. leaf area; @diaz2016) or more sophisticated continuous ones (e.g. landmark position; @marcy2016).
+Traits can also be relative observations such as community composition (e.g. @jones2015) or even some distance from other observations (e.g. @close2015).
+However, regardless of the methodology used to build a trait-space, three main broad occupancy metrics can be measured to investigate how observations are distributed in the trait-space: the volume which will approximate the *amount* of space occupied, the density which will approximate the *distribution* in space and the position which will approximate the *location* in space (Figure 1).
+Of course any combination of these three aspects is always possible.
+
+
+```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by disparity metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).") }
+
 set.seed(11)
 ## Plot space function (utility shortcut)
 ## The elements
@@ -190,27 +193,48 @@ points(trait_space, pch = defaults$pch)
 par(op)
 ```
 
-Observations (or elements) in the trait-space can be summarised into three broad categories: the volume (i.e. how much space are the observations taking in the trait-space); the density (i.e. how are observations distributed in the trait-space); and the position (i.e. where are the observations in the trait space).
-Of course any combination of these three categories is possible (i.e. how and where are observations distributed?).
-
-<!-- VW: In the below can we add stuff about where metrics have resulted in debates about a group's disparity; and/or specific informations on the types of data used ; or where people are using a bunch of metrics that are already criticized (like the ones with products in them that crash to 0).
- -->
 #### 1. The volume
 
-This type of metric measures the spread of a group in the trait-space. The common metrics quantify the hyper-volume, ellipsoid volume, and product of variances or ranges. In biological terms, larger values for these metrics indicate a clade exhibits more extreme morphologies. This metric has widely been used since the advent of disparity analysis due to its implementationinf @wills2001 in PAST or the Procrustes variance implemented in @adams2013geomorph (`geomorph::morphol.disparity`).
+Volume metrics measures the spread of a group in the trait-space.
+Such metrics can be interpreted as the amount of the trait-space that is occupied by observations.
+Typically, larger values for such metrics indicate more more extreme trait combinations.
+For example if group A has a bigger volume than group B, the observations in group A achieve more extreme trait combinations than in group B.
+This type of metrics is really common in both ecology (the hypervolume @blonder2018) or in evolution (the sum or product of ranges or variances @wills2001, @ciampaglio2001 or the Procrustes variance @adams2013geomorph).
+In general, such metrics are a variation of the hypercube volume.
+
+Although this type of metric is a really good indicator for comparing group's trait-space occupancy, it is only limited to comparing the range of extreme trait-combinations between groups.
+Typically, such metrics do not take into account the spread of the observations within a group.
+In other words, such metric can make it difficult to determine whether all the observations are on the edge of the volume or whether the volume is simply driven by a couple of extreme observations.
+This weakness has been acknowledged in palaeoecology for example for the product of ranges metric (Table 2 - the exact approximation of the hypercube) which is highly sensitive to outliers [@Butler2012] or in ecology with the use of convex-hypervolumes.
+However, this can be easily alleviated by using lower confidence intervals (e.g. by only at 95% of the data; @donohue2013 or by using the variance instead of the range; @ciampaglio2001).
 
 #### 2. The density
 
-This type of metrics measures the "packedness" of a group in the trait-space.
-In biological terms, the bigger this metric, the more different elements are from each other.
-This is typically measured by pairwise distances or nearest neigbhors distances.
-In macroevolution, this metric is generally used in disparity-through-time analysis based on extant taxa as implemented in @geiger2008 (`geiger::dtt`).
+Density metrics measure the distribution of a group in the trait-space.
+Such metrics can be interpreted as an indication of the "packedness" of a group in trait-space.
+For example, if group A is more dense than group B, observations in group A tend to be more similar between each other relatively than within group B.
+Although this aspect of trait-space occupancy is less routinely measured, it is still often used in both evolution [e.g. the average pairwise distance @geiger2008] or in ecology [e.g. the minimum spanning tree length @oksanen2007vegan].
+
+This type of metrics could be used more often in concert of a volume to allow answering finer hypethises.
+For example, if group A has a greater volume than group B but both have the same density, similar mechanisms could be driving both groups trait-space occupancy (e.g. a Brownian motion) but maybe group A is older and had more time to achieve more extreme trait combinations.
 
 #### 3. The position
 
-More rarely used, researchers summarise disparity as a measure the particular position of the group in the morphospace, either relative to another group or a fixed point in the morphospace.
-The biological interpretation will thus depend on what the metrics measures the distance from.
-For example if it's distance from the centre of the morphospace, the bigger the metric, the more "weird" (i.e. non-average) specimens in a group are (i.e. the centre being the average morphology in an ordination).
+Position metrics measure where a group lies in trait-space.
+Such metrics can be interpreted as an indication of where a group lies in the trait-space either relative to the space itself or relative to another group.
+For example, if group A has a different position than group B, observation in group A will have a different trait-combination than group B.
+
+This type of metrics is probably harder to interpret in multidimensional spaces (i.e. beyond left/right and above/below) and hence less often used.
+However, when thinking about unidimensional data, this metric is pretty obvious: for example, two groups A or B could have the same variance (i.e. "volume" or spread) with the same number of observations (i.e. the same density) but could have a totally different mean and thus be in different positions.
+Although these metrics are more rare in macroevolution (to our knowledge), they have been used in ecology to compare the position of two groups relatively to each other [@mammola2019].
+
+
+
+
+
+
+
+
 
 > VW: At the risk of sounding belligerent, the below 2 paragraphs could be more aggressive. Something like "Disparity metrics are often not designed for the question asked, but this can have serious consequences for the result. For example...[Scenario]
 
