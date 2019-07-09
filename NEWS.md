@@ -21,6 +21,13 @@ dispRity 0.2.0 (2016-04-01)
 
   * Blabla
  -->
+ moms v0.3 (2019-07-09)
+=========================
+
+### NEW FEATURES
+
+  * added series of Volume/Density/Position (vdp) functions: `make.vdp`, `dispRity.vdp` and `plot.vdp`
+
 moms v0.2 (2019-05-09)
 =========================
 

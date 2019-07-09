@@ -2,8 +2,8 @@ Package: moms
 Title: Measuring Occupancy in Multidimensional Spaces
 Author: Thomas Guillerme [aut, cre, cph]
 Maintainer: Thomas Guillerme <guillert@tcd.ie>
-Version: 0.2
-Date: 2019-06-07
+Version: 0.3
+Date: 2019-07-09
 Description: A shiny app for exploring measurements of multidimensional space occupancy (disparity).
 Depends:
 	R (>= 3.5.2),

@@ -6,6 +6,9 @@ importFrom("shinyMatrix", "matrixInput")
 
 ## Functions
 export(reduce.space)
+export(make.vdp)
+export(dispRity.vdp)
+export(plot.vdp)
 
 ## Plot utilities
 export(plot.space)
