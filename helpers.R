@@ -17,7 +17,7 @@
 # input$inverse_remove <- FALSE
 
 # input$metric_choice <- "User"
-# input$metric1 <- "Ellipsoid volume"
+# input$metric1 <- "Median distance from centre (Manhattan)"
 # input$metric_specific1 <- "mean"
 # input$metric_specific2 <- "neigbhours"
 # input$metric_arguments <- FALSE
@@ -411,6 +411,9 @@ handle.metrics <- function(input, dispRity_args, session) {
         # print("update value to:")
         # print(update_value)
         shiny::updateTextAreaInput(session, "manually_enter_metric", label = "Metric", value = "update_value")
+
+        ## Clean the arguments list
+        dispRity_args <- dispRity_args[1]
 
         ## Metric is user made
         dispRity_args$metric <- eval(parse(text = input$manually_edit_metric))
