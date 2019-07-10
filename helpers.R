@@ -405,28 +405,35 @@ handle.metrics <- function(input, dispRity_args, session) {
         }
     )
 
-    if(input$edit_metric == TRUE) {
+    if(input$show_metric == TRUE) {
         ## Update the metric display
-        update_value <- paste0("user.metric <- function(matrix) {\n\t", dispRity_code, "\n}")
-        # print("update value to:")
-        # print(update_value)
-        shiny::updateTextAreaInput(session, "manually_enter_metric", label = "Metric", value = "update_value")
+        metric_display <- paste0("user.metric <- function(matrix) {\n\t", dispRity_code, "\n}")
+        shiny::updateTextAreaInput(session, "manually_show_metric", value = metric_display)
+    }
 
+    if(input$edit_metric == TRUE) {
         ## Clean the arguments list
         dispRity_args <- dispRity_args[1]
+
+        ## Default display
+        error_msg <- paste0("Incorrect user metric format. You can start by copy/pasting: ", metric_display)
+        if(input$manually_edit_metric == "copy/paste and edit the function above.") {
+            return(error_msg)
+        }
 
         ## Metric is user made
         dispRity_args$metric <- eval(parse(text = input$manually_edit_metric))
 
         ## Check if metric works
         if(!is.numeric(dispRity_args$metric(matrix(1, 5, 5)))) {
-            return("Incorrect user metric format.")
+            return(error_msg)
         }
         ## Name is user made
         metric_name <- "user metric"
         ## Export the code (for eventual display)
-        dispRity_code <- input$manually_edit_metric
+        dispRity_code <- input$manually_show_metric
     }
+
 
     return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }

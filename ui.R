@@ -248,12 +248,17 @@ shinyUI(fluidPage(
           )
         ),
 
-        ## Edit the metric
-        checkboxInput("edit_metric", label = "Manually edit the metric", value = FALSE),
-        conditionalPanel(condition = "input.edit_metric == true",
-          ## Parameters
-          textAreaInput("manually_edit_metric", label = "Metric", value = "user.metric <- function(matrix) {\n\tsum(variances(matrix))\n}"),
-          helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
+        ## Show the metric
+        checkboxInput("show_metric", label = "Show metric code", value = FALSE),
+        conditionalPanel(condition = "input.show_metric == true",
+          textAreaInput("manually_show_metric", label = NULL, value = "user.metric <- function(matrix) {\n\tsum(variances(matrix))\n}"),
+
+          ## Edit the metric
+          checkboxInput("edit_metric", label = "Edit metric", value = FALSE),
+            conditionalPanel(condition = "input.edit_metric == true",
+              textAreaInput("manually_edit_metric", label = NULL, value = "copy/paste and edit the function above."),
+              helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
+              )
         ),
 
         # actionButton("add.metric", label = "Add a metric"),
