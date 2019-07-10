@@ -386,21 +386,14 @@ handle.metrics <- function(input, dispRity_args, session) {
             if(input$metric_specific2 == "NULL") {
                 dispRity_args$metric <- eval(parse(text = input$metric_specific1))
                 ## Export the code (for eventual display)
-                dispRity_code <- paste0(metric_name, "(matrix)")
+                dispRity_code <- paste0(input$metric_specific1, "(matrix)")
             } else {
                 ## Update function
                 dispRity_args$metric <- c(eval(parse(text = input$metric_specific1)), eval(parse(text = input$metric_specific2)))
                 ## Update name
                 metric_name <- paste0("c(",input$metric_specific1, ", ", input$metric_specific2, ")")
                 ## Export the code (for eventual display)
-                dispRity_code <- c(dispRity_code, dispRity_code)
-                dispRity_code <- paste0(input$metric_specific2, "(", paste0(input$metric_specific1, "(matrix)"), ")")
-            }
-
-            ## Optional arguments
-            if(input$metric_arguments) {
-                return("Optional arguments for personalised metrics are not yet available in this version.")
-                # dispRitys_args <- list(dispRity_args, eval(parse(text = input$metric_optional_arguments)))
+                dispRity_code <- paste0(input$metric_specific1, "(", paste0(input$metric_specific2, "(matrix)"), ")")
             }
         }
     )

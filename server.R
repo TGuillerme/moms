@@ -148,8 +148,6 @@ shinyServer(
 
             ## Some dummy table
             output$table_out <- renderTable({
-            # Profiling toggle off
-
                 ## Name the elements
                 rownames(space) <- 1:input$n_elements
 
@@ -191,26 +189,6 @@ shinyServer(
                     ## Change the column name
                     colnames(table_out)[4] <- "change"
                 }
-                
-                ## Adding and removing metrics
-                # if(input$add.metric){
-                #     new_metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups))
-
-                #     ## Measuring disparity
-                #     new_disparity <- do.call(dispRity, new_metrics_handle$args)
-
-                #     ## Rendering the output table
-                #     new_output <- summary(new_disparity)
-                    
-                #     ## Add names
-                #     rownames(output) <- output$subsets
-                #     colnames(output)[3] <- metrics_handle$name
-                # }
-                # if(input$remove.metric){
-                #     print("remove metric")
-                #     print(input$remove.metric)
-                # }
-
 
                 ## Print output
                 table_out[,-1]

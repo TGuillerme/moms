@@ -239,13 +239,7 @@ shinyUI(fluidPage(
                                     "radius",
                                     "ranges",
                                     "variances"), selected = "NULL"),
-          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances')."),
-          checkboxInput("metric_arguments", label = "Optional arguments", value = FALSE), 
-          conditionalPanel(condition = "input.metric_arguments == true",
-            ## Parameters
-            textInput("metric_optional_arguments", label = "Optional arguments", value = "..."),
-            helpText("Any optional arguments to be passed to the selected specific function. This should be the name of the argument and its value (e.g. \"centroid = 0\") or multiple ones as a list (e.g. \"list(method = \"manhattan\", centroid = 0)\".")
-          )
+          helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances').")
         ),
 
         ## Show the metric
@@ -260,6 +254,8 @@ shinyUI(fluidPage(
               helpText("Input your very own occupancy metric as a function that takes the argument <matrix> and output a single numeric value. Note that you can pre-populate this window by selecting Dimension level 1 or 2 metrics.")
               )
         ),
+
+        p("You can find more informations about the metric types in the ", a(href="https://tguillerme.github.io/dispRity.html", "dispRity manual", rel="noopener noreferrer", target="_blank"), "."),
 
         # actionButton("add.metric", label = "Add a metric"),
         # actionButton("remove.metric", label = "Remove last metric"),
