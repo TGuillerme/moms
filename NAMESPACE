@@ -2,7 +2,8 @@ import(dispRity)
 import(stats)
 import(grDevices)
 import(graphics)
-importFrom("shinyMatrix", "matrixInput")
+# import(shinyMatrix)
+# importFrom("shinyMatrix", "matrixInput")
 
 ## Functions
 export(reduce.space)

@@ -1,4 +1,4 @@
 library(testthat)
-library(Moms)
+library(moms)
 
-test_check("Moms", reporter = "list")
+test_check("moms", reporter = "list")

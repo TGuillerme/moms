@@ -116,7 +116,6 @@ As expected, we found that different metrics are more appropriated to be used in
 
 # Introduction
 
-
 Life on earth is essentially multidimensional.
 Both organisms and their environments are a combination of multiple of traits whether they are phenotypic, physiological, phylogenetic, behavioural, etc.
 In fact since the advent of Biology, it has been acknowledged that groups of species and environments share specific, easily recognisable, correlated characteristics (e.g. guilds or biomes).
@@ -232,11 +231,17 @@ Although these metrics are more rare in macroevolution (to our knowledge), they 
 
 
 
+## One metric to rule them all?
+
+
 
 
 
 
 > VW: At the risk of sounding belligerent, the below 2 paragraphs could be more aggressive. Something like "Disparity metrics are often not designed for the question asked, but this can have serious consequences for the result. For example...[Scenario]
+> VW: but also, using your approach of multiple metrics provides opportunities for much finer-scaled hypothesis testing. So using different metrics allows the provision of space occupation information not just in one case, but several. As far as I am aware, this is new ground - e.g. you can use the kind of data you have to simulate different scenarios (e.g. to assess if an extinction was random) and then check back with your data. But it is late and have maybe just rubbished 20 years of existing disparity literature?
+
+
 
 Of course, some metrics can be a combination of several of these three different and more.
 In an ideal word, the choice of the metric should be based on the properties of changes in the morphospace of interest while taking into account the properties of the morphospace (number of elements or/and dimensions and distribution of the data on each axis).
@@ -244,8 +249,6 @@ However, it is highly unlikely that a such one-size-fits-all metric exist; rathe
 
 To alleviate this problem we suggest using multiple metrics.
 For example, if the macroevolutionary question of interest is to look at how the morphospace changes in response to mass extinction, it is important to capture several expected effects through different metrics (e.g. a mass extinction making the specimens with extreme characteristics go extinct - e.g. big mammals in the megafauna extinction).
-
-> VW: but also, using your approach of multiple metrics provides opportunities for much finer-scaled hypothesis testing. So using different metrics allows the provision of space occupation information not just in one case, but several. As far as I am aware, this is new ground - e.g. you can use the kind of data you have to simulate different scenarios (e.g. to assess if an extinction was random) and then check back with your data. But it is late and have maybe just rubbished 20 years of existing disparity literature?
 
 Finally, as different metrics will capture different aspects of the morphospace, it is important to know how such metrics will change in response to predicted or observed changes in the morphospace.
 For example, when measuring the volume of a morphospace, if the morphospace space decreases randomly by 50%, do we expect a reduction of the volume of 50% as well? Or merely a reduction in density?
@@ -385,6 +388,13 @@ Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | 
 Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
 Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
+
+
+
+
+
+
+
 
 ```{r, all_metric, echo = FALSE}
 ## All metrics (exploration)

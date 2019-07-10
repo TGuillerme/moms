@@ -19,7 +19,7 @@
 # input$metric_choice <- "User"
 # input$metric1 <- "Ellipsoid volume"
 # input$metric_specific1 <- "mean"
-# input$metric_specific2 <- "centroids"
+# input$metric_specific2 <- "neigbhours"
 # input$metric_arguments <- FALSE
 
 # input$refresh <- 0

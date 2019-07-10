@@ -29,7 +29,7 @@ make.vdp <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
     ## Make the origin space (vdp and fixed)
     outer_edge <- t(data.frame("x" = rep(base.range, 2), "y" = rep(base.range, each = 2)))
 
-    ## Add extra points (if required)
+    ## Add extra points (if required)
     if(extra.points != 0) {
         ## Add extra points on the outer edge
         extra_points <- runif(extra.points, max = max(base.range), min = min(base.range))
@@ -122,14 +122,14 @@ make.vdp <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' @export
 plot.vdp <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, ...) {
 
-    ## Handle the limits
+    ## Handle the limits
     if(missing(limits)) {
         limits <- range(unlist(vdp))
     }
 
     ## Get the disparity values as x labels
     if(!is.null(disparity)) {
-        ## Make the base name
+        ## Make the base name
         base_name <- c("Vol.=", "Den.=", "Pos.=")
         disparity_lab <- character()
         ## Extract the values for each vdp
@@ -144,7 +144,7 @@ plot.vdp <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
     ## Loop through each plot
     for(one_plot in 1:length(vdp)) {
         if(!is.null(disparity)) {
-            ## Get the disparity values
+            ## Get the disparity values
             plot(t(vdp[[one_plot]]), main = names(vdp)[[one_plot]],
                  xlim = limits, ylim = limits, pch = pch, xlab = disparity_lab[[one_plot]], ylab = ylab, ...)
         } else {
