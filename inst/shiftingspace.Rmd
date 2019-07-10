@@ -235,6 +235,57 @@ Although these metrics are more rare in macroevolution (to our knowledge), they 
 
 
 
+```{r fig_metric_captures, echo = FALSE, fig.height = 4, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different volume (Vol. - @@@), density (Den. - @@@) and position (Pos. - @@@) metrics capture different aspects of trait-space occupancy.") }
+
+## Making the volume/density/position space
+vdp_space <- make.vdp()
+
+## Measuring disparity
+vdp_disp <- dispRity.vdp(vdp_list,
+                         volume = c(sum, variances),
+                         density = c(mean, neighbours),
+                         position = c(mean, displacements))
+
+## Plotting the results
+plot.vdp(vdp_disp)
+
+
+## Plot space function (utility shortcut)
+## The elements
+elements <- 10
+
+## Trait space
+trait_space <- space.maker(elements, 2, distribution = rnorm)
+
+## Graphical parameters
+op <- par(mfrow = c(1,3), bty = "n")
+
+## The volume
+plot(trait_space, pch = defaults$pch, main = "A - Volume", xlab = "Trait 1", ylab = "Trait 2")
+## The range lines
+lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1)
+lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1)
+
+## The density
+plot(trait_space, pch = defaults$pch, main = "B - Density", xlab = "Trait 1", ylab = "")
+## Plotting the pairwise lines
+pair.line <- function(line, trait_space, defaults) {
+    lines(x = trait_space[line,1], y = trait_space[line,2], col = defaults$col1)
+}
+apply(combn(1:elements, 2), 2, pair.line, trait_space, defaults)
+points(trait_space, pch = defaults$pch)
+
+## The position
+plot(trait_space, pch = defaults$pch, main = "C - Position", xlab = "Trait 1", ylab = "")
+## Plotting the center of the space
+points(0,0, pch = 13, cex = 2)
+arrows(x0 = 0, y0 = 0, x1 = trait_space[,1], y1 = trait_space[,2], code = 0, col = defaults$col1)
+points(trait_space, pch = defaults$pch)
+
+par(op)
+```
+
+
 
 
 

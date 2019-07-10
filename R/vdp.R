@@ -7,24 +7,24 @@
 #' 
 #' @examples
 #' ## Make a Volume/density/position list
-#' vdp_list <- make.vdp()
+#' vdp_list <- vdp.make()
 #' 
 #' ## Plotting the transformations
-#' plot.vdp(vdp_list)
+#' vdp.plot(vdp_list)
 #' 
 #' ## Calculate disparity
-#' vdp_disp <- dispRity.vdp(vdp_list, volume = c(sum, variances),
+#' vdp_disp <- vdp.dispRity(vdp_list, volume = c(sum, variances),
 #'                                    density = c(mean, neighbours),
 #'                                    position = c(mean, displacements))
 #' 
 #' ## Plotting the results with disparity
-#' plot.vdp(vdp_list, disparity = vdp_disp)
+#' vdp.plot(vdp_list, disparity = vdp_disp)
 #'
-#' @seealso \code{\link{plot.vdp}}, \code{\link{dispRity.vdp}}
+#' @seealso \code{\link{vdp.plot}}, \code{\link{vdp.dispRity}}
 #' 
 #' @author Thomas Guillerme
 #' @export
-make.vdp <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
+vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 
     ## Make the origin space (vdp and fixed)
     outer_edge <- t(data.frame("x" = rep(base.range, 2), "y" = rep(base.range, each = 2)))
@@ -94,33 +94,33 @@ make.vdp <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' 
 #' @description Make a volume, density, position combination plot
 #'
-#' @param vdp A list output from \code{\link{make.vdp}}
+#' @param vdp A list output from \code{\link{vdp.make}}
 #' @param limits Optional, a set of plot limits
 #' @param pch The dots type to plot (default = 19 - full round dots)
 #' @param xlab, ylab The x and y labels (default is none - \code{""}).
-#' @param disparity optional, disparity values obtained from \code{\link{dispRity.vdp}} to be displayed as x labels
+#' @param disparity optional, disparity values obtained from \code{\link{vdp.dispRity}} to be displayed as x labels
 #' @param ... any aditional argument to be passed to \code{\link[base]{plot}}.
 #' 
 #' @examples
 #' ## Make a Volume/density/position list
-#' vdp_list <- make.vdp()
+#' vdp_list <- vdp.make()
 #' 
 #' ## Plotting the transformations
-#' plot.vdp(vdp_list)
+#' vdp.plot(vdp_list)
 #' 
 #' ## Calculate disparity
-#' vdp_disp <- dispRity.vdp(vdp_list, volume = c(sum, variances),
+#' vdp_disp <- vdp.dispRity(vdp_list, volume = c(sum, variances),
 #'                                    density = c(mean, neighbours),
 #'                                    position = c(mean, displacements))
 #' 
 #' ## Plotting the results with disparity
-#' plot.vdp(vdp_list, disparity = vdp_disp)
+#' vdp.plot(vdp_list, disparity = vdp_disp)
 #' 
-#' @seealso \code{\link{make.vdp}}, \code{\link{dispRity.vdp}}
+#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.dispRity}}
 #' 
 #' @author Thomas Guillerme
 #' @export
-plot.vdp <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, ...) {
+vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, ...) {
 
     ## Handle the limits
     if(missing(limits)) {
@@ -159,7 +159,7 @@ plot.vdp <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
 #' 
 #' @description Measure disparity on a vdp object
 #'
-#' @param vdp A list output from \code{\link{make.vdp}}
+#' @param vdp A list output from \code{\link{vdp.make}}
 #' @param volume a volume function as passed to \code{\link[dispRity]{dispRity}}
 #' @param density a density function as passed to \code{\link[dispRity]{dispRity}}
 #' @param position a position function as passed to \code{\link[dispRity]{dispRity}}
@@ -167,24 +167,24 @@ plot.vdp <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
 #' 
 #' @examples
 #' ## Make a Volume/density/position list
-#' vdp_list <- make.vdp()
+#' vdp_list <- vdp.make()
 #' 
 #' ## Plotting the transformations
-#' plot.vdp(vdp_list)
+#' vdp.plot(vdp_list)
 #' 
 #' ## Calculate disparity
-#' vdp_disp <- dispRity.vdp(vdp_list, volume = c(prod, ranges),
+#' vdp_disp <- vdp.dispRity(vdp_list, volume = c(prod, ranges),
 #'                                    density = c(mean, neighbours),
 #'                                    position = c(mean, displacements))
 #' 
 #' ## Plotting the results with disparity
-#' plot.vdp(vdp_list, disparity = vdp_disp)
+#' vdp.plot(vdp_list, disparity = vdp_disp)
 #' 
-#' @seealso \code{\link{make.vdp}}, \code{\link{plot.vdp}}
+#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.plot}}
 #' 
 #' @author Thomas Guillerme
 #' @export
-dispRity.vdp <- function(vdp, volume, density, position, base.relative = TRUE) {
+vdp.dispRity <- function(vdp, volume, density, position, base.relative = TRUE) {
 
     ## Creating a list of spaces
     list_spaces <- lapply(vdp, t)
