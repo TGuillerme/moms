@@ -7,9 +7,10 @@ import(graphics)
 
 ## Functions
 export(reduce.space)
-export(make.vdp)
-export(dispRity.vdp)
-export(plot.vdp)
+export(vdp.make)
+export(vdp.dispRity)
+export(vdp.plot)
+export(vdp.table.check)
 
 ## Plot utilities
 export(plot.space)

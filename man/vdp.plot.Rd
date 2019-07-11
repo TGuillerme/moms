@@ -5,7 +5,7 @@
 \title{Make vdp plot}
 \usage{
 vdp.plot(vdp, limits, pch = 19, xlab = "", ylab = "",
-  disparity = NULL, ...)
+  disparity = NULL, plot.names, ...)
 }
 \arguments{
 \item{vdp}{A list output from \code{\link{vdp.make}}}
@@ -18,7 +18,9 @@ vdp.plot(vdp, limits, pch = 19, xlab = "", ylab = "",
 
 \item{disparity}{optional, disparity values obtained from \code{\link{vdp.dispRity}} to be displayed as x labels}
 
-\item{...}{any aditional argument to be passed to \code{\link[base]{plot}}.}
+\item{plot.names}{optional, the plot names (passed as \code{main})}
+
+\item{...}{any additional argument to be passed to \code{\link[base]{plot}}.}
 }
 \description{
 Make a volume, density, position combination plot

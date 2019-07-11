@@ -62,17 +62,19 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
     base <- cbind(outer_edge, move.points(outer_edge, centre, factor = 0.5))
 
     ## Differences
-    vol <- move.points(base, factor = 2, centre = centre)
+    vol <- cbind(move.points(outer_edge, factor = 2, centre = centre),
+                 move.points(outer_edge, factor = 1.5, centre = centre))
     den <- cbind(outer_edge,
-                 move.points(outer_edge, factor = 0.25, centre = centre))
+                 move.points(outer_edge, factor = 0.3535, centre = centre))
     pos <- max(base.range) + base
     vol_den <- cbind(move.points(outer_edge, factor = 2, centre = centre),
                      move.points(outer_edge, factor = 0.25, centre = centre))
     vol_pos <- max(base.range) +
-               move.points(base, factor = 0.5, centre = centre)
+               cbind(move.points(outer_edge, factor = 1.5, centre = centre),
+                     move.points(outer_edge, factor = 1, centre = centre))
     den_pos <- max(base.range) +
                cbind(outer_edge,
-                     move.points(outer_edge, factor = 0.25, centre = centre)) 
+                     move.points(outer_edge, factor = 0.3535, centre = centre)) 
     vol_pos_den <- max(base.range) +
                    cbind(move.points(outer_edge, factor = 0.1, centre = centre),
                          move.points(outer_edge, factor = 0.25, centre = centre))
@@ -99,7 +101,8 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' @param pch The dots type to plot (default = 19 - full round dots)
 #' @param xlab, ylab The x and y labels (default is none - \code{""}).
 #' @param disparity optional, disparity values obtained from \code{\link{vdp.dispRity}} to be displayed as x labels
-#' @param ... any aditional argument to be passed to \code{\link[base]{plot}}.
+#' @param plot.names optional, the plot names (passed as \code{main})
+#' @param ... any additional argument to be passed to \code{\link[base]{plot}}.
 #' 
 #' @examples
 #' ## Make a Volume/density/position list
@@ -120,7 +123,7 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' 
 #' @author Thomas Guillerme
 #' @export
-vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, ...) {
+vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, plot.names, ...) {
 
     ## Handle the limits
     if(missing(limits)) {
@@ -137,6 +140,10 @@ vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
             values <- round(c(disparity$volume[[val]], disparity$density[[val]], disparity$position[[val]]), digits = 3)
             disparity_lab[[val]] <- paste(paste0(base_name, values), collapse = "; ")
         }
+    }
+
+    if(!missing(plot.names)) {
+        names(vdp) <- plot.names
     }
 
     ## Plotting all the 
@@ -208,4 +215,32 @@ vdp.dispRity <- function(vdp, volume, density, position, base.relative = TRUE) {
     return(list("volume" = disp_volume,
                 "density" = disp_densit,
                 "position" = disp_positi))
+}
+
+#' @title checking vdp
+#' 
+#' @description Checking the vdp results in a table
+#'
+#' @param vdp_disp A list output from \code{\link{vdp.dispRity}}
+#' @param vdp_space A list output from \code{\link{vdp.make}}
+#' @param round The number of digits to round (default = \code{3})
+#' 
+#' @examples
+#' ## Make a Volume/density/position list
+#' vdp_list <- vdp.make()
+#' 
+#' ## Calculate disparity
+#' vdp_disp <- vdp.dispRity(vdp_list, volume = c(prod, ranges),
+#'                                    density = c(mean, neighbours),
+#'                                    position = c(mean, displacements))
+#' 
+#' ## Plotting the results with disparity
+#' vdp.check.table(vdp_disp, vdp_list)
+#' 
+#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.dispRity}}
+#' 
+#' @author Thomas Guillerme
+#' @export
+vdp.check.table <- function(vdp_disp, vdp_space, round = 3) {
+  return(matrix(round(unlist(vdp_disp), round), ncol = 8, byrow = TRUE, dimnames = list(names(vdp_disp), gsub("diff.", "", names(vdp_space)))))
 }
