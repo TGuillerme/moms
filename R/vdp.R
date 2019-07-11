@@ -147,7 +147,7 @@ vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
     }
 
     ## Plotting all the 
-    par(mfrow = c(2,4), bty = "n")
+    par(mfrow = c(2,4), bty = "n", mar = c(4, 3, 3, 1))
     ## Loop through each plot
     for(one_plot in 1:length(vdp)) {
         if(!is.null(disparity)) {

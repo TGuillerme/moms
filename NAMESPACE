@@ -10,7 +10,7 @@ export(reduce.space)
 export(vdp.make)
 export(vdp.dispRity)
 export(vdp.plot)
-export(vdp.table.check)
+export(vdp.check.table)
 
 ## Plot utilities
 export(plot.space)
