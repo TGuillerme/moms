@@ -14,7 +14,7 @@ output:
   lineno: linenumbers
 ---
 
-<!-- When toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
+<!-- When  toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
 
 ```{r header, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
 ## Repeatability note:
@@ -52,8 +52,8 @@ defaults <- list(pch = 20,
                  cex = 1)
 ## Generating the default palette
 default.palette <- function(n) {
-    hues = seq(15, 375, length = n + 1)
-    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+    hues <- seq(15, 375, length = n + 1)
+    grDevices::hcl(h <- hues, l = 65, c = 100)[1:n]
 }
 
 ## Setting the datapath
@@ -228,148 +228,107 @@ However, when thinking about unidimensional data, this metric is pretty obvious:
 Although these metrics are more rare in macroevolution (to our knowledge), they have been used in ecology to compare the position of two groups relatively to each other [@mammola2019].
 
 
-
-
-
 ## One metric to rule them all?
 
+In an ideal word, the choice of the metric should be based on the properties of changes in the trait-space of interest while taking into account the properties of the space (number of elements or/and dimensions and distribution of the data on each axis).
+However, it is highly unlikely that a such one-size-fits-all metric exist; rather, it is important to assess the properties of a metric relative to the specific data used.
+
+If the question of interest is, say, to look at how trait-space occupancy changes in response to mass extinction, using a single metric to describe one aspect of occupancy (usually the volume) can miss an important part of the picture.
+For example, in @halliday2015, the authors demonstrate a change in mammalian trait-space volume as a result from the Cretaceous-Palaeogene extinction (66 million years ago - Mya - Fig. 5 in @halliday2015) yet this one seems to be also accompanied by an apparent shift in the trait-space position due to the extinction of basal mammals (Fig. 8 in @halliday2015).
+Such examples can be found throughout the literature in both evolution and ecology on different aspects of trait-space occupancy [e.g. @close2015, @diaz2016].
+Figure 2 illustrates this problem where the three aspects (volume, density and position) can be decouple and change in concert or independently.
+For this example, both trait space (2D), the observations (8) and the metrics have been optimised for illustration purpose.
+In empirical data, the relations can be more complex to discern.
+Yet, this illustrates how using only one specific space occupancy metric (e.g. the volume) will fail to capture changes in the trait-spaces C, D, and I.
 
 
-```{r fig_metric_captures, echo = FALSE, fig.height = 4, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different volume (Vol. - @@@), density (Den. - @@@) and position (Pos. - @@@) metrics capture different aspects of trait-space occupancy.") }
+<!-- In Slater et al 2017: variation in mean squared pairwise distance (density) with two peaks (25 Mya and 5 Mya) corresponding to a less densily packed trait-space (Fig. 5) which might be not optimal to explain the shift in body mass (position) and the increase in variance (volume) for the one trait analysed (body length).
+ -->
+
+
+```{r fig_metric_captures, echo = FALSE, fig.height = 4, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different volume (Vol. - Product of ranges), density (Den. - Average nearest neighbour distance) and position (Pos. - Average displacement) metrics capture different aspects of trait-space occupancy.") }
 
 ## Making the volume/density/position space
-vdp_space <- make.vdp()
+vdp_space <- moms::vdp.make()
 
 ## Measuring disparity
-vdp_disp <- dispRity.vdp(vdp_list,
-                         volume = c(sum, variances),
+vdp_disp <- moms::vdp.dispRity(vdp_space,
+                         volume = c(prod, ranges),
                          density = c(mean, neighbours),
                          position = c(mean, displacements))
 
+## Checking the table of volume changes
+silent <- moms::vdp.check.table(vdp_disp, vdp_space)
+
 ## Plotting the results
-plot.vdp(vdp_disp)
-
-
-## Plot space function (utility shortcut)
-## The elements
-elements <- 10
-
-## Trait space
-trait_space <- space.maker(elements, 2, distribution = rnorm)
-
-## Graphical parameters
-op <- par(mfrow = c(1,3), bty = "n")
-
-## The volume
-plot(trait_space, pch = defaults$pch, main = "A - Volume", xlab = "Trait 1", ylab = "Trait 2")
-## The range lines
-lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1)
-lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1)
-
-## The density
-plot(trait_space, pch = defaults$pch, main = "B - Density", xlab = "Trait 1", ylab = "")
-## Plotting the pairwise lines
-pair.line <- function(line, trait_space, defaults) {
-    lines(x = trait_space[line,1], y = trait_space[line,2], col = defaults$col1)
-}
-apply(combn(1:elements, 2), 2, pair.line, trait_space, defaults)
-points(trait_space, pch = defaults$pch)
-
-## The position
-plot(trait_space, pch = defaults$pch, main = "C - Position", xlab = "Trait 1", ylab = "")
-## Plotting the center of the space
-points(0,0, pch = 13, cex = 2)
-arrows(x0 = 0, y0 = 0, x1 = trait_space[,1], y1 = trait_space[,2], code = 0, col = defaults$col1)
-points(trait_space, pch = defaults$pch)
-
-par(op)
+moms::vdp.plot(vdp_space, disparity = vdp_disp,
+        plot.names = c("A - Base (no changes)",
+                       "B - Change in volume",
+                       "C - Change in density",
+                       "D - Change in position",
+                       "E - Change in vol. & den.",
+                       "F - Change in vol. & pos.",
+                       "I - Change in den. & pos.",
+                       "J - All changes"))
 ```
 
+To alleviate this problem we suggest using multiple metrics to describe trait-space occupancy the same way that multiple statistics are required to describe distributions.
+This has also to advantage of allowing finer scale and more precise evolutionary or ecological questions.
+For example, during a radiation following a mass extinction event, one could both predict an increase of the volume of the trait-space [e.g. an increase in morphological diversity in birds; @crouch2019] but also a shift if position in the trait-space [e.g. a shift from non-avian to avian dinosaur traits; @crouch2019].
+Similarly, in ecology, differences in density of the trait-space while the volume remains constant could indicate some kind of selection pressures on the studied traits (i.e. due to the "narrowness" of trait combination for example in desert plants).
 
-
-
-
-> VW: At the risk of sounding belligerent, the below 2 paragraphs could be more aggressive. Something like "Disparity metrics are often not designed for the question asked, but this can have serious consequences for the result. For example...[Scenario]
-> VW: but also, using your approach of multiple metrics provides opportunities for much finer-scaled hypothesis testing. So using different metrics allows the provision of space occupation information not just in one case, but several. As far as I am aware, this is new ground - e.g. you can use the kind of data you have to simulate different scenarios (e.g. to assess if an extinction was random) and then check back with your data. But it is late and have maybe just rubbished 20 years of existing disparity literature?
-
-
-
-Of course, some metrics can be a combination of several of these three different and more.
-In an ideal word, the choice of the metric should be based on the properties of changes in the morphospace of interest while taking into account the properties of the morphospace (number of elements or/and dimensions and distribution of the data on each axis).
-However, it is highly unlikely that a such one-size-fits-all metric exist; rather, it is important to assess the properties of a metric relative to the specific data used.
-
-To alleviate this problem we suggest using multiple metrics.
-For example, if the macroevolutionary question of interest is to look at how the morphospace changes in response to mass extinction, it is important to capture several expected effects through different metrics (e.g. a mass extinction making the specimens with extreme characteristics go extinct - e.g. big mammals in the megafauna extinction).
-
-Finally, as different metrics will capture different aspects of the morphospace, it is important to know how such metrics will change in response to predicted or observed changes in the morphospace.
-For example, when measuring the volume of a morphospace, if the morphospace space decreases randomly by 50%, do we expect a reduction of the volume of 50% as well? Or merely a reduction in density?
-In this paper, we analyse the effect of such changes of the morphospace on five commonly used disparity metrics and propose two novel metrics.
-We test both how these seven metrics change in response of different morphopace reduction scenarios but also how they respond to these changes depending on the space distributions and the number of dimensions.
-
-We found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario along with a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In this paper, we analyse the effect of changes in simulated and empirical trait-spaces on five@@@ commonly used space occupancy metrics as well as proposing two@@@ novel metrics to explicitly measure trait-space density and position.
+As expected, we found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario.
+We also propose a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics: [`moms`]().
 
 
 # Methods
 
-To test the effect of spatial change (see Shifting space below), dimensions and dimensions distributions on the seven disparity metrics we:
+We tested the effect of changes in trait-spaces on space occupancy (see [Shifting space](##shifting-spaces)) as a function of spaces dimensions and distributions on the seven@@@ occupancy metrics.
+To so, we preformed these following steps (explained in more details below):
 
-1. generated 7 different spaces with variable parameters
-2. transformed these spaces by removing 50% of the elements following four different scenarios
-3. measured disparity on the resulted transformed spaces
-
-Each points are described in details below.
+1. We simulated seven different spaces with different set of parameters
+2. We transformed these spaces by removing 50% of the observations (elements) following four different scenarios: randomly, by limit, by displacement and by density
+3. We measured occupancy on the resulted transformed spaces using seven@@@ different metrics
+4. We applied the same space occupancy metrics to six@@@ empirical datasets from the literature (covering a range of disciplines and a range of dataset properties).
 
 ## Generating spaces
 
-We generated 7 spaces using the following parameters:
-> VW: This needs justification or possibly a table column that cites a paper where such a scenario has been suggested/found/debated. Ideally from all the different areas of biology we can possibly reach with the paper.
+We generated nine spaces using the following parameters:
 
-| space name | size | distribution(s)                | dimensions variance | correlation |
-|------------|------|--------------------------------|---------------------|-------------|
-|   Uniform  |300*2 | Uniform (min = -0.5, max = 0.5)| Constant            | none        |
-|   Uniform  |300*50| Uniform                        | Constant            | none        |
-|   Uniform  |300*50| Uniform                        | Constant            | Random (between 0.1 and 0.9) |
-|    Normal  |300*2 | Normal  (mean = 0, sd = 1)     | Constant            | none        |
-|    Normal  |300*50| Normal                         | Constant            | none        |
-|    Normal  |300*50| Normal                         | Constant            | Random (between 0.1 and 0.9) |
-|   Random   |300*50| Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
-| PCA-like   |300*50| Normal                         | Lognormal           | none        |
-| PCO-like   |300*50| Normal                         | Normal              | none        |
-
+| space name | size  | distribution(s)                | dimensions variance | correlation |
+|------------|-------|--------------------------------|---------------------|-------------|
+| Uniform2   |200*2  | Uniform (min = -0.5, max = 0.5)| Constant            | none        |
+| Uniform50  |200*50 | Uniform                        | Constant            | none        |
+| Uniform150 |200*150| Uniform                        | Constant            | none        |
+| Uniform50c |200*50 | Uniform                        | Constant            | Random (between 0.1 and 0.9) |
+| Normal2    |200*2  | Normal  (mean = 0, sd = 1)     | Constant            | none        |
+| Normal50   |200*50 | Normal                         | Constant            | none        |
+| Normal150  |200*150| Normal                         | Constant            | none        |
+| Normal50c  |200*50 | Normal                         | Constant            | Random (between 0.1 and 0.9) |
+| Random     |200*50 | Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Constant            | none        |
+| PCA-like   |200*50 | Normal                         | Lognormal           | none        |
+| PCO-like   |200*50 | Normal                         | Normal              | none        |
 Table 1: different simulated space distributions.
 
-The five first spaces reflect specific distributions to understand the baseline effect of the metric on controlled variables.
-The two last spaces (PCA and PCO-like) reflect spaces commonly used to measure changes in disparity in the macroevolutionary literature.
+The different in space sizes (200 $\times$ 2, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of trait-space dimensions in literature: "low-dimension" spaces ($<10$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
+We used a different range of distributions (uniform, normal or random) to test the effect of observation distributions on the metrics.
+It can be assumed that many trait-spaces are normally distributed [e.g. @diaz2016, @cooney2017, @healy2019] albeit with some varying levels of correlation [e.g. @jones2015, @wright2017] reflected in the correlation parameter.
+For simplification, in the seven first spaces, we used a constant variance per dimensions (i.e. all dimensions have a similar variance) but we used a decreasing variance for the "PCA-like" (Principal Component Analysis) and "PCO-like" (Principal Coordinates Analysis) spaces to mimic the ranking of variance in ordination technique.
+Empirically variance tends to decrease log-normally in PCAs [e.g. @marcy2016, healy2019] and more normally in PCOs [e.g.  @close2015, @wright2017].
 
-## Shifting spaces
+
+## Shifting spaces {#shifting-spaces}
 
 We reduced the spaces by removing 50% of elements each time using the following algorithms
 
-* **Randomly:** by randomly removing 50% of elements.  Figure 2A.
+* **Randomly:** by randomly removing 50% of elements (Fig. 3A).
 
-* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected).  Figure 2B.
+* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected) (Fig. 3B).
 
-* **Displacement:** by removing points similarly as above but using the distance from the furthest point from the centre (max point). Figure 2C.
+* **Displacement:** by removing points similarly as above but using the distance from the furthest point from the centre (max point - Fig. 3C).
 
-* **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected). Figure 2D.
+* **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected - Fig. 3D).
 
 The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
 We used mirror results for the limit, displacement and density reduction (i.e. the opposite data was also used).
