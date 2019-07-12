@@ -5,14 +5,18 @@ bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
   html_document:
+  keep_tex: true
+  self_contained: false
   fig_width: 8
   fig_height: 8
-  keep_tex: true
+---
+
+<!--   keep_tex: true
   self_contained: false
   line_numbers: true
   fig_caption: true
-  lineno: linenumbers
----
+  lineno: linenumbers -->
+
 
 <!-- When  toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
 
@@ -360,15 +364,16 @@ limit_rm <- reduce.space(trait_space, type = "limit", remove = 0.5)
 ## Plotting the reduction
 plot.space(trait_space, limit_rm, main = "B - Limit", defaults)
 
-## The displacement removal
-displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
-## Moving the space to the upper right corner (positive)
-plot.space(trait_space, displace_rm, main = "C - Displacement", defaults)
-
 ## The density removal
 density_rm <- reduce.space(trait_space, type = "density", remove = 0.5)
 ## Plotting the reduction
-plot.space(trait_space, density_rm, main = "D - Density", defaults)
+plot.space(trait_space, density_rm, main = "C - Density", defaults)
+
+## The displacement removal
+displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
+## Moving the space to the upper right corner (positive)
+plot.space(trait_space, displace_rm, main = "D - Displacement", defaults)
+
 
 ## List of removals (for plotting the tables later)
 typical_removal <- list(space = trait_space,

@@ -211,4 +211,14 @@ ecol <- list("jones" = jones_traitspace, "ecodata" = jones_traitspace)
 save.results(ecol)
 ```
 
+
+### Exporting the datasets for shiny
+
+```{r}
+## The list of datasets
+demo_data <- c(palaeo, gmm, ecol)
+save(demo_data, file = "../data/demo_data.rda")
+```
+
+
 # References
