@@ -26,7 +26,7 @@ shinyServer(
             space <- get.space(input)
 
             ## Update the dimensions if matrix is input
-            if(input$use_input_matrix && !is.null(input$upload_input_matrix)) {
+            if(input$space_type != "User") {
                 shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
                 shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
             }

@@ -32,7 +32,8 @@
 ## Return a space, or an error message to be written to output.
 get.space <- function(input, args.only = FALSE){
 
-    if(input$use_input_matrix && !is.null(input$upload_input_matrix)){
+    ## Input space
+    if(input$space_type == "Input"){
         ## Load the file
         space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = FALSE))
         ## Check class and space
@@ -43,6 +44,24 @@ get.space <- function(input, args.only = FALSE){
             return("Input matrix does not contain only numeric values.")
         }
         return(space)
+    }
+
+    ## Demo space
+    if(input$space_type == "Demo"){
+        ## Load the demo data
+        data(demo_data)
+
+        ## Select the right data
+        switch(input$demo_data,
+               "Beck and Lee 2014"  = {dataset <- 1},
+               "Wright 2017"        = {dataset <- 2},
+               "Marcy et al. 2016"  = {dataset <- 3},
+               "NONAME1"            = {dataset <- 4},
+               "Jones et al. 2015"  = {dataset <- 5},
+               "NONAME2"            = {dataset <- 6}
+               )
+        return(demo_data[[dataset]]$matrix)
+
     }
 
     ## Getting the arguments
@@ -201,6 +220,28 @@ get.space <- function(input, args.only = FALSE){
 #' @return a character string if character extracted correctly,
 #'  a list (detailing the error message to be displayed) if there's an error.
 get.reduction <- function(input, space, session) {
+
+
+    ## Demo space
+    if(input$use_demo_groups == TRUE){
+        ## Load the demo data
+        data(demo_data)
+
+        ## Select the right data
+        switch(input$demo_data,
+               "Beck and Lee 2014"  = {dataset <- 1},
+               "Wright 2017"        = {dataset <- 2},
+               "Marcy et al. 2016"  = {dataset <- 3},
+               "NONAME1"            = {dataset <- 4},
+               "Jones et al. 2015"  = {dataset <- 5},
+               "NONAME2"            = {dataset <- 6}
+               )
+        return(1:dim(demo_data[[dataset]]$matrix)[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
+    }
+
+
+
+
 
     ## Set the parameters
     switch(input$reduce,

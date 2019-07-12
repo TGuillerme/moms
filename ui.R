@@ -13,105 +13,162 @@ shinyUI(fluidPage(
       ## Side Bar
       column(width = 3,
 
-        ## ---------------
-        ## Space parameters
-        ## ---------------
+
 
         h2("Multidimensional space parameters"),
-        ## Number of dimensions input - input$n_dimensions
-        sliderInput("n_dimensions", label = "Number of dimensions (traits):", min = 2, max = 100, value = 3),
-        ## Number of elements input - input$n_elements
-        sliderInput("n_elements", label = "Number of elements (observations):", min = 3, max = 1000, value = 300),
 
-        ## Distributions - input$distributions
-        selectInput("distributions", label = "Distributions", choices = list("Normal", "LogNormal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
+        selectInput("space_type", label = h3("Select the type of space to use:"),
+                    choices = list(
+                                  "User",
+                                  "Input",
+                                  "Demo"
+                                  ), selected = "User"),
 
-        ## Normal parameters
-        conditionalPanel(condition = "input.distributions == \"Normal\"",
-          ## Parameters
-          numericInput("rnorm_mean", label = "mean", value = 0),
-          numericInput("rnorm_sd", label = "standard deviation", value = 1)
-        ),
+        ## ---------------
+        ## Simulate space
+        ## ---------------
+        conditionalPanel(condition = "input.space_type == \"User\"",
 
-        ## LogNormal parameters
-        conditionalPanel(condition = "input.distributions == \"LogNormal\"",
-          ## Parameters
-          numericInput("rlnorm_mean", label = "mean log", value = 0),
-          numericInput("rlnorm_sd", label = "standard deviation log", value = 1)
-        ),
+          ## Number of dimensions input - input$n_dimensions
+          sliderInput("n_dimensions", label = "Number of dimensions (traits):", min = 2, max = 100, value = 3),
+          ## Number of elements input - input$n_elements
+          sliderInput("n_elements", label = "Number of elements (observations):", min = 3, max = 1000, value = 300),
 
-        ## Uniform parameters
-        conditionalPanel(condition = "input.distributions == \"Uniform\"",
-          ## Parameters
-          numericInput("runif_min", label = "minimum", value = -0.5),
-          numericInput("runif_max", label = "maximum", value = 0.5)
-        ),
+          ## Distributions - input$distributions
+          selectInput("distributions", label = "Distributions", choices = list("Normal", "LogNormal", "Uniform", "Gamma", "Poisson", "Specific"), selected = "Normal"),
 
-        ## Gamma parameters
-        conditionalPanel(condition = "input.distributions == \"Gamma\"",
-          ## Parameters
-          numericInput("rgamma_shape", label = "shape (alpha)", value = 5),
-          numericInput("rgamma_rate", label = "rate (beta)", value = 1)
-        ),
-
-        ## Poisson parameters
-        conditionalPanel(condition = "input.distributions == \"Poisson\"",
-          ## Parameters
-          numericInput("rpois_lambda", label = "lambda", value = 5)
-        ),
-
-        ## Multiple distributions
-        conditionalPanel(condition = "input.distributions == \"Specific\"",
-          ## Distributions for D1
-          textInput("distribution_list", label = "Distribution list", value = "list(rnorm, runif, rlnorm)"),
-          helpText("Enter the distributions as a list of function names from the 'stats' package (e.g. rnorm for the normal distribution to be applied to dimensions 1, etc.)."),
-          checkboxInput("optional_arguments", label = "Optional arguments", value = FALSE),
-          conditionalPanel(condition = "input.optional_arguments == true",
+          ## Normal parameters
+          conditionalPanel(condition = "input.distributions == \"Normal\"",
             ## Parameters
-            textInput("distribution_arguments", label = "Argument list", value = "list(list(mean = 0, sd = 1), list(), list(meanlog = 5))"),
-            helpText("Enter a list of arguments to be applied to each distribution above. The format should be \"c(list(arguments1), list(arguments2), etc..)\" where \"arguments1\" are used for the first distribution, etc. If one argument needs no specific argument (default), use an empty list: list().")
+            numericInput("rnorm_mean", label = "mean", value = 0),
+            numericInput("rnorm_sd", label = "standard deviation", value = 1)
+          ),
+
+          ## LogNormal parameters
+          conditionalPanel(condition = "input.distributions == \"LogNormal\"",
+            ## Parameters
+            numericInput("rlnorm_mean", label = "mean log", value = 0),
+            numericInput("rlnorm_sd", label = "standard deviation log", value = 1)
+          ),
+
+          ## Uniform parameters
+          conditionalPanel(condition = "input.distributions == \"Uniform\"",
+            ## Parameters
+            numericInput("runif_min", label = "minimum", value = -0.5),
+            numericInput("runif_max", label = "maximum", value = 0.5)
+          ),
+
+          ## Gamma parameters
+          conditionalPanel(condition = "input.distributions == \"Gamma\"",
+            ## Parameters
+            numericInput("rgamma_shape", label = "shape (alpha)", value = 5),
+            numericInput("rgamma_rate", label = "rate (beta)", value = 1)
+          ),
+
+          ## Poisson parameters
+          conditionalPanel(condition = "input.distributions == \"Poisson\"",
+            ## Parameters
+            numericInput("rpois_lambda", label = "lambda", value = 5)
+          ),
+
+          ## Multiple distributions
+          conditionalPanel(condition = "input.distributions == \"Specific\"",
+            ## Distributions for D1
+            textInput("distribution_list", label = "Distribution list", value = "list(rnorm, runif, rlnorm)"),
+            helpText("Enter the distributions as a list of function names from the 'stats' package (e.g. rnorm for the normal distribution to be applied to dimensions 1, etc.)."),
+            checkboxInput("optional_arguments", label = "Optional arguments", value = FALSE),
+            conditionalPanel(condition = "input.optional_arguments == true",
+              ## Parameters
+              textInput("distribution_arguments", label = "Argument list", value = "list(list(mean = 0, sd = 1), list(), list(meanlog = 5))"),
+              helpText("Enter a list of arguments to be applied to each distribution above. The format should be \"c(list(arguments1), list(arguments2), etc..)\" where \"arguments1\" are used for the first distribution, etc. If one argument needs no specific argument (default), use an empty list: list().")
+            )
+            ## TODO: add optional arguments
+          ),
+
+          ## Scree - input$scree
+          selectInput("scree", label = h5("Dimensions variance"), choices = list("Uniform", "Decreasing", "LogNormal"), selected = "Uniform"),
+          conditionalPanel(condition = "input.scree == \"Uniform\"",
+            ## Parameters
+            helpText("Variance is the same on each axis.")
+          ),
+          conditionalPanel(condition = "input.scree == \"Decreasing\"",
+            ## Parameters
+            helpText("Variance is uniformly decreasing on each axis.")
+          ),
+          conditionalPanel(condition = "input.scree == \"Log-normal\"",
+            ## Parameters
+            helpText("Variance is log-normally decreasing on each axis.")
+          ),
+
+          ## Correlation - input$correlation
+          selectInput("correlation", label = h5("Dimensions correlation"), choices = list("Uncorrelated", "Matrix", "Vector", "Upload"), selected = "Uncorrelated"),
+          conditionalPanel(condition = "input.correlation == \"Vector\"",
+            textInput("correlation_value_vector", label = "Correlations", value = "0.1,0.2,0.3"),
+            ## Parameters
+            helpText("Enter the correlation between each axis as the lower diagonal of a correlation matrix (separated by a comma). For example, for three dimensions D1, D2, D3, D4 enter 0.1,0.2,0.3,0.4,0.5,0.6 for a correlation of respectively 0.1 for D1 and D2; 0.2 for D1,D3; 0.3 for D1,D4;, 0.4 for D2,D3; 0.5 for D2,D4; and 0.6 for D3,D4.")
+          ),
+          conditionalPanel(condition = "input.correlation == \"Matrix\"",
+            shinyMatrix::matrixInput(inputId = "cor.matrix", value = diag(3), class = "numeric"),
+            ## Parameters
+            helpText("Enter the correlation value between each axis. The upper triangle and the diagonal are ignored. Note that this input option is ignored if using more than 15 dimensions.")
+          ),
+          conditionalPanel(condition = "input.correlation == \"Upload\"",
+            ## Parameters
+            fileInput("correlation_value_csv", label = "Select a matrix in csv format."),
+            helpText("The matrix must have no header. The diagonal and the upper triangle are ignored.")
           )
-          ## TODO: add optional arguments
         ),
+          
 
-        ## Scree - input$scree
-        selectInput("scree", label = h5("Dimensions variance"), choices = list("Uniform", "Decreasing", "LogNormal"), selected = "Uniform"),
-        conditionalPanel(condition = "input.scree == \"Uniform\"",
-          ## Parameters
-          helpText("Variance is the same on each axis.")
-        ),
-        conditionalPanel(condition = "input.scree == \"Decreasing\"",
-          ## Parameters
-          helpText("Variance is uniformly decreasing on each axis.")
-        ),
-        conditionalPanel(condition = "input.scree == \"Log-normal\"",
-          ## Parameters
-          helpText("Variance is log-normally decreasing on each axis.")
-        ),
 
-        ## Correlation - input$correlation
-        selectInput("correlation", label = h5("Dimensions correlation"), choices = list("Uncorrelated", "Matrix", "Vector", "Upload"), selected = "Uncorrelated"),
-        conditionalPanel(condition = "input.correlation == \"Vector\"",
-          textInput("correlation_value_vector", label = "Correlations", value = "0.1,0.2,0.3"),
-          ## Parameters
-          helpText("Enter the correlation between each axis as the lower diagonal of a correlation matrix (separated by a comma). For example, for three dimensions D1, D2, D3, D4 enter 0.1,0.2,0.3,0.4,0.5,0.6 for a correlation of respectively 0.1 for D1 and D2; 0.2 for D1,D3; 0.3 for D1,D4;, 0.4 for D2,D3; 0.5 for D2,D4; and 0.6 for D3,D4.")
-        ),
-        conditionalPanel(condition = "input.correlation == \"Matrix\"",
-          shinyMatrix::matrixInput(inputId = "cor.matrix", value = diag(3), class = "numeric"),
-          ## Parameters
-          helpText("Enter the correlation value between each axis. The upper triangle and the diagonal are ignored. Note that this input option is ignored if using more than 15 dimensions.")
-        ),
-        conditionalPanel(condition = "input.correlation == \"Upload\"",
-          ## Parameters
-          fileInput("correlation_value_csv", label = "Select a matrix in csv format."),
-          helpText("The matrix must have no header. The diagonal and the upper triangle are ignored.")
-        ),
-        checkboxInput("use_input_matrix", label = h3("Input user matrix"), value = FALSE),
-        
-        conditionalPanel(condition = "input.use_input_matrix == true",
+        ## ---------------
+        ## Input space
+        ## ---------------
+        conditionalPanel(condition = "input.space_type == \"Input\"",
+
           fileInput("upload_input_matrix", label = "Select a multidimensional matrix in csv format."),
           helpText("Upload your own multidimensional matrix! The matrix must be in .csv format, with numeric values and no row names or column names.")
         ),
+
+
+
+        ## ---------------
+        ## Demo spaces
+        ## ---------------
+        conditionalPanel(condition = "input.space_type == \"Demo\"",
+          selectInput("demo_data", label = h5("Select a demo matrix:"),
+                      choices = list(
+                                    "Beck and Lee 2014",
+                                    "Wright 2017",
+                                    "Marcy et al. 2016",
+                                    "NONAME1",
+                                    "Jones et al. 2015",
+                                    "NONAME2"
+                                    ), selected = "Beck and Lee 2014"),
+
+          conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
+              helpText("A palaeobiology study of mammals. The data is a 105 dimensions ordination (PCO) of the distances between 106 mammals based on discrete morphological characters. The data is divided into two groups, the stem mammals (n = 54) and crown mammals (n = 52).\n
+                REF:")
+              ),
+          conditionalPanel(condition = "input.demo_data == \"Wright 2017\"",
+              helpText("A palaeobiology study of crinoids. The data is a 41 dimensions ordination (PCO) of the distances between 42 crinoids based on discrete morphological characters. The data is divided into two groups, crinoids before (n = 16) and after (n = 23) the Ordovician-Silurian extinction (422.5 Mya).\n
+                REF:")
+              ),
+          conditionalPanel(condition = "input.demo_data == \"Marcy et al. 2016\"",
+              helpText("A geometric morphometric study of gophers (rodents). The data is a 134 dimensions ordination (PCA) the Procrustes superimposition of landmarks from 454 gopher skulls. The data is divided into two groups, the genus Megascapheus (n = 225) and the Thomomys (n = 229).")
+              ),
+          conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
+              helpText("PLACE HOLDER FOR MATRIX GMM 2.")
+              ),
+          conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
+              helpText("An ecological landscape study. The data is a 47 dimensions ordination (PCO) of the Jaccard distances between 48 field sites based on species composition. The data is divided into two groups, the aspen sites (n = 24) and the grassland ones (n = 24).")
+              ),
+          conditionalPanel(condition = "input.demo_data == \"NONAME2\"",
+              helpText("PLACE HOLDER FOR MATRIX ECOL 2.")
+              )
+        ),
+
+
 
         hr(),
         ## --------------------
@@ -129,6 +186,33 @@ shinyUI(fluidPage(
           conditionalPanel(condition = "input.scree != \"Uniform\"",
               checkboxInput("proportion_remove", label = "Proportional removal", value = FALSE),
               helpText("Whether to remove data uniformly across each dimensions (untick) or proportional (tick).")
+            ),
+
+          conditionalPanel(condition = "input.space_type == \"Demo\"",
+              checkboxInput("use_demo_groups", label = "Use demo groups", value = FALSE),
+              helpText("Whether to use the groupings from the demo data."),
+
+            conditionalPanel(condition = "input.use_demo_groups == \"true\"",
+
+              conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
+                  helpText("The data is divided into two groups, the stem mammals (n = 54) and crown mammals (n = 52).\n
+                    REF:")
+                  ),
+              conditionalPanel(condition = "input.demo_data == \"Wright 2017\"",
+                  helpText("The data is divided into two groups, crinoids before (n = 16) and after (n = 23) the Ordovician-Silurian extinction (422.5 Mya).\n
+                    REF:")
+                  ),
+              conditionalPanel(condition = "input.demo_data == \"Marcy et al. 2016\"",
+                  helpText("The data is divided into two groups, the genus Megascapheus (n = 225) and the Thomomys (n = 229).")
+                  ),
+              conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
+                  helpText("PLACE HOLDER FOR MATRIX GMM 2.")
+                  ),
+              conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
+                  helpText("The data is divided into two groups, the aspen sites (n = 24) and the grassland ones (n = 24).")
+                  )
+                )
+
             )
 
         )
