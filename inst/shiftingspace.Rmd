@@ -64,10 +64,10 @@ if(!all(c("remove_05.Rda", "rarefy_dim_05.Rda") %in% list.files(DATA_PATH))) {
     ## Run The supplementary material (simulation)
     rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
-# if(!all(c("palaeo.Rda", "gmm.Rda", "ecol.Rda") %in% list.files(DATA_PATH))) {
-#     ## Run The supplementary material
-#     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
-# }
+if(!all(c("palaeo.Rda", "gmm.Rda", "ecol.Rda") %in% list.files(DATA_PATH))) {
+    ## Run The supplementary material
+    rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
+}
 ```
 
 
@@ -392,15 +392,19 @@ Name          | Definition                      | Captures | Origin           | 
 Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
 Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
 Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
-Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
-Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
-Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))`
 Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
 Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
 
 
 
+
+
+<!--
+Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
+Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
+Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))` 
+-->
 
 
 
@@ -411,9 +415,9 @@ Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})
 metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
                     "Volume" = ellipse.volume,
-                    "PoR" = c(prod, ranges),
-                    "SoR" = c(sum, ranges),
-                    "PoV" = c(prod, variances),
+                    # "PoR" = c(prod, ranges),
+                    # "SoR" = c(sum, ranges),
+                    # "PoV" = c(prod, variances),
                     "SoV" = c(sum, variances),
                     # "PoQ" = c(prod, quantiles),
                     # "SoQ" = c(sum, quantiles),
@@ -421,11 +425,11 @@ metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(
                     "av.neighbo" = c(mean, neighbours))
 
 metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
-                  "Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
                   "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
 ## Shorter vector name version (for clarity in the fable)
 name <- gsub("\n", " ", metric_names)
 #"Product of Quantiles", "Sum of Quantiles", 
+#"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
 ```
 
 ```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
@@ -554,7 +558,7 @@ test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
 ```
 
 
-```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3.5, fig.width=3.5}
 ## Making a list of parameters for each mini plot
 plot.param <- list(scaler = 0.5,
                    bg.col = "black",
@@ -624,7 +628,7 @@ disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
 disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)
 ```
 
-```{r fable_results_empirical, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+```{r fable_results_empirical, fig.show='hide', echo=FALSE, fig.height=3.5, fig.width=3.5}
 ## Plotting parameters
 plot.param <- list(cex = 1,
                    col = c("#F7B27E", "#BFE4E3"),
