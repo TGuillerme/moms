@@ -554,7 +554,7 @@ test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
 ```
 
 
-```{r fable_results, fig.show='hide', echo=FALSE, fig.height=1.5, fig.width=1.5}
+```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
 ## Making a list of parameters for each mini plot
 plot.param <- list(scaler = 0.5,
                    bg.col = "black",
@@ -594,12 +594,11 @@ Table caption goes here
 ```{r running_empirical, echo = FALSE}
 ## Loading the data
 palaeo <- load.results("palaeo")
-#gmm <- load.results("gmm")
+gmm <- load.results("gmm")
 ecol <- load.results("ecol")
 
 ## List of spaces
-trait_spaces <- unlist(list(palaeo, palaeo, ecol), recursive = FALSE)
-# trait_spaces <- unlist(list(palaeo, gmm, ecol), recursive = FALSE)
+trait_spaces <- unlist(list(palaeo, gmm, ecol), recursive = FALSE)
 
 ## Measuring space occupancy for all spaces and all metrics
 apply.disparity <- function(space, metrics) {
@@ -625,22 +624,22 @@ disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
 disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)
 ```
 
-```{r fable_results_empirical, fig.show='hide', echo=FALSE, fig.height=1.5, fig.width=1.5}
+```{r fable_results_empirical, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
 ## Plotting parameters
 plot.param <- list(cex = 1,
                    col = c("#F7B27E", "#BFE4E3"),
                    border = c("#F65205", "#3E9CBA"),
-                   na.cex = 10)
+                   na.cex = 3)
 
 ## Looping through each mini plot for every metric
 data_names <- c("Beck and Lee 2014", "Wright 2017", "Marcy et al. 2016",
-                "Somebody", "Somebody", "Somebody")
+                "Somebody", "Jones et al. 2015", "Somebody")
 
 for(dataset in 1:length(data_names)){
     for(metric in 1:length(metric_names)){
         ## Plotting the results
         generate.fable.empirical(disparities[[dataset]][[metric]], disparity_t_test[[dataset]][[metric]],
-                                 precision = 1e-16, plot.param)
+                                 precision = 1e-5, plot.param)
     }
 }
 ```
