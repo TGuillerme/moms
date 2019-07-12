@@ -307,7 +307,7 @@ generate.fable.empirical <- function(data, test, precision, plot.param) {
 #' 
 #' @author Thomas Guillerme
 #' @export
-plot.id <- function(plot.ID, path = "fig.path", resolution = 800) {
+plot.id <- function(plot.ID, path = "fig.path", resolution = 600) {
     type <- ".pdf"
     chain <- "fable_results"
     knitr::include_graphics(path = paste0(opts_chunk$get(path), paste0(chain, "-", plot.ID, type)),
