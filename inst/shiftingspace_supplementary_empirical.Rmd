@@ -17,6 +17,7 @@ if(!require(knitr)) install.packages("knitr"); library(knitr)
 if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
 if(!require(ape)) install.packages("ape"); library(ape)
 if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(!require(geomorph)) install.packages("geomorph"); library(geomorph)
 if(packageVersion("dispRity") < "1.2.4") {
     ## dispRity must be above v1.2.3
     devtools::install_github("TGuillerme/dispRity"); library(dispRity)
@@ -52,22 +53,22 @@ This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to 
 
 ```{r}
 ## Creating the trait-spaces
-beck_traitspace <- Claddis.ordination("../data/matrices/Beck2014.nex", distance = "MORD")
-wright_traitspace <- Claddis.ordination("../data/matrices/Wright2017.nex", distance = "MORD")
+beck_traitspace <- Claddis.ordination("../data/raw/Beck2014.nex", distance = "MORD")
+wright_traitspace <- Claddis.ordination("../data/raw/Wright2017.nex", distance = "MORD")
 ```
 
 For both datasets we created two groups, the crown versus the stem mammals for @beck2014 and the crinoids occuring before and after the Ordovician-Silurian boundary (455-430 million years ago - Mya).
 
 ```{r}
 ## Loading the tree from Beck and Lee 2014
-beck_tree <- read.nexus("../data/groups/Beck2014.tre")
+beck_tree <- read.nexus("../data/raw/Beck2014.tre")
 
 ## Selecting the crown and stem mammals
 groups_beck <- crown.stem(beck_tree)
 # groups_beck <- unlist(list(list("all" = beck_tree$tip.label), groups_beck), recursive = FALSE)
 
 ## Loading the first and last occurence data from Wright 2017
-wright_ages <- read.csv("../data/groups/Wright2017.csv")
+wright_ages <- read.csv("../data/raw/Wright2017.csv")
 
 ## Separating taxa that went extinct half way through the Ordovician-Silurian extinction (442.5 Mya)
 groups_wright <- ifelse(wright_ages$LAD < 422.5, TRUE, FALSE)
@@ -87,42 +88,71 @@ save.results(palaeo)
 
 ### Geometric morphometric (landmark) data
 
-For the geometric morphometric data (landmark datasets) we used...
+For the continuous geometric morphometric data, we performed a generalised Procrustes analysis [@adams2013geomorph], using 2D [@marcy2016] or 3D @@@ landmark coordinates sets (with semi-landmarks, i.e. sliders).
+We then ordinated the resulted Procrustes superimposed data using a principal component analysis [PCA; @hotelling1933] and divided the data into two groups for each dataset (see below and in the main text).
 
-```{r, eval = FALSE}
-## Using the geomorph package
-if(!require(geomorph)) install.packages("geomorph"); library(geomorph)
+#### Marcy et al. 2016
 
-## Loading the landmark data
+```{r}
+## Read in TPS coordinates
+tps_data <- readland.tps("../data/raw/Marcy2016.TPS", specID = "imageID", warnmsg = FALSE)
 
-## Performing a Procrustes superimposition
- <- geomorph::gpagen(plethodon$land, PrinAxes = FALSE, print.progress = FALSE)
+## Remove duplicated points for ventral crania semi-landmarks (artefact of the landmarking process)
+tps_data <- tps_data[-c(1, 2, 26, 29, 30, 41, 42, 45, 46, 51, 58, 60, 61, 68, 69, 78, 79, 85), , ]
 
-## Ordinating the data
- <- geomorph.ordination()
+## Read in semilandmark definitions from Marcy et al 2016
+sliders <- read.csv("../data/raw/Marcy2016.csv", header = TRUE, colClasses = "integer")
 
+## Get the specimens names
+sp_names <- strsplit(names(tps_data[1, 1, ]), "_")
+
+## Find non-unique specimens (they have a suffix, i.e. 7 elements)
+duplicated <- ifelse(unlist(lapply(sp_names, length)) == 7, TRUE, FALSE)
+
+## Remove duplicated specimens
+tps_data <- tps_data[, , !duplicated]
+sp_names <- sp_names[!duplicated]
+```
+##### Groups
+
+We divided the dataset from @marcy2016 into two groups corresponding to the two genera: *Thomomys* and *Megascapheus*.
+
+```{r}
+## Selecting the generas (first element in the name list)
+subgenera <- unlist(lapply(sp_names, function(x) x[[1]]))
+
+## Renaming the generas
+subgenera <- as.factor(ifelse(subgenera == "T", "Thomomys", "Megascapheus"))
+
+## Running the Procrustes superimposition
+marcy_data <- geomorph.data.frame(gpagen(tps_data, Proj = TRUE, ProcD = TRUE, curves = sliders,
+                                         print.progress = FALSE),
+                                  subgenera)
 ```
 
-```{r, eval = FALSE}
-## Making the groups
+
+
+```{r, eval = TRUE}
+## Creating the trait space
+marcy_traitspace <- dispRity::geomorph.ordination(marcy_data)
 
 ## Saving the data for the main analysis
-gmm <- list("beck" = beck_traitspace, "wright" = wright_traitspace)
+gmm <- list("marcy" = marcy_traitspace, "noname" = marcy_traitspace)
 save.results(gmm)
 ```
 
 ### Ecological (continuous) data
 
-### Jones et al. 2015 data
+#### Jones et al. 2015 data
 
-For the @jones2015 dataset, we converted the spreadsheet "aspen & grass richness & abund" from the data from @jones2015 available at @jones2015data into a .csv file (now available in `/data/matrices`).
+For the @jones2015 dataset, we converted the spreadsheet "aspen & grass richness & abund" from the data from @jones2015 available at @jones2015data into a .csv file (now available in `/data/raw`).
 We then selected only the `wholeplot` entries and separated the studied plot between `aspen` and `grassland` and converted the species presence data into a presence/absence matrix.
 From this matrix we calculated a Jaccard distance matrix [@oksanen2007vegan] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ field sites. 
 
 ```{r, eval = TRUE}
 ## Reading the community composition data from Jones et al 2015
-jones_communities <- read.csv("../data/matrices/Jones2015.csv")
+jones_communities <- read.csv("../data/raw/Jones2015.csv")
 
 ## Selecting only the whole plots and the plot number, habitat and species
 jones_whole_com <- jones_communities[which(jones_communities$mptype == "wholeplot"), c(1,2,3)]
@@ -153,6 +183,16 @@ distance_matrix <- as.matrix(vegan::vegdist(community, method = "jaccard"))
 jones_traitspace <- stats::cmdscale(distance_matrix,
                                     k = ncol(distance_matrix)- 1, add = TRUE)$points
 ```
+
+<!-- ### Healy et al. 2019 data
+
+
+-We log10 all variables and z-transformed by mean centering and dividing by the standard deviation prior to analysis
+
+For each of the life history traits included used the residuals from the respective regressions, as described above, where we controlled for variation relating to mass, matrix dimension, phylogeny and population.
+
+Life history trait ~ fixed = log10(mass) + log10(matrix dimension)
+                     Random = phylogeny + species -->
 
 ### Making the ecological trait-space groups
 
