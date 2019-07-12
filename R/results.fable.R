@@ -178,11 +178,11 @@ generate.fable.empirical <- function(data, test, precision, plot.param) {
     ## Scale the data
     data <- scale.vals(data)
 
-    if(all(unlist(data$disparity) < precision)) {
+    if(any(is.nan(unlist(data$disparity))) || all(unlist(data$disparity) < precision)) {
         ## Empty plot
         par(bty = "n")
         plot(NULL, ylim = c(0,1), xlim = c(0,1), xaxt = "n", yaxt = "n", xlab = "", ylab = "")
-        text(0.5, 0.5, "NA", cex = na.cex)
+        text(0.5, 0.5, "NA", cex = plot.param$na.cex)
     }  else {
         ## Setting the margins
         par(bty = "l", mar = c(1, 3, 1, 1))
