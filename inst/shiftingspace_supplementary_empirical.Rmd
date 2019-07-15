@@ -65,7 +65,11 @@ beck_tree <- read.nexus("../data/raw/Beck2014.tre")
 
 ## Selecting the crown and stem mammals
 groups_beck <- crown.stem(beck_tree)
-# groups_beck <- unlist(list(list("all" = beck_tree$tip.label), groups_beck), recursive = FALSE)
+
+## Adding the four stem mammals not in the tree
+missing_stem <- rownames(beck_traitspace)[which(is.na(match(rownames(beck_traitspace), 
+                                                            beck_tree$tip.label)))]
+groups_beck$stem <- c(groups_beck$stem, missing_stem)
 
 ## Loading the first and last occurence data from Wright 2017
 wright_ages <- read.csv("../data/raw/Wright2017.csv")
@@ -198,7 +202,7 @@ Life history trait ~ fixed = log10(mass) + log10(matrix dimension)
 
 We separated the @jones2015 dataset into `aspen` and `grassland` groups.
 
-```{r, eval = FALSE}
+```{r}
 ## Making the groups
 jones_groups <- list("aspen" = grep("aspen", rownames(jones_traitspace)),
                      "grassland" = grep("grassland", rownames(jones_traitspace)))
