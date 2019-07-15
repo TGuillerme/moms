@@ -147,21 +147,23 @@ shinyUI(fluidPage(
                                     ), selected = "Beck and Lee 2014"),
 
           conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
-              helpText("A palaeobiology study of mammals. The data is a 105 dimensions ordination (PCO) of the distances between 106 mammals based on discrete morphological characters. The data is divided into two groups, the stem mammals (n = 54) and crown mammals (n = 52).\n
-                REF:")
+              helpText("A palaeobiology study of mammals. The data is a 105 dimensions ordination (PCO) of the distances between 106 mammals based on discrete morphological characters.
+                Beck, R. M., & Lee, M. S. (2014). Ancient dates or accelerated rates? Morphological clocks and the antiquity of placental mammals. Proceedings of the Royal Society B: Biological Sciences, 281(1793), 20141278.")
               ),
           conditionalPanel(condition = "input.demo_data == \"Wright 2017\"",
-              helpText("A palaeobiology study of crinoids. The data is a 41 dimensions ordination (PCO) of the distances between 42 crinoids based on discrete morphological characters. The data is divided into two groups, crinoids before (n = 16) and after (n = 23) the Ordovician-Silurian extinction (422.5 Mya).\n
-                REF:")
+              helpText("A palaeobiology study of crinoids. The data is a 41 dimensions ordination (PCO) of the distances between 42 crinoids based on discrete morphological characters.
+                Wright, D. F. (2017). Bayesian estimation of fossil phylogenies and the evolution of early to middle Paleozoic crinoids (Echinodermata). Journal of Paleontology, 91(4), 799-814.")
               ),
           conditionalPanel(condition = "input.demo_data == \"Marcy et al. 2016\"",
-              helpText("A geometric morphometric study of gophers (rodents). The data is a 134 dimensions ordination (PCA) the Procrustes superimposition of landmarks from 454 gopher skulls. The data is divided into two groups, the genus Megascapheus (n = 225) and the Thomomys (n = 229).")
+              helpText("A geometric morphometric study of gophers (rodents). The data is a 134 dimensions ordination (PCA) the Procrustes superimposition of landmarks from 454 gopher skulls.
+                Marcy, A. E., Hadly, E. A., Sherratt, E., Garland, K., & Weisbecker, V. (2016). Getting a head in hard soils: convergent skull evolution and divergent allometric patterns explain shape variation in a highly diverse genus of pocket gophers (Thomomys). BMC evolutionary biology, 16(1), 207.")
               ),
           conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
               helpText("PLACE HOLDER FOR MATRIX GMM 2.")
               ),
           conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
-              helpText("An ecological landscape study. The data is a 47 dimensions ordination (PCO) of the Jaccard distances between 48 field sites based on species composition. The data is divided into two groups, the aspen sites (n = 24) and the grassland ones (n = 24).")
+              helpText("An ecological landscape study. The data is a 47 dimensions ordination (PCO) of the Jaccard distances between 48 field sites based on species composition.
+                Jones, N. T., Germain, R. M., Grainger, T. N., Hall, A. M., Baldwin, L., & Gilbert, B. (2015). Dispersal mode mediates the effect of patch size and patch connectivity on metacommunity diversity. Journal of Ecology, 103(4), 935-944.")
               ),
           conditionalPanel(condition = "input.demo_data == \"NONAME2\"",
               helpText("PLACE HOLDER FOR MATRIX ECOL 2.")

@@ -1,9 +1,9 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$space_type <- "Demo"
+# input$space_type <- "User"
 # input$demo_data <- "Beck and Lee 2014"
-# input$n_dimensions <- 3
+# input$n_dimensions <- 2
 # input$n_elements <- 300
 # input$distributions <- "Normal"
 # input$rnorm_mean <- 0
@@ -145,8 +145,8 @@ get.space <- function(input, args.only = FALSE){
             space_args$scree <- scree#scree/sum(scree)
         },
         "LogNormal"  = {
-            scree <- c(1, cumprod(rep(1/input$n_dimensions, input$n_dimensions)))[-input$n_dimensions+1]
-            space_args$scree <- scree#scree/sum(scree)
+            scree <- cumprod(rep(1/2, input$n_dimensions))
+            space_args$scree <- scree/max(scree)
         }
     )
 

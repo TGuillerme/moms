@@ -25,18 +25,16 @@ shinyServer(
             ## ~~~~~~~~~~
             space <- get.space(input)
 
-            ## Update the dimensions if matrix is input
-            # if(input$space_type == "In") {
-            #     shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
-            #     shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
-            # }
-            ## Profiling toggle off
+            ## Update the dimensions if matrix is input/demo
+            if(input$space_type != "User") {
+                shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
+                shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
+            }
 
             ## Update the matrix input
-            if(input$n_dimensions != nrow(input$cor.matrix) && input$n_dimensions < 15) {
-                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(space))
+            if(input$space_type == "User") {
+                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
             }
-            ## Profiling toggle off
 
             ## Return error
             if(class(space) == "character") {
@@ -86,6 +84,10 @@ shinyServer(
                 defaults$xlim <- defaults$ylim <- range(space[, c(input$axis_1, input$axis_2)])
             }
 
+            ## Get the variance per axis
+            all_variance <- apply(space, 2, var)
+            var_axis_1 <- round(var(space[, (input$axis_1)])/sum(all_variance)*100, 2)
+            var_axis_2 <- round(var(space[, (input$axis_2)])/sum(all_variance)*100, 2)
 
             ## colours
             switch(input$color_scheme,
@@ -112,8 +114,8 @@ shinyServer(
                     ylim = defaults$ylim,
                     col = defaults$palette[[1]],
                     main = NULL,
-                    xlab = paste(defaults$lab, input$axis_1),
-                    ylab = paste(defaults$lab, input$axis_2),
+                    xlab = paste(defaults$lab, input$axis_1, paste0("(",var_axis_1,"%)")),
+                    ylab = paste(defaults$lab, input$axis_2, paste0("(",var_axis_2,"%)")),
                     cex = defaults$cex)
 
             } else {
@@ -140,8 +142,8 @@ shinyServer(
                     ylim = defaults$ylim,
                     col = defaults$palette[[2]],
                     main = NULL,
-                    xlab = paste(defaults$lab, input$axis_1),
-                    ylab = paste(defaults$lab, input$axis_2),
+                    xlab = paste(defaults$lab, input$axis_1, paste0("(",var_axis_1,"%)")),
+                    ylab = paste(defaults$lab, input$axis_2, paste0("(",var_axis_1,"%)")),
                     cex = defaults$cex)
 
                 ## Plotting the points
