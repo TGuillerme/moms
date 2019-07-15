@@ -190,29 +190,31 @@ shinyUI(fluidPage(
 
           conditionalPanel(condition = "input.space_type == \"Demo\"",
               checkboxInput("use_demo_groups", label = "Use demo groups", value = FALSE),
-              helpText("Whether to use the groupings from the demo data."),
 
-            conditionalPanel(condition = "input.use_demo_groups == \"true\"",
+            conditionalPanel(condition = "input.use_demo_groups == true",
 
               conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
-                  helpText("The data is divided into two groups, the stem mammals (n = 54) and crown mammals (n = 52).\n
-                    REF:")
+                  helpText("The data is divided into two groups, the stem and crown mammals.")
                   ),
               conditionalPanel(condition = "input.demo_data == \"Wright 2017\"",
-                  helpText("The data is divided into two groups, crinoids before (n = 16) and after (n = 23) the Ordovician-Silurian extinction (422.5 Mya).\n
-                    REF:")
+                  helpText("The data is divided into two groups, crinoids before and after the Ordovician-Silurian extinction (422.5 Mya).")
                   ),
               conditionalPanel(condition = "input.demo_data == \"Marcy et al. 2016\"",
-                  helpText("The data is divided into two groups, the genus Megascapheus (n = 225) and the Thomomys (n = 229).")
+                  helpText("The data is divided into two groups, the genera Megascapheus and Thomomys.")
                   ),
               conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
                   helpText("PLACE HOLDER FOR MATRIX GMM 2.")
                   ),
               conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
-                  helpText("The data is divided into two groups, the aspen sites (n = 24) and the grassland ones (n = 24).")
+                  helpText("The data is divided into two groups, the aspen grassland sites.")
+                  ),
+              conditionalPanel(condition = "input.demo_data == \"NONAME2\"",
+                  helpText("PLACE HOLDER FOR MATRIX ECOL 2.")
                   )
-                )
-
+                ),
+            conditionalPanel(condition = "input.use_demo_groups == false",
+              helpText("Tick to use the groupings from the demo data.")
+              )
             )
 
         )

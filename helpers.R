@@ -1,6 +1,8 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
+# input$space_type <- "Demo"
+# input$demo_data <- "Beck and Lee 2014"
 # input$n_dimensions <- 3
 # input$n_elements <- 300
 # input$distributions <- "Normal"
@@ -12,15 +14,18 @@
 
 
 # input$reduce <- "Limit"
-# input$remove <- 0.5
+# input$remove <- 0.4
 # input$proportion_remove <- FALSE
 # input$inverse_remove <- FALSE
+# input$use_demo_groups <- FALSE
 
 # input$metric_choice <- "User"
 # input$metric1 <- "Median distance from centre (Manhattan)"
 # input$metric_specific1 <- "mean"
-# input$metric_specific2 <- "neigbhours"
+# input$metric_specific2 <- "neighbours"
 # input$metric_arguments <- FALSE
+# input$show_metric <- FALSE
+# input$edit_metric <- FALSE
 
 # input$refresh <- 0
 # input$axis_2 <- 2

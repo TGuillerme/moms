@@ -26,15 +26,15 @@ shinyServer(
             space <- get.space(input)
 
             ## Update the dimensions if matrix is input
-            if(input$space_type != "User") {
-                shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
-                shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
-            }
+            # if(input$space_type == "In") {
+            #     shiny::updateNumericInput(session, "n_dimensions", max = ncol(space), value = ncol(space))
+            #     shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
+            # }
             ## Profiling toggle off
 
             ## Update the matrix input
             if(input$n_dimensions != nrow(input$cor.matrix) && input$n_dimensions < 15) {
-                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
+                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(space))
             }
             ## Profiling toggle off
 
@@ -105,7 +105,7 @@ shinyServer(
 
 
             ## Background plot
-            if(input$reduce == "None") {            
+            if(input$reduce == "None") {
                 plot(space[, c(input$axis_1, input$axis_2)],
                     pch = defaults$pch,
                     xlim = defaults$xlim,
@@ -119,7 +119,17 @@ shinyServer(
             } else {
                 ## Selecting which points to remove
                 if(input$inverse_remove) {
-                    reduced_space_points <- !reduced_space
+                    if(input$space_type != "Demo") {
+                        ## Switch reduce space only if not demo data
+                        reduced_space_points <- !reduced_space
+                    } else {
+                        ## If demo data, check if groups are demo or not
+                        if(input$use_demo_groups == TRUE) {
+                            reduced_space_points <- reduced_space
+                        } else {
+                            reduced_space_points <- !reduced_space
+                        }
+                    }
                 } else {
                     reduced_space_points <- reduced_space
                 }
@@ -139,8 +149,26 @@ shinyServer(
                        pch = defaults$pch,
                        col = defaults$palette[[1]],
                        cex = defaults$cex)
-            }
 
+                ## Add the legend for the default spaces
+                if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
+                    ## Select the dataset names
+                    switch(input$demo_data,
+                           "Beck and Lee 2014"  = {dataset <- 1},
+                           "Wright 2017"        = {dataset <- 2},
+                           "Marcy et al. 2016"  = {dataset <- 3},
+                           "NONAME1"            = {dataset <- 4},
+                           "Jones et al. 2015"  = {dataset <- 5},
+                           "NONAME2"            = {dataset <- 6}
+                           )
+                    subset_names <- names(demo_data[[dataset]]$subsets)
+                
+                    ## Get the legend text
+                    legend_text <- c(paste(subset_names[1], paste0("(", length(which(reduced_space_points)),")")),
+                                     paste(subset_names[2], paste0("(", length(which(!reduced_space_points)),")")))
+                    legend("topleft", legend = legend_text, col = c(defaults$palette[[1]][1], defaults$palette[[2]][1]), pch = defaults$pch, cex = defaults$cex)
+                }
+            }
 
             ## ~~~~~~~~~~
             ## Disparity
@@ -148,8 +176,9 @@ shinyServer(
 
             ## Some dummy table
             output$table_out <- renderTable({
+
                 ## Name the elements
-                rownames(space) <- 1:input$n_elements
+                rownames(space) <- 1:nrow(space)
 
                 ## Make the disparity object
                 if(input$reduce == "None") {
@@ -157,9 +186,24 @@ shinyServer(
                     groups <- space
                 } else {
                     ## Custom subsets
-                    groups <- custom.subsets(space,
-                                    group = list("Full space" = rownames(space),
-                                                 "Reduced space" = rownames(space)[reduced_space_points]))
+
+                    if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
+                        ## Select the demo dispRity object
+                        switch(input$demo_data,
+                               "Beck and Lee 2014"  = {dataset <- 1},
+                               "Wright 2017"        = {dataset <- 2},
+                               "Marcy et al. 2016"  = {dataset <- 3},
+                               "NONAME1"            = {dataset <- 4},
+                               "Jones et al. 2015"  = {dataset <- 5},
+                               "NONAME2"            = {dataset <- 6}
+                               )
+                        groups <- demo_data[[dataset]]
+                    } else {
+                        ## Create dispRity groups
+                        groups <- custom.subsets(space,
+                                        group = list("Full space" = rownames(space),
+                                                     "Reduced space" = rownames(space)[reduced_space_points]))
+                    }
                 }
 
                 ## Handling the disparity metrics
@@ -181,18 +225,23 @@ shinyServer(
                 colnames(table_out)[3] <- metrics_handle$name
 
                 if(input$reduce != "None") {
-                    ## Get the proportional change
-                    proportional_change <- table_out[2,3]/table_out[1,3]*100-100
+                    ## Add the change column (if groups are not pre-made)
+                    if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
+                        ## Print the results
+                        return(table_out)
+                    } else {
+                        ## Get the proportional change
+                        proportional_change <- table_out[2,3]/table_out[1,3]*100-100
 
-                    ## Adding the proportional change
-                    table_out <- cbind(table_out, c("", paste(round(proportional_change, 2), "%")))
-                    ## Change the column name
-                    colnames(table_out)[4] <- "change"
+                        ## Adding the proportional change
+                        table_out <- cbind(table_out, c("", paste(round(proportional_change, 2), "%")))
+                        ## Change the column name
+                        colnames(table_out)[4] <- "change"
+
+                        ## Print the output
+                        return(table_out[,-1])
+                    }
                 }
-
-                ## Print output
-                table_out[,-1]
-
             })
             # ~~~~~~~~~
             # Code snippet
