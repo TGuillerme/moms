@@ -205,6 +205,10 @@ In other words, such metric can make it difficult to determine whether all the o
 This weakness has been acknowledged in palaeoecology for example for the product of ranges metric (Table 2 - the exact approximation of the hypercube) which is highly sensitive to outliers [@Butler2012] or in ecology with the use of convex-hypervolumes.
 However, this can be easily alleviated by using lower confidence intervals (e.g. by only at 95% of the data; @donohue2013 or by using the variance instead of the range; @ciampaglio2001).
 
+
+<!-- Add that @villéger2008 notes three distinctions: volume (FRic Fig.1b); minimum tree spanning (MST Fig.1c); -->
+
+
 #### 2. The density
 
 Density metrics measure the distribution of a group in the trait-space.
@@ -280,6 +284,27 @@ As expected, we found no one-size-fits-all metric but provide guidance on which 
 We also propose a new user friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace occupancy on user defined disparity metrics: [`moms`]().
 
 
+
+
+
+
+
+
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- METHODS SECTION -->
+<!--  -->
+<!--  -->
+<!--  -->
+
+
+
+
+
+
+
+
 # Methods
 
 We tested the effect of changes in trait-spaces on space occupancy (see [Shifting space](##shifting-spaces)) as a function of spaces dimensions and distributions on the seven@@@ occupancy metrics.
@@ -290,17 +315,27 @@ To so, we preformed these following steps (explained in more details below):
 3. We measured occupancy on the resulted transformed spaces using seven@@@ different metrics
 4. We applied the same space occupancy metrics to six@@@ empirical datasets from the literature (covering a range of disciplines and a range of dataset properties).
 
+| Test | Methods section | Results figure
+|------|-----------------|------------------
+| How do the metrics compare to each other? | Metrics comparisons       | FigX
+| How are they affected by dimensionality?  | Effect of dimensionality  | FigX+1
+| How are they affected by space shifting?  | Space shifting            | FigX+2
+| How is that reflected in the real world?  | Empirical examples        | FigX+3
+
+
 ## Generating spaces
 
 We generated nine spaces using the following parameters:
 
 | space name | size  | distribution(s)                | dimensions variance | correlation |
 |------------|-------|--------------------------------|---------------------|-------------|
-| Uniform2   |200*2  | Uniform (min = -0.5, max = 0.5)| Constant            | none        |
+| Uniform3   |200*3  | Uniform (min = -0.5, max = 0.5)| Constant            | none        |
+| Uniform15  |200*15 | Uniform                        | Constant            | none        |
 | Uniform50  |200*50 | Uniform                        | Constant            | none        |
 | Uniform150 |200*150| Uniform                        | Constant            | none        |
 | Uniform50c |200*50 | Uniform                        | Constant            | Random (between 0.1 and 0.9) |
-| Normal2    |200*2  | Normal  (mean = 0, sd = 1)     | Constant            | none        |
+| Normal3    |200*3  | Normal  (mean = 0, sd = 1)     | Constant            | none        |
+| Normal15   |200*15 | Normal                         | Constant            | none        |
 | Normal50   |200*50 | Normal                         | Constant            | none        |
 | Normal150  |200*150| Normal                         | Constant            | none        |
 | Normal50c  |200*50 | Normal                         | Constant            | Random (between 0.1 and 0.9) |
@@ -309,12 +344,157 @@ We generated nine spaces using the following parameters:
 | PCO-like   |200*50 | Normal                         | Normal              | none        |
 Table 1: different simulated space distributions.
 
-The different in space sizes (200 $\times$ 2, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of trait-space dimensions in literature: "low-dimension" spaces ($<10$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
+The different in space sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of trait-space dimensions in literature: "low-dimension" spaces ($<15$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
 We used a different range of distributions (uniform, normal or random) to test the effect of observation distributions on the metrics.
 It can be assumed that many trait-spaces are normally distributed [e.g. @diaz2016, @cooney2017, @healy2019] albeit with some varying levels of correlation [e.g. @jones2015, @wright2017] reflected in the correlation parameter.
 For simplification, in the seven first spaces, we used a constant variance per dimensions (i.e. all dimensions have a similar variance) but we used a decreasing variance for the "PCA-like" (Principal Component Analysis) and "PCO-like" (Principal Coordinates Analysis) spaces to mimic the ranking of variance in ordination technique.
 Empirically variance tends to decrease log-normally in PCAs [e.g. @marcy2016, healy2019] and more normally in PCOs [e.g.  @close2015, @wright2017].
 
+## Spatial occupancy metrics
+
+We then measured seven different metrics on the resulting transformed spaces:
+
+Name          | Definition                      | Captures | Origin           | `dispRity` function
+:-------------|:-------------------------------:|----------|------------------|------|
+Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
+Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
+Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
+Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
+Median distance from centroid[^1] |  median($\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}$) | Volume and density | | | |
+Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
+Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
+
+[^1]: 
+This is equivalent to the functional diversity index.
+
+
+
+<!-- TODO: add a series of metrics corresponding to the ecology metrics? -->
+
+
+<!--
+Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
+Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
+Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))` 
+-->
+
+
+
+
+
+```{r, all_metric, echo = FALSE}
+
+## Small metrics list (for testing)
+metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+                    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+                    "av.displac" = c(mean, displacements),
+                    "av.neighbo" = c(mean, neighbours))
+
+
+## All metrics (exploration)
+# metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+#                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+#                     "Volume" = ellipse.volume,
+#                     # "PoR" = c(prod, ranges),
+#                     # "SoR" = c(sum, ranges),
+#                     # "PoV" = c(prod, variances),
+#                     "SoV" = c(sum, variances),
+#                     # "PoQ" = c(prod, quantiles),
+#                     # "SoQ" = c(sum, quantiles),
+#                     "av.displac" = c(mean, displacements),
+#                     "av.neighbo" = c(mean, neighbours))
+
+# metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
+#                   "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
+
+metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Mean\ndisplacement",
+                  "Mean nearest\nneighbours distance")
+
+
+## Shorter vector name version (for clarity in the fable)
+name <- gsub("\n", " ", metric_names)
+#"Product of Quantiles", "Sum of Quantiles", 
+#"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
+```
+
+```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
+complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
+                       centroid = 0, method = "manhattan"))
+```
+
+
+All metrics are scaled between 0 and 1 for comparisons.
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- COMPARING METRICS -->
+<!--  -->
+<!--  -->
+<!--  -->
+## Metrics comparisons
+
+
+laliberté/Villéger style
+
+
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- EFFECT OF DIMENSIONALITY -->
+<!--  -->
+<!--  -->
+<!--  -->
+## Effect of dimensionality
+
+> VW: I understand teh below but only just and it is hard to read. I can help simplify.
+
+Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
+This is link to the fact that the more dimensions, the more sparse the data becomes.
+In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
+Thus this probability decreases as a product of the number of dimensions.
+This "curse" can make the interpretation of high dimensional data counter-intuitive.
+
+For example, the product of range is expected to decrease with the number of dimensions, regardless of the number of elements on each dimensions.
+This is counter-intuitive because:
+1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. increasing the number of observations on one dimension can only increase the range, never decrease it);
+2) second, products are a classical example of the "curse" where multiplying a higher number of dimensions with a non-null probability of having a range of zero will irremediably result in 0 (i.e. an infinite number of positive values by 0 is still 0).
+
+
+```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
+set.seed(42)
+## Make a 50 dimensions space
+space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
+
+## Function wrappers
+disparity <- function(metric, dimensions, space) {
+    fast.disparity(group = 1:nrow(space), space = space, metric = metric, rare.dim = dimensions)
+}
+lapply.fun <- function(dimensions, metrics_list, space) {
+    unlist(lapply(metrics_list, disparity, dimensions = dimensions, space = space))
+}
+
+## Curse results
+curse_results <- sapply(2:50, lapply.fun, metrics_list = metrics_list, space = space)
+curse_results <- apply(curse_results, 1, function(x) return(x/max(x)))
+
+## Empty plot
+hue_colors <- default.palette(ncol(curse_results))
+par(bty = "n")
+plot(NULL, xlim = c(2,50), ylim = c(0,1),
+xlab = "Dimensions (decreasing variance)",
+ylab = "Scaled disparity")
+for(metric in 1:ncol(curse_results)) {
+    lines(curse_results[, metric], col = hue_colors[metric])
+}
+legend("bottomleft", metric_names, lty = 1, col = hue_colors)
+```
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- SHIFTING SPACES -->
+<!--  -->
+<!--  -->
+<!--  -->
 
 ## Shifting spaces {#shifting-spaces}
 
@@ -382,112 +562,15 @@ remove = list("random" = random_rm,
 
 We repeated each of the data generation process (generating the space and reducing it) 20 times to obtain variance on the simulated parameters.
 
-## Disparity metrics
 
-We then measured seven different metrics on the resulting transformed spaces:
-
-Name          | Definition                      | Captures | Origin           | `dispRity` function
-:-------------|:-------------------------------:|----------|------------------|------|
-Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Density and Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
-Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Density and Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
-Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
-Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
-Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | `mean(dispRity::displacements(matrix))`
-Average nearest neighbour distance |$min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | `mean(dispRity::neighbours(matrix))`
-
-
-
-
-
-<!--
-Product of ranges | $\prod_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
-Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
-Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))` 
--->
-
-
-
-
-
-```{r, all_metric, echo = FALSE}
-## All metrics (exploration)
-metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-                    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-                    "Volume" = ellipse.volume,
-                    # "PoR" = c(prod, ranges),
-                    # "SoR" = c(sum, ranges),
-                    # "PoV" = c(prod, variances),
-                    "SoV" = c(sum, variances),
-                    # "PoQ" = c(prod, quantiles),
-                    # "SoQ" = c(sum, quantiles),
-                    "av.displac" = c(mean, displacements),
-                    "av.neighbo" = c(mean, neighbours))
-
-metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
-                  "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
-## Shorter vector name version (for clarity in the fable)
-name <- gsub("\n", " ", metric_names)
-#"Product of Quantiles", "Sum of Quantiles", 
-#"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
-```
-
-```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
-complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
-                       centroid = 0, method = "manhattan"))
-```
-
-## Effect of dimensionality
-
-> VW: I understand teh below but only just and it is hard to read. I can help simplify.
-
-Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
-This is link to the fact that the more dimensions, the more sparse the data becomes.
-In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
-Thus this probability decreases as a product of the number of dimensions.
-This "curse" can make the interpretation of high dimensional data counter-intuitive.
-
-For example, the product of range is expected to decrease with the number of dimensions, regardless of the number of elements on each dimensions.
-This is counter-intuitive because:
-1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. increasing the number of observations on one dimension can only increase the range, never decrease it);
-2) second, products are a classical example of the "curse" where multiplying a higher number of dimensions with a non-null probability of having a range of zero will irremediably result in 0 (i.e. an infinite number of positive values by 0 is still 0).
-
-
-```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
-set.seed(42)
-## Make a 50 dimensions space
-space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
-
-## Function wrappers
-disparity <- function(metric, dimensions, space) {
-    fast.disparity(group = 1:nrow(space), space = space, metric = metric, rare.dim = dimensions)
-}
-lapply.fun <- function(dimensions, metrics_list, space) {
-    unlist(lapply(metrics_list, disparity, dimensions = dimensions, space = space))
-}
-
-## Curse results
-curse_results <- sapply(2:50, lapply.fun, metrics_list = metrics_list, space = space)
-curse_results <- apply(curse_results, 1, function(x) return(x/max(x)))
-
-## Empty plot
-hue_colors <- default.palette(ncol(curse_results))
-par(bty = "n")
-plot(NULL, xlim = c(2,50), ylim = c(0,1),
-xlab = "Dimensions (decreasing variance)",
-ylab = "Scaled disparity")
-for(metric in 1:ncol(curse_results)) {
-    lines(curse_results[, metric], col = hue_colors[metric])
-}
-legend("bottomleft", metric_names, lty = 1, col = hue_colors)
-```
-
-## Measuring the effect of space reduction, distribution and dimensionality on the metric
+## What is the effect of changing the space?
 
 ### Scaling disparity
 
 To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non reduced space for each dimension distributions or number of dimensions.
 To do so, we subtracted the observed disparity with no space reduction (i.e. base disparity) to all the disparity measurements of the reduced spaces and then divided it by the resulting maximum observed disparity.
 This way, our disparity metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the disparity metric value.
+
 
 ### Measuring the effect of the metric
 
@@ -506,7 +589,13 @@ TODO: report the full tests
 
 > VW:Here or perhaps in the results, I think there needs to be an explicit expectation of what "good" behaviour is for each metric. Something like an expectation - for the disparity metric to work, what should it do? E.g. If you apply the "limit" scenario, the squared distance measure is expected to go down for the black dots and up for the grey dots. 
 
-
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- EMPIRICAL EXAMPLES -->
+<!--  -->
+<!--  -->
+<!--  -->
 ## Empirical examples
 
 We analysed the effect of the different space occupancy metrics on six different studies from palaeontology, geometric morphometrics, and ecology to cover a broad representative view of fields using trait-spaces analysis.
@@ -534,6 +623,27 @@ We re-analised the data from the original studies in three different ways to obt
 
 Each procedure is described in more details in the supplementary materials.
 <!-- TODO: vignette to generate the trait-spaces -->
+
+
+
+
+
+
+
+
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- RESULTS SECTION -->
+<!--  -->
+<!--  -->
+<!--  -->
+
+
+
+
+
+
 
 
 # Results
@@ -695,6 +805,25 @@ Some table caption goes here
 
 
 
+
+
+
+
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- DISCUSSION SECTION -->
+<!--  -->
+<!--  -->
+<!--  -->
+
+
+
+
+
+
+
+
 # Discussion
 
 
@@ -721,6 +850,13 @@ Some table caption goes here
 * Data not simulated using evolutionary models (TODO: maybe TODO?)
 * Response to reduction is often more specific to distribution/dimensions/reduction for each metric and these fine differences are not displayed here.
 *
+
+## Suggestions
+
+* Measure multiple aspects of multidimensional space occupancy
+* Use a metric that will best fit the biological question
+* Don't name metrics as the biological aspect they are approximating (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids). We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the same but named differently and used for approximating different things.
+
 
 # Conclusion
 
