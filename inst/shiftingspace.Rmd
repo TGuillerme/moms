@@ -58,7 +58,7 @@ default.palette <- function(n) {
 DATA_PATH <- "../data/processed/"
 
 ## Checking whether the data exists
-if(!all(c("remove_05.Rda", "rarefy_dim_05.Rda") %in% list.files(DATA_PATH))) {
+if(!all(c("remove_05.Rda") %in% list.files(DATA_PATH))) {
     ## Run The supplementary material (simulation)
     rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
@@ -383,7 +383,6 @@ Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | 
 
 
 ```{r, all_metric, echo = FALSE}
-
 ## Small metrics list (for testing)
 metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
@@ -651,20 +650,51 @@ Each procedure is described in more details in the supplementary materials.
 ```{r loading_results, echo = FALSE}
 ## Loading the results
 remove_05 <- load.results("remove_05")
-rarefy_dim_05 <- load.results("rarefy_dim_05")
 ```
-
 ```{r running_tests, echo = FALSE}
 ## Anova function
 anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
 
 ## Running the tests
-test_space05 <- test.metrics(remove_05, test = anova.fun, scale = TRUE)
-test_raref05 <- test.metrics(rarefy_dim_05, test = anova.fun, scale = TRUE)
-
-#TODO: Generate the aov tables in the supplementary
-
+all_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE)
+all_dim_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150",
+                                  "normal3", "normal15", "normal50", "normal100", "normal150"))
+dim_unif_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150"))
+dim_norm_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                      factors = c("normal3", "normal15", "normal50", "normal100", "normal150"))
+space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                              factors = c("uniform50", "uniform50c", "normal50", "normal50c",
+                                          "random50", "pca_like", "pco_like"))
 ```
+
+## Metrics comparisons 
+
+```{r fig_metric_correlation, echo = FALSE, fig.height = 6, fig.width = 6, results = 'hide', fig.cap = paste("Figure @@@: correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
+
+## Adding proper names
+results_pairwise <- remove_05
+names(results_pairwise[[1]]) <- metric_names
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+## Effect of dimensionality
+
+```{r fig_metric_dimensionality, eval=FALSE, echo = FALSE, fig.height = 6, fig.width = 6, results = 'hide', fig.cap = paste("Figure @@@: correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
+
+## Adding proper names
+results_pairwise <- remove_05
+names(results_pairwise[[1]]) <- metric_names
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+
+## Space shifting
 
 
 ```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3.5, fig.width=3.5}
@@ -684,10 +714,6 @@ for(metric in 1:length(metrics_list)) {
 }
 
 ```
-
-
-Table 3: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different disparity metrics.
-Figures: the dots represent the median disparity values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the negative reductions (i.e. discarding the black dots in Figure 2) and in blue the positive reductions (i.e. discarding the grey dots in Figure 2). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs disparity ~ distributions and disparity ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
 ```{r, echo = FALSE, eval = FALSE}
 ## Function for printing the table in the R console
@@ -718,12 +744,12 @@ Metric      | Volume change  | Position change | Density change | Distribution e
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s")` | `r s.test(2, "r")`|
 `r name[3]` | `r plot.id(7)` | `r plot.id(8)` | `r plot.id(9)` | `r s.test(3, "s")` | `r s.test(3, "r")`|
 `r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s")` | `r s.test(4, "r")`|
-`r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s")` | `r s.test(5, "r")`|
-`r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 
 
-Table caption goes here
+Table 3: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different disparity metrics. The dots represent the median disparity values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the negative reductions (i.e. discarding the black dots in Figure 2) and in blue the positive reductions (i.e. discarding the grey dots in Figure 2). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs disparity ~ distributions and disparity ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
+
+## Empirical example
 
 ```{r running_empirical, echo = FALSE}
 ## Loading the data
@@ -783,22 +809,16 @@ for(dataset in 1:length(data_names)){
 body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 ```
 
-
-
 ```{r, echo = FALSE, eval = FALSE}
 print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
-
-
 Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Somebody       |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
-`r name[1]` | `r plot.id(1)` | `r plot.id(7)` | `r plot.id(13)` | `r plot.id(19)` | `r plot.id(25)` | `r plot.id(31)`|
-`r name[2]` | `r plot.id(2)` | `r plot.id(8)` | `r plot.id(14)` | `r plot.id(20)` | `r plot.id(26)` | `r plot.id(32)`|
-`r name[3]` | `r plot.id(3)` | `r plot.id(9)` | `r plot.id(15)` | `r plot.id(21)` | `r plot.id(27)` | `r plot.id(33)`|
-`r name[4]` | `r plot.id(4)` | `r plot.id(10)` | `r plot.id(16)` | `r plot.id(22)` | `r plot.id(28)` | `r plot.id(34)`|
-`r name[5]` | `r plot.id(5)` | `r plot.id(11)` | `r plot.id(17)` | `r plot.id(23)` | `r plot.id(29)` | `r plot.id(35)`|
-`r name[6]` | `r plot.id(6)` | `r plot.id(12)` | `r plot.id(18)` | `r plot.id(24)` | `r plot.id(30)` | `r plot.id(36)` |
+`r name[1]` | `r plot.id(1)` | `r plot.id(5)` | `r plot.id(9)` | `r plot.id(13)` | `r plot.id(17)` | `r plot.id(21)`|
+`r name[2]` | `r plot.id(2)` | `r plot.id(6)` | `r plot.id(10)` | `r plot.id(14)` | `r plot.id(18)` | `r plot.id(22)`|
+`r name[3]` | `r plot.id(3)` | `r plot.id(7)` | `r plot.id(11)` | `r plot.id(15)` | `r plot.id(19)` | `r plot.id(23)`|
+`r name[4]` | `r plot.id(4)` | `r plot.id(8)` | `r plot.id(12)` | `r plot.id(16)` | `r plot.id(20)` | `r plot.id(24)`|
 
 Some table caption goes here
 
