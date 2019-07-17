@@ -14,20 +14,20 @@ export(vdp.check.table)
 export(space.simulation)
 export(shift.group.simulation)
 export(metrics.simulation)
+export(test.simulation)
 
-# export(rarefaction.simulation)
-
-## Plot utilities
+## Plot utilities (paper)
 export(plot.space)
 export(plot.results)
 export(plot.metrics)
 
-## Simulation utilities (paper)
+## Fable utilities (paper)
 export(generate.fable.plot)
 export(generate.fable.empirical)
 export(plot.id)
 export(s.test)
-export(test.metrics)
+
+## Simulation utilities (paper)
 export(extract.results)
 export(summarise.metrics)
 export(save.results)

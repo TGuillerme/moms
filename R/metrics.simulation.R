@@ -17,10 +17,10 @@
 #' groups <- lapply(space, shift.group.simulation, remove = 0.5)
 #' 
 #' ## List of metrics
-#' metrics <- list(c(mean, variances), diag)
+#' metrics <- list(c(sum, variances), c(sum, ranges))
 #' 
 #' ## Apply the metrics
-#' metrics.simulations(space, groups, metrics)
+#' metrics.simulation(space, groups, metrics)
 #' 
 #' @seealso space.simulation shift.group.simulation
 #' 
