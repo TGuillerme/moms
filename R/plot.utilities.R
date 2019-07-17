@@ -376,3 +376,79 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     }
     return(invisible())
 }
+
+#' @title Plot rarefaction
+#' @description Plotting rarefied metrics
+#' @param results the list of results
+#' @param scale whether to scale and centre the results around the non-reduced spaces
+#' @param type the type of results (e.g. "base" or "all")
+#' @param factors optional, a list of factors (space names) to test
+#' @param plot.param plotting parameters
+#' @param ... any additional arguments to be passed to plot()
+
+rarefaction.plot <- function(results, scale = TRUE, type, factors, plot.param, ...) {
+
+    if(missing(plot.param)) {
+        plot.param <- list()
+    }
+
+    ## Get the metric names
+    metrics_names <- names(results[[1]])
+
+    ## Get the results for each metric
+    get.results <- function(metric, results) {
+        return(extract.results(results, metric = metric, element = "all", transfo = "all"))
+    }
+    results_per_metric <- lapply(as.list(metrics_names), get.results, results)
+
+    ## Select the type of interest only
+    select.type <- function(result, type) {
+        return(unlist(result[type, ]))
+    }
+    results_per_metric <- lapply(results_per_metric, lapply, select.type, type = "all")
+
+    ## Scale the metrics
+    if(scale) {
+        results_per_metric <- lapply(results_per_metric, lapply, scale)
+    }
+
+    ## Transform the results into tables for glm
+    convert.table <- function(metric_results) {
+        table <- data.frame(lapply(metric_results, c))
+        return(data.frame("disparity" = unname(unlist(table)), "factor" = rep(names(table), each = nrow(table))))
+    }
+
+    ## List of tables per metrics
+    tables <- lapply(results_per_metric, convert.table)
+
+    ## Selecting only a certain type of factors
+    if(!missing(factors)) {
+        ## Select only the relevant factors in the tables
+        select.factors <- function(table, factors) {
+            return(table[(table$factor %in% factors), ])
+        }
+        tables <- lapply(tables, select.factors, factors)
+    }
+
+    ## Flip the tables
+    results_table <- do.call(cbind, lapply(tables, function(x)return(x[,1])))
+    ## Add the factors
+    results_table <- cbind(tables[[1]][,2], results_table)
+    ## Correct the factors (in order of appearance)
+    levels <- unique(results_table[,1])
+    tmp <- results_table[,1]
+    for(fact in 1:length(levels)) {
+        tmp <- gsub(levels[fact], letters[fact], tmp)
+    }
+    for(fact in 1:length(levels)) {
+        tmp <- gsub(letters[fact], c(1:length(levels))[fact], tmp)
+    }
+    results_table[,1] <- as.numeric(tmp)
+
+    ## Plotting the results for one metric
+    ## Loop through the metrics....
+    boxplot(by(results_table[, 2], results_table[, 1], c))
+    #xlab, blabalbal
+
+    return(invisible())
+}

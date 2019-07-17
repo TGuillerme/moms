@@ -22,6 +22,8 @@ export(fast.disparity)
 export(plot.space)
 export(plot.results)
 export(plot.metrics)
+export(pairwise.plot)
+export(rarefaction.plot)
 
 ## Fable utilities (paper)
 export(generate.fable.plot)
