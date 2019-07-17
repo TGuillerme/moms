@@ -328,7 +328,8 @@ plot.id <- function(plot.ID, path = "fig.path", resolution = 600) {
 #' 
 #' @author Thomas Guillerme
 #' @export
-s.test <- function(metric.ID, type, test.results = list("s" = test_space05, "r" = test_raref05)) { 
+s.test <- function(metric.ID, type, test.results = list("s" = space_test, "r" = all_dim_test)) { 
+    
     ## Select the results
     test_results <- test.results[[type]]
     ## Coerce the results into a data.frame

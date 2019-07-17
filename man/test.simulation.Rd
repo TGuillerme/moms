@@ -30,7 +30,7 @@ space3 <- space.simulation(distributions = list(distribution = rlnorm),
 spaces <- list("normal" = space1, "uniform" = space2, "lognorm" = space3)
 
 ## Make the shifts
-groups <- lapply(spaces, lapply, shift.group.simulation, remove = 0.5)
+groups <- lapply(spaces, lapply, shift.group.simulation, remove = 0.4)
 
 ## List of metrics
 metrics <- list("sum.var" = c(sum, variances),

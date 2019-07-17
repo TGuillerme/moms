@@ -33,30 +33,6 @@ metrics.simulation <- function(space, reduction, metrics, rare.dim = NULL, verbo
         rare.dim <- dim(space[[1]])[2]
     }
 
-    ## Function for fast metric calculations
-    fast.disparity <- function(group, space, metric, rare.dim) {
-        ## Setting up the default args
-        args <- list(matrix = space[group, 1:rare.dim])
-        ## Simple level 1 metric
-        if(length(metric) == 1) {
-            return(do.call(metric, args))
-        } 
-        ## Simple level 2 + 1 metric
-        if(is.null(names(metric))) {
-            return(metric[[1]](do.call(metric[[2]], args)))
-        }
-        ## Handle the named arguments
-        args <- c(args, metric[-1])
-
-        ## Level 1 metric + args
-        if(length(metric[[1]]) == 1) {
-            return(do.call(metric[[1]], args))
-        } 
-        ## Level 2 + 1 metric + args
-        return(metric[[1]][[1]](do.call(metric[[1]][[2]], args)))
-    }
-
-
     ## Mapply wrapper function
     lapply.metric <- function(one_metric, space, reduction, rare.dim, verbose) {
         lapply.disparity <- function(one_group, one_space, one_metric, rare.dim, verbose) {

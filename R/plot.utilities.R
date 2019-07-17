@@ -5,9 +5,6 @@
 #' @param main the title
 #' @param defaults a list of parameters for plot() and points()
 #' @param axis which axis to plot
-#' @examples
-
-## Plot space function (utility shortcut)
 plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
     ## Plot the first space
     plot(space[, axis], pch = defaults$pch, xlim = defaults$xlim, ylim = defaults$ylim, col = defaults$col1,
@@ -26,9 +23,6 @@ plot.space <- function(space, remove, main, defaults, axis = c(1,2), ...) {
 #' @param space the space to be plotted on the side (plot.space)
 #' @param remove_list a list of elements to remove in the space (plot.space)
 #' @param defaults a list of arguments for plot.space
-#' @examples
-
-
 plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 
     empty.plot <- function(n_metrics, names_metrics, is.last = FALSE) {
@@ -118,7 +112,6 @@ plot.results <- function(cent.tend, CIs, col, space, remove_list, defaults) {
 #' @param defaults a list of arguments for plot.space
 #' @param reduce.distribution the function for making the spaces for the row "names"
 #' @param text.in.cell logical, whether to add text in the first cell (i.e. legend)
-#' @examples
 
 plot.metrics <- function(space_results, col, remove, metrics_names, defaults, reduce.distribution = rnorm, text.in.cell = FALSE) {
 
@@ -289,6 +282,97 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
     ## Plot all results
     for(one_metric in 1:length(space_results[[1]][[1]])) {
         make.results.plots(one_metric, space_results, overal_range, col, main = metrics_names[one_metric], text.in.cell = ifelse(text.in.cell, ifelse(one_metric == 1, TRUE, FALSE), FALSE))
+    }
+    return(invisible())
+}
+
+
+#' @title Pairwise plots
+#' @description Pairwise plot of the metrics
+#' @param results the list of results
+#' @param scale whether to scale and centre the results around the non-reduced spaces
+#' @param type the type of results (e.g. "base" or "all")
+#' @param factors optional, a list of factors (space names) to test
+#' @param plot whether to display a pairplot ("pairs") or a correlation plot ("cor")
+#' @param plot.param plotting parameters
+#' @param ... any additional arguments to be passed to pairs() or plotcorr()
+
+pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", plot.param, ...) {
+
+    if(missing(plot.param)) {
+        plot.param <- list()
+    }
+
+    ## Get the metric names
+    metrics_names <- names(results[[1]])
+
+    ## Get the results for each metric
+    get.results <- function(metric, results) {
+        return(extract.results(results, metric = metric, element = "all", transfo = "all"))
+    }
+    results_per_metric <- lapply(as.list(metrics_names), get.results, results)
+
+    ## Select the type of interest only
+    select.type <- function(result, type) {
+        return(unlist(result[type, ]))
+    }
+    results_per_metric <- lapply(results_per_metric, lapply, select.type, type = "all")
+
+    ## Scale the metrics
+    if(scale) {
+        results_per_metric <- lapply(results_per_metric, lapply, scale)
+    }
+
+    ## Transform the results into tables for glm
+    convert.table <- function(metric_results) {
+        table <- data.frame(lapply(metric_results, c))
+        return(data.frame("disparity" = unname(unlist(table)), "factor" = rep(names(table), each = nrow(table))))
+    }
+
+    ## List of tables per metrics
+    tables <- lapply(results_per_metric, convert.table)
+
+    ## Selecting only a certain type of factors
+    if(!missing(factors)) {
+        ## Select only the relevant factors in the tables
+        select.factors <- function(table, factors) {
+            return(table[(table$factor %in% factors), ])
+        }
+        tables <- lapply(tables, select.factors, factors)
+    }
+
+    ## Flip the tables
+    results_table <- do.call(cbind, lapply(tables, function(x)return(x[,1])))
+    ## Add the factors
+    results_table <- cbind(tables[[1]][,2], results_table)
+    ## Correct the factors
+    present_factors <- unique(results_table[,1])
+    if(max(present_factors) !=  length(present_factors)) {
+        results_table[,1] <- results_table[,1] - (max(present_factors) - length(present_factors))
+    }
+    colnames(results_table) <- c("space", metrics_names)
+
+    ## Plotting
+    if(plot == "pairs") {
+        ## Some default plot arguments
+        if(is.null(plot.param$col)) {
+            plot.param$col <- "black"
+        }
+        if(is.null(plot.param$pch)) {
+            plot.param$pch <- 19
+        }
+        ## Pair plot
+        pairs(results_table[, -1], pch = plot.param$pch, col = plot.param$col, ...)
+    } else {
+        ## Some default plot arguments
+        if(is.null(plot.param$hist.col)) plot.param$hist.col <- "grey"
+        if(is.null(plot.param$lm)) plot.param$lm <- TRUE
+        if(is.null(plot.param$stars)) plot.param$stars <- FALSE
+        if(is.null(plot.param$ci)) plot.param$ci <- TRUE
+        if(is.null(plot.param$ellipses)) plot.param$ellipses <- FALSE
+
+        ## Pair plot
+        psych::pairs.panels(results_table[, -1], hist.col = plot.param$hist.col, lm = plot.param$lm, stars = plot.param$stars, ci = plot.param$ci, ellipses = plot.param$ellipses, ...)
     }
     return(invisible())
 }

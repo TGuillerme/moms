@@ -2,6 +2,7 @@ import(dispRity)
 import(stats)
 import(grDevices)
 import(graphics)
+importFrom("ellipse", "plotcorr")
 
 ## Functions
 export(reduce.space)
@@ -15,6 +16,7 @@ export(space.simulation)
 export(shift.group.simulation)
 export(metrics.simulation)
 export(test.simulation)
+export(fast.disparity)
 
 ## Plot utilities (paper)
 export(plot.space)

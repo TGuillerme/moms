@@ -10,6 +10,8 @@ Depends:
 	graphics,
 	stats,
     dispRity
+Imports:
+	psych
 License: GPL-3 | file LICENSE
 Suggests:
     testthat,
