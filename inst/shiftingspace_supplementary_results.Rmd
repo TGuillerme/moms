@@ -1,0 +1,118 @@
+---
+title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
+author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_width: 12
+    fig_height: 6
+---
+
+# Supplementary material 3: supplementary results
+
+```{r, echo = FALSE}
+## Loading the packages
+if(!require(devtools)) install.packages("devtools")
+if(!require(knitr)) install.packages("knitr"); library(knitr)
+if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
+if(!require(ape)) install.packages("ape"); library(ape)
+if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(packageVersion("dispRity") < "1.2.4") {
+    ## dispRity must be above v1.2.3
+    devtools::install_github("TGuillerme/dispRity"); library(dispRity)
+}
+if(!require(moms)) devtools::install_github("TGuillerm/moms"); library(moms)
+
+## Setting the default parameters for the space plots
+defaults <- list(pch = 20,
+                 xlim = c(-3, 3),
+                 ylim = c(-3, 3),
+                 col1 = "grey",
+                 col2 = "black",
+                 xlab = "Trait",
+                 ylab = "Trait",
+                 cex = 1)
+## Generating the default palette
+default.palette <- function(n) {
+    hues = seq(15, 375, length = n + 1)
+    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+}
+```
+
+## ANOVA tables
+
+```{r loading_results, echo = FALSE}
+## Loading the results
+remove_05 <- load.results("remove_05")
+```
+
+```{r running_tests, echo = FALSE}
+## Anova function
+anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
+
+## Running the tests
+all_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE)
+all_dim_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                                factors = c("uniform3", "uniform15", "uniform50","uniform150",
+                                            "normal3", "normal15", "normal50","normal150"))
+dim_unif_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                                 factors = c("uniform3", "uniform15", "uniform50","uniform150"))
+dim_norm_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                                 factors = c("normal3", "normal15", "normal50","normal150"))
+space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
+                              factors = c("uniform50", "uniform50c", "normal50", "normal50c",
+                                          "random50", "pca_like", "pco_like"))
+```
+
+```{r, echo = FALSE}
+## Function for converting the results into a table
+convert.to.table <- function(results, factor) {
+
+    ## Make the empty data.frame
+    output <- matrix("", nrow = length(results)*2, ncol = dim(one_result[[1]])[2]+2,
+                     dimnames = list(c(), c("metric", "", colnames(one_result[[1]]))))
+    ## Fill the table with the metric names
+    output[,1] <- c(rbind(names(results), rep("", length(results))))
+    output[,2] <- rep(c(factor, "Residuals"), length(results))
+
+    ## Printing sequence
+    print_seq <- rep(seq(1:length(results)), each = 2)
+
+    ## Printing each results
+    for(one_table in seq(from = 1, to = length(results)*2, by = 2)) {
+        as.matrix(results[[print_seq[one_table]]][[1]]) -> 
+            output[one_table:(one_table+1), (1:dim(one_result[[1]])[2])+2] 
+    }
+
+    ## Coerce to data.frame
+    output <- as.data.frame(output, stringsAsFactors = FALSE)
+    output[, -c(1:2)] <- apply(output[, -c(1:2)], 2, as.numeric)
+    colnames(output)[2] <- ""
+    return(output)
+}
+```
+
+```{r, echo = FALSE}
+kable(convert.to.table(all_test, factor = "all spaces"), digits = 3,
+     caption = "ANOVA results caption")
+```
+
+```{r, echo = FALSE}
+kable(convert.to.table(all_dim_test, factor = "dimensions"), digits = 3,
+     caption = "ANOVA results caption")
+```
+
+```{r, echo = FALSE}
+kable(convert.to.table(dim_unif_test, factor = "dimensions (uniform)"), digits = 3,
+     caption = "ANOVA results caption")
+```
+
+```{r, echo = FALSE}
+kable(convert.to.table(dim_norm_test, factor = "dimensions (normal)"), digits = 3,
+     caption = "ANOVA results caption")
+```
+
+```{r, echo = FALSE}
+kable(convert.to.table(space_test, factor = "space type"), digits = 3,
+     caption = "ANOVA results caption")
+```
