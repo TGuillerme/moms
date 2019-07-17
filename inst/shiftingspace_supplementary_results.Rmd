@@ -9,7 +9,7 @@ output:
 ---
 
 # Supplementary material 3: supplementary results
-
+ 
 ```{r, echo = FALSE}
 ## Loading the packages
 if(!require(devtools)) install.packages("devtools")
@@ -53,12 +53,12 @@ anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
 ## Running the tests
 all_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE)
 all_dim_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
-                                factors = c("uniform3", "uniform15", "uniform50","uniform150",
-                                            "normal3", "normal15", "normal50","normal150"))
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150",
+                                  "normal3", "normal15", "normal50", "normal100", "normal150"))
 dim_unif_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
-                                 factors = c("uniform3", "uniform15", "uniform50","uniform150"))
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150"))
 dim_norm_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
-                                 factors = c("normal3", "normal15", "normal50","normal150"))
+                      factors = c("normal3", "normal15", "normal50", "normal100", "normal150"))
 space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
                               factors = c("uniform50", "uniform50c", "normal50", "normal50c",
                                           "random50", "pca_like", "pco_like"))
@@ -69,8 +69,8 @@ space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
 convert.to.table <- function(results, factor) {
 
     ## Make the empty data.frame
-    output <- matrix("", nrow = length(results)*2, ncol = dim(one_result[[1]])[2]+2,
-                     dimnames = list(c(), c("metric", "", colnames(one_result[[1]]))))
+    output <- matrix("", nrow = length(results)*2, ncol = dim(results[[1]][[1]])[2]+2,
+                     dimnames = list(c(), c("metric", "", colnames(results[[1]][[1]]))))
     ## Fill the table with the metric names
     output[,1] <- c(rbind(names(results), rep("", length(results))))
     output[,2] <- rep(c(factor, "Residuals"), length(results))
@@ -81,7 +81,7 @@ convert.to.table <- function(results, factor) {
     ## Printing each results
     for(one_table in seq(from = 1, to = length(results)*2, by = 2)) {
         as.matrix(results[[print_seq[one_table]]][[1]]) -> 
-            output[one_table:(one_table+1), (1:dim(one_result[[1]])[2])+2] 
+            output[one_table:(one_table+1), (1:dim(results[[print_seq[one_table]]][[1]])[2])+2] 
     }
 
     ## Coerce to data.frame
