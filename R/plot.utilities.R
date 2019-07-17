@@ -343,7 +343,7 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
 
     ## Flip the tables
     results_table <- do.call(cbind, lapply(tables, function(x)return(x[,1])))
-    ## Add the factors
+    ## Add the factors
     results_table <- cbind(tables[[1]][,2], results_table)
     ## Correct the factors
     present_factors <- unique(results_table[,1])
