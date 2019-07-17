@@ -24,9 +24,18 @@ shift.group.simulation <- function(space, remove, verbose = TRUE) {
     double.check.reduce <- function(reduction, space, type, remove, verbose) {
         if(all(reduction == "TRUE") || all(reduction == "FALSE") || length(which(reduction)) == 1 || length(which(!reduction)) == 1) {
             if(verbose) cat(paste0("Double checking reduction for ", type, ":"))
+
+            ## Counter
+            counter <- 1
             while(all(reduction == TRUE) || all(reduction == FALSE) || length(which(reduction)) == 1 || length(which(!reduction)) == 1) {
                 if(verbose) cat(".")
                 reduction <- reduce.space(space, type = type, remove = remove+sample(c(0.01, -0.01), 1))
+                counter <- counter + 1
+                if(counter == 100) {
+                    sample(c(TRUE, FALSE), nrow(space), replace = TRUE)
+                    warning("Impossible to reduce space: reduction is now random")
+                    break()
+                }
             }
             if(verbose) cat("Done.\n")
         }
