@@ -47,16 +47,60 @@ The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz)
 ## Metrics analysed
 
 ```{r metrics_list, echo = FALSE}
-## All metrics
+# ## All metrics
+# ## Small metrics list (for testing)
+# metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+#                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+#                     "av.displac" = c(mean, displacements),
+#                     "av.neighbo" = c(mean, neighbours))
+
+# ## 
+# metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Mean\ndisplacement",
+#                   "Mean nearest\nneighbours distance")
+
+## Minimal spanning tree distances evenness
+func.eve <- function(matrix) {
+    ## Distance matrix
+    distances <- dist(matrix)
+    ## weighted evenness (EW) for equal weighted species
+    branch_lengths <- (distances/2)[which(as.dist(ape::mst(distances)) != 0)]
+    ## partial weighted evenness (PEW)
+    rel_br_lentghs <- branch_lengths/sum(branch_lengths)
+    ## Regular abundance value (1/(S-1))
+    regular <- 1/(nrow(matrix) - 1)
+    ## Get the minimal distances
+    min_distances <- sapply(rel_br_lentghs, function(x, y) min(c(x, y)), y = regular)
+    ## Return the Functional eveness
+    return((sum(min_distances) - regular) / (1 - regular))
+}
+
+## Distance from centroid deviation ratio
+func.div <- function(matrix) {
+    ## The distance from centroid (dGi)
+    dist_centroid <- centroids(matrix)
+    ## The mean distance from centroid (dG)
+    mean_dis_cent <- mean(dist_centroid)
+    ## The number of observations
+    obs <- length(dist_centroid)
+    ## The FDiv metric
+    return((sum(dist_centroid) - mean_dis_cent * (obs-1)) / ((sum(abs(dist_centroid - mean_dis_cent) + dist_centroid))/obs))
+}
 ## Small metrics list (for testing)
-metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
                     "av.displac" = c(mean, displacements),
-                    "av.neighbo" = c(mean, neighbours))
+                    "av.neighbo" = c(mean, neighbours),
+                    "dist.centre" = list(c(mean, centroids), centroid = 0),
+                    "mean.centr" = c(mean, centroids),
+                    "func.disp"  = function(matrix) return(unname(FD::fdisp(dist(matrix))$FDis)),
+                    "func.div"  = func.eve,
+                    "func.eve"  = func.div,
+                    "conv.hull" = function(matrix) return(geometry::convhulln(matrix, "FA")$vol),
+                    "span.tree" = span.tree.length
+                    )
 
-## 
-metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Mean\ndisplacement",
-                  "Mean nearest\nneighbours distance")
+metric_names <- names(metrics_list)
+
 ```
 
 The metrics analysed are the `r paste(metric_names, collapse = ", ")`.
