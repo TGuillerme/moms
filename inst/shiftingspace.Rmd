@@ -318,10 +318,11 @@ To so, we preformed these following steps (explained in more details below):
 | Test | Methods section | Results figure
 |------|-----------------|------------------
 | How do the metrics compare to each other? | Metrics comparisons       | FigX
-| How are they affected by dimensionality?  | Effect of dimensionality  | FigX+1
-| How are they affected by space shifting?  | Space shifting            | FigX+2
-| How is that reflected in the real world?  | Empirical examples        | FigX+3
+| How are they affected by space shifting?  | Space shifting            | FigX+1
+| How is that reflected in the real world?  | Empirical examples        | FigX+2
 
+
+<!-- | How are they affected by dimensionality?  | Effect of dimensionality  | FigX+1 -->
 
 ## Generating spaces
 
@@ -383,11 +384,51 @@ Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | 
 
 
 ```{r, all_metric, echo = FALSE}
+## Minimal spanning tree distances evenness
+func.eve <- function(matrix) {
+    ## Distance matrix
+    distances <- dist(matrix)
+    ## weighted evenness (EW) for equal weighted species
+    branch_lengths <- (distances/2)[which(as.dist(ape::mst(distances)) != 0)]
+    ## partial weighted evenness (PEW)
+    rel_br_lentghs <- branch_lengths/sum(branch_lengths)
+    ## Regular abundance value (1/(S-1))
+    regular <- 1/(nrow(matrix) - 1)
+    ## Get the minimal distances
+    min_distances <- sapply(rel_br_lentghs, function(x, y) min(c(x, y)), y = regular)
+    ## Return the Functional eveness
+    return((sum(min_distances) - regular) / (1 - regular))
+}
+
+## Distance from centroid deviation ratio
+func.div <- function(matrix) {
+    ## The distance from centroid (dGi)
+    dist_centroid <- centroids(matrix)
+    ## The mean distance from centroid (dG)
+    mean_dis_cent <- mean(dist_centroid)
+    ## The number of observations
+    obs <- length(dist_centroid)
+    ## The FDiv metric
+    return((sum(dist_centroid) - mean_dis_cent * (obs-1)) / ((sum(abs(dist_centroid - mean_dis_cent) + dist_centroid))/obs))
+}
+
+
 ## Small metrics list (for testing)
-metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+## Small metrics list (for testing)
+metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
                     "av.displac" = c(mean, displacements),
-                    "av.neighbo" = c(mean, neighbours))
+                    "av.neighbo" = c(mean, neighbours),
+                    "dist.centre" = list(c(mean, centroids), centroid = 0),
+                    "mean.centr" = c(mean, centroids),
+                    "func.disp"  = function(matrix) return(unname(FD::fdisp(dist(matrix))$FDis)),
+                    "func.div"  = func.eve,
+                    "func.eve"  = func.div,
+                    "conv.hull" = function(matrix) return(geometry::convhulln(matrix, "FA")$vol),
+                    "span.tree" = span.tree.length
+                    )
+
+metric_names <- names(metrics_list)
 
 
 ## All metrics (exploration)
@@ -406,12 +447,8 @@ metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(
 # metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
 #                   "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
 
-metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Mean\ndisplacement",
-                  "Mean nearest\nneighbours distance")
-
-
 ## Shorter vector name version (for clarity in the fable)
-name <- gsub("\n", " ", metric_names)
+# name <- gsub("\n", " ", metric_names)
 #"Product of Quantiles", "Sum of Quantiles", 
 #"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
 ```
@@ -443,6 +480,7 @@ laliberté/Villéger style
 <!--  -->
 <!--  -->
 <!--  -->
+<!--
 ## Effect of dimensionality
 
 > VW: I understand teh below but only just and it is hard to read. I can help simplify.
@@ -458,8 +496,9 @@ This is counter-intuitive because:
 1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. increasing the number of observations on one dimension can only increase the range, never decrease it);
 2) second, products are a classical example of the "curse" where multiplying a higher number of dimensions with a non-null probability of having a range of zero will irremediably result in 0 (i.e. an infinite number of positive values by 0 is still 0).
 
+-->
 
-```{r fig_curse, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
+```{r fig_curse, eval=FALSE, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
 set.seed(42)
 ## Make a 50 dimensions space
 space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
@@ -681,7 +720,7 @@ names(results_pairwise[[1]]) <- metric_names
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
 ```
 
-## Effect of dimensionality
+<!-- ## Effect of dimensionality -->
 
 ```{r fig_metric_dimensionality, eval=FALSE, echo = FALSE, fig.height = 6, fig.width = 6, results = 'hide', fig.cap = paste("Figure @@@: correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
 
@@ -744,6 +783,12 @@ Metric      | Volume change  | Position change | Density change | Distribution e
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s")` | `r s.test(2, "r")`|
 `r name[3]` | `r plot.id(7)` | `r plot.id(8)` | `r plot.id(9)` | `r s.test(3, "s")` | `r s.test(3, "r")`|
 `r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s")` | `r s.test(4, "r")`|
+`r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s")` | `r s.test(5, "r")`|
+`r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
+`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
+`r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
+`r name[9]` | `r plot.id(25)` | `r plot.id(26)` | `r plot.id(27)` | `r s.test(9, "s")` | `r s.test(9, "r")`|
+`r name[10]` | `r plot.id(28)` | `r plot.id(29)` | `r plot.id(30)` | `r s.test(10, "s")` | `r s.test(10, "r")`|
 
 
 Table 3: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different disparity metrics. The dots represent the median disparity values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the negative reductions (i.e. discarding the black dots in Figure 2) and in blue the positive reductions (i.e. discarding the grey dots in Figure 2). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs disparity ~ distributions and disparity ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
@@ -815,10 +860,16 @@ print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 
 Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Somebody       |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
-`r name[1]` | `r plot.id(1)` | `r plot.id(5)` | `r plot.id(9)` | `r plot.id(13)` | `r plot.id(17)` | `r plot.id(21)`|
-`r name[2]` | `r plot.id(2)` | `r plot.id(6)` | `r plot.id(10)` | `r plot.id(14)` | `r plot.id(18)` | `r plot.id(22)`|
-`r name[3]` | `r plot.id(3)` | `r plot.id(7)` | `r plot.id(11)` | `r plot.id(15)` | `r plot.id(19)` | `r plot.id(23)`|
-`r name[4]` | `r plot.id(4)` | `r plot.id(8)` | `r plot.id(12)` | `r plot.id(16)` | `r plot.id(20)` | `r plot.id(24)`|
+`r name[1]` | `r plot.id(1)` | `r plot.id(11)` | `r plot.id(21)` | `r plot.id(31)` | `r plot.id(41)` | `r plot.id(51)`|
+`r name[2]` | `r plot.id(2)` | `r plot.id(12)` | `r plot.id(22)` | `r plot.id(32)` | `r plot.id(42)` | `r plot.id(52)`|
+`r name[3]` | `r plot.id(3)` | `r plot.id(13)` | `r plot.id(23)` | `r plot.id(33)` | `r plot.id(43)` | `r plot.id(53)`|
+`r name[4]` | `r plot.id(4)` | `r plot.id(14)` | `r plot.id(24)` | `r plot.id(34)` | `r plot.id(44)` | `r plot.id(54)`|
+`r name[5]` | `r plot.id(5)` | `r plot.id(15)` | `r plot.id(25)` | `r plot.id(35)` | `r plot.id(45)` | `r plot.id(55)`|
+`r name[6]` | `r plot.id(6)` | `r plot.id(16)` | `r plot.id(26)` | `r plot.id(36)` | `r plot.id(46)` | `r plot.id(56)`|
+`r name[7]` | `r plot.id(7)` | `r plot.id(17)` | `r plot.id(27)` | `r plot.id(37)` | `r plot.id(47)` | `r plot.id(57)`|
+`r name[8]` | `r plot.id(8)` | `r plot.id(18)` | `r plot.id(28)` | `r plot.id(38)` | `r plot.id(48)` | `r plot.id(58)`|
+`r name[9]` | `r plot.id(9)` | `r plot.id(19)` | `r plot.id(29)` | `r plot.id(39)` | `r plot.id(49)` | `r plot.id(59)`|
+`r name[10]` | `r plot.id(10)` | `r plot.id(20)` | `r plot.id(30)` | `r plot.id(40)` | `r plot.id(50)` | `r plot.id(60)`|
 
 Some table caption goes here
 
