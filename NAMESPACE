@@ -2,7 +2,7 @@ import(dispRity)
 import(stats)
 import(grDevices)
 import(graphics)
-importFrom("ellipse", "plotcorr")
+#importFrom("ellipse", "plotcorr")
 
 ## Functions
 export(reduce.space)

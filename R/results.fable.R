@@ -342,6 +342,11 @@ s.test <- function(metric.ID, type, test.results = list("s" = space_test, "r" = 
     print_results <- ifelse(is.na(print_results), "", print_results)
     ## Add the tokens
     p_val <- as.numeric(print_results[1,5])
+
+    if(is.na(p_val)){
+        return(noquote("NA"))
+    }
+
     if(p_val < 0.001) {
         # print_results <- cbind(print_results, c("***", ""))
         signif_token <- "***"

@@ -69,7 +69,11 @@ test.simulation <- function(results, test, scale = TRUE, factors) {
     ## Transform the results into tables for glm
     convert.table <- function(metric_results) {
         table <- data.frame(lapply(metric_results, c))
-        return(data.frame("disparity" = unname(unlist(table)), "factor" = rep(names(table), each = nrow(table))))
+
+        ## Check for NaNs
+        table_data <- ifelse(is.nan(unname(unlist(table))), 0, unname(unlist(table)))
+
+        return(data.frame("disparity" = table_data, "factor" = rep(names(table), each = nrow(table))))
     }
 
     ## List of tables per metrics
