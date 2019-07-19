@@ -97,7 +97,7 @@ func.disp <- function(matrix) {
 
 ## Function for convex hull
 convhull <- function(matrix) {
-    if(ncol(matrix) > 15) {
+    if(ncol(matrix) > 10) {
         return(0)
     } else {
         return(geometry::convhulln(matrix, "FA")$vol)
