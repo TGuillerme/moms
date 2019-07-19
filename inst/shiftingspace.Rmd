@@ -423,19 +423,20 @@ func.disp <- function(matrix) {
 
 ## Function for convex hull
 convhull <- function(matrix) {
-    if(ncol(matrix) > 15) {
+    if(ncol(matrix) > 10) {
         return(0)
     } else {
         return(geometry::convhulln(matrix, "FA")$vol)
     }
 }
 
+
 ## Small metrics list (for testing)
 metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
                     "av.displac" = c(mean, displacements),
                     "av.neighbo" = c(mean, neighbours),
-                    "dist.centre" = list(c(mean, centroids), centroid = 0),
+                    "dist.centre" = function(matrix) return(mean(centroids(matrix, centroid = 0))),
                     "mean.centr" = c(mean, centroids),
                     "func.disp"  = func.disp,
                     "func.div"  = func.eve,
@@ -443,8 +444,6 @@ metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist
                     "conv.hull" = convhull,
                     "span.tree" = span.tree.length
                     )
-
-metric_names <- names(metrics_list)
 
 metric_names <- names(metrics_list)
 
@@ -755,6 +754,9 @@ pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
 
 
 ```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3.5, fig.width=3.5}
+## The metrics names (shortened vector)
+name <- metric_names
+
 ## Making a list of parameters for each mini plot
 plot.param <- list(scaler = 0.5,
                    bg.col = "black",
