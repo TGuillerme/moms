@@ -312,6 +312,14 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     }
     results_per_metric <- lapply(as.list(metrics_names), get.results, results)
 
+    ## Remake into a matrix if it wrong format
+    if(class(results_per_metric[[1]][[1]]) == "list") {
+        make.matrix <- function(list) {
+            return(matrix(unlist(list), nrow = 1, dimnames = list(c("all"))))
+        }
+        results_per_metric <- lapply(results_per_metric, lapply, make.matrix)
+    }
+
     ## Select the type of interest only
     select.type <- function(result, type) {
         return(unlist(result[type, ]))
