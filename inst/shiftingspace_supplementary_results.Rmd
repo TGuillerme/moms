@@ -116,3 +116,183 @@ kable(convert.to.table(dim_norm_test, factor = "dimensions (normal)"), digits = 
 kable(convert.to.table(space_test, factor = "space type"), digits = 3,
      caption = "ANOVA results caption")
 ```
+
+# Metrics similarity
+
+This section details the similarity between certain categories of metrics
+
+## Methods
+
+We generate a series of 7 spaces of 50 dimensions replicated 10 times (see the main manuscript for details on the procedure).
+
+| space name | size  | distribution(s)                | dimensions variance | correlation |
+|------------|-------|--------------------------------|---------------------|-------------|
+| Uniform50  |200*50 | Uniform                        | Constant            | none        |
+| Uniform50c |200*50 | Uniform                        | Constant            | Random (between 0.1 and 0.9) |
+| Normal50   |200*50 | Normal                         | Constant            | none        |
+| Normal50c  |200*50 | Normal                         | Constant            | Random (between 0.1 and 0.9) |
+| Random     |200*50 | Normal, Uniform, Lognormal     | Constant            | none        |
+| PCA-like   |200*50 | Normal                         | Lognormal           | none        |
+| PCO-like   |200*50 | Normal                         | Normal              | none        |
+
+```{r simulate_spaces, echo = FALSE, warning = FALSE, results = 'hide'}
+set.seed(42)
+## List of distributions
+distributions_list <- list(
+    "unifor" = list(distribution = runif, arguments = list(list("min" = -0.5, "max" = 0.5))),
+    "normal" = list(distribution = rnorm),
+    "random" = list(distribution = "random"),
+    "unicor" = list(distribution = runif, arguments = list(list("min" = -0.5, "max" = 0.5)),
+                    cor.matrix = "random"),
+    "norcor" = list(distribution = rnorm, cor.matrix = "random"),
+    "pcalik" = list(distribution = rnorm, scree = "lognormal"),
+    "pcolik" = list(distribution = rnorm, scree = "normal")
+    )
+
+## Number of replicates (low on purpose!)
+n_replicates <- 10
+
+## Number of elements
+elements <- function() 200
+
+## Generating all spaces
+all_spaces <- list(uniform50 = space.simulation(distributions_list$unifor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   uniformc50 = space.simulation(distributions_list$unicor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   normal50 = space.simulation(distributions_list$normal, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   normalc50 = space.simulation(distributions_list$norcor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   random50 = space.simulation(distributions_list$random, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   pca_like = space.simulation(distributions_list$pcalik, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   pco_like = space.simulation(distributions_list$pcolik, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates))
+
+```
+
+We then calculated space occupancy with the following metrics:
+
+Name          | Definition                      | Captures | Origin           | `dispRity` function
+:-------------|:-------------------------------:|----------|------------------|------|
+Average squared distance | $\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)^{2}\times \frac{1}{n}$ | Volume | @geiger2008 | `mean(dispRity::pairwise.dist(matrix)^2)`
+Procrustes variance | $\sum_{i}^{m=dn}{M_{m}^2} \times \frac{1}{d}$ | Volume | @adams2013geomorph | `sum(matrix^2)/nrow(matrix)`
+Functional dispersion | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}{n}$ | Volume and density | Volume | @laliberté2010 | |
+Ellipsoid volume | $\frac{\pi^{k/2}}{\Gamma(\frac{k}{2}+1)}\displaystyle\prod_{i=1}^{k} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | `dispRity::ellipse.volume(matrix)`
+Prod of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))`
+Prod of ranges | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::ranges(matrix))`
+Prod of quantiles | | Volume |  | `prod(dispRity::quantiles(matrix))` 
+Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::variances(matrix))`
+Sum of ranges | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `sum(dispRity::ranges(matrix))`
+Sum of quantiles | | Volume |  | `sum(dispRity::quantiles(matrix))` 
+
+
+```{r, eval = TRUE, echo = FALSE}
+source("list.of.metrics.R")
+## General volume metrics
+volume_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
+                       "Procrustes"  = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+                       "func.disp"   = func.disp,
+                       "sum.var"    = c(sum, variances),
+                       "sum.ranges" = c(sum, ranges),
+                       "sum.quantil"= c(sum, quantiles),
+                       "prod.var"    = c(prod, variances),
+                       "prod.ranges" = c(prod, ranges),
+                       "prod.quantil"= c(prod, quantiles),
+                       "ellips.vol"  = ellipse.volume,)
+volume_names <- c("Average squared pairwise distance",
+                  "Procrustes variances",
+                  "Functional dispersion",
+                  "Sum of variances",
+                  "Sum of ranges",
+                  "Sum of quantiles",
+                  "Product of variances",
+                  "Product of ranges",
+                  "Product of quantiles",
+                  "Ellipsoid volume"
+                  )
+
+## General density metrics
+density_metrics <- list("span.tree"   = span.tree.length,
+                       "ave.neigh"   = c(mean, neighbours),
+                       "ave.pairdist"= c(mean, pairwise.dist))
+density_names <- c("Minimum spanning tree length",
+                  "Average minimum neighbours distance",
+                  "Average pairwise distance")
+
+## General position metrics
+position_metrics <- list("func.div" = func.div,
+                       "av.displa"  = c(mean, displacements))
+position_names <- c("Function diversity",
+                  "Average displacement")
+
+## Functional metrics
+functional_metrics <- list("func.div" = func.div,
+                           "func.eve" = func.eve,
+                           "func.disp" = func.disp)
+position_names <- c("Functional diversity",
+                    "Functional evenness",
+                    "Functional dispersion")
+```
+
+
+```{r get_disparity_volume, echo = FALSE, warning = FALSE, results = 'hide'}
+## Lapply functions to get disparity
+lapply.disparity <- function(one_space, one_metric) {
+    space_dim <- dim(one_space)
+    return(fast.disparity(rep(TRUE, space_dim[1]), one_space, one_metric, rare.dim =  space_dim[2]))
+}
+lapply.metric <- function(one_metric, space) {
+    return(matrix(lapply(space, lapply.disparity, one_metric), nrow = 1, dimnames = list("all")))
+}
+lapply.space <- function(space, metrics) {
+    return(lapply(metrics, lapply.metric, space))
+}
+
+## Get the results for the volume
+volume_results <- lapply(all_spaces, lapply.space, volume_metrics)
+## Get the results for the density
+density_results <- lapply(all_spaces, lapply.space, density_metrics)
+## Get the results for the position
+position_results <- lapply(all_spaces, lapply.space, position_metrics)
+```
+
+## Results
+
+### Volume metrics
+
+```{r, echo = FALSE}
+results_pairwise <- volume_results
+
+## Printing the results
+names(results_pairwise[[1]]) <- gsub(" ", "\n", volume_names)
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+### Density metrics
+
+```{r, echo = FALSE}
+results_pairwise <- density_results
+
+## Printing the results
+names(results_pairwise[[1]]) <- gsub(" ", "\n", density_names)
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+### Position metrics
+
+```{r, echo = FALSE}
+results_pairwise <- position_results
+
+## Printing the results
+names(results_pairwise[[1]]) <- gsub(" ", "\n", position_names)
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
