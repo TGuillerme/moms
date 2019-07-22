@@ -4,12 +4,13 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  html_document:
-  keep_tex: true
-  self_contained: false
-  fig_caption: true
+  pdf_document:
   fig_width: 8
   fig_height: 8
+keep_tex: true
+self_contained: false
+line_numbers: true
+fig_caption: true
 ---
 
 <!-- When  toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
@@ -62,14 +63,14 @@ if(!all(c("remove_05.Rda") %in% list.files(DATA_PATH))) {
     ## Run The supplementary material (simulation)
     rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
-if(!all(c("palaeo.Rda", "gmm.Rda", "ecol.Rda") %in% list.files(DATA_PATH))) {
+if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
     ## Run The supplementary material
     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
 }
 ```
 
 
-```{r compilation_html, echo = FALSE, eval = TRUE}
+```{r compilation_html, echo = FALSE, eval = FALSE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -379,101 +380,12 @@ Sum of ranges | $\sum_{i}^{d}{\|max(k_i) - min(k_i)\|}$ | Volume | @wills2001 | 
 Product of variances | $\prod_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | `prod(dispRity::variances(matrix))` 
 -->
 
-
-
-
-
-```{r, all_metric, echo = FALSE}
-## Minimal spanning tree distances evenness
-func.eve <- function(matrix) {
-    ## Distance matrix
-    distances <- dist(matrix)
-    ## weighted evenness (EW) for equal weighted species
-    branch_lengths <- (distances/2)[which(as.dist(ape::mst(distances)) != 0)]
-    ## partial weighted evenness (PEW)
-    rel_br_lentghs <- branch_lengths/sum(branch_lengths)
-    ## Regular abundance value (1/(S-1))
-    regular <- 1/(nrow(matrix) - 1)
-    ## Get the minimal distances
-    min_distances <- sapply(rel_br_lentghs, function(x, y) min(c(x, y)), y = regular)
-    ## Return the Functional eveness
-    return((sum(min_distances) - regular) / (1 - regular))
-}
-
-## Distance from centroid deviation ratio
-func.div <- function(matrix) {
-    ## The distance from centroid (dGi)
-    dist_centroid <- centroids(matrix)
-    ## The mean distance from centroid (dG)
-    mean_dis_cent <- mean(dist_centroid)
-    ## The number of observations
-    obs <- length(dist_centroid)
-    ## The FDiv metric
-    return((sum(dist_centroid) - mean_dis_cent * (obs-1)) / ((sum(abs(dist_centroid - mean_dis_cent) + dist_centroid))/obs))
-}
-
-## Function dispersion (should be mean distance from centroid)
-func.disp <- function(matrix) {
-    if(is.null(rownames(matrix))) {
-        rownames(matrix) <- 1:nrow(matrix)
-    }
-    distance <- dist(matrix)
-    return(unname(FD::fdisp(distance)$FDis))
-}
-
-## Function for convex hull
-convhull <- function(matrix) {
-    if(ncol(matrix) > 10) {
-        return(0)
-    } else {
-        return(geometry::convhulln(matrix, "FA")$vol)
-    }
-}
-
-
-## Small metrics list (for testing)
-metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-                    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-                    "av.displac" = c(mean, displacements),
-                    "av.neighbo" = c(mean, neighbours),
-                    "dist.centre" = function(matrix) return(mean(centroids(matrix, centroid = 0))),
-                    "mean.centr" = c(mean, centroids),
-                    "func.disp"  = func.disp,
-                    "func.div"  = func.eve,
-                    "func.eve"  = func.div,
-                    "conv.hull" = convhull,
-                    "span.tree" = span.tree.length
-                    )
-
-metric_names <- names(metrics_list)
-
-
-## All metrics (exploration)
-# metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-#                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-#                     "Volume" = ellipse.volume,
-#                     # "PoR" = c(prod, ranges),
-#                     # "SoR" = c(sum, ranges),
-#                     # "PoV" = c(prod, variances),
-#                     "SoV" = c(sum, variances),
-#                     # "PoQ" = c(prod, quantiles),
-#                     # "SoQ" = c(sum, quantiles),
-#                     "av.displac" = c(mean, displacements),
-#                     "av.neighbo" = c(mean, neighbours))
-
-# metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
-#                   "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
-
-## Shorter vector name version (for clarity in the fable)
-# name <- gsub("\n", " ", metric_names)
-#"Product of Quantiles", "Sum of Quantiles", 
-#"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
+```{r metrics_list, echo = FALSE}
+## Loading the list of metrics
+source("list.of.metrics.R")
 ```
 
-```{r, complex_metrics_example, echo = FALSE, eval = FALSE}
-complex_metric <- list("med.mana.dist.centre" = list(c(median, centroids),
-                       centroid = 0, method = "manhattan"))
-```
+
 
 
 All metrics are scaled between 0 and 1 for comparisons.
@@ -571,6 +483,11 @@ This resulted in seven different transformation by reducing the space: randomly,
 
 ```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays 50% of the data points removed (in grey) using the following algorithm: A - randomly; B - by limit (removing data from the centre); C - by displacement (removing data from one side of the plot); and D - by density (removing data to increase or decrease the density).")}
 set.seed(42)
+
+## Change colors
+defaults$col1 <- "orange"
+defaults$col2 <- "blue"
+
 op <- par(mfrow = c(2,2), bty = "n")
 ## The elements
 elements <- 300
@@ -727,7 +644,7 @@ space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
 
 ## Metrics comparisons 
 
-```{r fig_metric_correlation, echo = FALSE, fig.height = 6, fig.width = 6, results = 'hide', fig.cap = paste("Figure @@@: correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
+```{r fig_metric_correlation, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure @@@: correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
 
 ## Adding proper names
 results_pairwise <- remove_05
@@ -817,36 +734,10 @@ Table 3: Results of the effect of space reduction, space dimensions distribution
 ## Empirical example
 
 ```{r running_empirical, echo = FALSE}
-## Loading the data
-palaeo <- load.results("palaeo")
-gmm <- load.results("gmm")
-ecol <- load.results("ecol")
-
-## List of spaces
-trait_spaces <- c(palaeo, gmm, ecol)
-
-## Measuring space occupancy for all spaces and all metrics
-apply.disparity <- function(space, metrics) {
-    lapply(metrics, function(metric, space) dispRity(boot.matrix(space), metric), space)
-}
-disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
-
-# ## Wrapper for the bhatt.coeff function to return NA below a precision number
-# ## (to avoid comparing effectively 0 vs 0 distributions)
-# bhatt.coeff.safe <- function(x, y, bw = bw.nrd0, precision, ...) {
-#     if(all(x < precision) || all(y < precision)) {
-#         return(NA)
-#     } else {
-#         return(bhatt.coeff(x, y, bw = bw, ...))
-#     }
-# }
-
-# ## Testing the probability of overlap
-# disparity_bc <- lapply(disparities, lapply, test.dispRity,
-#                            test = bhatt.coeff.safe, precision = 1e-50)
-
-## Testing the differences for each distributions
-disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)
+## Loading the results
+load.results(empirical_results)
+disparities <- empirical_results$disparities
+disparity_t_test <- empirical_results$disparity_t_test
 ```
 
 ```{r fable_results_empirical, fig.show='hide', echo=FALSE, fig.height=3.5, fig.width=3.5}
