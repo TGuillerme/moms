@@ -4,7 +4,7 @@
 \alias{generate.fable.empirical}
 \title{Generates fable plots for the empirical data}
 \usage{
-generate.fable.empirical(data, test, precision, plot.param)
+generate.fable.empirical(data, test, precision, plot.param, dataset)
 }
 \arguments{
 \item{data}{the disparity data}
@@ -18,6 +18,8 @@ generate.fable.empirical(data, test, precision, plot.param)
 \item{data_names}{the names of the datasets (to be plotted)}
 
 \item{metrics_names}{the names of the metrics (to be plotted)}
+
+\item{precision}{the dataset number (to plot the y axis values or not)}
 }
 \description{
 Generates the plots for the empirical example fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"

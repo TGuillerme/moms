@@ -18,7 +18,6 @@
 
 generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALSE, plot.param) {
 
-
     pool.data <- function(data, metric, what, scale) {
         ## Extract the metric
         pooled_metric <- lapply(remove_05, function(X, metric) return(X[[metric]]), metric = metric)
@@ -50,7 +49,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
         return(do.call(rbind, pooled_data))
     }
 
-    empty.plot <- function(plot.param) {
+    empty.plot <- function(plot.param, metric) {
         ## Plot margins
         par(bty = "n", mar = c(3,1,1,1))
         ## Plot size
@@ -59,7 +58,11 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
         abline(v = 0, lty = 2, col = plot.param$bg.col, lwd = 1 + plot.param$scaler)
 
         ## Adding the x axis
-        axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = c(-1, NA, 0, NA, 1), tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col, cex = 0.5 + plot.param$scaler)
+        if(metric != plot.param$metric.max) {
+            axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = FALSE, tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col, lwd = 1 + plot.param$scaler)
+        } else {
+            axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = c(-1, NA, 0, NA, 1), tick = TRUE, col.ticks = plot.param$bg.col, col = plot.param$bg.col, lwd = 1 + plot.param$scaler, cex.axis = 0.5 + (plot.param$scaler)/2)
+        }
     }
 
     add.data <- function(data, plot.param) {
@@ -93,7 +96,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
     pooled_data <- pool.data(data, metric = metric, what = what, scale = scale)
 
     ## Plot the results
-    empty.plot(plot.param)
+    empty.plot(plot.param, metric)
     add.data(pooled_data, plot.param)
 
     if(overlap) {
@@ -125,6 +128,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
 #' @param data_names the names of the datasets (to be plotted)
 #' @param metrics_names the names of the metrics (to be plotted)
 #' @param precision the value under which to consider values as zeros
+#' @param precision the dataset number (to plot the y axis values or not)
 #'
 #' @examples
 #'
@@ -132,7 +136,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
 #' 
 #' @author Thomas Guillerme
 #' @export
-generate.fable.empirical <- function(data, test, precision, plot.param) {
+generate.fable.empirical <- function(data, test, precision, plot.param, dataset) {
     ## Scaling the results
     scale.vals <- function(disparity) {
         ## Centre
@@ -185,111 +189,23 @@ generate.fable.empirical <- function(data, test, precision, plot.param) {
         text(0.5, 0.5, "NA", cex = plot.param$na.cex)
     }  else {
         ## Setting the margins
-        par(bty = "l", mar = c(1, 3, 1, 1))
+        par(bty = "l", mar = c(1, (2 +(plot.param$scaler)/2), 1, 1))
         ## Plotting the results
         plot(data, col = plot.param$col, border = plot.param$border, las = 1,
             ylim = c(0,1),
             xaxt = "n",
             xlab = "",
             ylab = "",
-            yaxt = "s",
-            main = ""
-            )
+            yaxt = "n",
+            main = "",
+            lwd = 1 + plot.param$scaler)
+        ## Add the yaxis
+        axis(2, at = seq(from = 0, to = 1, by = 0.2), labels = ifelse(dataset == 1, TRUE, FALSE), tick = TRUE, lwd = 1 + plot.param$scaler, cex.axis = 0.5 + (plot.param$scaler)/2, las = 2)
     
         ## Adding the difference (or not)
-        text(1.5, 0.9, get.token(test), cex = plot.param$cex)
+        text(1.5, 0.9, get.token(test), cex = plot.param$cex + plot.param$scaler)
     }
 }
-# generate.fable.empirical.bkp <- function(data, test, plot.param, data_names, metrics_names, precision = 1e-16) {
-
-#     ## Scaling the disparity values between 0 and 1
-#     scale.vals <- function(disparity) {
-#         ## Centre
-#         centre <- function(x, min) return(x-min)
-#         min_val <- min(unlist(disparity$disparity))
-#         disparity$disparity <- lapply(disparity$disparity, lapply,
-#                                       centre, min = min_val)
-#         ## Scale
-#         scale <- function(x, max) return(x/max)
-#         max_val <- max(unlist(disparity$disparity))
-#         disparity$disparity <- lapply(disparity$disparity, lapply,
-#                                       function(x, max) x/max, max = max_val)
-#         return(disparity)
-#     }
-
-#     ## Get significance token
-#     get.token <- function(test) {
-
-#         if(is.nan(test[[3]][[1]]) ||
-#            is.na(test[[3]][[1]]) ||
-#            is.null(test[[3]][[1]])) {
-#             return("")
-#         }
-
-#         if(test[[3]][[1]] < 0.001) {
-#             return("***")
-#         } else {
-#             if(test[[3]][[1]] < 0.01) {
-#                 return("**")
-#             } else {
-#                 if(test[[3]][[1]] < 0.05) {
-#                     return("*")
-#                 } else {
-#                     if(test[[3]][[1]] < 0.1) {
-#                         return(".")
-#                     } else {
-#                         return("")
-#                     }
-#                 }
-#             }
-#         }
-#     }
-
-#     ## Scaling the disparity
-#     data <- lapply(data, lapply, scale.vals)
-
-#     ## Setting the plot window
-#     layout_matrix <- matrix(1:(length(metric_names)*length(data_names)), nrow = length(metric_names), ncol = length(data_names))
-#     layout <- layout(layout_matrix, widths = 1, heights = 1)
-#     # layout.show(layout)
-
-#     par(mfcol = c(length(metric_names), length(data_names)))
-
-#     ## Double looping through the plots (boooh!)
-#     for(dataset in 1:length(data_names)){
-#         for(metric in 1:length(metric_names)){
-#             ## Setting the plot position parameters
-#             first_row <- ifelse(dataset == 1, TRUE, FALSE)
-#             top_column <- ifelse(metric == 1, TRUE, FALSE)
-#             bottom_column <- ifelse(metric == length(metric_names), TRUE, FALSE)
-        
-#             if(all(unlist(data[[dataset]][[metric]]$disparity) < precision)) {
-#                 ## Empty plot
-#                 par(bty = "n")
-#                 plot(NULL, ylim = c(0,1), xlim = c(0,1), xaxt = "n", yaxt = "n", xlab = "", ylab = "")
-#                 text(0.5, 0.5, "NA", cex = 10)
-#             } else {
-#                 ## Setting the margins
-#                 margin <- c(ifelse(bottom_column, 3, 1), ifelse(first_row, 5, 1), 1, 1)
-#                 par(bty = "l", mar = margin)
-
-#                 ## Plotting the results
-#                 plot(data[[dataset]][[metric]], col = plot.param$col, border = plot.param$border, las = 1,
-#                     ylim = c(0,1),
-#                     xaxt = ifelse(bottom_column, "s", "n"),
-#                     xlab = "",
-#                     ylab = ifelse(first_row, metric_names[metric], ""),
-#                     yaxt = ifelse(first_row, "s", "n"),
-#                     main = ifelse(top_column, data_names[dataset], "")
-#                     )
-            
-#                 ## Adding the difference (or not)
-#                 text(1.5, 0.9, get.token(test[[dataset]][[metric]]), cex = plot.param$cex)
-#             }
-#         }
-#     }
-# }
-
 
 #' @title Plotting distribution by ID
 #'

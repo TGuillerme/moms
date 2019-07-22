@@ -332,6 +332,13 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     ## List of tables per metrics
     tables <- lapply(results_per_metric, convert.table)
 
+    ## Replacing NaN, Inf, and other non-numerics by 0
+    replace.no.num <- function(x) {
+        x[, 1] <- sapply(x[, 1], function(num) return(ifelse((is.infinite(num) | is.nan(num)), 0, num)))
+        return(x)
+    }
+    tables <- lapply(tables, replace.no.num)
+
     ## Selecting only a certain type of factors
     if(!missing(factors)) {
         ## Select only the relevant factors in the tables
