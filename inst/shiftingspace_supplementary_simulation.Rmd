@@ -52,7 +52,6 @@ The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz)
 source("list.of.metrics.R")
 ```
 
-
 The metrics analysed are the `r paste(metric_names, collapse = ", ")`.
 
 ## Generating the data
