@@ -224,5 +224,68 @@ demo_data <- c(palaeo, gmm, ecol)
 save(demo_data, file = "../data/demo_data.rda")
 ```
 
+# Running the disparity calculations
+
+```{r metrics_list, echo = FALSE}
+## Loading the list of metrics
+source("list.of.metrics.R")
+```
+
+```{r running_empirical, echo = FALSE}
+## Loading the data
+palaeo <- load.results("palaeo")
+gmm <- load.results("gmm")
+ecol <- load.results("ecol")
+
+## List of spaces
+trait_spaces <- c(palaeo, gmm, ecol)
+
+## Measuring space occupancy for all spaces and all metrics
+apply.disparity <- function(space, metrics) {
+    lapply(metrics, function(metric, space) dispRity(boot.matrix(space), metric), space)
+}
+disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
+
+# ## Wrapper for the bhatt.coeff function to return NA below a precision number
+# ## (to avoid comparing effectively 0 vs 0 distributions)
+# bhatt.coeff.safe <- function(x, y, bw = bw.nrd0, precision, ...) {
+#     if(all(x < precision) || all(y < precision)) {
+#         return(NA)
+#     } else {
+#         return(bhatt.coeff(x, y, bw = bw, ...))
+#     }
+# }
+
+# ## Testing the probability of overlap
+# disparity_bc <- lapply(disparities, lapply, test.dispRity,
+#                            test = bhatt.coeff.safe, precision = 1e-50)
+# t.test.safe <- function(x, y) {
+#     if(length(x) < 2 || length(y) < 2) {
+#         null_test <- t.test(c(1,2), c(1,2))
+#         null_test$statistic <- c(t = NA)
+#         null_test$p.value <- NA
+#         return(null_test)
+#     } else {
+#         return(t.test(x, y))
+#     }
+# }
+
+## Testing the differences for each distributions
+disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)#.safe)
+
+
+bob <- lapply(disparities[[6]], test.dispRity, test = t.test.safe)
+
+
+test.dispRity(disparities[[5]][[1]], test = t.test.safe)
+
+
+
+## Results list
+empirical_results <- list("disparities", "disparity_t_test")
+
+save.results(empirical_results)
+```
+
 
 # References
