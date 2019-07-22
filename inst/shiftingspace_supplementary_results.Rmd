@@ -201,7 +201,8 @@ volume_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dis
                        "prod.var"    = c(prod, variances),
                        "prod.ranges" = c(prod, ranges),
                        "prod.quantil"= c(prod, quantiles),
-                       "ellips.vol"  = ellipse.volume,)
+                       "ellips.vol"  = ellipse.volume,
+                       "n.ball.vol"  = n.ball.volume)
 volume_names <- c("Average squared pairwise distance",
                   "Procrustes variances",
                   "Functional dispersion",
@@ -211,7 +212,8 @@ volume_names <- c("Average squared pairwise distance",
                   "Product of variances",
                   "Product of ranges",
                   "Product of quantiles",
-                  "Ellipsoid volume"
+                  "Ellipsoid volume",
+                  "nBall volume"
                   )
 
 ## General density metrics
@@ -232,11 +234,19 @@ position_names <- c("Function diversity",
 functional_metrics <- list("func.div" = func.div,
                            "func.eve" = func.eve,
                            "func.disp" = func.disp)
-position_names <- c("Functional diversity",
+functional_names <- c("Functional diversity",
                     "Functional evenness",
                     "Functional dispersion")
-```
 
+## Selected metrics
+select_metrics <- list("func.disp" = func.disp,
+                       "sum.var"    = c(sum, variances),
+                       "ellips.vol"  = ellipse.volume,
+                       "span.tree"   = span.tree.length,
+                       "ave.neigh"   = c(mean, neighbours),
+                       "av.displa"  = c(mean, displacements),
+                       "median.eig1" = function(matrix) median(abs(apply(var(matrix), 2, sum))))
+```
 
 ```{r get_disparity_volume, echo = FALSE, warning = FALSE, results = 'hide'}
 ## Lapply functions to get disparity
@@ -257,6 +267,10 @@ volume_results <- lapply(all_spaces, lapply.space, volume_metrics)
 density_results <- lapply(all_spaces, lapply.space, density_metrics)
 ## Get the results for the position
 position_results <- lapply(all_spaces, lapply.space, position_metrics)
+## Get the results for the functional
+functional_results <- lapply(all_spaces, lapply.space, functional_metrics)
+## Get the results for the selected
+select_results <- lapply(all_spaces, lapply.space, select_metrics)
 ```
 
 ## Results
@@ -292,6 +306,30 @@ results_pairwise <- position_results
 
 ## Printing the results
 names(results_pairwise[[1]]) <- gsub(" ", "\n", position_names)
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+### functional metrics
+
+```{r, echo = FALSE}
+results_pairwise <- functional_results
+
+## Printing the results
+names(results_pairwise[[1]]) <- gsub(" ", "\n", functional_names)
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
+```
+
+### select metrics
+
+```{r, echo = FALSE}
+results_pairwise <- select_results
+
+## Printing the results
+names(results_pairwise[[1]]) <- gsub(" ", "\n", select_names)
 
 ## Plotting the pairwise results
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
