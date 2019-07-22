@@ -47,16 +47,18 @@ convhull <- function(matrix) {
 
 ## Small metrics list (for testing)
 metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-                    "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-                    "av.displac" = c(mean, displacements),
-                    "av.neighbo" = c(mean, neighbours),
-                    "dist.centre" = function(matrix) return(mean(centroids(matrix, centroid = 0))),
-                    "mean.centr" = c(mean, centroids),
-                    "func.disp"  = func.disp,
-                    "func.div"  = func.eve,
-                    "func.eve"  = func.div,
-                    "conv.hull" = convhull,
-                    "span.tree" = span.tree.length
+                    # "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+                    # "av.displac" = c(mean, displacements),
+                    # "av.neighbo" = c(mean, neighbours),
+                    # "dist.centre" = function(matrix) return(mean(centroids(matrix, centroid = 0))),
+                    # "mean.centr" = c(mean, centroids),
+                    # "func.disp"  = func.disp,
+                    # "func.div"  = func.eve,
+                    # "func.eve"  = func.div,
+                    # "conv.hull" = convhull,
+                    # "span.tree" = span.tree.length
+                    "sum.var" = c(sum, variances),
+                    "prod.var" = c(prod, variances)
                     )
 
 metric_names <- names(metrics_list)
