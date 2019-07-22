@@ -46,22 +46,21 @@ convhull <- function(matrix) {
 
 
 ## Small metrics list (for testing)
-metrics_list <- list(#"av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-                    # "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-                    # "av.displac" = c(mean, displacements),
-                    # "av.neighbo" = c(mean, neighbours),
-                    # "dist.centre" = function(matrix) return(mean(centroids(matrix, centroid = 0))),
-                    # "mean.centr" = c(mean, centroids),
-                    # "func.disp"  = func.disp,
-                    # "func.div"  = func.eve,
-                    # "func.eve"  = func.div,
-                    # "conv.hull" = convhull,
-                    # "span.tree" = span.tree.length
-                    "sum.var" = c(sum, variances),
-                    "prod.var" = c(prod, variances)
-                    )
+## Selected metrics
+metrics_list    <- list("func.disp" = func.disp,
+                       "sum.var"    = c(sum, variances),
+                       "ellips.vol" = ellipse.volume,
+                       "span.tree"  = span.tree.length,
+                       "ave.neigh"  = c(mean, neighbours),
+                       "av.displa"  = c(mean, displacements),
+                       "median.var" = function(matrix) median(abs(apply(var(matrix), 2, sum))))
 
-metric_names <- names(metrics_list)
+metric_names <- c("Functional dispersion",
+                  "Sum of variances",
+                  "Ellipsoid volume",
+                  "Minimum span tree length",
+                  "Average nearest neighbour distance",
+                  "Median sum of the var-covar.")
 
 
 ## All metrics (exploration)
