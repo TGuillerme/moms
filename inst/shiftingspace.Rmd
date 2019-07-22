@@ -35,9 +35,12 @@ if(packageVersion("dispRity") < "1.2.4") {
 }
 if(!require(moms)) devtools::install_github("TGuillerme/moms"); library(moms)
 
+## Setting the datapath
+DATA_PATH <- "../data/processed/"
+
 ## Create data directory
-if(!dir.exists("../data/processed")) {
-    dir.create(path="../data/processed", showWarnings = FALSE)
+if(!dir.exists(DATA_PATH)) {
+    dir.create(path = DATA_PATH, showWarnings = FALSE)
 }
 
 ## Setting the default parameters for the space plots
@@ -54,9 +57,6 @@ default.palette <- function(n) {
     hues <- seq(15, 375, length = n + 1)
     grDevices::hcl(h <- hues, l = 65, c = 100)[1:n]
 }
-
-## Setting the datapath
-DATA_PATH <- "../data/processed/"
 
 ## Checking whether the data exists
 if(!all(c("remove_05.Rda") %in% list.files(DATA_PATH))) {
