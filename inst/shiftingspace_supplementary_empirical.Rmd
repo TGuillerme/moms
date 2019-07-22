@@ -156,13 +156,13 @@ This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to 
 
 ```{r, eval = TRUE}
 ## Reading the community composition data from Jones et al 2015
-jones_communities <- read.csv("../data/raw/Jones2015.csv")
+jones_communities <- read.csv("../data/raw/Jones2015.csv", stringsAsFactors = FALSE)
 
 ## Selecting only the whole plots and the plot number, habitat and species
 jones_whole_com <- jones_communities[which(jones_communities$mptype == "wholeplot"), c(1,2,3)]
 
 ## Separate each plot into aspen/grassland
-jones_whole_com$plot <- paste(jones_whole_com$plot, jones_whole_com$habitat, sep = ".")
+jones_whole_com$plot <- paste(jones_whole_com[,1], jones_whole_com$habitat, sep = ".")
 
 ## Making the community matrix
 plot_names <- unique(jones_whole_com$plot)
@@ -184,31 +184,21 @@ for(one_plot in rownames(community)) {
 distance_matrix <- as.matrix(vegan::vegdist(community, method = "jaccard"))
 
 ## Ordinating the data
-jones_traitspace <- stats::cmdscale(distance_matrix,
+jones_ordination <- stats::cmdscale(distance_matrix,
                                     k = ncol(distance_matrix)- 1, add = TRUE)$points
 ```
-
-<!-- ### Healy et al. 2019 data
-
-
--We log10 all variables and z-transformed by mean centering and dividing by the standard deviation prior to analysis
-
-For each of the life history traits included used the residuals from the respective regressions, as described above, where we controlled for variation relating to mass, matrix dimension, phylogeny and population.
-
-Life history trait ~ fixed = log10(mass) + log10(matrix dimension)
-                     Random = phylogeny + species -->
 
 ### Making the ecological trait-space groups
 
 We separated the @jones2015 dataset into `aspen` and `grassland` groups.
 
-```{r}
+```{r, eval = TRUE}
 ## Making the groups
-jones_groups <- list("aspen" = grep("aspen", rownames(jones_traitspace)),
-                     "grassland" = grep("grassland", rownames(jones_traitspace)))
+jones_groups <- list("aspen" = grep("aspen", rownames(jones_ordination)),
+                     "grassland" = grep("grassland", rownames(jones_ordination)))
 
 ## Making the dispRity objects
-jones_traitspace <- custom.subsets(jones_traitspace, group = jones_groups)
+jones_traitspace <- custom.subsets(jones_ordination, group = jones_groups)
 
 ## Saving the data for the main analysis
 ecol <- list("jones" = jones_traitspace, "ecodata" = jones_traitspace)
@@ -233,57 +223,15 @@ source("list.of.metrics.R")
 
 ```{r running_empirical, echo = FALSE}
 ## Loading the data
-palaeo <- load.results("palaeo")
-gmm <- load.results("gmm")
-ecol <- load.results("ecol")
-
-## List of spaces
-trait_spaces <- c(palaeo, gmm, ecol)
+trait_spaces <- demo_data
 
 ## Measuring space occupancy for all spaces and all metrics
 apply.disparity <- function(space, metrics) {
     lapply(metrics, function(metric, space) dispRity(boot.matrix(space), metric), space)
 }
-disparities <- lapply(trait_spaces, apply.disparity, metrics_list)
-
-# ## Wrapper for the bhatt.coeff function to return NA below a precision number
-# ## (to avoid comparing effectively 0 vs 0 distributions)
-# bhatt.coeff.safe <- function(x, y, bw = bw.nrd0, precision, ...) {
-#     if(all(x < precision) || all(y < precision)) {
-#         return(NA)
-#     } else {
-#         return(bhatt.coeff(x, y, bw = bw, ...))
-#     }
-# }
-
-# ## Testing the probability of overlap
-# disparity_bc <- lapply(disparities, lapply, test.dispRity,
-#                            test = bhatt.coeff.safe, precision = 1e-50)
-# t.test.safe <- function(x, y) {
-#     if(length(x) < 2 || length(y) < 2) {
-#         null_test <- t.test(c(1,2), c(1,2))
-#         null_test$statistic <- c(t = NA)
-#         null_test$p.value <- NA
-#         return(null_test)
-#     } else {
-#         return(t.test(x, y))
-#     }
-# }
-
-## Testing the differences for each distributions
-disparity_t_test <- lapply(disparities, lapply, test.dispRity, test = t.test)#.safe)
-
-
-bob <- lapply(disparities[[6]], test.dispRity, test = t.test.safe)
-
-
-test.dispRity(disparities[[5]][[1]], test = t.test.safe)
-
-
+empirical_results <- lapply(trait_spaces, apply.disparity, metrics_list)
 
 ## Results list
-empirical_results <- list("disparities", "disparity_t_test")
-
 save.results(empirical_results)
 ```
 
