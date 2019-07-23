@@ -53,12 +53,12 @@ metrics_list    <- list("func.disp" = func.disp,
                        "span.tree"  = function(matrix) span.tree.length(matrix)/nrow(matrix),
                        "ave.neigh"  = c(mean, neighbours),
                        "av.displa"  = c(mean, displacements),
-                       "med.centre" = function(matrix) median(centroids(matrix, centroid = 0)))
+                       "var.centre" = function(matrix) var(centroids(matrix, centroid = 0)))
 
-metric_names <- c("Functional dispersion",
+metric_names <- c("Average distance from centroid",
                   "Sum of variances",
                   "Ellipsoid volume",
-                  "Average spanning tree length",
+                  "Minimum spanning tree average distance",
                   "Average nearest neighbour distance",
                   "Average displacements",
-                  "Median distance from centre")
+                  "Variance of the distance from centre")
