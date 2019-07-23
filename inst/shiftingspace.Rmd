@@ -4,7 +4,7 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 8
     fig_height: 8
     keep_tex: true
@@ -67,7 +67,7 @@ if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
 ```
 
 
-```{r compilation_html, echo = FALSE, eval = FALSE}
+```{r compilation_html, echo = FALSE, eval = TRUE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
