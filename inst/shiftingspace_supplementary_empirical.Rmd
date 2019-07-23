@@ -10,7 +10,7 @@ output:
 
 # Supplementary material 2: empirical data
 
-```{r, echo = FALSE}
+```{r header_empirical, echo = FALSE}
 ## Loading the packages
 if(!require(devtools)) install.packages("devtools")
 if(!require(knitr)) install.packages("knitr"); library(knitr)
@@ -51,7 +51,7 @@ The protocol for creating each space is detailed below.
 For the discrete morphological data, we calculated a distance matrix from the original discrete morphological matrices from @beck2014 and @wright2017 using the maximum observable distance [@lloyd2016, @lehmann2019] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, gower1966, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ taxa. 
 
-```{r}
+```{r load_claddis_empirical}
 ## Creating the trait-spaces
 beck_traitspace <- Claddis.ordination("../data/raw/Beck2014.nex", distance = "MORD")
 wright_traitspace <- Claddis.ordination("../data/raw/Wright2017.nex", distance = "MORD")
@@ -59,7 +59,7 @@ wright_traitspace <- Claddis.ordination("../data/raw/Wright2017.nex", distance =
 
 For both datasets we created two groups, the crown versus the stem mammals for @beck2014 and the crinoids occuring before and after the Ordovician-Silurian boundary (455-430 million years ago - Mya).
 
-```{r}
+```{r group_claddis_empirical}
 ## Loading the tree from Beck and Lee 2014
 beck_tree <- read.nexus("../data/raw/Beck2014.tre")
 
@@ -97,7 +97,7 @@ We then ordinated the resulted Procrustes superimposed data using a principal co
 
 #### Marcy et al. 2016
 
-```{r}
+```{r load_marcy_empirical}
 ## Read in TPS coordinates
 tps_data <- readland.tps("../data/raw/Marcy2016.TPS", specID = "imageID", warnmsg = FALSE)
 
@@ -121,7 +121,7 @@ sp_names <- sp_names[!duplicated]
 
 We divided the dataset from @marcy2016 into two groups corresponding to the two genera: *Thomomys* and *Megascapheus*.
 
-```{r}
+```{r group_gmm_empirical}
 ## Selecting the generas (first element in the name list)
 subgenera <- unlist(lapply(sp_names, function(x) x[[1]]))
 
@@ -136,7 +136,7 @@ marcy_data <- geomorph.data.frame(gpagen(tps_data, Proj = TRUE, ProcD = TRUE, cu
 
 
 
-```{r, eval = TRUE}
+```{r morphospace_gmm_empirical, eval = TRUE}
 ## Creating the trait space
 marcy_traitspace <- dispRity::geomorph.ordination(marcy_data)
 
@@ -154,7 +154,7 @@ We then selected only the `wholeplot` entries and separated the studied plot bet
 From this matrix we calculated a Jaccard distance matrix [@oksanen2007vegan] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ field sites. 
 
-```{r, eval = TRUE}
+```{r load_jones_empirical, eval = TRUE}
 ## Reading the community composition data from Jones et al 2015
 jones_communities <- read.csv("../data/raw/Jones2015.csv", stringsAsFactors = FALSE)
 
@@ -192,7 +192,7 @@ jones_ordination <- stats::cmdscale(distance_matrix,
 
 We separated the @jones2015 dataset into `aspen` and `grassland` groups.
 
-```{r, eval = TRUE}
+```{r group_jones_empirical, eval = TRUE}
 ## Making the groups
 jones_groups <- list("aspen" = grep("aspen", rownames(jones_ordination)),
                      "grassland" = grep("grassland", rownames(jones_ordination)))
@@ -208,7 +208,7 @@ save.results(ecol)
 
 ### Exporting the datasets for shiny
 
-```{r}
+```{r demo_data_empirical}
 ## The list of datasets
 demo_data <- c(palaeo, gmm, ecol)
 save(demo_data, file = "../data/demo_data.rda")
@@ -216,7 +216,7 @@ save(demo_data, file = "../data/demo_data.rda")
 
 # Running the disparity calculations
 
-```{r metrics_list, echo = FALSE}
+```{r metrics_list_empirical, echo = FALSE}
 ## Loading the list of metrics
 source("list.of.metrics.R")
 ```
@@ -227,7 +227,8 @@ trait_spaces <- demo_data
 
 ## Measuring space occupancy for all spaces and all metrics
 apply.disparity <- function(space, metrics) {
-    lapply(metrics, function(metric, space) dispRity(boot.matrix(space), metric), space)
+    lapply(metrics, function(metric, space) dispRity(boot.matrix(space, bootstraps = 500), metric),
+           space)
 }
 empirical_results <- lapply(trait_spaces, apply.disparity, metrics_list)
 

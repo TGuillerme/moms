@@ -50,36 +50,15 @@ convhull <- function(matrix) {
 metrics_list    <- list("func.disp" = func.disp,
                        "sum.var"    = c(sum, variances),
                        "ellips.vol" = ellipse.volume,
-                       "span.tree"  = span.tree.length,
+                       "span.tree"  = function(matrix) span.tree.length(matrix)/nrow(matrix),
                        "ave.neigh"  = c(mean, neighbours),
                        "av.displa"  = c(mean, displacements),
-                       "median.var" = function(matrix) median(abs(apply(var(matrix), 2, sum))))
+                       "med.centre" = function(matrix) median(centroids(matrix, centroid = 0)))
 
 metric_names <- c("Functional dispersion",
                   "Sum of variances",
                   "Ellipsoid volume",
-                  "Minimum span tree length",
+                  "Average spanning tree length",
                   "Average nearest neighbour distance",
-                  "Median sum of the var-covar.")
-
-
-## All metrics (exploration)
-# metrics_list <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2)),
-#                     "Procrustes" = function(matrix) return(sum(matrix^2)/nrow(matrix)),
-#                     "Volume" = ellipse.volume,
-#                     # "PoR" = c(prod, ranges),
-#                     # "SoR" = c(sum, ranges),
-#                     # "PoV" = c(prod, variances),
-#                     "SoV" = c(sum, variances),
-#                     # "PoQ" = c(prod, quantiles),
-#                     # "SoQ" = c(sum, quantiles),
-#                     "av.displac" = c(mean, displacements),
-#                     "av.neighbo" = c(mean, neighbours))
-
-# metric_names <- c("Average squared\ndistance", "Procrustes\nvariance", "Ellipsoid\nvolume", 
-#                   "Sum of\nVariances", "Mean\ndisplacement", "Mean nearest\nneighbours distance")
-
-## Shorter vector name version (for clarity in the fable)
-# name <- gsub("\n", " ", metric_names)
-#"Product of Quantiles", "Sum of Quantiles", 
-#"Product of\nRange", "Sum of\nRanges", "Product of\nVariances",
+                  "Average displacements",
+                  "Median distance from centre")

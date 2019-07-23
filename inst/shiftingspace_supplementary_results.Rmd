@@ -241,11 +241,11 @@ functional_names <- c("Functional diversity",
 ## Selected metrics
 select_metrics <- list("func.disp" = func.disp,
                        "sum.var"    = c(sum, variances),
-                       "ellips.vol"  = ellipse.volume,
-                       "span.tree"   = span.tree.length,
-                       "ave.neigh"   = c(mean, neighbours),
+                       "ellips.vol" = ellipse.volume,
+                       "span.tree"  = function(matrix) span.tree.length(matrix)/nrow(matrix),
+                       "ave.neigh"  = c(mean, neighbours),
                        "av.displa"  = c(mean, displacements),
-                       "median.eig1" = function(matrix) median(abs(apply(var(matrix), 2, sum))))
+                       "med.centre" = function(matrix) median(centroids(matrix, centroid = 0))
 ```
 
 ```{r get_disparity_volume, echo = FALSE, warning = FALSE, results = 'hide'}
