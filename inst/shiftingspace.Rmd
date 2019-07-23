@@ -4,13 +4,10 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  html_document:
-  fig_width: 8
-  fig_height: 8
-keep_tex: true
-self_contained: false
-line_numbers: true
-fig_caption: true
+  pdf_document:
+    fig_width: 8
+    fig_height: 8
+    keep_tex: true
 ---
 
 <!-- When  toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
@@ -70,7 +67,7 @@ if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
 ```
 
 
-```{r compilation_html, echo = FALSE, eval = TRUE}
+```{r compilation_html, echo = FALSE, eval = FALSE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -735,11 +732,6 @@ Table 6: Comparisons of different pairs of groups in different empirical trait-s
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
 For all seven metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
 When looking at the probability of overlap, they are also clearly affected by the different metrics.
-
-
-
-
-
 
 
 <!--  -->
