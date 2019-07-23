@@ -154,22 +154,22 @@ generate.fable.empirical <- function(data, test, precision, plot.param, dataset)
     ## Get significance token
     get.token <- function(test) {
 
-        if(is.nan(test[[3]][[1]]) ||
-           is.na(test[[3]][[1]]) ||
-           is.null(test[[3]][[1]])) {
+        if(is.nan(unlist(test)["p.value"]) ||
+           is.na(unlist(test)["p.value"]) ||
+           is.null(unlist(test)["p.value"])) {
             return("")
         }
 
-        if(test[[3]][[1]] < 0.001) {
+        if(unlist(test)["p.value"] < 0.001) {
             return("***")
         } else {
-            if(test[[3]][[1]] < 0.01) {
+            if(unlist(test)["p.value"] < 0.01) {
                 return("**")
             } else {
-                if(test[[3]][[1]] < 0.05) {
+                if(unlist(test)["p.value"] < 0.05) {
                     return("*")
                 } else {
-                    if(test[[3]][[1]] < 0.1) {
+                    if(unlist(test)["p.value"] < 0.1) {
                         return(".")
                     } else {
                         return("")
