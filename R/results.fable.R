@@ -207,7 +207,7 @@ generate.fable.empirical <- function(data, test, precision, plot.param, dataset)
 
             if(length(test) == 1) {
                 ## Test is bhatt.coeff style
-                text(1.5, 0.9, unname(round(test, 3)[[1]]), cex = plot.param$cex + plot.param$scaler)
+                text(1.5, 0.9, unname(round(test, 3)[[1]]), cex = plot.param$cex)
             } else {
                 ## Test is h.test style
                 text(1.5, 0.9, get.token(test), cex = plot.param$cex + plot.param$scaler)
