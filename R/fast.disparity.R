@@ -25,6 +25,7 @@
 #' @author Thomas Guillerme
 #' @export
 #' 
+
 fast.disparity <- function(group, space, metric, rare.dim) {
     ## Setting up the default args
     args <- list(matrix = space[group, 1:rare.dim])

@@ -9,7 +9,7 @@ generate.fable.empirical(data, test, precision, plot.param, dataset)
 \arguments{
 \item{data}{the disparity data}
 
-\item{test}{the associated test with the data}
+\item{test}{the associated test with the data (optional)}
 
 \item{precision}{the value under which to consider values as zeros}
 

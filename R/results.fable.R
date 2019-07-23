@@ -123,7 +123,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
 #' @description Generates the plots for the empirical example fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
 #'
 #' @param data the disparity data
-#' @param test the associated test with the data
+#' @param test the associated test with the data (optional)
 #' @param plot.param the plot parameters
 #' @param data_names the names of the datasets (to be plotted)
 #' @param metrics_names the names of the metrics (to be plotted)
@@ -203,7 +203,16 @@ generate.fable.empirical <- function(data, test, precision, plot.param, dataset)
         axis(2, at = seq(from = 0, to = 1, by = 0.2), labels = ifelse(dataset == 1, TRUE, FALSE), tick = TRUE, lwd = 1 + plot.param$scaler, cex.axis = 0.5 + (plot.param$scaler)/2, las = 2)
     
         ## Adding the difference (or not)
-        text(1.5, 0.9, get.token(test), cex = plot.param$cex + plot.param$scaler)
+        if(!missing(test)) {
+
+            if(length(test) == 1) {
+                ## Test is bhatt.coeff style
+                text(1.5, 0.9, unname(round(test, 3)[[1]]), cex = plot.param$cex + plot.param$scaler)
+            } else {
+                ## Test is h.test style
+                text(1.5, 0.9, get.token(test), cex = plot.param$cex + plot.param$scaler)
+            }
+        }
     }
 }
 
