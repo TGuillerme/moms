@@ -1,0 +1,79 @@
+---
+title: "Moms: measuring occupancy in multidimensional spaces"
+author: "Thomas Guillerme"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_width: 12
+    fig_height: 6
+---
+
+# Moms: the user manual
+
+## Introduction
+
+Moms is a Shiny app for helping choosing the right tool for measuring occupancy in multidimensional spaces.
+
+Multdimensional spaces are any space with two dimensions or more, usually however there are high dimensional spaces (>> 3D) and are called trait-spaces in ecology or morphospaces in macroevolution.
+Trait-spaces have traits (columns) and observations (rows).
+
+Space-occupancy metric are metrics that measure how observations (data points) occupy the trait space.
+They can be called dissimilarity indices (ecology) or disparity metrics (evolution)
+
+### What is moms?
+
+A tool for helping to analyse multidimensional data.
+There are probably as many metrics as they are trait-spaces out there so it can be difficult to chose which metric to use to measure changes or differences in your own trait space.
+Moms is designed to help you in this task by visualising and playing around with different metrics and different scenarios.
+
+### What moms is *not*?
+
+A tool for analysing multidimensional data.
+Use `dispRity` or `vegan` or `momocs` or whatever tools suits you best!
+
+## The basics
+
+This is what moms looks like.
+There are six panels (that can change in size and content!)
+
+* The space generation panel (upper left): to generate or load your trait-space 
+* The space modification panel (lower left): to modify (reduce) your trait-space
+* The space panel (centre up): the visualisation of a 2D image of your space
+* The occupancy panel (centre down): the amount of space occupancy
+* The metric panel (upper right): to chose how to measure space occupancy
+* The display panel (upper left): to chose how to visualise the 2D image of your space
+
+### Creating a space
+
+The easiest way is to let `moms` create a space for you you can chose the number of dimensions and the number of observations using the sliders.
+
+The many more options to create your space are detailed in [the advanced section](#space_advance)
+
+### Transforming the space
+
+### Measuring space occupancy
+
+
+
+## The advanced
+
+### Creating a space {#space_advance}
+
+#### Simulating a space
+
+#### Demo spaces
+
+#### Input your own space
+
+
+### Transforming the space {#transform_advance}
+
+### Measuring space occupancy
+
+#### Which metric to use? 
+
+#### Create your own metric!
+
+
+```{r, eval = FALSE, message = FALSE, fig.width = 12, fig.height = 12, echo = FALSE}
+```
