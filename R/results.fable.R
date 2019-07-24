@@ -112,7 +112,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
             x_pos[column-1] <- ifelse(mean(pooled_data[, column]) < 0, 0.5, -0.5)
         }
         ## Add the text
-        text(x = x_pos, y = y_pos, labels = coefs, cex = 1 + plot.param$scaler)
+        text(x = x_pos, y = y_pos-0.15, labels = coefs, cex = plot.param$cex)
 
     }
 }
