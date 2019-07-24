@@ -516,3 +516,15 @@ plot.error <- function(text, col = "#cc6644", font = 1, cex = 1.2, ...) {
     ## Error message
     text(0.5, 0.5, paste("Error:", text), col = col, font = font, cex = cex, ...)
 }
+
+## Get proportional change in a table
+get.prop.change <- function(table, change = "change") {
+    ## Get the proportional change
+    proportional_change <- table[2,3]/table[1,3]*100-100
+    ## Adding the proportional change
+    table <- cbind(table, c("", paste(round(proportional_change, 2), "%")))
+    ## Change the column name
+    colnames(table)[4] <- change
+
+    return(table)
+}

@@ -213,6 +213,7 @@ shinyServer(
 
                 ## Errors from metrics_handle
                 if(class(metrics_handle) == "character") {
+                    print("hit return output table")
                     return(metrics_handle)
                 }
 
@@ -229,20 +230,18 @@ shinyServer(
                 if(input$reduce != "None") {
                     ## Add the change column (if groups are not pre-made)
                     if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
-                        ## Print the results
-                        return(table_out)
+                        ## Return full table with proportional difference
+                        return(get.prop.change(table_out, change = "difference"))
                     } else {
                         ## Get the proportional change
-                        proportional_change <- table_out[2,3]/table_out[1,3]*100-100
-
-                        ## Adding the proportional change
-                        table_out <- cbind(table_out, c("", paste(round(proportional_change, 2), "%")))
-                        ## Change the column name
-                        colnames(table_out)[4] <- "change"
+                        table_out <- get.prop.change(table_out)
 
                         ## Print the output
                         return(table_out[,-1])
                     }
+                } else {
+                    ## Print the output
+                    return(table_out[,-1])
                 }
             })
             # ~~~~~~~~~
