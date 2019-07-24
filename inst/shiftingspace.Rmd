@@ -7,10 +7,28 @@ output:
   html_document:
     fig_width: 8
     fig_height: 8
-    keep_tex: true
 ---
 
-<!-- When  toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
+<!-- When toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
+
+<!-- To build the line numbered version (for submission) use the following yaml header snippet
+output:
+  pdf_document:
+    fig_width: 8
+    fig_height: 8
+    keep_tex: true
+self_contained: false
+---
+and edit the save .tex file to add the following
+
+\usepackage{lineno} %in the package header
+
+\linespread{2} %in the document header
+
+\modulolinenumbers[1] % just after the \begin{document} tag
+\linenumbers
+ -->
+
 
 ```{r header, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
 ## Repeatability note:
@@ -432,18 +450,19 @@ To measure how the metrics responded to shifts in trait-spaces, we reduced the s
 
 * **Randomly:** by randomly removing 50% of elements (Fig. 3A).
 
-* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected) (Fig. 3B).
+* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected) (Fig. 3B). This generated two limit removals: *maximum* and *minimum* respectively in orange and blue in Fig. 3B.
 
-* **Displacement:** by removing points similarly as above but using the distance from the furthest point from the centre (max point - Fig. 3C).
+* **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected - Fig. 3C). This generated two density removals: *high* and *low* respectively in orange and blue in Fig. 3C.
 
-* **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected - Fig. 3D).
+* **Position:** by removing points similarly as above but using the distance from the furthest point from the centre (max point - Fig. 3D). This generated two position removals: *positive* and *negative* respectively in orange and blue in Fig. 3D.
+
 
 The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
 We used mirror results for the limit, displacement and density reduction (i.e. the opposite data was also used).
 For example, when increasing the **density** by removing the 50% most distant elements, we also run a transformation by removing 50% of the *closests* elements.
-This resulted in seven different transformation by reducing the space: randomly, by limit (positive or negative), by displacement (positive or negative) or by density (increased or decreased).
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays 50% of the data points removed (in orange) using the following algorithm: A - randomly; B - by limit (removing data from the centre); C - by displacement (removing data from one side of the plot); and D - by density (removing data to increase or decrease the density).")}
+
+```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue).")}
 set.seed(42)
 
 ## Change colors
@@ -458,9 +477,6 @@ remove <- 0.5
 
 ## Trait space
 trait_space <- space.maker(elements, 2, distribution = rnorm)
-# ## The original space
-# plot(trait_space, pch = 20, xlim = c(-3, 3), ylim = c(-3, 3),
-#      main = "A - Original space", xlab = "Trait 1", ylab = "Trait 2")
 
 ## The randomly removed space
 random_rm <- reduce.space(trait_space, type = "random", remove = 0.5)
@@ -480,23 +496,24 @@ plot.space(trait_space, density_rm, main = "C - Density", defaults)
 ## The displacement removal
 displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
 ## Moving the space to the upper right corner (positive)
-plot.space(trait_space, displace_rm, main = "D - Displacement", defaults)
+plot.space(trait_space, displace_rm, main = "D - Position", defaults)
 
 
 ## List of removals (for plotting the tables later)
 typical_removal <- list(space = trait_space,
-remove = list("random" = random_rm,
-              "limit(min)" = limit_rm,
-              "limit(max)" = !limit_rm,
-              "displace(positive)" = displace_rm,
-              "displace(negative)" = !displace_rm,
-              "density(high)" = density_rm,
-              "density(low)" = !density_rm))
+                        remove = list("random" = random_rm,
+                                      "limit(min)" = limit_rm,
+                                      "limit(max)" = !limit_rm,
+                                      "density(high)" = density_rm,
+                                      "density(low)" = !density_rm,
+                                      "displace(positive)" = displace_rm,
+                                      "displace(negative)" = !displace_rm))
 ```
 
 To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non reduced space for each dimension distributions or number of dimensions.
 To do so, we subtracted the observed disparity with no space reduction (i.e. base disparity) to all the disparity measurements of the reduced spaces and then divided it by the resulting maximum observed disparity.
 This way, our disparity metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the disparity metric value.
+We then measured the probability of overlap of the between the non-random removals (limit (max/min), displacement (positive/negative) and density (high/low)) and the random removals using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
 
 ### Measuring the effect of space and dimensionality on shifting spaces
 
@@ -528,7 +545,7 @@ Finally, analysed the effect of the different space-occupancy metrics on six dif
 For each of these six studies we generated a trait-spaces from the data published along with the paper.
 We then divided the trait-space into two roughly equal sized groups based on the nature of the paper and applied the space-occupancy metrics to each pair of groups to test whether different metrics captured different differences between groups.
 
-The procedures to generate the data and the groups varies from one study to the other but is detailed and fully reproducible in the supplementary materials. Table 4 summarises each data type, trait-space, and type of question:
+The procedures to generate the data and the groups varies from one study to the other but is detailed and fully reproducible in the supplementary materials.
 
 study | field | taxonomic Group | traits (data) | trait-space | size | groups | type of question |
 ------|-------|-----------------|---------------|-------------|------|--------|------------------|
@@ -611,13 +628,14 @@ plot.param <- list(scaler = 3,
                    quantiles = c(95, 50),
                    cent.tend = median,
                    pch = 19,
-                   metric.max = length(metrics_list))
+                   metric.max = length(metrics_list),
+                   cex = 2)
 
 ## Looping through each mini plot for every metric
 for(metric in 1:length(metrics_list)) {
-    generate.fable.plot(data = remove_05, metric = metric, what = "limits", plot.param = plot.param)
-    generate.fable.plot(data = remove_05, metric = metric, what = "densit", plot.param = plot.param)
-    generate.fable.plot(data = remove_05, metric = metric, what = "displa", plot.param = plot.param)
+    generate.fable.plot(data = remove_05, metric = metric, what = "limits", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = remove_05, metric = metric, what = "densit", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = remove_05, metric = metric, what = "displa", plot.param = plot.param, overlap = TRUE)
 }
 
 ```
@@ -655,7 +673,7 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 
 
-Table 5: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different space-occupancy metrics. The dots represent the median space-occupancy values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction, in orange the "negative" reductions (i.e. using the orange dots in Figure 3) and in blue the "positive" reductions (i.e. using the blue dots in Figure 3). _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space-occupancy ~ distributions and space-occupancy ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
+Table 5: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different space-occupancy metrics. The dots represent the median space-occupancy values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction. Results in blue are the minimum limit, low density and negative shift for respectively the volume, density and position changes. Results in orange are the maximum limit, high density and positive shift for respectively the volume, density and position changes. The displayed value in the plots are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange reductions and the random ones. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space-occupancy ~ distributions and space-occupancy ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
 As expected from the sketch in Figure 2, some different metrics capture different aspects of trait-space occupancy.
 However, it is worth noticing that it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
@@ -666,7 +684,6 @@ Note however that the increase in volume does not correspond to an *actual* incr
 In terms of change in density (increase or decrease), only the Minimum spanning tree average distance and the Average nearest neighbour distance seem to capture a clear change in both directions.
 In terms of change in position (increase or decrease), only the Average displacements metric seems to capture a change a clear change in direction (albeit not in both directions).
 This is not so surprising since the notion of positions becomes more and more complex to grab as dimensionality increases (i.e. beyond left/right and up/down).
-
 
 ## Empirical example
 
@@ -726,7 +743,7 @@ Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody   
 `r name[6]` | `r plot.id(6)` | `r plot.id(13)` | `r plot.id(20)` | `r plot.id(27)` | `r plot.id(34)` | `r plot.id(41)`|
 `r name[7]` | `r plot.id(7)` | `r plot.id(14)` | `r plot.id(21)` | `r plot.id(28)` | `r plot.id(35)` | `r plot.id(42)`|
 
-Table 6: Comparisons of different pairs of groups in different empirical trait-spaces. NAs are used for cases where space-occupancy could not be measured due to the curse of multidimensionality. The displayed value in the probability of overlap between both groups (Bhattacharrya Coefficient).
+Table 6: Comparisons of different pairs of groups in different empirical trait-spaces. NAs are used for cases where space-occupancy could not be measured due to the curse of multidimensionality. The displayed values are the probability of overlap between both groups (Bhattacharrya Coefficient).
 
 
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
