@@ -1,31 +1,3 @@
-## Minimal spanning tree distances evenness
-func.eve <- function(matrix) {
-    ## Distance matrix
-    distances <- dist(matrix)
-    ## weighted evenness (EW) for equal weighted species
-    branch_lengths <- (distances/2)[which(as.dist(ape::mst(distances)) != 0)]
-    ## partial weighted evenness (PEW)
-    rel_br_lentghs <- branch_lengths/sum(branch_lengths)
-    ## Regular abundance value (1/(S-1))
-    regular <- 1/(nrow(matrix) - 1)
-    ## Get the minimal distances
-    min_distances <- sapply(rel_br_lentghs, function(x, y) min(c(x, y)), y = regular)
-    ## Return the Functional eveness
-    return((sum(min_distances) - regular) / (1 - regular))
-}
-
-## Distance from centroid deviation ratio
-func.div <- function(matrix) {
-    ## The distance from centroid (dGi)
-    dist_centroid <- centroids(matrix)
-    ## The mean distance from centroid (dG)
-    mean_dis_cent <- mean(dist_centroid)
-    ## The number of observations
-    obs <- length(dist_centroid)
-    ## The FDiv metric
-    return((sum(dist_centroid) - mean_dis_cent * (obs-1)) / ((sum(abs(dist_centroid - mean_dis_cent) + dist_centroid))/obs))
-}
-
 ## Function dispersion (should be mean distance from centroid)
 func.disp <- function(matrix) {
     if(is.null(rownames(matrix))) {
