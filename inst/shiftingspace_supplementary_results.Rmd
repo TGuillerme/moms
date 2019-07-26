@@ -246,6 +246,7 @@ select_metrics <- list("func.disp" = func.disp,
                        "ave.neigh"  = c(mean, neighbours),
                        "av.displa"  = c(mean, displacements),
                        "med.centre" = function(matrix) median(centroids(matrix, centroid = 0)))
+select_names <- names(select_metrics)
 ```
 
 ```{r get_disparity_volume, echo = FALSE, warning = FALSE, results = 'hide'}
