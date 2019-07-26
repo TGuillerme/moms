@@ -285,6 +285,8 @@ shinyUI(fluidPage(
                                     "Average squared Euclidean distance (geiger::dtt)",
                                     "Average nearest neighbours distance (Euclidean)",
                                     "Average nearest neighbours distance (Manhattan)",
+                                    "Functional divergence (Villéger et al. 2008)",
+                                    "Functional evenness (Villéger et al. 2008)"
                                     "Median pairwise distance (Euclidean)",
                                     "Median pairwise distance (Manhattan)",
                                     "Minimum spanning tree length"
@@ -308,6 +310,8 @@ shinyUI(fluidPage(
                                     "convhull.surface",
                                     "diagonal",
                                     "ellipse.volume",
+                                    "func.div",
+                                    "func.eve",
                                     "max",
                                     "mean",
                                     "median",
@@ -315,7 +319,6 @@ shinyUI(fluidPage(
                                     "n.ball.volume",
                                     "prod",
                                     "sd",
-                                    "span.tree.length",
                                     "sum",
                                     "mode.val"), selected = "mean"),
           selectInput("metric_specific2", label = "Dimension level 2 metrics:",
@@ -327,7 +330,8 @@ shinyUI(fluidPage(
                                     "quantiles",
                                     "radius",
                                     "ranges",
-                                    "variances"), selected = "NULL"),
+                                    "variances",
+                                    "span.tree.length"), selected = "NULL"),
           helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances').")
         ),
 
