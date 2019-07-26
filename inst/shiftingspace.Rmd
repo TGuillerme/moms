@@ -549,12 +549,12 @@ The procedures to generate the data and the groups varies from one study to the 
 
 study | field | taxonomic Group | traits (data) | trait-space | size | groups | type of question |
 ------|-------|-----------------|---------------|-------------|------|--------|------------------|
-@beck2014 | palaeontology | Mammalia | discrete phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
-@wright2017 | palaeontology | Crinoidea | discrete phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
-@marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genus of Gophers (*Megascapheus*, *Thomomys*) morphological distinct? |
+@beck2014 | palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
+@wright2017 | palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
+@marcy2016 | geometrics morphometrics | Rodentia | skull 2D landmarks coordinates  | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genus of Gophers (*Megascapheus*, *Thomomys*) morphological distinct? |
 @@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@|
-@jones2015 | Ecology | Plantae | Species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
-@healy2019 | Ecology | Animalia | Life history | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
+@jones2015 | Ecology | Plantae | Communities species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
+@healy2019 | Ecology | Animalia | Life history traits | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 
 Table 4: details of the six empirical trait-spaces.
 
