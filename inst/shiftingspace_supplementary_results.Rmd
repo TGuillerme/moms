@@ -245,7 +245,7 @@ select_metrics <- list("func.disp" = func.disp,
                        "span.tree"  = function(matrix) span.tree.length(matrix)/nrow(matrix),
                        "ave.neigh"  = c(mean, neighbours),
                        "av.displa"  = c(mean, displacements),
-                       "med.centre" = function(matrix) median(centroids(matrix, centroid = 0))
+                       "med.centre" = function(matrix) median(centroids(matrix, centroid = 0)))
 ```
 
 ```{r get_disparity_volume, echo = FALSE, warning = FALSE, results = 'hide'}
