@@ -286,10 +286,10 @@ shinyUI(fluidPage(
                                     "Average nearest neighbours distance (Euclidean)",
                                     "Average nearest neighbours distance (Manhattan)",
                                     "Functional divergence (Villéger et al. 2008)",
-                                    "Functional evenness (Villéger et al. 2008)"
+                                    "Functional evenness (Villéger et al. 2008)",
                                     "Median pairwise distance (Euclidean)",
                                     "Median pairwise distance (Manhattan)",
-                                    "Minimum spanning tree length"
+                                    "Minimum spanning tree average length"
                                     ), selected = "Median nearest neighbours distance (Euclidean)")
         ),
 

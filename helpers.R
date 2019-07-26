@@ -288,16 +288,16 @@ handle.metrics <- function(input, dispRity_args, session) {
                     dispRity_code <- "dispRity::ellipse.volume(matrix)"
                 },
                 "Convex hull surface" = {
-                    if(input$n_dimensions > 10) {
-                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
+                    if(input$n_dimensions > 5) {
+                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 5 dimensions.")
                     } else {
                         dispRity_args$metric <- convhull.surface
                         dispRity_code <- "dispRity::convhull.surface(matrix)"
                     }
                 },
                 "Convex hull volume" = {
-                    if(input$n_dimensions > 10) {
-                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 10 dimensions.")
+                    if(input$n_dimensions > 5) {
+                        return("For saving computational time, this version cannot\ncalculate convex hull for more than 5 dimensions.")
                     } else {
                         dispRity_args$metric <- convhull.volume
                         dispRity_code <- "dispRity::convhull.volume(matrix)"
@@ -386,9 +386,9 @@ handle.metrics <- function(input, dispRity_args, session) {
                     dispRity_args$method <- "manhattan"
                     dispRity_code <- "stats::median(dispRity::pairwise.dist(matrix, method = \"manhattan\"))"
                 },
-                "Minimum spanning tree length" = {
-                    dispRity_args$metric <- span.tree.length
-                    dispRity_code <- "dispRity::span.tree.length(matrix)"
+                "Minimum spanning tree average length" = {
+                    dispRity_args$metric <- function(matrix) sum(span.tree.length(matrix))/nrow(matrix)
+                    dispRity_code <- "sum(dispRity::span.tree.length(matrix))/nrow(matrix)"
                 }
             )
         },
