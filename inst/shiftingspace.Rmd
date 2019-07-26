@@ -75,11 +75,11 @@ default.palette <- function(n) {
 
 ## Checking whether the data exists
 if(!all(c("remove_05.Rda") %in% list.files(DATA_PATH))) {
-    ## Run The supplementary material (simulation)
+    ## Run The supplementary material (simulation) ~ 5 minutes
     rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
 if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
-    ## Run The supplementary material
+    ## Run The supplementary material ~ 5 minutes
     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
 }
 ```
@@ -554,7 +554,7 @@ study | field | taxonomic Group | traits (data) | trait-space | size | groups | 
 @marcy2016 | geometrics morphometrics | Rodentia | 2D landmarks | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genus of Gophers (*Megascapheus*, *Thomomys*) morphological distinct? |
 @@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@|
 @jones2015 | Ecology | Plantae | Species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
-@@@ | Ecology | @@@ | Continuous data | Ordination (PCA) | @@@ | @@@ vs. @@@ | @@@|
+@healy2019 | Ecology | Animalia | Life history | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 
 Table 4: details of the six empirical trait-spaces.
 
@@ -733,7 +733,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
-Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Somebody       |
+Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Healy et al. 2019  |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(8)` | `r plot.id(15)` | `r plot.id(22)` | `r plot.id(29)` | `r plot.id(36)`|
 `r name[2]` | `r plot.id(2)` | `r plot.id(9)` | `r plot.id(16)` | `r plot.id(23)` | `r plot.id(30)` | `r plot.id(37)`|
