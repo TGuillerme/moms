@@ -143,7 +143,7 @@ shinyUI(fluidPage(
                                     "Marcy et al. 2016",
                                     "NONAME1",
                                     "Jones et al. 2015",
-                                    "NONAME2"
+                                    "Healy et al. 2019"
                                     ), selected = "Beck and Lee 2014"),
 
           conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
@@ -165,8 +165,9 @@ shinyUI(fluidPage(
               helpText("An ecological landscape study. The data is a 47 dimensions ordination (PCO) of the Jaccard distances between 48 field sites based on species composition.
                 Jones, N. T., Germain, R. M., Grainger, T. N., Hall, A. M., Baldwin, L., & Gilbert, B. (2015). Dispersal mode mediates the effect of patch size and patch connectivity on metacommunity diversity. Journal of Ecology, 103(4), 935-944.")
               ),
-          conditionalPanel(condition = "input.demo_data == \"NONAME2\"",
-              helpText("PLACE HOLDER FOR MATRIX ECOL 2.")
+          conditionalPanel(condition = "input.demo_data == \"Healy et al. 2019\"",
+              helpText("A life history analysis of the pace of life in animals. The data is a 6 dimensions ordination (PCA) of 6 life history traits from 285 animal species.
+                Healy, K., Ezard, T.H., Jones, O.R., Salguero-Gómez, R. and Buckley, Y.M., 2019. Animal life history is shaped by the pace of life and the distribution of age-specific mortality and reproduction. Nature ecology & evolution, p.1.")
               )
         ),
 
@@ -211,7 +212,7 @@ shinyUI(fluidPage(
                   helpText("The data is divided into two groups, the aspen grassland sites.")
                   ),
               conditionalPanel(condition = "input.demo_data == \"NONAME2\"",
-                  helpText("PLACE HOLDER FOR MATRIX ECOL 2.")
+                  helpText("The data is divided into two groups, ectothermic and endothermic animals.")
                   )
                 ),
             conditionalPanel(condition = "input.use_demo_groups == false",
