@@ -63,7 +63,7 @@ get.space <- function(input, args.only = FALSE){
                "Marcy et al. 2016"  = {dataset <- 3},
                "NONAME1"            = {dataset <- 4},
                "Jones et al. 2015"  = {dataset <- 5},
-               "NONAME2"            = {dataset <- 6}
+               "Healy et al. 2019"  = {dataset <- 6}
                )
         return(demo_data[[dataset]]$matrix)
 
@@ -239,7 +239,7 @@ get.reduction <- function(input, space, session) {
                "Marcy et al. 2016"  = {dataset <- 3},
                "NONAME1"            = {dataset <- 4},
                "Jones et al. 2015"  = {dataset <- 5},
-               "NONAME2"            = {dataset <- 6}
+               "Healy et al. 2019"  = {dataset <- 6}
                )
         return(1:dim(demo_data[[dataset]]$matrix)[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
     }
