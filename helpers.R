@@ -57,14 +57,7 @@ get.space <- function(input, args.only = FALSE){
         data(demo_data)
 
         ## Select the right data
-        switch(input$demo_data,
-               "Beck and Lee 2014"  = {dataset <- 1},
-               "Wright 2017"        = {dataset <- 2},
-               "Marcy et al. 2016"  = {dataset <- 3},
-               "NONAME1"            = {dataset <- 4},
-               "Jones et al. 2015"  = {dataset <- 5},
-               "Healy et al. 2019"  = {dataset <- 6}
-               )
+        dataset <- switch.demo.dataset(input)
         return(demo_data[[dataset]]$matrix)
 
     }
@@ -233,14 +226,7 @@ get.reduction <- function(input, space, session) {
         data(demo_data)
 
         ## Select the right data
-        switch(input$demo_data,
-               "Beck and Lee 2014"  = {dataset <- 1},
-               "Wright 2017"        = {dataset <- 2},
-               "Marcy et al. 2016"  = {dataset <- 3},
-               "NONAME1"            = {dataset <- 4},
-               "Jones et al. 2015"  = {dataset <- 5},
-               "Healy et al. 2019"  = {dataset <- 6}
-               )
+        dataset <- switch.demo.dataset(input)
         return(1:dim(demo_data[[dataset]]$matrix)[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
     }
 
@@ -381,6 +367,14 @@ handle.metrics <- function(input, dispRity_args, session) {
                     dispRity_args$metric <- c(mean, neighbours)
                     dispRity_args$method <- "manhattan"
                     dispRity_code <- "mean(dispRity::neighbours(matrix, method = \"manhattan\"))"
+                },
+                "Functional divergence (Villéger et al. 2008)" = {
+                    dispRity_args$metric <- func.div
+                    dispRity_code <- "dispRity::func.div(matrix)"
+                },
+                "Functional evenness (Villéger et al. 2008)" = {
+                    dispRity_args$metric <- func.eve
+                    dispRity_code <- "dispRity::func.eve(matrix)"
                 },
                 "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
@@ -527,4 +521,16 @@ get.prop.change <- function(table, change = "change") {
     colnames(table)[4] <- change
 
     return(table)
+}
+
+switch.demo.dataset <- function(input) {
+    switch(input$demo_data,
+       "Beck and Lee 2014"  = {dataset <- 1},
+       "Wright 2017"        = {dataset <- 2},
+       "Marcy et al. 2016"  = {dataset <- 3},
+       "NONAME1"            = {dataset <- 4},
+       "Jones et al. 2015"  = {dataset <- 5},
+       "Healy et al. 2019"  = {dataset <- 6}
+       )
+    return(dataset)
 }

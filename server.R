@@ -155,15 +155,7 @@ shinyServer(
                 ## Add the legend for the default spaces
                 if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
                     ## Select the dataset names
-                    switch(input$demo_data,
-                           "Beck and Lee 2014"  = {dataset <- 1},
-                           "Wright 2017"        = {dataset <- 2},
-                           "Marcy et al. 2016"  = {dataset <- 3},
-                           "NONAME1"            = {dataset <- 4},
-                           "Jones et al. 2015"  = {dataset <- 5},
-                           "Healy et al. 2019"  = {dataset <- 6}
-                           )
-                    subset_names <- names(demo_data[[dataset]]$subsets)
+                    subset_names <- names(demo_data[[switch.demo.dataset(input)]]$subsets)
                 
                     ## Get the legend text
                     legend_text <- c(paste(subset_names[1], paste0("(", length(which(reduced_space_points)),")")),
@@ -191,15 +183,7 @@ shinyServer(
 
                     if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
                         ## Select the demo dispRity object
-                        switch(input$demo_data,
-                               "Beck and Lee 2014"  = {dataset <- 1},
-                               "Wright 2017"        = {dataset <- 2},
-                               "Marcy et al. 2016"  = {dataset <- 3},
-                               "NONAME1"            = {dataset <- 4},
-                               "Jones et al. 2015"  = {dataset <- 5},
-                               "Healy et al. 2019"  = {dataset <- 6}
-                               )
-                        groups <- demo_data[[dataset]]
+                        groups <- demo_data[[switch.demo.dataset(input)]]
                     } else {
                         ## Create dispRity groups
                         groups <- custom.subsets(space,
