@@ -145,9 +145,9 @@ gmm <- list("marcy" = marcy_traitspace, "noname" = marcy_traitspace)
 save.results(gmm)
 ```
 
-### Ecological (continuous) data
+### Ecological data
 
-#### Jones et al. 2015 data
+#### Jones et al. 2015 data (species composition data)
 
 For the @jones2015 dataset, we converted the spreadsheet "aspen & grass richness & abund" from the data from @jones2015 available at @jones2015data into a .csv file (now available in `/data/raw`).
 We then selected only the `wholeplot` entries and separated the studied plot between `aspen` and `grassland` and converted the species presence data into a presence/absence matrix.
@@ -188,20 +188,46 @@ jones_ordination <- stats::cmdscale(distance_matrix,
                                     k = ncol(distance_matrix)- 1, add = TRUE)$points
 ```
 
+#### Healy et al. 2019 data (life history traits data)
+
+For the @healy2019 dataset, we used a processed version of the data available on the [GitHub repository associated to the paper](https://github.com/healyke/Healy_et_al_2019_Animal_Life_History).
+
+The procedure from @healy2019 consists of analysing matrix population models and extracting life history traits (survival rate, age at first reproduction, generation time, reproduction rate, life expectancy post sexual maturity and reproduction spread).
+To take into account the effect of body mass and phylogeny, @healy2019 used the residual of the six traits from general linear mixed models [@mcmcglmm; @multree].
+See @healy2019 for the exact description of the procedure.
+
+We used the [PCA_main_2019_may_28](https://github.com/healyke/Healy_et_al_2019_Animal_Life_History/blob/master/Main_PCA_analysis/PCA_main_2019_may_28.Rmd) script to obtain the data corrected for body mass and phylogeny with six variables: the survival residuals (`"SD_mort"`), the age at first reproduction (`"La_r"`), the generation time (`"gen_r"`), the mean reproductive rate (`"M_repo"`), the life expectancy post sexual maturity (`"M_suv"`) and the spread of reproduction (`"gini_r"`).
+
+```{r healy_pca}
+## Load the processed data
+healy_data <- read.csv("../data/raw/Healy2019.csv")
+
+## Cleaning up the data
+healy_traits <- healy_data[, -c(1, 8, 9)]
+
+## Ordinating the traits
+healy_ordination <- prcomp(healy_traits)$x
+```
+
+
 ### Making the ecological trait-space groups
 
-We separated the @jones2015 dataset into `aspen` and `grassland` groups.
+We separated the @jones2015 dataset into `aspen` and `grassland` groups and we separated the @healy2019 dataset into `ectotherms` `endotherms`:
 
-```{r group_jones_empirical, eval = TRUE}
+```{r group_ecol_empirical, eval = TRUE, warning = FALSE}
 ## Making the groups
 jones_groups <- list("aspen" = grep("aspen", rownames(jones_ordination)),
                      "grassland" = grep("grassland", rownames(jones_ordination)))
+healy_groups <- list("ectotherms" = which(healy_data[, 9] == "ecto"),
+                     "endotherms" = which(healy_data[, 9] == "endo"))
+
 
 ## Making the dispRity objects
 jones_traitspace <- custom.subsets(jones_ordination, group = jones_groups)
+healy_traitspace <- custom.subsets(healy_ordination, group = healy_groups)
 
 ## Saving the data for the main analysis
-ecol <- list("jones" = jones_traitspace, "ecodata" = jones_traitspace)
+ecol <- list("jones" = jones_traitspace, "healy" = healy_traitspace)
 save.results(ecol)
 ```
 
