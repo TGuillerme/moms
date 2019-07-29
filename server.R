@@ -197,7 +197,6 @@ shinyServer(
 
                 ## Errors from metrics_handle
                 if(class(metrics_handle) == "character") {
-                    print("hit return output table")
                     return(metrics_handle)
                 }
 
