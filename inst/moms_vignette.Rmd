@@ -1,5 +1,5 @@
 ---
-title: "Moms: measuring occupancy in multidimensional spaces"
+title: "`moms`: measuring occupancy in multidimensional spaces"
 author: "Thomas Guillerme"
 date: "`r Sys.Date()`"
 output:
@@ -8,72 +8,114 @@ output:
     fig_height: 6
 ---
 
-# Moms: the user manual
+# `moms`: the user manual
 
 ## Introduction
 
-Moms is a Shiny app for helping choosing the right tool for measuring occupancy in multidimensional spaces.
+`moms` is a Shiny app for helping choosing the right tool for measuring occupancy in multidimensional spaces.
 
-Multdimensional spaces are any space with two dimensions or more, usually however there are high dimensional spaces (>> 3D) and are called trait-spaces in ecology or morphospaces in macroevolution.
-Trait-spaces have traits (columns) and observations (rows).
+**Multdimensional spaces** are any space with multiple dimensions as columns (usually -but not necessary - more than 3 dimensions) and observations (or elements) as rows.
+Such multidimensional spaces are called differently in different fields in biology (and beyond) but they are often trait-spaces in ecology or morphospaces in macroevolution.
 
-Space-occupancy metric are metrics that measure how observations (data points) occupy the trait space.
-They can be called dissimilarity indices (ecology) or disparity metrics (evolution)
+**Space-occupancy metrics** are indices that measure how the observations (data points) are distributed in the trait-space.
+They also have different names in different fields, they have been called dissimilarity indices (ecology) or disparity metrics (evolution).
 
-### What is moms?
+One problem is that these space-occupancy metrics can be non-intuitive, especially in high dimensional spaces and can capture different aspects of space-occupancy (volume, density or position).
+`moms` allow to simulate or import multidimensional spaces and test and visualise the effect of specific metrics on the multidimensional space occupancy.
+It also allows to disrupt the space to check how the metric responds to changes in the distribution of the observations.
 
-A tool for helping to analyse multidimensional data.
+### What `moms` is?
+
+`moms` is a tool for helping to analyse multidimensional data.
 There are probably as many metrics as they are trait-spaces out there so it can be difficult to chose which metric to use to measure changes or differences in your own trait space.
-Moms is designed to help you in this task by visualising and playing around with different metrics and different scenarios.
+`moms` is designed to help you in this task by visualising and playing around with different metrics and different scenarios.
+For example, if one measures the sum of the variance of each dimension, how does this metric change when the volume in the trait-space is reduced by 50%? Does it reduce by 50%? Well that of course depends on many parameters that you can explore in `moms`.
 
-### What moms is *not*?
+### What `moms` is *not*?
 
 A tool for analysing multidimensional data.
-Use `dispRity` or `vegan` or `momocs` or whatever tools suits you best!
+`moms` is a tool for helping to choose multidimensional space occupancy metrics, it should not be used to actually analyse the spaces.
+If you want to analyse multidimensional spaces, we suggest you use the many `R` packages available: [`dispRity`](https://cran.r-project.org/web/packages/dispRity/index.html), [`vegan`](https://cran.r-project.org/web/packages/vegan/index.html) or [`Momocs`](https://cran.r-project.org/web/packages/Momocs/index.html) or whatever tools suits you best!
 
-## The basics
+## The basics {#basics}
 
-This is what moms looks like.
-There are six panels (that can change in size and content!)
+This is what `moms` looks like:
 
-* The space generation panel (upper left): to generate or load your trait-space 
-* The space modification panel (lower left): to modify (reduce) your trait-space
-* The space panel (centre up): the visualisation of a 2D image of your space
-* The occupancy panel (centre down): the amount of space occupancy
-* The metric panel (upper right): to chose how to measure space occupancy
-* The display panel (upper left): to chose how to visualise the 2D image of your space
+![moms interface](moms_screenshots/full_interface.png "moms interface")
+
+There are six panels (that can change in size and content!):
+
+1. The space generation panel (upper left): to generate or load your trait-space 
+2. The space modification panel (lower left): to modify (reduce) your trait-space
+3. The space panel (centre up): the visualisation of a 2D image of your space
+4. The metric panel (upper right): to chose how to measure space occupancy
+5. The occupancy panel (centre down): the amount of space occupancy
+6. The display panel (upper left): to chose how to visualise the 2D image of your space
+
+The basic `moms` pipeline would probably go as follow:
+
+ * Generate or import a multidimensional space (e.g. a normal 50D space with 500 observations);
+ * Apply a modification to the space (e.g. remove 50% of the observations randomly);
+ * Calculate a space-occupancy metric (e.g. the sum of the variance of each dimensions).
+
+You can then compare the metric before/after the transformation.
+If the metric changes by +/- 50%, it means this metric is really sensitive to the number of observations.
+It might be inappropriate to use this metric to compare groups with different number of observations!
+
+It is then possible to explore either the effect of the space modification on different metrics by changing the metric (until you find the one that suits your question) or by changing the space modification (until you find what type of space modification the metric measures, or not).
 
 ### Creating a space
 
 The easiest way is to let `moms` create a space for you you can chose the number of dimensions and the number of observations using the sliders.
+You can do this using the `"User"` option in the space generation panel [panel 1](#basics):
 
-The many more options to create your space are detailed in [the advanced section](#space_advance)
+![user space](moms_screenshots/Simulated_spaces.png "user space")
+
+This panel allows to select:
+
+1. The **number of observations** (simulating the number of species, field sites, etc...).
+2. The **number of dimensions** (the number of traits).
+3. The **distribution** of traits see this [specific section](#traits_distributions) for more info.
+4. The **dimensions variance** to specify how much variance should be on each dimensions.
+This can be done to simulate principal components analysis (PCA) for example where the distribution of variance per dimensions tends to decrease log-normally.
+5. The **dimensions correlation** allowing to set some correlation between the distributions.
+This can be done by inputting a vector of correlations between each distributions, filling a correlation matrix or uploading a personalised correlation matrix. 
+
+
+## Detailed options
+
+#### Trait distributions {#traits_distributions}
+
+The traits can be `"Normal"`, `"LogNormal"`, `"Uniform"`, `"Gamma"`, `"Poisson"` or `"Specific"`.
+For each of these option (expect `"Specific"`), it is possible to set the distribution parameters (e.g. the mean and the standard deviation for a normal distribution).
+When using the `"Specific"` option, you can input different specific distributions as random distribution functions from the `stats` package in `R`.
+For example, if you want a five dimensional space with two normal traits, two uniform ones and one gamma, you can use the following `"Specific"` option:
+
+```
+list(rnorm, rnorm, runif, runif, rgamma)
+```
+
+Note that you can fine tune each of these distribution by giving them specific parameters by ticking the `"Optional arguments"` button and enter a list of arguments. Use an empty list (`list()`) for empty (default) arguments.
+For the example above, if we want all the distributions to be default but the uniform ones to be bounded between -1 and 1, we can use:
+
+```
+list(list(), list(), list(max = 1, min = -1), list(max = 1, min = -1), list())
+```
+
+Note that the order of the arguments does not matter as long as they are named.
+To check the available arguments, refer to the specific function in the `R` manual (e.g. `?rpoisson`).
 
 ### Transforming the space
 
 ### Measuring space occupancy
 
+### Changing the display
 
 
-## The advanced
 
-### Creating a space {#space_advance}
+## `moms` and `dispRity`
 
-#### Simulating a space
-
-#### Demo spaces
-
-#### Input your own space
-
-
-### Transforming the space {#transform_advance}
-
-### Measuring space occupancy
-
-#### Which metric to use? 
-
-#### Create your own metric!
-
-
-```{r, eval = FALSE, message = FALSE, fig.width = 12, fig.height = 12, echo = FALSE}
-```
+`moms` is based on the [`dispRity`](https://cran.r-project.org/web/packages/dispRity/index.html) package.
+You can find every space occupancy metrics in the `dispRity` package by looking for the `?dispRity::dispRity.metric` manual.
+The simulated spaces on the other hand are generated using the `?dispRity::space.maker` function.
+You can find much more information about both sets of functions in the [`dispRity` manual](https://tguillerme.github.io/dispRity.html).
