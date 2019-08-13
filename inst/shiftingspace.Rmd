@@ -4,7 +4,7 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  pdf_document:
     fig_width: 8
     fig_height: 8
 ---
@@ -353,7 +353,7 @@ Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k}
 Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | This way of measuring the volume is less sensitive to outliers [c.f. sum of ranges; @wills2001] |
 Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | This metric is less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
 Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is related to the functional evenness [FEve; @villéger2008; though not weighted for abundance] |
-Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | This paper | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
+Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | This is the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
 Variance of the distance from centre | $\sigma^2 \left(\sqrt{\sum_{i}^{n}{({k}_{n})^2}}\right)$ | Position | This paper | This metric captures the spread of the distance from the centre of the trait-space; it can also be used to capture increases in volume |
 
