@@ -552,7 +552,7 @@ study | field | taxonomic Group | traits (data) | trait-space | size | groups | 
 @beck2014 | palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
 @wright2017 | palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
 @marcy2016 | geometrics morphometrics | Rodentia | skull 2D landmarks coordinates  | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genus of Gophers (*Megascapheus*, *Thomomys*) morphological distinct? |
-@@@ | geometrics morphometrics | @@@ | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | @@@ |@@@ vs. @@@ | @@@|
+@hopkins2016 | geometrics morphometrics | Trilobites | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | 46*46 | 10 juveniles vs. 36 adults | Are juveniles trilobites a subset of adult ones? |
 @jones2015 | Ecology | Plantae | Communities species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
 @healy2019 | Ecology | Animalia | Life history traits | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 
@@ -733,7 +733,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
-Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Somebody       | Jones et al. 2015 | Healy et al. 2019  |
+Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(8)` | `r plot.id(15)` | `r plot.id(22)` | `r plot.id(29)` | `r plot.id(36)`|
 `r name[2]` | `r plot.id(2)` | `r plot.id(9)` | `r plot.id(16)` | `r plot.id(23)` | `r plot.id(30)` | `r plot.id(37)`|
