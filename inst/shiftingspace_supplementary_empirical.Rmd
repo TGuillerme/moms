@@ -92,56 +92,88 @@ save.results(palaeo)
 
 ### Geometric morphometric (landmark) data
 
-For the continuous geometric morphometric data, we performed a generalised Procrustes analysis [@adams2013geomorph], using 2D [@marcy2016] or 3D @@@ landmark coordinates sets (with semi-landmarks, i.e. sliders).
+For the continuous geometric morphometric data, we performed a generalised Procrustes analysis [@adams2013geomorph], using 2D [@marcy2016] or 3D [@hopkins2016] landmark coordinates sets (with semi-landmarks, i.e. sliders).
 We then ordinated the resulted Procrustes superimposed data using a principal component analysis [PCA; @hotelling1933] and divided the data into two groups for each dataset (see below and in the main text).
 
 #### Marcy et al. 2016
 
+This dataset consists 552 2D landmarks [@@@; @marcy2016].
+The dataset is then divided into two genera[@marcy2016].
+
 ```{r load_marcy_empirical}
 ## Read in TPS coordinates
-tps_data <- readland.tps("../data/raw/Marcy2016.TPS", specID = "imageID", warnmsg = FALSE)
+marcy_data <- readland.tps("../data/raw/Marcy2016.TPS", specID = "imageID", warnmsg = FALSE)
 
 ## Remove duplicated points for ventral crania semi-landmarks (artefact of the landmarking process)
-tps_data <- tps_data[-c(1, 2, 26, 29, 30, 41, 42, 45, 46, 51, 58, 60, 61, 68, 69, 78, 79, 85), , ]
+marcy_data <- marcy_data[-c(1, 2, 26, 29, 30, 41, 42, 45, 46, 51, 58, 60, 61, 68, 69, 78, 79, 85), , ]
 
 ## Read in semilandmark definitions from Marcy et al 2016
 sliders <- read.csv("../data/raw/Marcy2016.csv", header = TRUE, colClasses = "integer")
 
 ## Get the specimens names
-sp_names <- strsplit(names(tps_data[1, 1, ]), "_")
+marcy_names <- strsplit(names(marcy_data[1, 1, ]), "_")
 
 ## Find non-unique specimens (they have a suffix, i.e. 7 elements)
-duplicated <- ifelse(unlist(lapply(sp_names, length)) == 7, TRUE, FALSE)
+duplicated <- ifelse(unlist(lapply(marcy_names, length)) == 7, TRUE, FALSE)
 
 ## Remove duplicated specimens
-tps_data <- tps_data[, , !duplicated]
-sp_names <- sp_names[!duplicated]
+marcy_data <- marcy_data[, , !duplicated]
+marcy_names <- marcy_names[!duplicated]
+
+## Procrustes superimposition
+marcy_gpa <- gpagen(marcy_data, Proj = TRUE, ProcD = TRUE, curves = sliders, print.progress = FALSE)
 ```
+
+#### Hopkins et al. 2016 (ontogenic sequences)
+
+This dataset consists of 63 3D landmarks for 46 specimens [from 23 individuals, 3 of which have estimated landmarks, @hopkins2016].
+The data is then separated into juveniles and adults [based on the specimens centroids sizes; @hopkins2016].
+
+```{r load_hopkins_empirical, warning = FALSE}
+## Read in TPS coordinates
+hopkins_data <- readland.tps("../data/raw/Hopkins2016.tps", specID = "ID", warnmsg = FALSE)
+
+## Remove duplicated points (repeated coordinates reported in Appendix 3 of original paper)
+hopkins_data <- hopkins_data[-c(63, 67, 55, 65), , ] 
+
+## Estimate missing landmarks using TPS method (used in orignial paper)
+hopkins_data <- estimate.missing(hopkins_data, "TPS")
+
+## Procrustes superimposition
+hopkins_gpa <- gpagen(hopkins_data, print.progress = FALSE)
+```
+
 ##### Groups
 
-We divided the dataset from @marcy2016 into two groups corresponding to the two genera: *Thomomys* and *Megascapheus*.
+We divided the dataset from @marcy2016 into two groups corresponding to the two genera: *Thomomys* and *Megascapheus*; and the dataset from @hopkins2016 into two groups, adult and juvenile based on the log centroid size threshold of 2.3 [i.e. juveniles have a log centroid size < 2.3; @hopkins].
 
 ```{r group_gmm_empirical}
 ## Selecting the generas (first element in the name list)
-subgenera <- unlist(lapply(sp_names, function(x) x[[1]]))
+marcy_groups <- unlist(lapply(marcy_names, function(x) x[[1]]))
 
 ## Renaming the generas
-subgenera <- as.factor(ifelse(subgenera == "T", "Thomomys", "Megascapheus"))
+marcy_groups <- as.factor(ifelse(marcy_groups == "T", "Thomomys", "Megascapheus"))
 
-## Running the Procrustes superimposition
-marcy_data <- geomorph.data.frame(gpagen(tps_data, Proj = TRUE, ProcD = TRUE, curves = sliders,
-                                         print.progress = FALSE),
-                                  subgenera)
+## Creating the geomorph data.frames
+marcy_data <- geomorph.data.frame(marcy_gpa, marcy_groups)
+
+## Setting the threshold for distinguising adults/juveniles in the hopkins data
+size_threshold <- 2.3
+
+## Creating the groupins
+hopkins_groups <- ifelse(log(hopkins_gpa$Csize) > size_threshold, "adult", "juvenile")
+
+## Creating the geomorph data.frames
+hopkins_data <- geomorph.data.frame(hopkins_gpa, hopkins_groups)
 ```
 
-
-
-```{r morphospace_gmm_empirical, eval = TRUE}
+```{r morphospace_gmm_empirical, eval = TRUE, warning = FALSE}
 ## Creating the trait space
 marcy_traitspace <- dispRity::geomorph.ordination(marcy_data)
+hopkins_traitspace <- dispRity::geomorph.ordination(hopkins_data)
 
 ## Saving the data for the main analysis
-gmm <- list("marcy" = marcy_traitspace, "noname" = marcy_traitspace)
+gmm <- list("marcy" = marcy_traitspace, "hopkins" = hopkins_traitspace)
 save.results(gmm)
 ```
 
