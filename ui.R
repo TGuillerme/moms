@@ -141,7 +141,7 @@ shinyUI(fluidPage(
                                     "Beck and Lee 2014",
                                     "Wright 2017",
                                     "Marcy et al. 2016",
-                                    "NONAME1",
+                                    "Hopkins et al. 2016",
                                     "Jones et al. 2015",
                                     "Healy et al. 2019"
                                     ), selected = "Beck and Lee 2014"),
@@ -149,6 +149,7 @@ shinyUI(fluidPage(
           conditionalPanel(condition = "input.demo_data == \"Beck and Lee 2014\"",
               helpText("A palaeobiology study of mammals. The data is a 105 dimensions ordination (PCO) of the distances between 106 mammals based on discrete morphological characters.
                 Beck, R. M., & Lee, M. S. (2014). Ancient dates or accelerated rates? Morphological clocks and the antiquity of placental mammals. Proceedings of the Royal Society B: Biological Sciences, 281(1793), 20141278.")
+              # Ref: google scholar Harvard format
               ),
           conditionalPanel(condition = "input.demo_data == \"Wright 2017\"",
               helpText("A palaeobiology study of crinoids. The data is a 41 dimensions ordination (PCO) of the distances between 42 crinoids based on discrete morphological characters.
@@ -158,8 +159,9 @@ shinyUI(fluidPage(
               helpText("A geometric morphometric study of gophers (rodents). The data is a 134 dimensions ordination (PCA) the Procrustes superimposition of landmarks from 454 gopher skulls.
                 Marcy, A. E., Hadly, E. A., Sherratt, E., Garland, K., & Weisbecker, V. (2016). Getting a head in hard soils: convergent skull evolution and divergent allometric patterns explain shape variation in a highly diverse genus of pocket gophers (Thomomys). BMC evolutionary biology, 16(1), 207.")
               ),
-          conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
-              helpText("PLACE HOLDER FOR MATRIX GMM 2.")
+          conditionalPanel(condition = "input.demo_data == \"Hopkins et al. 2016\"",
+              helpText("A geometric morphometric study of trilobites. The data is a 134 dimensions ordination (PCA) the Procrustes superimposition of landmarks from 46 trilobites cephala.
+                Hopkins, M.J. and Pearson, J.K., 2016. Non-linear ontogenetic shape change in Cryptolithus tesselatus (Trilobita) using three-dimensional geometric morphometrics. Palaeontologia Electronica, 19(3), pp.1-54.")
               ),
           conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
               helpText("An ecological landscape study. The data is a 47 dimensions ordination (PCO) of the Jaccard distances between 48 field sites based on species composition.
@@ -205,8 +207,8 @@ shinyUI(fluidPage(
               conditionalPanel(condition = "input.demo_data == \"Marcy et al. 2016\"",
                   helpText("The data is divided into two groups, the genera Megascapheus and Thomomys.")
                   ),
-              conditionalPanel(condition = "input.demo_data == \"NONAME1\"",
-                  helpText("PLACE HOLDER FOR MATRIX GMM 2.")
+              conditionalPanel(condition = "input.demo_data == \"Hopkins et al. 2016\"",
+                  helpText("The data is divided into two groups, juveniles (specimens with a log centroid size < 2.3) and adults.")
                   ),
               conditionalPanel(condition = "input.demo_data == \"Jones et al. 2015\"",
                   helpText("The data is divided into two groups, the aspen grassland sites.")

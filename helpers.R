@@ -528,7 +528,7 @@ switch.demo.dataset <- function(input) {
        "Beck and Lee 2014"  = {dataset <- 1},
        "Wright 2017"        = {dataset <- 2},
        "Marcy et al. 2016"  = {dataset <- 3},
-       "NONAME1"            = {dataset <- 4},
+       "Hopkins et al. 2016"= {dataset <- 4},
        "Jones et al. 2015"  = {dataset <- 5},
        "Healy et al. 2019"  = {dataset <- 6}
        )
