@@ -41,7 +41,7 @@ If you want to analyse multidimensional spaces, we suggest you use the many `R` 
 
 This is what `moms` looks like:
 
-![moms interface](moms_screenshots/full_interface.png "moms interface")
+![moms interface](moms_screenshots/moms_example.png "Figure 1: `moms` interface")
 
 There are six panels (that can change in size and content!):
 
@@ -54,22 +54,19 @@ There are six panels (that can change in size and content!):
 
 The basic `moms` pipeline would probably go as follow:
 
- * Generate or import a multidimensional space (e.g. a normal 50D space with 500 observations);
- * Apply a modification to the space (e.g. remove 50% of the observations randomly);
- * Calculate a space-occupancy metric (e.g. the sum of the variance of each dimensions).
-
-You can then compare the metric before/after the transformation.
-If the metric changes by +/- 50%, it means this metric is really sensitive to the number of observations.
-It might be inappropriate to use this metric to compare groups with different number of observations!
+ * Generate or import a multidimensional space: in the example above a 2D uniform uncorrelated space with 1000 elements;
+ * Apply a modification to the space: in the example above remove 33% of the elements from the centre;
+ * Calculate a space-occupancy metric: in the example above the sum of the variances of each dimensions;
+ * Comparing the metric between the full and reduced spaces: in the example above, removing 33% of the elements in the centre increases the sum of variances by 33%.
 
 It is then possible to explore either the effect of the space modification on different metrics by changing the metric (until you find the one that suits your question) or by changing the space modification (until you find what type of space modification the metric measures, or not).
 
 ### Creating a space
 
 The easiest way is to let `moms` create a space for you you can chose the number of dimensions and the number of observations using the sliders.
-You can do this using the `"User"` option in the space generation panel [panel 1](#basics):
+You can do this using the `"User"` option in the space generation [panel (1)](#basics):
 
-![user space](moms_screenshots/Simulated_spaces.png "user space")
+![user space](moms_screenshots/Simulated_spaces.png "Figure 2: setting the space parameters")
 
 This panel allows to select:
 
@@ -81,8 +78,15 @@ This can be done to simulate principal components analysis (PCA) for example whe
 5. The **dimensions correlation** allowing to set some correlation between the distributions.
 This can be done by inputting a vector of correlations between each distributions, filling a correlation matrix or uploading a personalised correlation matrix. 
 
+You can visualise the resulting space in the [space panel (3)](#basics).
 
-## Detailed options
+> **Importing spaces**: Note that you can also import your own space using `"Input"` in the "Select the type of space to use type" menu.
+This will open a navigation window allowing you to select a `.csv` matrix on your machine.
+The matrix must contain only numeric values and must have row and column names.
+
+> **Using demo spaces**:Finally it is also possible to use demo data by selecting `"Demo"` in the "Select the type of space to use type" menu.
+You can then choose across six diverse published empirical multidimensional spaces from ranging from palaeontology to ecology.
+Information about the empirical multidimensional spaces is displayed once you select any (i.e. what is the space capturing?) along with the reference of the original publication for more informations.
 
 #### Trait distributions {#traits_distributions}
 
@@ -105,12 +109,59 @@ list(list(), list(), list(max = 1, min = -1), list(max = 1, min = -1), list())
 Note that the order of the arguments does not matter as long as they are named.
 To check the available arguments, refer to the specific function in the `R` manual (e.g. `?rpoisson`).
 
-### Transforming the space
+### Modifying the space
+
+Once a space is parametrised (or imported), it is possible to modify it by selecting a modification algorithm in the "Space modification" menu.
+
+![reduce space](moms_screenshots/Reduce_spaces_options.png "Figure 3: reducing the space")
+
+Four modifications are implemented:
+
+* **Random:** to remove a random proportion of elements.
+
+* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that the desired proportion of elements are selected).
+
+* **Displace:** by removing points similarly as above but using the distance from the furthest point from the centre.
+
+* **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that the desired proportion of elements are selected).
+
+For each removal algorithm, you can choose the proportion of elements to remove using the "Proportion to remove" sliding bar (between 10% and 90%).
+It is also possible to use the "Inverse removal" button to inverse the selection: for example if you randomly remove 33% of the elements, ticking this option will keep the 33% selected elements (i.e. remove 66% others).
+
+> If you are using the demo datasets, you can also choose to select the groupings used for the demo datasets which will automatically generate empirical groups. Details on the groups is given when ticking this option.
+
+You can visualise the resulting modification in the [space panel (3)](#basics).
 
 ### Measuring space occupancy
 
+You can then select which space occupancy metric to apply to the global space and its modification in the [metric panel (4)](#basics).
+This panel is also called "Disparity" since this is the term mostly used in palaeobiology.
+It can be referred to as "Dissimilarity" in ecology or as space occupancy in general.
+
+![measure occupancy](moms_screenshots/Disparity_metric.png "Figure 4: measuring space occupancy (disparity)")
+
+This panel allows you to choose a space occupancy metric across three categories of commonly used space occupancy metrics (by selecting `"Volume"`, `"Density"` or `"Position"` in `"Metric type"` and the appropriate metric).
+You can also input your own personalised metric by selecting `"User"` in `"Metric type"`.
+This option gives you various choices between Dimension level 1 metrics and Dimensions level 2 metrics.
+The Dimensions level of a metric is reflecting the dimensionality level of the transformation of a matrix using this metric.
+For example, the arithmetic mean (`mean`) transforms a matrix (dimension level 3) into a single value (dimension level 1 - see Figure 5).
+
+![dimension levels](moms_screenshots/dispRity_fun.png "Figure 5: metrics dimensions levels")
+
+This allows you to combine different metrics, for example, the sum (dimension level 1) of the variances of each column of the matrix (dimension level 2).
+
+You can also visualise the metric's code by ticking the `"show metric code"` box and even modify it by selecting `"edit"` metric!
+For example in Figure 4, the sum of variances is edited to be the sum of variances divided by 10.
+You can modify metrics by using the `R` synthax and any functions from the `stats` or `dispRity` package.
+
+You can visualise the metric values in the [space occupancy panel (5)](#basics).
+
+
 ### Changing the display
 
+Finally you can modify the display of [space panel (3)](#basics) by using the [display panel (6)](#basics).
+This one allows to select which axis (dimensions) to be displayed, what colour palette to use and finally whether to scale the axis or not.
+This latest option can be useful when dimensions don't have the same variance.
 
 
 ## `moms` and `dispRity`
