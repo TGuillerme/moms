@@ -8,8 +8,6 @@ output:
     fig_height: 6
 ---
 
-# `moms`: the user manual
-
 ## Introduction
 
 `moms` is a Shiny app for helping choosing the right tool for measuring occupancy in multidimensional spaces.
