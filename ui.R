@@ -5,7 +5,8 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme T, Puttick M, Marcy A, and Weisbecker V (2019). Moms: a exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
+    p("Guillerme T, Puttick M, Marcy A, and Weisbecker V (2019). Moms: an exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
+    p(a(href="https://rawcdn.githack.com/TGuillerme/moms/master/inst/moms_vignette.html", "USER MANUAL", rel = "noopener noreferrer", target = "_blank")),
     hr(),
 
     fluidRow(
