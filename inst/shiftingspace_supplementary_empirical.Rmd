@@ -97,7 +97,7 @@ We then ordinated the resulted Procrustes superimposed data using a principal co
 
 #### Marcy et al. 2016
 
-This dataset consists 552 2D landmarks [@@@; @marcy2016].
+This dataset consists 2D landmarks for 552 specimens [25 fixed landmarks and 42 semi-landmark curves; @marcy2016].
 The dataset is then divided into two genera[@marcy2016].
 
 ```{r load_marcy_empirical}
