@@ -4,7 +4,7 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 8
     fig_height: 8
 ---
@@ -454,7 +454,7 @@ To measure how the metrics responded to shifts in trait-spaces, we reduced the s
 
 * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that 50% elements are selected - Fig. 3C). This generated two density removals: *high* and *low* respectively in orange and blue in Fig. 3C.
 
-* **Position:** by removing points similarly as above but using the distance from the furthest point from the centre (max point - Fig. 3D). This generated two position removals: *positive* and *negative* respectively in orange and blue in Fig. 3D.
+* **Position:** by removing points similarly as for **Limit** but using the distance from the furthest point from the centre (max point - Fig. 3D). This generated two position removals: *positive* and *negative* respectively in orange and blue in Fig. 3D.
 
 
 The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
