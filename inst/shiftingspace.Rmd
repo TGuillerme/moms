@@ -93,29 +93,35 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 # Abstract
 
 Trait multidimensional analysis are now a common tool-kit in ecology and evolution.
-Such analysis are based on a multidimensional where each dimension represent a trait (or a transformation thereof) thus summarising all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
-To quantify the overall occupation of such trait-spaces, researchers apply one or more metrics that summarise the way in which organisms inhabit that 'trait-space'.
-Using these metrics, researchers have investigated at how trait space occupancy changes through time, in relation to other groups of organisms or in response to global environmental changes (e.g. global warming events or mass extinctions).
+Such analysis are based on a multidimensional where each dimension represents a trait (or a transformation thereof) thus summarising all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
+To quantify the overall occupation of such trait-spaces, researchers apply one or more metrics that summarise the way in which organisms "inhabits" that trait-space.
+Using these metrics, researchers have investigated how trait space occupancy changes through time, in relation to other groups of organisms or in response to global environmental changes (e.g. global warming events or mass extinctions).
 
-Although few well defined space occupancy metrics are used in ecology and evolution, we lack a general description of the majority of those metrics, especially in macroevolution (often called disparity metrics).
+Although few well defined space occupancy metrics are used in ecology and evolution, we lack a general description of the majority of those metrics, especially in macroevolution (where they are often called disparity metrics).
 Therefore the mathematical and biological meaning of such trait-space occupancy metrics can be vague.
 This as consequences when interpreting changes in trait-space occupancy and linking them to biological phenomenon.
 For example, does a reduction in volume in trait-space corresponds to episodes of extinction or changes in traits distribution?
 Does an overlap in trait-space means overlapping niches?
 
-Here we propose a user friendly tool to Measure Occupancy in Multidimensional Spaces (moms) that allows to visualise numerical changes of many disparity metrics following space transformations (e.g. contraction, displacement, etc.) as well as visualising a 2D projection of the associated space changes.
-This tool thus allows researchers to explore and visualise the properties of disparity metrics under various parameters.
-Furthermore, we propose a thorough review of the behaviour of seven common and two new disparity metrics regarding various spacial properties (i.e. distribution, transformation, dimensionality).
+Here we propose a user friendly tool to Measure Occupancy in Multidimensional Spaces (moms) that allows to visualise numerical changes of many metrics following space transformations (e.g. contraction, displacement, etc.) as well as visualising a 2D projection of the associated space changes.
+This tool allows researchers to explore and visualise the properties of disparity metrics under various parameters.
+Furthermore, we propose a thorough review of the behaviour of four common and two new metrics regarding various spacial properties (i.e. distribution, transformation, dimensionality).
 As expected, we found that different metrics are more appropriated to be used in different disparity analysis.
-<!-- > MNP. Rather than just observing differences, may it be more important to (i) show what different metrics measure and can we actually relate this to underlying biology, and (ii) generate null changes with parameters of interest for a researcher's clade. -->
+<!-- > MNP. Rather than just observing differences, may it be more important to
+
+    (i) show what different metrics measure and can we actually relate this to underlying biology, and
+
+    (ii) generate null changes with parameters of interest for a researcher's clade.
+
+-->
 
 # Introduction
 
 Life on earth is essentially multidimensional.
 Both organisms and their environments are a combination of multiple of traits whether they are phenotypic, physiological, phylogenetic, behavioural, etc.
 In fact since the advent of modern biology, it has been acknowledged that groups of species and environments share specific, easily recognisable, correlated characteristics (e.g. guilds or biomes).
-In fact, a consensus is emerging that organisms or environments should be studied as a set of traits rather than some specific traits in isolation [e.g. @donohue2013; @hopkins2017].
-This has led to and explosion of multiple traits studies approaches facilitated by increased computational power and statistical methods as well as by the implementation of statistical methods in `R` packages [@oksanen2007vegan; @adams2013geomorph; @blonder2018; @disprity].
+Therefore, a consensus is emerging that organisms or environments should be studied as a set of traits rather than some specific traits in isolation [e.g. @donohue2013; @hopkins2017].
+This has led to and explosion of multiple traits studies approaches facilitated by increased computational power and statistical methods as well as by the implementation of statistical methods in `R` packages [@oksanen2007vegan; @adams2013geomorph; @momocs; @blonder2018; @disprity].
 
 One popular way to analyse all these traits in concert is to use ordination (or dimensionality reduction) techniques [see @legendre2012 for a summary] to create a trait-space of the studied system.
 Such trait-space approach has been successfully used across many sub-disciplines in biology to either explore properties of the data or test hypothesis.
@@ -135,6 +141,7 @@ In many studies in ecology and evolution authors have focused on measuring the v
 Therefore, this lack of diversity in multidimensional occupancy metrics may restrain the potential of multidimensional analysis [@villéger2008].
 
 Here we propose a broad classification of space occupancy metrics as used across ecology [@villéger2008] and evolution [@wills2001] and analyse their power to detect changes in multidimensional space occupancy in empirical and simulated data.
+<!-- TG: Add something around here that our space transformation can be seen as "null" models. -->
 We propose a review of each broad type of space occupancy metrics and a unified terminology aiming to foster easier communication between ecology and evolution.
 Unsurprisingly, we found that there is no one-size-fits-all metric and that they are often dependent on the characteristics of the space and the question at hand.
 Because they can potentially be as many metrics than they are trait-spaces and studies, it would be a daunting task to propose clear generalities to space occupancy metrics behaviour, therefore, we propose a user friendly tool allowing researchers to design, experiment and visual their own space occupancy metric tailored for their specific project.
@@ -190,7 +197,7 @@ par(op)
 
 Volume metrics measures the spread of a group in the trait-space.
 Such metrics can be interpreted as the amount of the trait-space that is occupied by observations.
-Typically, larger values for such metrics indicate more more extreme trait combinations.
+Typically, larger values for such metrics indicate more extreme trait combinations.
 For example if group A has a bigger volume than group B, the observations in group A achieve more extreme trait combinations than in group B.
 This type of metrics is really common in both ecology [the hypervolume; @blonder2018] or in evolution [the sum or product of ranges or variances @wills2001; @ciampaglio2001 or the Procrustes variance @adams2013geomorph].
 In general, such metrics are a variation of the hypercube volume.
@@ -216,7 +223,7 @@ For example, if group A has a greater volume than group B but both have the same
 
 Position metrics measure where a group lies in trait-space.
 Such metrics can be interpreted as an indication of where a group lies in the trait-space either relative to the space itself or relative to another group.
-For example, if group A has a different position than group B, observation in group A will have a different trait-combination than group B.
+For example, if group A has a different position than group B, observations in group A will have a different trait-combination than group B.
 
 This type of metrics is probably harder to interpret in multidimensional spaces (i.e. beyond left/right and above/below) and hence less often used.
 However, when thinking about unidimensional data, this metric is pretty obvious: for example, two groups A or B could have the same variance (i.e. "volume" or spread) with the same number of observations (i.e. the same density) but could have a totally different mean and thus be in different positions.
@@ -226,7 +233,7 @@ Although these metrics are more rare in macroevolution (to our knowledge), they 
 ## One metric to rule them all?
 
 In an ideal word, the choice of the metric should be based on the properties of changes in the trait-space of interest while taking into account the properties of the space (number of elements or/and dimensions and distribution of the data on each axis).
-However, it is highly unlikely that a such one-size-fits-all metric exist; rather, it is important to assess the properties of a metric relative to the specific data used.
+However, it is highly unlikely that such a one-size-fits-all metric exist; rather, it is important to assess the properties of a metric relative to the specific data used.
 
 If the question of interest is, say, to look at how trait-space occupancy changes in response to mass extinction, using a single metric to describe one aspect of occupancy (usually the volume) can miss an important part of the picture.
 For example, in @halliday2015, the authors demonstrate a change in mammalian trait-space volume as a result from the Cretaceous-Palaeogene extinction [66 million years ago - Mya - Fig. 5 in @halliday2015] yet this one seems to be also accompanied by an apparent shift in the trait-space position due to the extinction of basal mammals [Fig. 8 in @halliday2015].
@@ -338,7 +345,7 @@ Table 2: different simulated space distributions.
 
 The different in space sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of trait-space dimensions in literature: "low-dimension" spaces ($<15$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
 We used a different range of distributions (uniform, normal or random) to test the effect of observation distributions on the metrics.
-We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal (i.e. $\sigma_D1 \simeq \sigma_D2 \simeq \sigma_Di$) or decreasing (i.e. $\sigma_D1 < \sigma_D2 < \sigma_Di$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive (using the cumulative sum of the inverse of the numbe of dimensions: $\sum_i^d(1/d)$).
+We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal (i.e. $\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing (i.e. $\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive (using the cumulative sum of the inverse of the number of dimensions: $\sum_i^d(1/d)$).
 Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in Principal components analysis - PCA; e.g. @marcy2016; healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
 Finally we added a correlation parameter to take into account the potential correlation between different traits.
 We repeated the simulation of each trait-space 20 times (resulting in 260 trait-spaces).
@@ -355,17 +362,20 @@ Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i
 Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is related to the functional evenness [FEve; @villéger2008; though not weighted for abundance] |
 Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | This is the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
-Variance of the distance from centre | $\sigma^2 \left(\sqrt{\sum_{i}^{n}{({k}_{n})^2}}\right)$ | Position | This paper | This metric captures the spread of the distance from the centre of the trait-space; it can also be used to capture increases in volume |
+
+<!-- Variance of the distance from centre | $\sigma^2 \left(\sqrt{\sum_{i}^{n}{({k}\_{n})^2}}\right)$ | Position | This paper | This metric captures the spread of the distance from the centre of the trait-space; it can also be used to capture increases in volume |
+ -->
+
 
 ```{r metrics_list, echo = FALSE}
 ## Loading the list of metrics
 source("list.of.metrics.R")
 ```
 
-We selected these seven space-occupancy metrics to illustrate how they capture different aspects of trait-space occupancy.
+We selected these six space-occupancy metrics to illustrate how they capture different aspects of trait-space occupancy.
 We do not believe that they are better than many of the other metrics used in ecology and evolution.
 The supplementary results contain the same analysis as described below performed using more metrics.
-Additionally, the [moms]() shiny App allows to explore the effect of many more metrics as well as customising metrics by combining them together or entering users functions.
+Additionally, the [`moms`](@@@) shiny App allows to explore the effect of many more metrics as well as customising metrics by combining them together or entering users functions.
 
 <!--  -->
 <!--  -->
@@ -459,7 +469,7 @@ To measure how the metrics responded to shifts in trait-spaces, we reduced the s
 
 The algorithm to select $\rho$ or $D$ is described in more detail in in the [Appendix](#Appendix_algorithm_reduce).
 We used mirror results for the limit, displacement and density reduction (i.e. the opposite data was also used).
-For example, when increasing the **density** by removing the 50% most distant elements, we also run a transformation by removing 50% of the *closests* elements.
+For example, when increasing the **density** by removing the 50% most distant elements, we also run a transformation by removing 50% of the *closest* elements.
 
 
 ```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue).")}
@@ -511,8 +521,8 @@ typical_removal <- list(space = trait_space,
 ```
 
 To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non reduced space for each dimension distributions or number of dimensions.
-To do so, we subtracted the observed disparity with no space reduction (i.e. base disparity) to all the disparity measurements of the reduced spaces and then divided it by the resulting maximum observed disparity.
-This way, our disparity metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the disparity metric value.
+To do so, we subtracted the observed occupancy with no space reduction (i.e. base occupancy) to all the occupancy measurements of the reduced spaces and then divided it by the resulting maximum observed occupancy.
+This way, our occupancy metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the occupancy metric value.
 We then measured the probability of overlap of the between the non-random removals (limit (max/min), displacement (positive/negative) and density (high/low)) and the random removals using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
 
 ### Measuring the effect of space and dimensionality on shifting spaces
@@ -523,8 +533,8 @@ For example, in a normally distributed space, a decrease in density can often le
 This is not necessarily true in log-normal spaces or in uniform spaces for certain metrics (e.g. the convex hull of a lognormal space will be less sensitive to changes in density).
 
 Furthermore, the differences in distributions can have some drastic effects in high dimensional spaces ($> 10$) which are subject to the "curse of multidimensionality" [@cursedimensionality].
-This is link to the fact that the more dimensions, the more sparse the data becomes.
-In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
+This is linked to the fact that the more dimensions, the more sparse the data becomes.
+In other words the probability of two points A and B overlapping in *n* dimensions is the product of the probability of the two points overlapping on each dimensions ($\prod_{i}^{d} P(A = B)_{Di}$)
 Thus this probability decreases as a product of the number of dimensions.
 This "curse" can make the interpretation of high dimensional data counter-intuitive.
 
@@ -541,7 +551,7 @@ The results of the ANOVAs (_p_-values) are reported in Table 3 (see supplementar
 
 ## Empirical examples
 
-Finally, analysed the effect of the different space-occupancy metrics on six different empirical studies from palaeontology, geometric morphometrics, and ecology to cover a broad representative view of fields using trait-spaces analysis.
+Finally, we analysed the effect of the different space-occupancy metrics on six different empirical studies covering a broad representative view of fields using trait-spaces analysis (palaeobiology, macroevolution, evo-devo, ecology, etc.)
 For each of these six studies we generated a trait-spaces from the data published along with the paper.
 We then divided the trait-space into two roughly equal sized groups based on the nature of the paper and applied the space-occupancy metrics to each pair of groups to test whether different metrics captured different differences between groups.
 
@@ -552,13 +562,13 @@ study | field | taxonomic Group | traits (data) | trait-space | size | groups | 
 @beck2014 | palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
 @wright2017 | palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
 @marcy2016 | geometrics morphometrics | Rodentia | skull 2D landmarks coordinates  | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genus of Gophers (*Megascapheus*, *Thomomys*) morphological distinct? |
-@hopkins2016 | geometrics morphometrics | Trilobites | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | 46*46 | 10 juveniles vs. 36 adults | Are juveniles trilobites a subset of adult ones? |
+@hopkins2016 | geometrics morphometrics | Trilobita | 3D landmarks | Ordination of a Procrustes Superimposition (PCA) | 46*46 | 10 juveniles vs. 36 adults | Are juveniles trilobites a subset of adult ones? |
 @jones2015 | Ecology | Plantae | Communities species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
 @healy2019 | Ecology | Animalia | Life history traits | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 
 Table 4: details of the six empirical trait-spaces.
 
-For each empirical trait-space we bootstrapped each group 500 times [@disprity] and applied the seven space-occupancy metric to each pairs of groups.
+For each empirical trait-space we bootstrapped each group 500 times [@disprity] and applied the six space-occupancy metric to each pairs of groups.
 Note that when space-occupancy could not be calculated (e.g. due to the curse of multidimensionaly), we collapsed the metric value to 0 (i.e. no space-occupancy was captured).
 We then compared the means of each groups using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
 The are displayed in Table 6.
@@ -610,8 +620,8 @@ names(results_pairwise[[1]]) <- metric_names
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
 ```
 
-All the metrics selected where either positively correlated (correlation of 0.99 for the Average distance from centroid and Sum of variance or 0.97 for the Average nearest neighbour distance and Minimum spanning tree average length; Fig. 4) or somewhat correlated (ranging from 0.66 for the Sum of Variances and the Ellispsoid Volume to -0.17 between the Average displacement and the Variance of the distance from centre; Fig. 4).
-Note that all metrics but the Ellipsoid Volume were normally distributed (Fig. 4).
+All the metrics selected where either positively correlated (correlation of 0.99 for the Average distance from centroid and Sum of variance or 0.97 for the Average nearest neighbour distance and Minimum spanning tree average length; Fig. 4) or somewhat correlated (ranging from 0.66 for the Sum of Variances and the Ellispsoid Volume to -0.09 between the Average displacement and the Average distance from centroid; Fig. 4).
+Note that all metrics but the Ellipsoid Volume were normally (or nearly normally) distributed (Fig. 4).
 This is due to the Ellipsoid Volume being more sensitive to the curse of multidimensionality (many values close to 0).
 More comparisons between metrics are available in the supplementary materials.
 
@@ -658,7 +668,7 @@ print.fable <- function(n_metrics, byrow, ncol, test) {
     cat("|\n")
   }
 }
-## Getting the fable
+## Getting the fable to copy paste under the table header below.
 print.fable(length(metrics_list), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
@@ -670,14 +680,13 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s")` | `r s.test(4, "r")`|
 `r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s")` | `r s.test(5, "r")`|
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
-`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 
 
 Table 5: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different space-occupancy metrics. The dots represent the median space-occupancy values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction. Results in blue are the minimum limit, low density and negative shift for respectively the volume, density and position changes. Results in orange are the maximum limit, high density and positive shift for respectively the volume, density and position changes. The displayed value in the plots are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange reductions and the random ones. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space-occupancy ~ distributions and space-occupancy ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
 
 As expected from the sketch in Figure 2, some different metrics capture different aspects of trait-space occupancy.
 However, it is worth noticing that it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
-In fact we observe a clear decrease in median metric in only 14 out of 63 of the space reductions (or 42 non-random ones).
+In fact we observe a clear decrease in median metric in less than a third of the space reductions (10/36).
 
 In terms of change in volume (increase or decrease), only the Average distance from centroid and the Sum of variances seem to capture a clear change in both directions.
 Note however that the increase in volume does not correspond to an *actual* increase in volume in the trait-space (i.e. the volume in from the orange observations in Fig. 3B is equivalent to the one in Fig. 3A).
@@ -747,7 +756,7 @@ Table 6: Comparisons of different pairs of groups in different empirical trait-s
 
 
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
-For all seven metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
+For all five metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
 When looking at the probability of overlap, they are also clearly affected by the different metrics.
 
 
