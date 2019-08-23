@@ -8,6 +8,11 @@ output:
     fig_height: 6
 ---
 
+## Comments / questions from Ariel (delete when resolved :)
+1) Should there be a blank line before new segments, e.g. line 29 "## Setting the defaul parameters for the space plots" ?
+2) I don't really understand what is going on with the markdown code in line 54 but seems to be something with citations? On line 55 one of the lagging asterisks is white instead of red (which says to me the formatting isn't being picked up?)
+3) Is "Claddis.ordination()" the function that creates the distance matrix from line 54? If I were researcher, I would like that to be commented in.
+4) Oh no! The moms package didn't load!
 
 # Supplementary material 2: empirical data
 
@@ -44,8 +49,7 @@ default.palette <- function(n) {
 
 ## Creating the trait spaces
 
-The following sections contains the methodology and the code to generate the six empirical trait-spaces analysed in the paper.
-The protocol for creating each space is detailed below.
+The following sections contain the methodology and the code to generate the six empirical trait-spaces analysed in the paper. The protocol for creating each trait-space is detailed below.
 
 ### Palaeontological (discrete) data
 
