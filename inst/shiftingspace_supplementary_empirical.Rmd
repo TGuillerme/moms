@@ -8,6 +8,7 @@ output:
     fig_height: 6
 ---
 
+
 # Supplementary material 2: empirical data
 
 ```{r header_empirical, echo = FALSE}
