@@ -1,0 +1,541 @@
+---
+title: "Shifting spaces: how to summarise multidimensional spaces occupancy?"
+author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_width: 12
+    fig_height: 6
+---
+
+# Supplementary material 1: simulations
+
+```{r header_simulation, echo = FALSE}
+## Loading the packages
+if(!require(devtools)) install.packages("devtools")
+if(!require(knitr)) install.packages("knitr"); library(knitr)
+if(!require(rmarkdown)) install.packages("rmarkdown"); library(rmarkdown)
+if(!require(ape)) install.packages("ape"); library(ape)
+if(!require(dispRity)) install.packages("dispRity"); library(dispRity)
+if(packageVersion("dispRity") < "1.2.4") {
+    ## dispRity must be above v1.2.3
+    devtools::install_github("TGuillerme/dispRity"); library(dispRity)
+}
+if(!require(moms)) devtools::install_github("TGuillerm/moms"); library(moms)
+
+## Setting the default parameters for the space plots
+defaults <- list(pch = 20,
+                 xlim = c(-3, 3),
+                 ylim = c(-3, 3),
+                 col1 = "grey",
+                 col2 = "black",
+                 xlab = "Trait",
+                 ylab = "Trait",
+                 cex = 1)
+## Generating the default palette
+default.palette <- function(n) {
+    hues = seq(15, 375, length = n + 1)
+    grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+}
+```
+
+```{r compilation_html, echo = FALSE, eval = TRUE}
+## Changing defaults
+body(plot.id)[[2]] <- substitute(type <- ".png")
+```
+
+# Simulation data
+
+This section contains all the results and calculations (and plots them).
+The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz).
+
+## Metrics analysed
+
+
+```{r all_metrics_list, echo = FALSE}
+## Loading the list of metrics
+source("list.of.metrics.R")
+## General volume metrics
+all_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2, na.rm = TRUE)),
+                    "av.pair.ma"  = function(matrix) return(mean(pairwise.dist(matrix, method = "manhattan"), na.rm = TRUE)),
+                    "med.pairwise"= function(matrix) return(median(pairwise.dist(matrix), na.rm = TRUE)),
+                    "med.pair.ma" = function(matrix) return(median(pairwise.dist(matrix, method = "manhattan"), na.rm = TRUE)),
+                    "Procrustes"  = function(matrix) return(sum(matrix^2)/nrow(matrix)),
+                    "med.cent"    = c(median, centroids),
+                    "med.cent.man"= function(matrix) return(median(centroids(matrix, method = "manhattan"))),
+                    "sum.var"     = c(sum, variances),
+                    "sum.ranges"  = c(sum, ranges),
+                    "sum.quantil" = c(sum, quantiles),
+                    "prod.var"    = c(prod, variances),
+                    "prod.ranges" = c(prod, ranges),
+                    "prod.quantil"= c(prod, quantiles),
+                    "ellips.vol"  = ellipse.volume,
+                    "n.ball.vol"  = n.ball.volume,
+                    "span.tree"   = span.tree.length,
+                    "ave.neigh"   = c(mean, neighbours),
+                    "ave.neig.man"= function(matrix) return(mean(neighbours(matrix, method = "manhattan"))),
+                    "func.div"    = func.div,
+                    "func.eve"    = func.eve,
+                    "func.disp"   = func.disp,
+                    "av.displa"   = c(mean, displacements),
+                    "av.displ.man"= function(matrix) return(mean(displacements(matrix, method = "manhattan"))),
+                    "med.center"  = function(matrix) return(median(centroids(matrix, centroid = 0))),
+                    "med.center"  = function(matrix) return(median(centroids(matrix, centroid = 0, method = "manhattan")))
+                    )
+
+all_metrics_names <- c("Average squared pairwise distance (dtt::dtt)",
+                       "Average pairwise manhattan distance (dtt::dtt)",
+                       "Median pairwise distance",
+                       "Median pairwise manhattan distance",
+                       "Procrustes variances (geomorph::morpho.disparity)",
+                       "Median distance from centroid",
+                       "Median manhattan distance from centroid",
+                       "Sum of variances",
+                       "Sum of ranges",
+                       "Sum of quantiles",
+                       "Product of variances",
+                       "Product of ranges",
+                       "Product of quantiles",
+                       "Ellipsoid volume",
+                       "nBall volume",
+                       "Minimum spanning tree length",
+                       "Average minimum neighbours distance",
+                       "Average minimum neighbours manhattan distance",
+                       "Function diversity",
+                       "Functional evenness",
+                       "Functional dispersion",
+                       "Average displacement",
+                       "Average manhattan displacement",
+                       "Median distance from centre",
+                       "Median manhattan distance from centre"
+                       )
+
+
+```
+
+The metrics analysed are the `r paste(all_metrics_names, collapse = ", ")`.
+
+## Running the simulations for the 25 metrics
+
+```{r start_simulation, echo = FALSE}
+## Set the overall number of replicates
+n_replicates <- 20
+
+## Set the overall number of elements
+#elements <- function() sample(20:200) #TG: possibility to use a variable number of elements
+elements <- function() 200
+
+## Simulation seed
+set.seed(42)
+```
+
+```{r generate_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+## List of distributions
+distributions_list <- list(
+    "unifor" = list(distribution = runif, arguments = list(list("min" = -0.5, "max" = 0.5))),
+    "normal" = list(distribution = rnorm),
+    "random" = list(distribution = "random"),
+    "unicor" = list(distribution = runif, arguments = list(list("min" = -0.5, "max" = 0.5)),
+                    cor.matrix = "random"),
+    "norcor" = list(distribution = rnorm, cor.matrix = "random"),
+    "pcalik" = list(distribution = rnorm, scree = "lognormal"),
+    "pcolik" = list(distribution = rnorm, scree = "normal")
+    )
+
+## Generate all 13 spaces
+all_spaces <- list(uniform3 = space.simulation(distributions_list$unifor, dimensions = 3,
+                                               elements = elements(), replicates = n_replicates),
+                   uniform15 = space.simulation(distributions_list$unifor, dimensions = 15,
+                                               elements = elements(), replicates = n_replicates),
+                   uniform50 = space.simulation(distributions_list$unifor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   uniform100 = space.simulation(distributions_list$unifor, dimensions = 100,
+                                               elements = elements(), replicates = n_replicates),
+                   uniform150 = space.simulation(distributions_list$unifor, dimensions = 150,
+                                               elements = elements(), replicates = n_replicates),
+                   uniformc50 = space.simulation(distributions_list$unicor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   normal3 = space.simulation(distributions_list$normal, dimensions = 3,
+                                               elements = elements(), replicates = n_replicates),
+                   normal15 = space.simulation(distributions_list$normal, dimensions = 15,
+                                               elements = elements(), replicates = n_replicates),
+                   normal50 = space.simulation(distributions_list$normal, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   uniform100 = space.simulation(distributions_list$unifor, dimensions = 100,
+                                               elements = elements(), replicates = n_replicates),
+                   normal150 = space.simulation(distributions_list$normal, dimensions = 150,
+                                               elements = elements(), replicates = n_replicates),
+                   normalc50 = space.simulation(distributions_list$norcor, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   random50 = space.simulation(distributions_list$random, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   pca_like = space.simulation(distributions_list$pcalik, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates),
+                   pco_like = space.simulation(distributions_list$pcolik, dimensions = 50,
+                                               elements = elements(), replicates = n_replicates))
+
+#TG: Warnings are due to inexact correlations
+```
+
+```{r shift_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+## Shifting each space
+shift_groups_02 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.2)
+shift_groups_05 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.5)
+shift_groups_08 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.8)
+```
+
+```{r get_disparity_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+## Measuring disparity
+all_metrics_remove_02 <- mapply(metrics.simulation, all_spaces, shift_groups_02,
+                        MoreArgs = list(metrics = all_metrics, rare.dim = NULL, verbose = TRUE),
+                        SIMPLIFY = FALSE)
+all_metrics_remove_05 <- mapply(metrics.simulation, all_spaces, shift_groups_05,
+                        MoreArgs = list(metrics = all_metrics, rare.dim = NULL, verbose = TRUE),
+                        SIMPLIFY = FALSE)
+all_metrics_remove_08 <- mapply(metrics.simulation, all_spaces, shift_groups_08,
+                        MoreArgs = list(metrics = all_metrics, rare.dim = NULL, verbose = TRUE),
+                        SIMPLIFY = FALSE)
+
+
+## Saving the results
+save.results(all_metrics_remove_02)
+save.results(all_metrics_remove_05)
+save.results(all_metrics_remove_08)
+```
+
+## Running the empirical data for the 25 metrics
+
+```{r running_empirical, echo = FALSE, eval = TRUE}
+data(demo_data)
+## Loading the data
+trait_spaces <- demo_data
+
+## Measuring space occupancy for all spaces and all metrics
+apply.disparity <- function(space, metrics) {
+    lapply(metrics, function(metric, space) dispRity(boot.matrix(space, bootstraps = 500), metric),
+           space)
+}
+all_metrics_empirical_results <- lapply(trait_spaces, apply.disparity, all_metrics)
+
+## Results list
+save.results(all_metrics_empirical_results)
+```
+
+
+## Load all the data
+
+
+```{r}
+## Load all the data
+load.results("all_metrics_remove_02")
+load.results("all_metrics_remove_05")
+load.results("all_metrics_remove_08")
+load.results("all_metrics_empirical_results")
+```
+
+
+## Metrics pairwise comparisons
+
+```{r}
+## Adding proper names
+results_pairwise_02 <- all_metrics_remove_02
+results_pairwise_05 <- all_metrics_remove_05
+results_pairwise_08 <- all_metrics_remove_08
+
+## Numbering the metrics
+seq(1: length(all_metrics_names)) ->
+  names(results_pairwise_02[[1]]) ->
+  names(results_pairwise_05[[1]]) ->
+  names(results_pairwise_08[[1]])  
+
+## Plotting the pairwise results
+pairwise.plot(results_pairwise_02, scale = TRUE, type = "base", plot = "cor", main = "Results for 20% removal")
+pairwise.plot(results_pairwise_05, scale = TRUE, type = "base", plot = "cor", main = "Results for 50% removal")
+pairwise.plot(results_pairwise_08, scale = TRUE, type = "base", plot = "cor", main = "Results for 80% removal")
+```
+
+The metrics analysed are the `r paste(paste(seq(1:length(all_metrics_names)), all_metrics_names, sep = ": "), collapse = "; ")` (diagonally).
+
+
+
+
+## Space shifting all metrics
+
+
+```{r running_tests, echo = FALSE}
+## Anova function
+anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
+
+## Running the tests
+all_test_02  <- test.simulation(all_metrics_remove_02, test = anova.fun, scale = TRUE)
+all_test_05  <- test.simulation(all_metrics_remove_05, test = anova.fun, scale = TRUE)
+all_test_08  <- test.simulation(all_metrics_remove_08, test = anova.fun, scale = TRUE)
+
+all_dim_test_02 <- test.simulation(all_metrics_remove_02, test = anova.fun, scale = TRUE,
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150",
+                                  "normal3", "normal15", "normal50", "normal100", "normal150"))
+all_dim_test_05 <- test.simulation(all_metrics_remove_05, test = anova.fun, scale = TRUE,
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150",
+                                  "normal3", "normal15", "normal50", "normal100", "normal150"))
+all_dim_test_08 <- test.simulation(all_metrics_remove_08, test = anova.fun, scale = TRUE,
+                      factors = c("uniform3", "uniform15", "uniform50", "uniform100", "uniform150",
+                                  "normal3", "normal15", "normal50", "normal100", "normal150"))
+
+space_test_02 <- test.simulation(all_metrics_remove_02, test = anova.fun, scale = TRUE,
+                              factors = c("uniform50", "uniform50c", "normal50", "normal50c",
+                                          "random50", "pca_like", "pco_like"))
+space_test_05 <- test.simulation(all_metrics_remove_05, test = anova.fun, scale = TRUE,
+                              factors = c("uniform50", "uniform50c", "normal50", "normal50c",
+                                          "random50", "pca_like", "pco_like"))
+space_test_08 <- test.simulation(all_metrics_remove_08, test = anova.fun, scale = TRUE,
+                              factors = c("uniform50", "uniform50c", "normal50", "normal50c",
+                                          "random50", "pca_like", "pco_like"))
+```
+
+```{r fable_results options}
+## The metrics names (shortened vector)
+name <- all_metrics_names
+
+## Making a list of parameters for each mini plot
+plot.param <- list(scaler = 3,
+                   bg.col = "black",
+                   col = c("grey", "orange", "blue"),
+                   quantiles = c(95, 50),
+                   cent.tend = median,
+                   pch = 19,
+                   metric.max = length(all_metrics),
+                   cex = 2)
+```
+
+```{r fable_results_all_metrics_02, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+## Looping through each mini plot for every metric
+for(metric in 1:length(all_metrics)) {
+    generate.fable.plot(data = all_metrics_remove_02, metric = metric, what = "limits", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_02, metric = metric, what = "densit", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_02, metric = metric, what = "displa", plot.param = plot.param, overlap = TRUE)
+}
+```
+
+```{r fable_results_all_metrics_05, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+## Looping through each mini plot for every metric
+for(metric in 1:length(all_metrics)) {
+    generate.fable.plot(data = all_metrics_remove_05, metric = metric, what = "limits", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_05, metric = metric, what = "densit", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_05, metric = metric, what = "displa", plot.param = plot.param, overlap = TRUE)
+}
+```
+
+```{r fable_results_all_metrics_08, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+## Looping through each mini plot for every metric
+for(metric in 1:length(all_metrics)) {
+    generate.fable.plot(data = all_metrics_remove_08, metric = metric, what = "limits", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_08, metric = metric, what = "densit", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = all_metrics_remove_08, metric = metric, what = "displa", plot.param = plot.param, overlap = TRUE)
+}
+```
+
+```{r, echo = FALSE, eval = FALSE}
+## Function for printing the table in the R console
+print.fable <- function(n_metrics, byrow, ncol, test) {
+  ## Make the plot.id table 
+  ids <- matrix(1:(n_metrics*ncol), ncol = ncol, byrow = byrow)
+
+  for(one_metric in 1:n_metrics) {
+    ## Print all the rows one by one
+    text <- c(paste0("`r name[", one_metric, "]`"), paste0("`r plot.id(", ids[one_metric, ], ")`"))
+    ## Add some tests?
+    if(test) {
+      text <- c(text, paste0("`r s.test(", one_metric, ", \"s\", res)`"), paste0("`r s.test(", one_metric, ", \"r\", res)`"))
+    }
+    ## Print the line
+    cat(paste(text, collapse = " | "))
+    cat("|\n")
+  }
+}
+## Getting the fable to copy paste under the table header below.
+print.fable(length(all_metrics), byrow = TRUE, ncol = 3, test = TRUE)
+```
+
+### All metrics results 20% removal
+
+```{r fable_all_metrics_02, echo = FALSE, eval = TRUE}
+## Changing defaults
+body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_02")
+res <- list("s" = space_test_02, "r" = all_dim_test_02)
+```
+
+Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+:-----------|----------------|-----------------|----------------|---------------------|-------------------|
+`r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
+`r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
+`r name[3]` | `r plot.id(7)` | `r plot.id(8)` | `r plot.id(9)` | `r s.test(3, "s", res)` | `r s.test(3, "r", res)`|
+`r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s", res)` | `r s.test(4, "r", res)`|
+`r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s", res)` | `r s.test(5, "r", res)`|
+`r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s", res)` | `r s.test(6, "r", res)`|
+`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s", res)` | `r s.test(7, "r", res)`|
+`r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s", res)` | `r s.test(8, "r", res)`|
+`r name[9]` | `r plot.id(25)` | `r plot.id(26)` | `r plot.id(27)` | `r s.test(9, "s", res)` | `r s.test(9, "r", res)`|
+`r name[10]` | `r plot.id(28)` | `r plot.id(29)` | `r plot.id(30)` | `r s.test(10, "s", res)` | `r s.test(10, "r", res)`|
+`r name[11]` | `r plot.id(31)` | `r plot.id(32)` | `r plot.id(33)` | `r s.test(11, "s", res)` | `r s.test(11, "r", res)`|
+`r name[12]` | `r plot.id(34)` | `r plot.id(35)` | `r plot.id(36)` | `r s.test(12, "s", res)` | `r s.test(12, "r", res)`|
+`r name[13]` | `r plot.id(37)` | `r plot.id(38)` | `r plot.id(39)` | `r s.test(13, "s", res)` | `r s.test(13, "r", res)`|
+`r name[14]` | `r plot.id(40)` | `r plot.id(41)` | `r plot.id(42)` | `r s.test(14, "s", res)` | `r s.test(14, "r", res)`|
+`r name[15]` | `r plot.id(43)` | `r plot.id(44)` | `r plot.id(45)` | `r s.test(15, "s", res)` | `r s.test(15, "r", res)`|
+`r name[16]` | `r plot.id(46)` | `r plot.id(47)` | `r plot.id(48)` | `r s.test(16, "s", res)` | `r s.test(16, "r", res)`|
+`r name[17]` | `r plot.id(49)` | `r plot.id(50)` | `r plot.id(51)` | `r s.test(17, "s", res)` | `r s.test(17, "r", res)`|
+`r name[18]` | `r plot.id(52)` | `r plot.id(53)` | `r plot.id(54)` | `r s.test(18, "s", res)` | `r s.test(18, "r", res)`|
+`r name[19]` | `r plot.id(55)` | `r plot.id(56)` | `r plot.id(57)` | `r s.test(19, "s", res)` | `r s.test(19, "r", res)`|
+`r name[20]` | `r plot.id(58)` | `r plot.id(59)` | `r plot.id(60)` | `r s.test(20, "s", res)` | `r s.test(20, "r", res)`|
+`r name[21]` | `r plot.id(61)` | `r plot.id(62)` | `r plot.id(63)` | `r s.test(21, "s", res)` | `r s.test(21, "r", res)`|
+`r name[22]` | `r plot.id(64)` | `r plot.id(65)` | `r plot.id(66)` | `r s.test(22, "s", res)` | `r s.test(22, "r", res)`|
+`r name[23]` | `r plot.id(67)` | `r plot.id(68)` | `r plot.id(69)` | `r s.test(23, "s", res)` | `r s.test(23, "r", res)`|
+`r name[24]` | `r plot.id(70)` | `r plot.id(71)` | `r plot.id(72)` | `r s.test(24, "s", res)` | `r s.test(24, "r", res)`|
+`r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
+
+
+### All metrics results 50% removal
+
+```{r fable_all_metrics_05, echo = FALSE, eval = TRUE}
+## Changing defaults
+body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_05")
+res <- list("s" = space_test_05, "r" = all_dim_test_05)
+```
+
+Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+:-----------|----------------|-----------------|----------------|---------------------|-------------------|
+`r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
+`r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
+`r name[3]` | `r plot.id(7)` | `r plot.id(8)` | `r plot.id(9)` | `r s.test(3, "s", res)` | `r s.test(3, "r", res)`|
+`r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s", res)` | `r s.test(4, "r", res)`|
+`r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s", res)` | `r s.test(5, "r", res)`|
+`r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s", res)` | `r s.test(6, "r", res)`|
+`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s", res)` | `r s.test(7, "r", res)`|
+`r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s", res)` | `r s.test(8, "r", res)`|
+`r name[9]` | `r plot.id(25)` | `r plot.id(26)` | `r plot.id(27)` | `r s.test(9, "s", res)` | `r s.test(9, "r", res)`|
+`r name[10]` | `r plot.id(28)` | `r plot.id(29)` | `r plot.id(30)` | `r s.test(10, "s", res)` | `r s.test(10, "r", res)`|
+`r name[11]` | `r plot.id(31)` | `r plot.id(32)` | `r plot.id(33)` | `r s.test(11, "s", res)` | `r s.test(11, "r", res)`|
+`r name[12]` | `r plot.id(34)` | `r plot.id(35)` | `r plot.id(36)` | `r s.test(12, "s", res)` | `r s.test(12, "r", res)`|
+`r name[13]` | `r plot.id(37)` | `r plot.id(38)` | `r plot.id(39)` | `r s.test(13, "s", res)` | `r s.test(13, "r", res)`|
+`r name[14]` | `r plot.id(40)` | `r plot.id(41)` | `r plot.id(42)` | `r s.test(14, "s", res)` | `r s.test(14, "r", res)`|
+`r name[15]` | `r plot.id(43)` | `r plot.id(44)` | `r plot.id(45)` | `r s.test(15, "s", res)` | `r s.test(15, "r", res)`|
+`r name[16]` | `r plot.id(46)` | `r plot.id(47)` | `r plot.id(48)` | `r s.test(16, "s", res)` | `r s.test(16, "r", res)`|
+`r name[17]` | `r plot.id(49)` | `r plot.id(50)` | `r plot.id(51)` | `r s.test(17, "s", res)` | `r s.test(17, "r", res)`|
+`r name[18]` | `r plot.id(52)` | `r plot.id(53)` | `r plot.id(54)` | `r s.test(18, "s", res)` | `r s.test(18, "r", res)`|
+`r name[19]` | `r plot.id(55)` | `r plot.id(56)` | `r plot.id(57)` | `r s.test(19, "s", res)` | `r s.test(19, "r", res)`|
+`r name[20]` | `r plot.id(58)` | `r plot.id(59)` | `r plot.id(60)` | `r s.test(20, "s", res)` | `r s.test(20, "r", res)`|
+`r name[21]` | `r plot.id(61)` | `r plot.id(62)` | `r plot.id(63)` | `r s.test(21, "s", res)` | `r s.test(21, "r", res)`|
+`r name[22]` | `r plot.id(64)` | `r plot.id(65)` | `r plot.id(66)` | `r s.test(22, "s", res)` | `r s.test(22, "r", res)`|
+`r name[23]` | `r plot.id(67)` | `r plot.id(68)` | `r plot.id(69)` | `r s.test(23, "s", res)` | `r s.test(23, "r", res)`|
+`r name[24]` | `r plot.id(70)` | `r plot.id(71)` | `r plot.id(72)` | `r s.test(24, "s", res)` | `r s.test(24, "r", res)`|
+`r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
+
+### All metrics results 50% removal
+
+```{r fable_all_metrics_08, echo = FALSE, eval = TRUE}
+## Changing defaults
+body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_08")
+res <- list("s" = space_test_08, "r" = all_dim_test_08)
+```
+
+Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+:-----------|----------------|-----------------|----------------|---------------------|-------------------|
+`r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
+`r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
+`r name[3]` | `r plot.id(7)` | `r plot.id(8)` | `r plot.id(9)` | `r s.test(3, "s", res)` | `r s.test(3, "r", res)`|
+`r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s", res)` | `r s.test(4, "r", res)`|
+`r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s", res)` | `r s.test(5, "r", res)`|
+`r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s", res)` | `r s.test(6, "r", res)`|
+`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s", res)` | `r s.test(7, "r", res)`|
+`r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s", res)` | `r s.test(8, "r", res)`|
+`r name[9]` | `r plot.id(25)` | `r plot.id(26)` | `r plot.id(27)` | `r s.test(9, "s", res)` | `r s.test(9, "r", res)`|
+`r name[10]` | `r plot.id(28)` | `r plot.id(29)` | `r plot.id(30)` | `r s.test(10, "s", res)` | `r s.test(10, "r", res)`|
+`r name[11]` | `r plot.id(31)` | `r plot.id(32)` | `r plot.id(33)` | `r s.test(11, "s", res)` | `r s.test(11, "r", res)`|
+`r name[12]` | `r plot.id(34)` | `r plot.id(35)` | `r plot.id(36)` | `r s.test(12, "s", res)` | `r s.test(12, "r", res)`|
+`r name[13]` | `r plot.id(37)` | `r plot.id(38)` | `r plot.id(39)` | `r s.test(13, "s", res)` | `r s.test(13, "r", res)`|
+`r name[14]` | `r plot.id(40)` | `r plot.id(41)` | `r plot.id(42)` | `r s.test(14, "s", res)` | `r s.test(14, "r", res)`|
+`r name[15]` | `r plot.id(43)` | `r plot.id(44)` | `r plot.id(45)` | `r s.test(15, "s", res)` | `r s.test(15, "r", res)`|
+`r name[16]` | `r plot.id(46)` | `r plot.id(47)` | `r plot.id(48)` | `r s.test(16, "s", res)` | `r s.test(16, "r", res)`|
+`r name[17]` | `r plot.id(49)` | `r plot.id(50)` | `r plot.id(51)` | `r s.test(17, "s", res)` | `r s.test(17, "r", res)`|
+`r name[18]` | `r plot.id(52)` | `r plot.id(53)` | `r plot.id(54)` | `r s.test(18, "s", res)` | `r s.test(18, "r", res)`|
+`r name[19]` | `r plot.id(55)` | `r plot.id(56)` | `r plot.id(57)` | `r s.test(19, "s", res)` | `r s.test(19, "r", res)`|
+`r name[20]` | `r plot.id(58)` | `r plot.id(59)` | `r plot.id(60)` | `r s.test(20, "s", res)` | `r s.test(20, "r", res)`|
+`r name[21]` | `r plot.id(61)` | `r plot.id(62)` | `r plot.id(63)` | `r s.test(21, "s", res)` | `r s.test(21, "r", res)`|
+`r name[22]` | `r plot.id(64)` | `r plot.id(65)` | `r plot.id(66)` | `r s.test(22, "s", res)` | `r s.test(22, "r", res)`|
+`r name[23]` | `r plot.id(67)` | `r plot.id(68)` | `r plot.id(69)` | `r s.test(23, "s", res)` | `r s.test(23, "r", res)`|
+`r name[24]` | `r plot.id(70)` | `r plot.id(71)` | `r plot.id(72)` | `r s.test(24, "s", res)` | `r s.test(24, "r", res)`|
+`r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
+
+
+## Empirical results (all metrics)
+
+
+```{r test_empirical, echo = FALSE}
+## Testing the differences for each distributions
+bhatt.coeff.safe <- function(x, y, tol = 1e-16, ...) {
+  if(all(x < tol) | all(y < tol)) {
+    bhatt.coeff(1, 0)
+  } else {
+    bhatt.coeff(x, y, ...)
+  }
+} 
+disparity_test <- lapply(all_metrics_empirical_results, lapply, test.dispRity, test = bhatt.coeff.safe)
+```
+
+```{r fable_results_empirical_all_metrics, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
+## Plotting parameters
+plot.param <- list(cex = 2,
+                   col = c("#F7B27E", "#BFE4E3"),
+                   border = c("#F65205", "#3E9CBA"),
+                   na.cex = 3,
+                   scaler = 3)
+
+## Looping through each mini plot for every metric
+data_names <- c("Beck and Lee 2014", "Wright 2017", "Marcy et al. 2016",
+                "Hopkins et al. 2016", "Jones et al. 2015", "Healy et al. 2019")
+
+for(dataset in 1:length(data_names)){
+    for(metric in 1:length(metrics_list)){
+        ## Plotting the results
+        generate.fable.empirical(data = all_metrics_empirical_results[[dataset]][[metric]],
+                                 test = disparity_test[[dataset]][[metric]],
+                                 precision = 1e-5, plot.param, dataset = dataset)
+    }
+}
+```
+
+```{r change_plotid_chain, echo = FALSE, eval = TRUE}
+## Changing defaults
+body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical_all_metrics")
+```
+
+```{r, echo = FALSE, eval = FALSE}
+print.fable(length(all_metrics), byrow = FALSE, ncol = 6, test = FALSE)
+```
+
+Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
+:-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
+`r name[1]` | `r plot.id(1)` | `r plot.id(26)` | `r plot.id(51)` | `r plot.id(76)` | `r plot.id(101)` | `r plot.id(126)`|
+`r name[2]` | `r plot.id(2)` | `r plot.id(27)` | `r plot.id(52)` | `r plot.id(77)` | `r plot.id(102)` | `r plot.id(127)`|
+`r name[3]` | `r plot.id(3)` | `r plot.id(28)` | `r plot.id(53)` | `r plot.id(78)` | `r plot.id(103)` | `r plot.id(128)`|
+`r name[4]` | `r plot.id(4)` | `r plot.id(29)` | `r plot.id(54)` | `r plot.id(79)` | `r plot.id(104)` | `r plot.id(129)`|
+`r name[5]` | `r plot.id(5)` | `r plot.id(30)` | `r plot.id(55)` | `r plot.id(80)` | `r plot.id(105)` | `r plot.id(130)`|
+`r name[6]` | `r plot.id(6)` | `r plot.id(31)` | `r plot.id(56)` | `r plot.id(81)` | `r plot.id(106)` | `r plot.id(131)`|
+`r name[7]` | `r plot.id(7)` | `r plot.id(32)` | `r plot.id(57)` | `r plot.id(82)` | `r plot.id(107)` | `r plot.id(132)`|
+`r name[8]` | `r plot.id(8)` | `r plot.id(33)` | `r plot.id(58)` | `r plot.id(83)` | `r plot.id(108)` | `r plot.id(133)`|
+`r name[9]` | `r plot.id(9)` | `r plot.id(34)` | `r plot.id(59)` | `r plot.id(84)` | `r plot.id(109)` | `r plot.id(134)`|
+`r name[10]` | `r plot.id(10)` | `r plot.id(35)` | `r plot.id(60)` | `r plot.id(85)` | `r plot.id(110)` | `r plot.id(135)`|
+`r name[11]` | `r plot.id(11)` | `r plot.id(36)` | `r plot.id(61)` | `r plot.id(86)` | `r plot.id(111)` | `r plot.id(136)`|
+`r name[12]` | `r plot.id(12)` | `r plot.id(37)` | `r plot.id(62)` | `r plot.id(87)` | `r plot.id(112)` | `r plot.id(137)`|
+`r name[13]` | `r plot.id(13)` | `r plot.id(38)` | `r plot.id(63)` | `r plot.id(88)` | `r plot.id(113)` | `r plot.id(138)`|
+`r name[14]` | `r plot.id(14)` | `r plot.id(39)` | `r plot.id(64)` | `r plot.id(89)` | `r plot.id(114)` | `r plot.id(139)`|
+`r name[15]` | `r plot.id(15)` | `r plot.id(40)` | `r plot.id(65)` | `r plot.id(90)` | `r plot.id(115)` | `r plot.id(140)`|
+`r name[16]` | `r plot.id(16)` | `r plot.id(41)` | `r plot.id(66)` | `r plot.id(91)` | `r plot.id(116)` | `r plot.id(141)`|
+`r name[17]` | `r plot.id(17)` | `r plot.id(42)` | `r plot.id(67)` | `r plot.id(92)` | `r plot.id(117)` | `r plot.id(142)`|
+`r name[18]` | `r plot.id(18)` | `r plot.id(43)` | `r plot.id(68)` | `r plot.id(93)` | `r plot.id(118)` | `r plot.id(143)`|
+`r name[19]` | `r plot.id(19)` | `r plot.id(44)` | `r plot.id(69)` | `r plot.id(94)` | `r plot.id(119)` | `r plot.id(144)`|
+`r name[20]` | `r plot.id(20)` | `r plot.id(45)` | `r plot.id(70)` | `r plot.id(95)` | `r plot.id(120)` | `r plot.id(145)`|
+`r name[21]` | `r plot.id(21)` | `r plot.id(46)` | `r plot.id(71)` | `r plot.id(96)` | `r plot.id(121)` | `r plot.id(146)`|
+`r name[22]` | `r plot.id(22)` | `r plot.id(47)` | `r plot.id(72)` | `r plot.id(97)` | `r plot.id(122)` | `r plot.id(147)`|
+`r name[23]` | `r plot.id(23)` | `r plot.id(48)` | `r plot.id(73)` | `r plot.id(98)` | `r plot.id(123)` | `r plot.id(148)`|
+`r name[24]` | `r plot.id(24)` | `r plot.id(49)` | `r plot.id(74)` | `r plot.id(99)` | `r plot.id(124)` | `r plot.id(149)`|
+`r name[25]` | `r plot.id(25)` | `r plot.id(50)` | `r plot.id(75)` | `r plot.id(100)` | `r plot.id(125)` | `r plot.id(150)`|
