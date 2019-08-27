@@ -352,19 +352,20 @@ We repeated the simulation of each trait-space 20 times (resulting in 260 trait-
 
 ## Spatial occupancy metrics
 
-We then measured seven different metrics on the resulting transformed spaces:
+We then measured height @@@ different metrics on the resulting transformed spaces:
 
 Name | Definition | Captures | Source | Notes  |
 -----|------------|----------|--------|---------|
 Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | This is equivalent to the functional dispersion (FDis) in @laliberté2010 (but not weighted by observation's abundance) |
-Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | This way of measuring the volume is less sensitive to outliers [c.f. sum of ranges; @wills2001] |
+Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | This is a really common metric used in palaeobiology [@ciampaglio2001] |
+Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @wills2001 | This metric is more sensitive to outliers than the sum of variances |
 Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | This metric is less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
-Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is related to the functional evenness [FEve; @villéger2008; though not weighted for abundance] |
+Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is similar to the unscaled functional evenness [@villéger2008] |
+Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | This metric is the functional evenness without weighted abundance [FEve; @villéger2008] |
 Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
 Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | This is the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
 
-<!-- Variance of the distance from centre | $\sigma^2 \left(\sqrt{\sum_{i}^{n}{({k}\_{n})^2}}\right)$ | Position | This paper | This metric captures the spread of the distance from the centre of the trait-space; it can also be used to capture increases in volume |
- -->
+With *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the eigen value of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
 
 ```{r metrics_list, echo = FALSE}
@@ -372,7 +373,7 @@ Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{
 source("list.of.metrics.R")
 ```
 
-We selected these six space-occupancy metrics to illustrate how they capture different aspects of trait-space occupancy.
+We selected these height @@@ space-occupancy metrics to illustrate how they capture different aspects of trait-space occupancy.
 We do not believe that they are better than many of the other metrics used in ecology and evolution.
 The supplementary results contain the same analysis as described below performed using more metrics.
 Additionally, the [`moms`](@@@) shiny App allows to explore the effect of many more metrics as well as customising metrics by combining them together or entering users functions.
@@ -568,7 +569,7 @@ study | field | taxonomic Group | traits (data) | trait-space | size | groups | 
 
 Table 4: details of the six empirical trait-spaces.
 
-For each empirical trait-space we bootstrapped each group 500 times [@disprity] and applied the six space-occupancy metric to each pairs of groups.
+For each empirical trait-space we bootstrapped each group 500 times [@disprity] and applied the height @@@ space-occupancy metric to each pairs of groups.
 Note that when space-occupancy could not be calculated (e.g. due to the curse of multidimensionaly), we collapsed the metric value to 0 (i.e. no space-occupancy was captured).
 We then compared the means of each groups using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
 The are displayed in Table 6.
@@ -681,6 +682,8 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[4]` | `r plot.id(10)` | `r plot.id(11)` | `r plot.id(12)` | `r s.test(4, "s")` | `r s.test(4, "r")`|
 `r name[5]` | `r plot.id(13)` | `r plot.id(14)` | `r plot.id(15)` | `r s.test(5, "s")` | `r s.test(5, "r")`|
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
+`r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
+`r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
 
 
 Table 5: Results of the effect of space reduction, space dimensions distributions and dimensions number of the different space-occupancy metrics. The dots represent the median space-occupancy values, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction. Results in blue are the minimum limit, low density and negative shift for respectively the volume, density and position changes. Results in orange are the maximum limit, high density and positive shift for respectively the volume, density and position changes. The displayed value in the plots are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange reductions and the random ones. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space-occupancy ~ distributions and space-occupancy ~ dimensions (Signif. codes:  0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 ' ' 1).
@@ -743,20 +746,22 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
-Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
+Metric     | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
-`r name[1]` | `r plot.id(1)` | `r plot.id(7)` | `r plot.id(13)` | `r plot.id(19)` | `r plot.id(25)` | `r plot.id(31)`|
-`r name[2]` | `r plot.id(2)` | `r plot.id(8)` | `r plot.id(14)` | `r plot.id(20)` | `r plot.id(26)` | `r plot.id(32)`|
-`r name[3]` | `r plot.id(3)` | `r plot.id(9)` | `r plot.id(15)` | `r plot.id(21)` | `r plot.id(27)` | `r plot.id(33)`|
-`r name[4]` | `r plot.id(4)` | `r plot.id(10)` | `r plot.id(16)` | `r plot.id(22)` | `r plot.id(28)` | `r plot.id(34)`|
-`r name[5]` | `r plot.id(5)` | `r plot.id(11)` | `r plot.id(17)` | `r plot.id(23)` | `r plot.id(29)` | `r plot.id(35)`|
-`r name[6]` | `r plot.id(6)` | `r plot.id(12)` | `r plot.id(18)` | `r plot.id(24)` | `r plot.id(30)` | `r plot.id(36)`|
+`r name[1]` | `r plot.id(1)` | `r plot.id(9)` | `r plot.id(17)` | `r plot.id(25)` | `r plot.id(33)` | `r plot.id(41)`|
+`r name[2]` | `r plot.id(2)` | `r plot.id(10)` | `r plot.id(18)` | `r plot.id(26)` | `r plot.id(34)` | `r plot.id(42)`|
+`r name[3]` | `r plot.id(3)` | `r plot.id(11)` | `r plot.id(19)` | `r plot.id(27)` | `r plot.id(35)` | `r plot.id(43)`|
+`r name[4]` | `r plot.id(4)` | `r plot.id(12)` | `r plot.id(20)` | `r plot.id(28)` | `r plot.id(36)` | `r plot.id(44)`|
+`r name[5]` | `r plot.id(5)` | `r plot.id(13)` | `r plot.id(21)` | `r plot.id(29)` | `r plot.id(37)` | `r plot.id(45)`|
+`r name[6]` | `r plot.id(6)` | `r plot.id(14)` | `r plot.id(22)` | `r plot.id(30)` | `r plot.id(38)` | `r plot.id(46)`|
+`r name[7]` | `r plot.id(7)` | `r plot.id(15)` | `r plot.id(23)` | `r plot.id(31)` | `r plot.id(39)` | `r plot.id(47)`|
+`r name[8]` | `r plot.id(8)` | `r plot.id(16)` | `r plot.id(24)` | `r plot.id(32)` | `r plot.id(40)` | `r plot.id(48)`|
 
 Table 6: Comparisons of different pairs of groups in different empirical trait-spaces. NAs are used for cases where space-occupancy could not be measured due to the curse of multidimensionality. The displayed values are the probability of overlap between both groups (Bhattacharrya Coefficient).
 
 
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
-For all five metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
+For all height @@@ metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
 When looking at the probability of overlap, they are also clearly affected by the different metrics.
 
 
@@ -777,39 +782,35 @@ When looking at the probability of overlap, they are also clearly affected by th
 
 # Discussion
 
-To write at some point.
 
-<!-- 
-* Average squared distances: all right metric for measuring density (increase/decrease picked up). Not great for volume (i.e. volume decreases when the morphospace becomes hollow). Not at all good for position (both negative/positive are picked up the same way). Affected by the distributions but not the dimensions.
+- Metrics results depends on the space
+- However some metrics always increase/decrease (e.g. @@@) even when removing points randomly
 
-* Procrustes variances: similar to the average squared distances although even worth for position (often close to random changes). Clearly not affect by the distributions and the dimensions.
+- This shows that the choice of the metric is a really important step and should be carefully thought through depending on what to measure.
+For example if we want to know whether there is a displacement in the trait-space, using @@@ metrics will always result in false negative results.
+Similarly, if we want to know a change in position, using @@@ will often result in false positives.
 
-* Ellispsoid volume: Not great for picking up anything, probably because of the curse of multidimensionality. This metric is clearly affected both by the distributions and the number of dimensions. This metric is probably best used with a low number of dimensions ($<10$).
 
-* Product of ranges: Same as the ellipsoid volume.
 
-* Sum of ranges: Picks a only negative change in volume (but not hollowness) and bat for measuring changes in position and density. This metric is clearly affected by the distributions and also by the number of dimensions (albeit less clearly).
 
-* Product of variances: Positive decrease in volume (hollowness) is picked up. But not much signal from change in position or density. This metric is clearly affected by the distributions and the dimensions.
 
-* Sum of variances: Similar behaviour than the Procrustes variance. Picks up great differences in volume. Bad for position on average, not bad for density. 
-
-* Mean displacement: Picks up reduction in volume (increased metric), not great for change in position and density. This metric is clearly affected by both the distributions and the number of dimensions.
-
-* Mean nearest neighbour distances: Picks up reduction in volume. Not great for change in position. OK for change in density. This metric is affected by the distributions but not the number of dimensions.
- -->
-## Caveat of the analysis
-
-<!-- * Data not simulated using evolutionary models (TODO: maybe TODO?)
-* Response to reduction is often more specific to distribution/dimensions/reduction for each metric and these fine differences are not displayed here.
-*
- -->
 ## Suggestions
 
-<!-- * Measure multiple aspects of multidimensional space occupancy
+We therefore suggest the following
+
+* Measure multiple aspects of multidimensional space occupancy
 * Use a metric that will best fit the biological question
 * Don't name metrics as the biological aspect they are approximating (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids). We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the same but named differently and used for approximating different things.
- -->
+* Finally we suggest checking the caveats of the metric used (e.g. curse of multidimensionality)
+
+We suggest using the [`moms`](@@@) shiny app to help exploring this.
+
+
+## Caveat of the analysis
+
+* Data not simulated using evolutionary models (TODO: maybe TODO?)
+* Response to reduction is often more specific to distribution/dimensions/reduction for each metric and these fine differences are not displayed here.
+
 
 # Conclusion
 
