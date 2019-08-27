@@ -293,8 +293,9 @@ plot.metrics <- function(space_results, col, remove, metrics_names, defaults, re
 #' @param scale whether to scale and centre the results around the non-reduced spaces
 #' @param type the type of results (e.g. "base" or "all")
 #' @param factors optional, a list of factors (space names) to test
-#' @param plot whether to display a pairplot ("pairs") or a correlation plot ("cor")
+#' @param plot whether to display a pairplot ("pairs") or a correlation plot ("cor") or a numeric character for the metric correlations to plot.
 #' @param plot.param plotting parameters
+#' @param single logical, whether to plot single metrics (compared to all other (\code{TRUE})) or a square matrix (default - \code{FALSE})
 #' @param ... any additional arguments to be passed to pairs() or plotcorr()
 
 pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", plot.param, ...) {
@@ -368,27 +369,62 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     colnames(results_table) <- c("space", metrics_names)
 
     ## Plotting
-    if(plot == "pairs") {
-        ## Some default plot arguments
-        if(is.null(plot.param$col)) {
-            plot.param$col <- "black"
-        }
-        if(is.null(plot.param$pch)) {
-            plot.param$pch <- 19
-        }
-        ## Pair plot
-        pairs(results_table[, -1], pch = plot.param$pch, col = plot.param$col, ...)
-    } else {
-        ## Some default plot arguments
-        if(is.null(plot.param$hist.col)) plot.param$hist.col <- "grey"
-        if(is.null(plot.param$lm)) plot.param$lm <- TRUE
-        if(is.null(plot.param$stars)) plot.param$stars <- FALSE
-        if(is.null(plot.param$ci)) plot.param$ci <- TRUE
-        if(is.null(plot.param$ellipses)) plot.param$ellipses <- FALSE
+    if(plot == "pairs" && plot == "cor") {
 
-        ## Pair plot
-        psych::pairs.panels(results_table[, -1], hist.col = plot.param$hist.col, lm = plot.param$lm, stars = plot.param$stars, ci = plot.param$ci, ellipses = plot.param$ellipses, ...)
+        if(plot == "pairs") {
+            ## Some default plot arguments
+            if(is.null(plot.param$col)) {
+                plot.param$col <- "black"
+            }
+            if(is.null(plot.param$pch)) {
+                plot.param$pch <- 19
+            }
+            ## Pair plot
+            pairs(results_table[, -1], pch = plot.param$pch, col = plot.param$col, ...)
+        } else  {
+            ## Some default plot arguments
+            if(is.null(plot.param$hist.col)) plot.param$hist.col <- "grey"
+            if(is.null(plot.param$lm)) plot.param$lm <- TRUE
+            if(is.null(plot.param$stars)) plot.param$stars <- FALSE
+            if(is.null(plot.param$ci)) plot.param$ci <- TRUE
+            if(is.null(plot.param$ellipses)) plot.param$ellipses <- FALSE
+
+            ## Pair plot
+            psych::pairs.panels(results_table[, -1], hist.col = plot.param$hist.col, lm = plot.param$lm, stars = plot.param$stars, ci = plot.param$ci, ellipses = plot.param$ellipses, ...)
+        }
+    } else {
+
+        metric_ID <- plot
+
+        ## Do a single plot
+        single.plot <- function(plot_ID, metric_ID, res_table, correlations, lin_models) {
+            label <- paste0(colnames(res_table[,-metric_ID])[plot_ID], ": ", round(correlations[plot_ID], digits = 2))
+            plot(res_table[,metric_ID], res_table[,-metric_ID][,plot_ID], pch = 19, cex = 0.5, main = label, xlab = "", ylab = "")
+            abline(lin_models[[plot_ID]], col = "red", lwd = 2)
+        }
+
+        ## Simplified results_table
+        res_table <- results_table[, -1]
+
+        ## Plot parameters
+        par(mfrow = c(ceiling(sqrt(ncol(res_table))), ceiling(sqrt(ncol(res_table)))), mar = c(2,2,3,1))
+
+        ## Get all correlations
+        correlations <- apply(res_table[,-metric_ID], 2, function(x,y) return(cor(y,x)), y = res_table[,metric_ID])
+        names(correlations)
+
+        ## Get all linear models
+        lin_models <- apply(res_table[,-metric_ID], 2, function(y,x) return(lm(x ~ y)), x = res_table[,metric_ID]) 
+
+        ## Plot the histogram
+        hist(res_table[,metric_ID], main = colnames(res_table)[metric_ID], xlab = "", ylab = "")
+
+        ## Plot the correlations
+        for(other_metric in 1:(ncol(res_table)-1)) {
+            single.plot(other_metric, metric_ID, res_table, correlations, lin_models)
+        }
     }
+
     return(invisible())
 }
 

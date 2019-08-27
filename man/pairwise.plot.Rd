@@ -16,11 +16,13 @@ pairwise.plot(results, scale = TRUE, type, factors, plot = "pairs",
 
 \item{factors}{optional, a list of factors (space names) to test}
 
-\item{plot}{whether to display a pairplot ("pairs") or a correlation plot ("cor")}
+\item{plot}{whether to display a pairplot ("pairs") or a correlation plot ("cor") or a numeric character for the metric correlations to plot.}
 
 \item{plot.param}{plotting parameters}
 
 \item{...}{any additional arguments to be passed to pairs() or plotcorr()}
+
+\item{single}{logical, whether to plot single metrics (compared to all other (\code{TRUE})) or a square matrix (default - \code{FALSE})}
 }
 \description{
 Pairwise plot of the metrics

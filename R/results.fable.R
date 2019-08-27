@@ -20,7 +20,7 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
 
     pool.data <- function(data, metric, what, scale) {
         ## Extract the metric
-        pooled_metric <- lapply(remove_05, function(X, metric) return(X[[metric]]), metric = metric)
+        pooled_metric <- lapply(data, function(X, metric) return(X[[metric]]), metric = metric)
 
         if(scale){
             ## Centre the results
@@ -46,6 +46,10 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
 
         ## Get the pooled data
         pooled_data <- lapply(pooled_metric, get.category, what = what, scale = scale)
+
+        ## Remove not numbers
+        pooled_data <- lapply(pooled_data, function(x) ifelse(is.nan(x), 0, x))
+
         return(do.call(rbind, pooled_data))
     }
 
@@ -113,7 +117,6 @@ generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALS
         }
         ## Add the text
         text(x = x_pos, y = y_pos-0.15, labels = coefs, cex = plot.param$cex)
-
     }
 }
 
