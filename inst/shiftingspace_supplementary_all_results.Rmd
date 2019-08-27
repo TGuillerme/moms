@@ -8,7 +8,7 @@ output:
     fig_height: 6
 ---
 
-# Supplementary material 1: simulations
+# Supplementary material 4: full results
 
 ```{r header_simulation, echo = FALSE}
 ## Loading the packages
@@ -71,7 +71,7 @@ all_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(m
                     "prod.quantil"= c(prod, quantiles),
                     "ellips.vol"  = ellipse.volume,
                     "n.ball.vol"  = n.ball.volume,
-                    "span.tree"   = span.tree.length,
+                    "span.tree"   = c(mean, span.tree.length),
                     "ave.neigh"   = c(mean, neighbours),
                     "ave.neig.man"= function(matrix) return(mean(neighbours(matrix, method = "manhattan"))),
                     "func.div"    = func.div,
@@ -80,7 +80,7 @@ all_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(m
                     "av.displa"   = c(mean, displacements),
                     "av.displ.man"= function(matrix) return(mean(displacements(matrix, method = "manhattan"))),
                     "med.center"  = function(matrix) return(median(centroids(matrix, centroid = 0))),
-                    "med.center"  = function(matrix) return(median(centroids(matrix, centroid = 0, method = "manhattan")))
+                    "med.cent.ma" = function(matrix) return(median(centroids(matrix, centroid = 0, method = "manhattan")))
                     )
 
 all_metrics_names <- c("Average squared pairwise distance (dtt::dtt)",
@@ -98,7 +98,7 @@ all_metrics_names <- c("Average squared pairwise distance (dtt::dtt)",
                        "Product of quantiles",
                        "Ellipsoid volume",
                        "nBall volume",
-                       "Minimum spanning tree length",
+                       "Minimum spanning tree average length",
                        "Average minimum neighbours distance",
                        "Average minimum neighbours manhattan distance",
                        "Function diversity",
@@ -129,7 +129,7 @@ elements <- function() 200
 set.seed(42)
 ```
 
-```{r generate_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+```{r generate_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = FALSE}
 ## List of distributions
 distributions_list <- list(
     "unifor" = list(distribution = runif, arguments = list(list("min" = -0.5, "max" = 0.5))),
@@ -177,14 +177,14 @@ all_spaces <- list(uniform3 = space.simulation(distributions_list$unifor, dimens
 #TG: Warnings are due to inexact correlations
 ```
 
-```{r shift_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+```{r shift_spaces_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = FALSE}
 ## Shifting each space
 shift_groups_02 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.2)
 shift_groups_05 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.5)
 shift_groups_08 <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.8)
 ```
 
-```{r get_disparity_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = TRUE}
+```{r get_disparity_simulation, echo = FALSE, warning = FALSE, results = 'hide', eval = FALSE}
 ## Measuring disparity
 all_metrics_remove_02 <- mapply(metrics.simulation, all_spaces, shift_groups_02,
                         MoreArgs = list(metrics = all_metrics, rare.dim = NULL, verbose = TRUE),
@@ -196,7 +196,6 @@ all_metrics_remove_08 <- mapply(metrics.simulation, all_spaces, shift_groups_08,
                         MoreArgs = list(metrics = all_metrics, rare.dim = NULL, verbose = TRUE),
                         SIMPLIFY = FALSE)
 
-
 ## Saving the results
 save.results(all_metrics_remove_02)
 save.results(all_metrics_remove_05)
@@ -205,7 +204,7 @@ save.results(all_metrics_remove_08)
 
 ## Running the empirical data for the 25 metrics
 
-```{r running_empirical, echo = FALSE, eval = TRUE}
+```{r running_empirical, echo = FALSE, eval = FALSE}
 data(demo_data)
 ## Loading the data
 trait_spaces <- demo_data
@@ -225,44 +224,34 @@ save.results(all_metrics_empirical_results)
 ## Load all the data
 
 
-```{r}
+```{r, loading_data}
 ## Load all the data
-load.results("all_metrics_remove_02")
-load.results("all_metrics_remove_05")
-load.results("all_metrics_remove_08")
-load.results("all_metrics_empirical_results")
+all_metrics_remove_02 <- load.results("all_metrics_remove_02")
+all_metrics_remove_05 <- load.results("all_metrics_remove_05")
+all_metrics_remove_08 <- load.results("all_metrics_remove_08")
+all_metrics_empirical_results <- load.results("all_metrics_empirical_results")
 ```
 
 
 ## Metrics pairwise comparisons
 
-```{r}
-## Adding proper names
-results_pairwise_02 <- all_metrics_remove_02
-results_pairwise_05 <- all_metrics_remove_05
-results_pairwise_08 <- all_metrics_remove_08
-
-## Numbering the metrics
-seq(1: length(all_metrics_names)) ->
-  names(results_pairwise_02[[1]]) ->
-  names(results_pairwise_05[[1]]) ->
-  names(results_pairwise_08[[1]])  
+```{r, pairwise_comparisons}
+## getting the results to loop through (independent of the removal)
+results_pairwise <- all_metrics_remove_02
 
 ## Plotting the pairwise results
-pairwise.plot(results_pairwise_02, scale = TRUE, type = "base", plot = "cor", main = "Results for 20% removal")
-pairwise.plot(results_pairwise_05, scale = TRUE, type = "base", plot = "cor", main = "Results for 50% removal")
-pairwise.plot(results_pairwise_08, scale = TRUE, type = "base", plot = "cor", main = "Results for 80% removal")
+for(metric_ID in 1:length(all_metrics_names)) {
+  pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = metric_ID)
+}
 ```
 
-The metrics analysed are the `r paste(paste(seq(1:length(all_metrics_names)), all_metrics_names, sep = ": "), collapse = "; ")` (diagonally).
-
-
+The metrics analysed are the `r paste(paste(names(all_metrics), all_metrics_names, sep = ": "), collapse = "; ")`.
 
 
 ## Space shifting all metrics
 
 
-```{r running_tests, echo = FALSE}
+```{r running_anovas, echo = FALSE}
 ## Anova function
 anova.fun <- function(data) {return(aov(glm(disparity ~ factor, data = data)))}
 
