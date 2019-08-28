@@ -314,11 +314,11 @@ To do so we performed the following steps (explained in more details below):
 3. We measured occupancy on the resulted transformed spaces using seven different space occupancy metrics;
 4. We applied the same space occupancy metrics to six empirical datasets from the literature (covering a range of disciplines and a range of dataset properties).
 
-| Test | Methods section | Results figure
+| Test | Methods section | Results
 |------|-----------------|------------------
 | How do the metrics compare to each other? | Metrics comparisons       | Figure 4
-| How are they affected by space shifting?  | Space shifting            | Figure 5
-| How is that reflected in the real world?  | Empirical examples        | Figure 6
+| How are they affected by space shifting?  | Space shifting            | Table 5
+| How is that reflected in the real world?  | Empirical examples        | Table 6
 
 Table 1: summary of the tests in this paper.
 
@@ -759,7 +759,6 @@ Metric     | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et a
 
 Table 6: Comparisons of different pairs of groups in different empirical trait-spaces. NAs are used for cases where space-occupancy could not be measured due to the curse of multidimensionality. The displayed values are the probability of overlap between both groups (Bhattacharrya Coefficient).
 
-
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
 For all height @@@ metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
 When looking at the probability of overlap, they are also clearly affected by the different metrics.
@@ -782,6 +781,40 @@ When looking at the probability of overlap, they are also clearly affected by th
 
 # Discussion
 
+As expected we see a range of differences between the metrics themselves (Fig. 4), their response to space shifting (Tab. 5) and their effect on capturing differences in empirical datasets (Tab. 6).
+This should not come as a surprise because a space-occupancy metric is bound to capture different summary of the trait-spaces depending on both the metric and the trait space properties.
+
+#### Metrics comparisons
+
+The correlation between metrics ranges from a near 1:1 correlation (0.99 for the mean distance from centroid and the sum of variances) to a somewhat negative correlation (-0.23 for the sum of ranges and the spanning tree average length).
+Furthermore, all metrics seems to behave following a normal distribution but for the ellipsoid volume which demonstrates a classic "curse of multidimensionality" with values increasing logarithmically first and then quickly decreasing to 0 [Fig. 4; @cursedimensionality].
+In other words, the ellipsoid volume is really sensitive to changes in trait-space only up until a modest number of dimensions.
+The fact that we have such a range of correlations for such conserved distributions (but for the ellipsoid volume) hints that each metric can capture different summaries of trait-space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated). 
+
+#### Space shifting
+
+Expected "null" change in directionality: Average nearest neighbour distance (positive median) and sum of ranges (negative median).
+This means that for any decrease in number of elements in the trait-space, the average nearest neighbour distance and the sum of ranges will always pick up respectively and increase and a decrease in trait-space occupancy.
+This is not especially a bad thing but definitely something to keep in mind.
+
+Change in volume:
+Sum of variances and average distance from centroid really good since there is only a low overlap.
+This is good since they pick something different than the simple random decrease.
+However they also pick some increase in volume (blue) even though the algorithm does only suppress data from the centre (Fig. 3B) which does not correspond as an increase in volume *per se*.
+Furthermore they also seem to be correlated to changes in density
+
+Change in density:
+Average nearest neigbhour distance and minimum spanning tree average distance seems to be the best.
+However both seem to have a "null increase" (see below).
+
+Change in position:
+Unsurprisingly changes in position is hard to capture (position gets more complex as dimensionality increases).
+The average displacement seems to be the best at picking a change in position and maybe the sum of ranges but with a big "null decrease" (leading to high Bhattacharrya Coefficients - 0.96 and 0.86 - Tab. 5).
+
+#### Empirical examples
+
+Again, as expected, different metrics highlight different differences for different trait-spaces.
+Although most differences are fairly consistent within each dataset (red group mean superior/inferior to blue group mean), this can be more or less pronounced (ranging from no to nearly full overlap - BC $\in(0;0.995)$) 
 
 - Metrics results depends on the space
 - However some metrics always increase/decrease (e.g. @@@) even when removing points randomly
@@ -795,6 +828,9 @@ Similarly, if we want to know a change in position, using @@@ will often result 
 
 
 ## Suggestions
+
+We insist that there is no metric better than another one and that people should use their metrics based on their question and knowledge of both the metric and the trait-space properties.
+However, following this study we suggest the following points could be applied to future multdimensional analysis:
 
 We therefore suggest the following
 
