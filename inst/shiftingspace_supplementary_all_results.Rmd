@@ -4,7 +4,6 @@ author: "Thomas Guillerme, Mark Puttick, Ariel Marcy, Vera Weisbecker"
 date: "`r Sys.Date()`"
 output:
   html_document:
-    self_contained: false
     fig_width: 12
     fig_height: 6
 ---
@@ -527,5 +526,5 @@ Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et 
 `r name[21]` | `r plot.id(21)` | `r plot.id(46)` | `r plot.id(71)` | `r plot.id(96)` | `r plot.id(121)` | `r plot.id(146)`|
 `r name[22]` | `r plot.id(22)` | `r plot.id(47)` | `r plot.id(72)` | `r plot.id(97)` | `r plot.id(122)` | `r plot.id(147)`|
 `r name[23]` | `r plot.id(23)` | `r plot.id(48)` | `r plot.id(73)` | `r plot.id(98)` | `r plot.id(123)` | `r plot.id(148)`|
-`r name[24]` | `r plot.id(24)` | `r plot.id(49)` | `r plot.id(74)` | `r plot.id(99)` | `r plot.id(124)` | `r plot.id(149)`|
-`r name[25]` | `r plot.id(25)` | `r plot.id(50)` | `r plot.id(75)` | `r plot.id(100)` | `r plot.id(125)` | `r plot.id(150)`|
+`r name[24]` | `r plot.id(24)` | `r plot.id(49)` | `r plot.id(74)` | `r plot.id(99)` | `r plot.id(124)` | `#r plot.id(149)`|
+`r name[25]` | `r plot.id(25)` | `r plot.id(50)` | `r plot.id(75)` | `r plot.id(100)` | `r plot.id(125)` | `#r plot.id(150)`|

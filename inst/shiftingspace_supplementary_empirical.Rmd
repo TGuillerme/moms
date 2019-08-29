@@ -129,7 +129,7 @@ marcy_names <- marcy_names[!duplicated]
 marcy_gpa <- gpagen(marcy_data, Proj = TRUE, ProcD = TRUE, curves = sliders, print.progress = FALSE)
 ```
 
-#### Hopkins et al. 2016 (ontogenic sequences)
+#### Hopkins and Pearson 2016 (ontogenic sequences)
 
 This dataset consists of 63 3D landmarks for 46 specimens [from 23 individuals, 3 of which have estimated landmarks, @hopkins2016].
 The data is then separated into juveniles and adults [based on the specimens centroids sizes; @hopkins2016].
