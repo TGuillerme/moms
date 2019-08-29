@@ -17,7 +17,13 @@ output:
     fig_width: 8
     fig_height: 8
     keep_tex: true
-self_contained: false
+  self_contained: false
+
+
+output:
+  html_document:
+    fig_width: 8
+    fig_height: 8
 ---
 and edit the save .tex file to add the following
 
@@ -75,11 +81,11 @@ default.palette <- function(n) {
 
 ## Checking whether the data exists
 if(!all(c("remove_05.Rda") %in% list.files(DATA_PATH))) {
-    ## Run The supplementary material (simulation) ~ 5 minutes
+    ## Run The supplementary material (simulation) ~ 30 minutes
     rmarkdown::render("shiftingspace_supplementary_simulation.Rmd", "html_document")    
 }
 if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
-    ## Run The supplementary material ~ 5 minutes
+    ## Run The supplementary material ~ 15 minutes
     rmarkdown::render("shiftingspace_supplementary_empirical.Rmd", "html_document")
 }
 ```
@@ -347,18 +353,17 @@ We repeated the simulation of each trait-space 20 times (resulting in 260 trait-
 
 We then measured height @@@ different metrics on the resulting transformed spaces:
 
-Name | Definition | Captures | Source | Notes  |
------|------------|----------|--------|---------|
-Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | This is equivalent to the functional dispersion (FDis) in @laliberté2010 (but not weighted by observation's abundance) |
-Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | This is a really common metric used in palaeobiology [@ciampaglio2001] |
-Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @wills2001 | This metric is more sensitive to outliers than the sum of variances |
-Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | This metric is less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
-Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is similar to the unscaled functional evenness [@villéger2008] |
-Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | This metric is the functional evenness without weighted abundance [FEve; @villéger2008] |
-Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
-Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | This is the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
-
-With *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the eigen value of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
+| Name | Definition | Captures | Source | Notes  |
+|------|------------|----------|--------|--------|
+| Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | This is equivalent to the functional dispersion (FDis) in @laliberté2010 (but not weighted by observation's abundance) |
+| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | This is a really common metric used in palaeobiology [@ciampaglio2001] |
+| Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @wills2001 | This metric is more sensitive to outliers than the sum of variances |
+| Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | This metric is less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
+| Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | This metric is similar to the unscaled functional evenness [@villéger2008] |
+| Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | This metric is the functional evenness without weighted abundance [FEve; @villéger2008] |
+| Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | This metric measures the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
+| Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | This is the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
+Table 3: List of metric with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the eigen value of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
 
 ```{r metrics_list, echo = FALSE}
@@ -840,7 +845,7 @@ In fact, if one studies an adaptive radiation in a group of organisms, it is wor
 
 Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
 We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the same but named differently and used for approximating different things.
-For example, the average squared pairwise distance [`geiger::dtt`; @geiger] and the Procrustes Variance [`geomorph::disparity`; @geomorph] often describe the same aspect of space occupancy (see Supplementary material 4@@@).
+For example, the average squared pairwise distance [`geiger::dtt`; @geiger2008] and the Procrustes Variance [`geomorph::disparity`; @adams2013geomorph] often describe the same aspect of space occupancy (see Supplementary material 4@@@).
 
 # Conclusion
 
