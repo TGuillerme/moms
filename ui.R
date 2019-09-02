@@ -128,7 +128,7 @@ shinyUI(fluidPage(
         conditionalPanel(condition = "input.space_type == \"Input\"",
 
           fileInput("upload_input_matrix", label = "Select a multidimensional matrix in csv format."),
-          helpText("Upload your own multidimensional matrix! The matrix must be in .csv format, with numeric values and no row names or column names.")
+          helpText("Upload your own multidimensional matrix! The matrix must be in .csv format, with numeric values no NAs.")
         ),
 
 

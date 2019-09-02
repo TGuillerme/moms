@@ -1,7 +1,7 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$space_type <- "User"
+# input$space_type <- "Input"
 # input$demo_data <- "Beck and Lee 2014"
 # input$n_dimensions <- 2
 # input$n_elements <- 300
@@ -10,7 +10,8 @@
 # input$rnorm_sd <- 1
 # input$scree <- "Uniform"
 # input$correlation <- "Uncorrelated"
-# input$use_input_matrix <- FALSE
+# input$use_input_matrix <- TRUE
+# input$upload_input_matrix$name <- "trait_space_small.csv"
 
 
 # input$reduce <- "Limit"
@@ -41,13 +42,37 @@ get.space <- function(input, args.only = FALSE){
     if(input$space_type == "Input"){
         ## Load the file
         space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = FALSE))
-        ## Check class and space
-        if(class(space) != "matrix" && any(is.na(space))) {
-            return("Impossible to read the input matrix.\nThe input matrix should have no missing characters, only numeric values and no column and row names.")
+
+        ## Check whether it can work out with rownames
+        if(class(space) != "matrix") {
+            ## Was not a matrix
+            return("Not a matrix")
         }
+
+        ## First check if is numeric
+        if(!is.numeric(space)) {
+            ## Is not numeric
+            ## Try reload with row or col names
+            space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = 1, header = FALSE))
+            ## Try changing parameters
+            if(!is.numeric(space)) {
+                space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = TRUE))
+            } 
+            if(!is.numeric(space)) {
+                space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = 1, header = TRUE))
+            }
+        }
+
+        ## Check again if space is numeric (after multiple loadings)
         if(!is.numeric(space)) {
             return("Input matrix does not contain only numeric values.")
         }
+
+        ## Check class and space
+        if(class(space) != "matrix" && any(is.na(space))) {
+            return("Impossible to read the input matrix.\nThe input matrix should have no missing characters, and only numeric values.")
+        }
+
         return(space)
     }
 
