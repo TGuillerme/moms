@@ -263,7 +263,7 @@ get.reduction <- function(input, space, session) {
     switch(input$reduce,
         Random = {
             ## Simple removal
-            return(reduce.space(space, type = "random", input$remove, verbose = FALSE, return.optim = FALSE))
+            return(reduce.space(space, type = "random", 1-input$remove, verbose = FALSE, return.optim = FALSE))
         },
         Limit = {
             type <- "limit"
@@ -290,7 +290,7 @@ get.reduction <- function(input, space, session) {
     }
 
     ## Reducing the space
-    remove <- reduce.space(space_to_reduce, type, input$remove, tuning, verbose = FALSE, return.optim = FALSE)
+    remove <- reduce.space(space_to_reduce, type, 1-input$remove, tuning, verbose = FALSE, return.optim = FALSE)
 
     if(all(remove) || all(!remove)) {
         return("Impossible to remove data.\nTry hitting the \"refresh\" button,\nchanging the parameters combinations\nor the \"remove\" value.")
