@@ -4,7 +4,7 @@ shinyUI(fluidPage(
 
   wellPanel(
 
-    titlePanel("Measuring Occupancy in Multidimensional Spaces"),
+    titlePanel("moms: Measuring Occupancy in Multidimensional Spaces"),
     p("Guillerme T, Puttick M, Marcy A, and Weisbecker V (2019). Moms: an exploratory tool for multidimensional space analyses. Some journal. doi:", a(href="https://dx.doi.org/10.1093/sysbio/syy083", "some DOI"), "."),
     p(a(href="https://rawcdn.githack.com/TGuillerme/moms/master/inst/moms_vignette.html", "USER MANUAL", rel = "noopener noreferrer", target = "_blank")),
     hr(),
@@ -257,7 +257,7 @@ shinyUI(fluidPage(
         ## -------
         ## Disparity metric (and display)
         ## -------
-        h2("Disparity metric"),
+        h2("Space occupancy metric (disparity)"),
 
         ## Metric - input$level1
         selectInput("metric_choice", label = "Metric type", choices = list("Volume", "Density", "Position", "User"), selected = "Volume"),

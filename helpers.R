@@ -41,6 +41,7 @@ get.space <- function(input, args.only = FALSE){
     ## Input space
     if(input$space_type == "Input"){
         ## Load the file
+        shiny::req(input$upload_input_matrix)
         space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = FALSE))
 
         ## Check whether it can work out with rownames
