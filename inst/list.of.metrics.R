@@ -36,3 +36,21 @@ metric_names <- c("Average distance from centroid",
                   "Minimum spanning tree distances evenness",
                   "Average nearest neighbour distance",
                   "Average displacements")
+
+## Prints the number of metrics in english (single = FALSE) or the list of metrics (single = TRUE)
+metric.names <- function(single = FALSE, names = metric_names) {
+  english_numbers <- c("one", "two", "three", "four", "five", "six", "seven", "height", "nine", "ten")
+  if(!single) {
+    if(length(names) > 10) {
+      ## Return the digits
+      return(length(names))
+    } else {
+      ## Return the english number
+      return(english_numbers[length(names)])
+    }
+  } else {
+    return(paste0(names, sep = ", "))
+  }
+}
+
+## Table number
