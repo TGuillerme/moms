@@ -680,10 +680,6 @@ space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
 ## Metric comparisons 
 
 
-
-<!-- Figure 4: pairwise correlation between the scaled metrics. Each data point represents the measures for the metrics for each of the 260 simulated trait spaces. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey). -->
-<!-- VW: correct? -->
-
 ```{r fig_metric_correlation, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 4: pairwise correlation between the scaled metrics. Numbers on the upper right corner are the Pearson correlations. The red line are linear regressions (with the confidence intervals in grey).")}
 
 ## Adding proper names
@@ -694,9 +690,7 @@ names(results_pairwise[[1]]) <- metric_names
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
 ```
 
-All the metrics selected were either positively correlated (correlation
-<!-- VW: Too complicated ! -->
- of 0.99 for the Average distance from centroid and Sum of variance or 0.97 for the Average nearest neighbour distance and Minimum spanning tree average length; Fig. `r figures <- figure("comparisons"); figures$print`) or somewhat correlated (ranging from 0.66 for the Sum of Variances and the Ellispsoid Volume to -0.09 between the Average displacement and the Average distance from centroid; Fig. `r figures <- figure("comparisons"); figures$print`).
+All the metrics selected were either positively correlated (Pearson correlation of 0.99 for the Average distance from centroid and Sum of variance or 0.97 for the Average nearest neighbour distance and Minimum spanning tree average length; Fig. `r figures <- figure("comparisons"); figures$print`) or somewhat correlated (ranging from 0.66 for the Sum of Variances and the Ellispsoid Volume to -0.09 between the Average displacement and the Average distance from centroid; Fig. `r figures <- figure("comparisons"); figures$print`).
 Note that all metrics but the Ellipsoid Volume were normally (or nearly normally) distributed (Fig. `r figures <- figure("comparisons"); figures$print`).
 This is due to the Ellipsoid Volume being more sensitive to the curse of multidimensionality (many values close to 0).
 More comparisons between metrics are available in the supplementary materials.
@@ -759,23 +753,22 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
 Table `r tables <- table("simulations"); tables$print`: Results of the effect of space reduction, space dimension distributions and dimensions number of the different trait-space occupancy metrics. The dots represent the median trait-space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction. Results in blue and orange represent the blue and orange opposite scenarios in Fig. `r figures <- figure("reductions"); figures$print` (blue,  the minimum limit, low density and negative shift orange, maximum limit, high density and positive shift) for respectively the volume, density and position changes.
-<!-- VW: Let's workshop this to see if we can have it non-repeating. It may even be worth adding one extra table that dissects the figures because the amount of information is too high to stay in someone's brain easily. -->
 The displayed value in the plots are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange reductions and the random ones. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs trait-space occupancy ~ distributions and trait-space occupancy ~ dimensions (Signif. codes: 0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1).
+
+<!-- VW: Let's workshop this to see if we can have it non-repeating. It may even be worth adding one extra table that dissects the figures because the amount of information is too high to stay in someone's brain easily. -->
 
 As expected (Fig. `r figures <- figure("quartets"); figures$print`), some different metrics capture different aspects of trait-space occupancy.
 In contrast to the clear hypothetical example in Fig. `r figures <- figure("quartets"); figures$print`, it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
 In fact we observe a clear decrease in median metric in less than a third of the space reductions (10/36).
 
 In terms of change in volume (increase or decrease), only the Average distance from centroid and the Sum of variances seem to capture a clear change in both directions.
-Note however that the increase in volume does not correspond to an *actual* increase in volume in the trait-space (i.e. the volume in from the orange
-<!-- VW: Shouldn't it be blue? The volume of the blue observations is equivalent to the volume of the space in 3A? -->
- observations in Fig. `r figures <- figure("reductions"); figures$print`B is equivalent to the one in Fig. `r figures <- figure("reductions"); figures$print`A).
+Note however that the increase in volume does not correspond to an *actual* increase in volume in the trait-space (i.e. the volume from the blue observations in Fig. `r figures <- figure("reductions"); figures$print`B is equivalent to the one in Fig. `r figures <- figure("reductions"); figures$print`A).
 In terms of change in density (increase or decrease), only the Minimum spanning tree average distance and the Average nearest neighbour distance seem to capture a clear change in both directions.
 In terms of change in position (increase or decrease), only the Average displacements metric seems to capture a change a clear change in direction (albeit not in both directions).
-This is not surprising however, since the notion of positions becomes more and more complex to 
- <!-- VW: grasp? -->
- as dimensionality increases (i.e. beyond left/right and up/down).
- <!-- VW:But does it warrant a cautionary use of the displacement metrics because of this lack of human-interpretable directionality? -->
+This is not surprising however, since the notion of positions becomes more and more complex to appreciate as dimensionality increases (i.e. beyond left/right (1D), up/down (2D) and front/back (3D)).
+<!-- VW:But does it warrant a cautionary use of the displacement metrics because of this lack of human-interpretable directionality? -->
+<!-- TG: I don't think so -->
+
 
 ## Empirical example
 
@@ -838,9 +831,11 @@ Metric     | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins and 
 Table `r tables <- table("empiricals"); tables$print`: Comparisons of different pairs of groups in different empirical trait-spaces. NAs are used for cases where trait-space occupancy could not be measured due to the curse of multidimensionality. The displayed values are the probability of overlap between both groups (Bhattacharrya Coefficient).
 
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
-For all `r metric.names()` metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other.
-<!-- VW: This needs more description. In particular, for example, The Beck and Lee data suggest that the KT boundary resulted in volume differences but not density or position difference; Hopson and Pearson suggest that red has a much larger volume than blue but blue is also displaced. Ideally in one or several of these we find an indication of a previously unfound piece of information.  -->
-When looking at the probability of overlap, they are also clearly affected by the different metrics.
+For all `r metric.names()` metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the metrics.
+For example, in the @beck2014's dataset, there is a clear non-overlap in trait-space occupancy volume using the average distance from centroif or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the volume using the sum of ranges (overlap of 0.966).
+However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average distance from centroid or the sum of variances - overlap of 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (overlap of 0).
+Furthermore, for each dataset, the absolute differences between each groups (i.e. mean of the orange group higher or lower than the one of the blue group) is not consistent depending on the metrics.
+For example, in @hopkins2016's dataset, the orange group's mean is clearly higher than the blue one when measuring the sum of ranges (overlap of 0) and the inverse is true when measuring the average displacements (overlap of 0).
 
 
 <!--  -->
