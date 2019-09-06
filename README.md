@@ -8,14 +8,14 @@
 
 <!-- <a href="https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
 Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222). --> 
-### What is moms?
-moms is a shiny app that helps understanding the multidimensional space occupancy metrics that can be used in ecology and evolution.
+### What is `moms`?
+`moms` is a shiny app that helps understanding the multidimensional space occupancy metrics that can be used in ecology and evolution.
 
 ### What isn't moms?
 **moms is not a package for measuring disparity!** 
-Although moms is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with moms] reproducible.
+Although moms is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with moms]() fully reproducible.
 These functions allow the reduce the space, make fancy plots or wrap up analysis in the context of the shiny app or the paper only.
-If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by moms for all the disparity calculations.
+If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by `moms` for all the disparity calculations.
 
 ## Running moms on your web browser
 That's easy! In `R`, simply copy/paste the following:
@@ -33,11 +33,11 @@ Not much more complicated! In `R`, copy/paste the following:
 if(!require(devtools)) install.packages("devtools")
 devtools::install_github("TGuillerme/moms")
 
-## Running the App:
-moms::runmoms()
+## Running the App (from the root of the repository, i.e. <some_path_in_my_machine>/moms/:
+shiny::runApp(".")
 ```
 
-<!-- Check out the package [vignette](https://tguillerme.github.io/moms.html) for (many) more details on the GUI possibilities. -->
+Check out the app [manual](https://raw.githack.com/TGuillerme/moms/master/inst/moms_vignette.html) for more details on `moms` GUI possibilities.
 
 
 ## Associated paper
@@ -66,13 +66,11 @@ Authors
 [Thomas Guillerme](http://tguillerme.github.io), [Mark Puttick](https://puttickbiology.wordpress.com/), [Ariel Marcy](https://github.com/miracleray), [Vera Weisbecker](http://weisbeckerlab.com.au/)
 
 
-<!-- Citations
+Citations
 -------
-If you are using this package, please cite both the published description of this algorithm:
+If you are using this package, please send [me](mailto:guillert@tcd.ie) an email so that I can generate some DOI you can cite.
 
-* Guillerme T, Puttick M, Weisbecker V. (**2018**) Shifting spaces: how to summarise multidimensional spaces occupancy?. *Methods in Ecology and Evolution*. [doi:]()
+> **NOTE HOWEVER THAT THIS IS AN EARLY STAGE OF THE APP/PAPER AND THAT IT CAN CHANGE SIGNIFICANTLY!**
 
-And the DOI of this package:
+<!-- * Guillerme T, Puttick M, Weisbecker V. (**2018**) Shifting spaces: how to summarise multidimensional spaces occupancy?. *MEE*. [doi:]() -->
 
- * Guillerme T, Puttick M, Weisbecker V. (**2018**). moms: Measuring Occupacy in Multidimensional Spaces. *Zenodo*. [doi:10.5281/zenodo.1484656](http://doi.org/10.5281/zenodo.1484656)
- -->
