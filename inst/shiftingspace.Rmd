@@ -270,7 +270,9 @@ Although these metrics are rarer in macroevolution (to our knowledge), they have
 The use of multiple metrics to assess traitspace occupancy has the benefit of providing a more detailed characterization of occupancy changes.
 For example, if the question of interest is, say, to look at how trait-space occupancy changes in response to mass extinction, using a single metric to describe one aspect of occupancy (usually the volume) can miss part of the picture.
 For example, when looking at the effect of mass extinction on trait-space occupancy, a change in volume (or the absence thereof) can be decoupled from a change in position or density of the observations trait-space.
-The Cretaceous-Palaeogene extinction (66 million years ago - Mya) has been linked to an increase in volume of the mammalian trait-space [the mark of an adaptive radiation; @halliday] but more specific questions can be answered by looking at other aspects of trait-occupancy: does the radiation expands on previously existing morphologies (@@@expansion; increase in density) or does it explore entire new regions of the trait-space (@@@exploration; change in position)?
+The Cretaceous-Palaeogene extinction (66 million years ago - Mya) has been linked to an increase in volume of the mammalian trait-space [the mark of an adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of trait-occupancy: does the radiation expands on previously existing morphologies (@@@expansion; increase in density) or does it explore entire new regions of the trait-space (@@@exploration; change in position)?
+Similarly, in ecology, if two groups occupy the same volume in the trait-space, it can be interesting to look at differences in density within these two hypothetical groups: different selection pressure can lead to different density within equal volume groups.
+
 
 Such examples can be found throughout the literature in both evolution and ecology on different aspects of trait-space occupancy [e.g. @close2015; @diaz2016].
 Figure 2 illustrates this problem on a 2D trait space with eight hypothetical observation where the three aspects (volume, density and position) can change in concert or independently.
@@ -308,13 +310,7 @@ moms::vdp.plot(vdp_space, disparity = vdp_disp,
 ```
 
 To allow a more confident assessment of whether trait space changes occur, and also to refine the characterization of trait space change, we suggest using multiple metrics to describe trait-space occupancy the same way that multiple statistics are required to describe distributions.
-For example, during a radiation following a mass extinction event, one could both predict an increase of the volume of the trait-space [e.g. an increase in morphological diversity in birds; @crouch2019] but also a shift if position in the trait-space [(]e.g. a shift from non-avian to avian dinosaur traits; @crouch2019].
-Similarly, in ecology, differences in trait-space density with constant volume could indicate selection pressures on the studied traits (i.e. due to the "narrowness" of trait combination for example in desert plants).
-<!-- VW: This needs to be clearer but it's great to have the example there. -->
-
-In this paper, we analyse the effect of changes in simulated and empirical trait-spaces on seven space occupancy metrics to explicitly measure trait-space density and position. As expected, we found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario. We also propose a new user-friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in morphospace
-<!-- AM: Trait-space? Or specifically morphospace? -->
- occupancy on user defined disparity metrics: [`moms`]().
+In this paper, we analyse the effect of changes in simulated and empirical trait-spaces on seven space occupancy metrics to explicitly measure trait-space density and position. As expected, we found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario. We also propose a new user-friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in trait-space occupancy on user defined disparity metrics: [`moms`]().
 <!-- VW: This needs to be more aggressive but I can help with that when you want deeper text changes. -->
 
 
@@ -345,7 +341,6 @@ Briefly, we tested how seven different space occupancy metrics relate to each ot
 To do so, we performed the following steps (explained in more detail below):
 
 1.  We simulated 13 different spaces with different sets of parameters (dimensions, distributions, etc);
-<!-- VW: "Simulation of…" instead of "We did x"? -->
 2.  We transformed these spaces by removing 50% of the observations following four different scenarios: randomly, by limit, by displacement and by density;
 <!-- VW: Could you add here or elsewhere a hypothetical biological scenario where such trait space changes could occur?
 Also, you talk about "displacement" here but "position" above. I suggest picking one.  -->
