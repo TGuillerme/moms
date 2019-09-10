@@ -880,27 +880,26 @@ Most metrics capture a normal "null" space shift with no changes in space occupa
 This is a desirable behaviour for space occupancy metrics since most studies using trait-space occupancy look at potential processes resulting in the observed space occupancy patterns [e.g. competition @brusatte2008, convergence @marcy2016, life history traits @healy2019, etc.].
 In this context, random changes in the trait-space occupancy should not be picked up as a pattern to avoid false positive errors.
 However, the average nearest neighbour distance and the sum of ranges have a respectively positive and negative "null" median meaning that any decrease of elements will always lead to respectively and increase and a decrease of these metrics even when the process is random (Table `r tables <- table("simulations"); tables$print`).
-This is not especially a bad thing for both metrics
-<!-- VW: ? but only when we already know that the process is non-random, right? -->
- (i.e. they can still be used to analysis changes in space occupancy) but should be kept in mind as a property of these metrics.
+This is not especially a bad property for both metrics (i.e. they can still be used to analysis changes in space occupancy) but it should be kept in mind that even random processes will increase or decrease the metric value which can lead to false positives or negatives. 
 
 Regarding the changes in volume of the trait-spaces, the sum of variances and the average distance from centroid are excellent descriptors, with both maximum and minimum limit changes leading to a clear increase or decrease of the metrics values.
-However, as illustrated in the 2D examples in Fig. `r figures <- figure("reductions"); figures$print`B, only the minimum limit changes (orange) should actually lead to a decrease of volume of the trait-space; the volume of the maximum limit shifted trait-spaces should have the same volume as the non-modified trait-space but with a hole in its centre.
-This could be due to the fact that these metrics are merely approximating changes in volume with the volume itself
-<!-- VW: I don't understand this. But it seems like we can conclude that any "hollowing out" of trait space will not be captured but it could be a real problem. But I guess this not a biologically likely scenario… -->
- (e.g. the ellispsoid volume) being more sensitive to the curse of multidimensionality  [@cursedimensionality].
+However, as illustrated in the 2D examples in Fig. `r figures <- figure("reductions"); figures$print`B, only the minimum limit changes (orange) should actually lead to a decrease of volume of the trait-space; the volume of the maximum limit shifted trait-spaces should have the same volume as the non-modified trait-space but with a hole in its centre ("hollowing out").
+Therefore, an increase in "volume" of the trait-space does not necessary always corresponds to an *actual* 3D volume increase but could also reflect a "hollowing" of the trait-space.
+However, the shit from a small volume (orange; Fig. `r figures <- figure("reductions"); figures$print`B) to a bigger "hollow" volume (blue; Fig. `r figures <- figure("reductions"); figures$print`B) can still be interpreted has an increase in volume.
 
 Regarding changes in density of the trait-spaces, the average nearest neigbhour distance and the minimum spanning tree average distance consistently detect changes in density with more precision for low density trait-spaces (in blue in Table `r tables <- table("simulations"); tables$print`).
-However, these metrics seem to be also associated to a "null" increase (see above)
-<!-- VW: meaning…. -->
+However, these metrics seem to be also associated to a "null" increase: a small increase in the metric value could be due to a random change (null) or a small decrease in density (see above).
 In general, we can observe some degree of correlation between the changes in density and the changes in volume for most metric picking either signal (i.e. the average nearest neighbour distance picks both changes in density and in volume).
-This could be due the generation of normally distributed spaces where a change in density often leads to a change in volume (i.e. to increase density in a normal distribution, one can simply reduce the its tails). 
-<!-- VW: So in real life it is unlikely to be a problem? -->
+This could be due the generation of normally distributed spaces where a change in density often leads to a change in volume (i.e. to increase density in a normal distribution, one can simply reduce its tails).
+This is not necessary the case with empirical data.
 
 Regarding the changes in position of the trait-space, all but the average displacements metric seems to not be able to distinguish between a random change in trait-space (grey) and a positive or a negative displacement of the trait-space (blue and orange - Table `r tables <- table("simulations"); tables$print`).
 Furthermore the average displacements metric does not distinguish between and positive or a negative displacement of the trait-space: in both cases, the metric increases.
 This might be due to the inherent complexity of "position" in a trait space that increases with the number of dimensions.
 In fact, it is complex to intuitively describe position beyond a 2D (left/right) or 3D (up/down) space.
+
+Regarding the effect of dimensions and trait-space distribution, metrics seems to be either affected by neither of these factors or by both (Table `r tables <- table("simulations"); tables$print`).
+Again, this should not preclude using metrics that are sensitive to trait-spaces' dimensions and distributions [e.g. the ellispoid volume is a good volume discriptor up until a moderate number of dimensions; @jackson2011; @donohue2013] but should be kept in mind.
 
 #### Empirical examples
 
