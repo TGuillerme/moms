@@ -861,17 +861,18 @@ This should not come as a surprise because a trait-space occupancy metric is bou
 
 #### Metrics comparisons
 
-The correlation
-<!-- VW: Could there be a comment about how correlated "related" metrics that target the same basic shift (volume, density, position as per Table 4) are? Eg. Distance from centroid and sum of variances is clearly nearly the same – but sum of ranges is also meant to reflect volume (per your description in the intro) but there's a much weaker correlation. -->
- between metrics ranges from a near 1:1 correlation (0.99 for the mean distance from centroid and the sum of variances) to a somewhat negative correlation (-0.23 for the sum of ranges and the spanning tree average length).
-Furthermore, all metrics seem to behave following a normal distribution, except for the ellipsoid volume which demonstrates a classic "curse of multidimensionality" 
-<!-- AM: If we're running with this (and I hope we are), definitely use the whole phrase back in the intro or methods when you introduce it -->
-with values increasing logarithmically first and then quickly decreasing to 0 [Fig. `r figures <- figure("comparisons"); figures$print`; @cursedimensionality].
-In other words, the ellipsoid volume is clearly sensitive to changes in trait-space only up to a modest number of dimensions.
-The fact that we have such a range of correlations for such conserved distributions (but for the ellipsoid volume) suggests that each metric can capture different summaries of trait-space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
-Comparisons between more metrics are available in the Supplementary Material 4@@@.
-<!-- VW: And what do they say? Same thing? -->
-<!-- VW: This paragraph needs more discussion. -->
+Metrics that capture the same aspect of trait space occupancy (volume, density or position) do not have the same level of correlation.
+For volume metrics, only the average distance from centroid and the sum of variances are strongly correlated (Pearson correlation of 0.99; Fig. `r figures <- figure("comparisons"); figures$print`) whereas the sum of ranges and the ellispsoid volume are more weekly correlated to them (ranging from 0.07 to 0.40; Fig. `r figures <- figure("comparisons"); figures$print`).
+This is due to the sum of ranges and the ellispsoid volume being more affected by the number of dimensions and the type of trait-spaces [Table `r tables <- table("simulations"); tables$print)`; @cursedimensionality].
+This does not precludes using such metrics but raises caution about what they capture in which scenarios [@donohue2013; @Butler2012].
+We see the same pattern for the density metrics with the minimum spanning tree average distance and the average nearest neighbour distance being strongly correlated (correlation of 0.97; Table `r tables <- table("simulations"); tables$print)`), conversely to the minimum spanning tree distances evenness (correlation of respectively 0.18 and 0.20; Table `r tables <- table("simulations"); tables$print)`) that is also more affected by the number of dimensions and the type trait-space (Table `r tables <- table("simulations"); tables$print)`).
+
+Furthermore, all metrics seem to behave following a normal distribution except for the ellipsoid volume which demonstrates a classic "curse of multidimensionality" with values increasing logarithmically first and then quickly decreasing to 0 [Fig. `r figures <- figure("comparisons"); figures$print`; @cursedimensionality].
+Overall, the fact that we have such a range of correlations for such conserved distributions suggests that each metric can capture different summaries of trait-space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
+Comparisons between more metrics are available in the Supplementary Material 4@@@ and show the same wide range of patterns.
+
+Analysing the properties of metrics in a trait-space prior to using them to answer macroevolutionary or ecological questions can bring valuable insights into what aspect of space occupancy they are capturing.
+For example, if captures the same pattern using the sum of variances and the sum of ranges, it is possible that the trait space have really similar properties (i.e. space with equal normal dimensions).
 
 #### Space shifting
 
