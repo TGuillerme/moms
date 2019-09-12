@@ -930,20 +930,16 @@ Second, we suggest selecting a metric (or a series of metrics) that best help an
 In fact, if one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's volume increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
 
 Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
-We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the same but named differently and used for approximating different types of trait occupancy.
-For example, the average squared pairwise distance [`geiger::dtt`; @geiger2008] and the Procrustes Variance [`geomorph::disparity`; @adams2013geomorph] often describe the same aspect of space occupancy (see Supplementary material 4@@@).
-<!-- But are the the same, as your preceding sentence suggests? -->
+We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the similar but named differently and used for approximating different types of trait occupancy (Fig. 4@@@).
 
 # Conclusion
+<!-- TG: Maybe we don't need this header -->
 
-STILL DRAFT:
-Multidimensional analysis is the future in biology.
-It is important however to know what patterns we are describing from multidimensional data.
-There are non one-size-fits-all trait-space occupancy metric.
-Check the properties of your space and your metric (using [`moms`](@@@)!).
-Use multiple metrics.
-<!-- AM: Somehow I missed a mention / selling of the new metric you introduce in this paper. Can you prop that up?  -->
-
+Multidimensional analysis have been acknowledged to be an essential toolkit modern biology [@adams2019] but can often be counter-intuitive [@cursedimensionality].
+It is thus crucial to accurately describe patterns in multidimensional trait spaces to be able to link them to biological processes of interest.
+Mainly, it is important to remember that there are no one-size-fits-all trait space occupancy metric.
+And that what a pattern captured by a specific space occupancy metric is often dependent on the properties of the trait space and of the particular biological question of interest.
+We thus believe that having a clearer understanding of both the properties of the trait space and the associated space occupancy metrics (e.g. using [`moms`](@@@)) as well as using novel space occupancy metrics to answer specific questions (e.g. the average displacement metric to capture changes in group's position) will be of great use to study biological processes in a multidimensional world.
 
 # Acknowledgements
 
