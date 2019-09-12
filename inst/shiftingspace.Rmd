@@ -178,7 +178,7 @@ Columns (*d*) | Traits, Ordination scores, distances, etc. | Traits, Ordination 
 Matrix subset ($m \times d$; $m \leq n$) | Treatments, phylogenetic group (clade), etc. | Clades, geological stratum, etc. | group
 Statistic | Dissimilarity index or metric, hypervolume | Disparity metric or index | space occupancy metric
 Multidimensional analysis | Dissimilarity analysis, trait analysis, etc. | Disparity analysis, disparity-through-time, etc. | multidimensional analysis
-Table 1@@@: terms and equivalence between mathematics, ecology and macroevolution
+Table 1@@@: terms and equivalence between mathematics, ecology and macroevolution.
 
 Ecologists and evolutionary biologists are also using trait-spaces for similar reasons.
 Across many sub-disciplines they will look at how their observations occupy the trait-space, often with respect to the same fundamental questions: are two groups overlapping in the trait-space?
@@ -189,7 +189,8 @@ Although these space occupancy metrics are common in ecology and evolution, surp
 
 Different space occupancy metrics capture different aspects of the trait-space [ciampaglio2001; @villéger2008; @mammola2019].
 Although this does not come as a surprising property this has been rarely acknowledged to our knowledge.
-In many studies in ecology and evolution, authors have focused on measuring the volume of the trait-space [or a function thereof; e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016] yet this only represents a single aspects of multidimensional occupancy that excludes other aspects that can be of interest [e.g. the density @geiger2008; the position @wills2001; @ciampaglio2001; or dissimilarity between groups @oksanen2007vegan; @close2015].
+First, space occupancy metrics are often named as the biological aspect they are describing (e.g. "disparity" or "functional dispersion") rather than what they are measuring (e.g. the sum of dimensions variance, etc.) which sometimes obscures the differences or similarities in space occupancy metrics between studies in both ecology and evolution.
+Second, in many studies in ecology and evolution, authors have focused on measuring the volume of the trait-space [or a function thereof; e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016] yet this only represents a single aspects of multidimensional occupancy that excludes other aspects that can be of interest [e.g. the density @geiger2008; the position @wills2001; @ciampaglio2001; or dissimilarity between groups @oksanen2007vegan; @close2015].
 For example, the volume occupied by a group of taxa in the trait-space might remain constant while it's position changes.
 Measuring the volume can miss this information that might be of interest to biologists (e.g. a group of species maintains the same diversity of traits while also shifting towards a new ecological niche).
 This lack of diversity in multidimensional occupancy metrics may restrain the potential of multidimensional analysis [@villéger2008].
@@ -898,9 +899,6 @@ Again, this should not preclude using metrics that are sensitive to trait-spaces
 
 #### Empirical examples
 
-Again, as expected, different metrics highlight different differences for different trait-spaces.
-
-
 Although most differences are fairly consistent within each dataset with one group having a higher space occupancy score than the other for multiple metrics, this difference can be more or less pronounced within each dataset (ranging from no to nearly full overlap - BC $\in(0;0.995)$) and sometimes even reversed.
 This indicates that opposite conclusions can be drawn from a dataset depending on which space occupancy metric is considered.
 For example, in @wright2017 dataset where the blue group has a greater occupancy metric median value but for the average displacements metric showing a higher median displacement in the red group (Table 7@@@).
@@ -916,14 +914,13 @@ This is not often the case in biology since observations might be spatially [@jo
 However, we can note that the we get expected results from the empirical data (where the observations are more realistically auto-correlated).
 Furthermore, the algorithm used to reduce the multi-dimensional spaces might not always accurately reflect how trait-spaces are changed in nature.
 They might indeed favour the response of specific metrics, in particular for the changes in density that only modifies the density between pairs of points rather than changing the global density.
-This is specific algorithmic choice was made in order to not confound changes in density along with changes in volume (i.e. a general change in density can be obtain by uniformly increasing/decreasing the volume).
+This is a specific algorithmic choice was made in order to not confound changes in density along with changes in volume (i.e. a general change in density can be obtain by uniformly increasing/decreasing the volume).
 <!-- VW: Conclusion sentence -->
 
 ## Suggestions
 
 We insist that there is no metric better than another one and that researchers should use the most appropriate metrics based on their question and knowledge of both the metric and the trait-space properties.
-However, following the present study we suggest the several points that could be applied to potentially improve future multidimensional analysis:
-<!-- VW: I'd rephrase this because it puts undue emphasis on this issue. I know people fight over the best metric but it seems enough to just to summarize which finds of the study are prompting our suggestions and then move on to suggestions themselved. -->
+However, the findings of this study might suggest several points:
 
 First, we suggest using multiple metrics to tackle different aspects of the trait-space. 
 This is suggestion is in the same logical thinking line that the mean can not be sufficient to describe a distribution (the variance and the type of distribution might be good additional indicators).
@@ -932,9 +929,7 @@ Although using multiple metrics is not uncommon in macroevolutionary studies [e.
 Second, we suggest selecting a metric (or a series of metrics) that best help answering the biological question a hand.
 In fact, if one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's volume increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
 
-Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity
-<!-- VW: This may need to be raised as an issue in the intro -->
- or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
+Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
 We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the same but named differently and used for approximating different types of trait occupancy.
 For example, the average squared pairwise distance [`geiger::dtt`; @geiger2008] and the Procrustes Variance [`geomorph::disparity`; @adams2013geomorph] often describe the same aspect of space occupancy (see Supplementary material 4@@@).
 <!-- But are the the same, as your preceding sentence suggests? -->
