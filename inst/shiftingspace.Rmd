@@ -267,8 +267,9 @@ For example, if group A is more dense than group B, observations in group A tend
 Although density is an aspect of space occupancy is measured less often than the volume, it is still used in both evolution [e.g. the average pairwise distance; @geiger2008] and in ecology [e.g. the minimum spanning tree length; @oksanen2007vegan].
 
 Despite their relatively rare application, density metrics could be used more often in concert with a volume metric to investigate finer hypotheses.
-For example, if group A has a greater volume than group B but both have the same density, similar mechanisms could be driving both groups' space occupancy (e.g. a Brownian motion) but maybe group A is an older species and has had more time to evolve more extreme trait combinations.
-<!-- VW: Good example but needs rewriting, I can do it but you said not to get too stuck into the wording. -->
+For example, if group A has a greater volume than group B but both have the same density, similar mechanisms could be driving both groups' trait-space occupancy (e.g. a Brownian motion).
+However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process.
+
 
 #### 3. The position
 
@@ -297,6 +298,9 @@ Such examples can be found throughout the literature in both evolution and ecolo
 Figure 2@@@ illustrates this problem on a 2D trait space with eight hypothetical observation where the three aspects (volume, density and position) can change in concert or independently.
 This illustrates how using only one specific space occupancy metric (e.g. the volume) will fail to capture changes in the trait-spaces C, D, and I.
 <!-- VW: Hmm. Does there even need to be this figure? I mean, isn't it obvious? Or is it obvious but no one has thought of it? -->
+
+<!-- TG: Narrow down the figure to just A D and I -->
+
 
 
 <!-- Figure 2: Illustration how three different volume (Vol. - Product of ranges), density (Den. - Average nearest neighbour distance) and position (Pos. - Average displacement) metrics capture different occupancy aspects in this simplified trait-space. The numbers displayed are the values of the space occupancy metrics. -->
@@ -329,9 +333,12 @@ moms::vdp.plot(vdp_space, disparity = vdp_disp,
 ```
 
 To allow a more confident assessment of whether trait space changes occur, and also to refine the characterization of trait space change, we suggest using multiple metrics to describe space occupancy the same way that multiple statistics are required to describe distributions.
-In this paper, we analyse the effect of changes in simulated and empirical trait-spaces on seven space occupancy metrics to explicitly measure trait-space density and position.
-As expected, we found no one-size-fits-all metric but provide guidance on which metric could be used in which specific scenario. We also propose a new user-friendly software with an intuitive graphical user interface (GUI) to look at the effect of changes in space occupancy on user defined disparity metrics: [`moms`]().
-<!-- VW: This needs to be more aggressive but I can help with that when you want deeper text changes. -->
+
+In this paper, we provide the first interdisciplinary review of space occupancy metrics that uses the broad classification of metrics into volume, density and position to capture pattern changes in trait space.
+We assess the behaviour of metrics using simulations and a selection of interdisciplinary empirical datasets; these cover a wide range of potential data types and evolutionary/ecological questions.
+We also introduce a tool for Measuring Occupancy in Multidimensional Space ([`moms`](@@@)), which is a user-friendly open-source graphical interface tool to allow the tailored testing of metric behaviour for any use case.
+This will allow resarchers to comprehensively assess the properties of their traitspace and metrics associated with their specific biological question.
+
 
 
 
@@ -408,8 +415,9 @@ We repeated the simulation of each trait-space 20 times (resulting in 260 trait-
 
 ## Spatial occupancy metrics
 
-We then measured `r metric.names()` different metrics on the resulting transformed spaces, including a new metric we produced:
- <!-- VW: [Justification] : -->
+We then measured `r metric.names()` different metrics on the resulting transformed spaces, including a new metric we produced.
+We also introduce two new metric (NAME) s which we expect to be only influenced by trait space position change, which to our knowledge is not available in the literature.
+
 
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
@@ -437,7 +445,7 @@ Additionally, the [`moms`](@@@) shiny App allows exploration the effect of many 
 <!--  -->
 
 
-## Metrics comparisons
+## Metric comparisons
 
 We compared the space occupancy correlations across all simulations between each pair of metrics to assess they captured similar signal [@villéger2008; @laliberté2010].
 First, we used the metrics on the full 13 trait-spaces described above.
@@ -545,10 +553,19 @@ remove <- 0.5
 ## Trait space
 trait_space <- space.maker(elements, 2, distribution = rnorm)
 
+## Random removal colours
+defaults$col1 <- "black"
+defaults$col2 <- "grey"
+
 ## The randomly removed space
 random_rm <- reduce.space(trait_space, type = "random", remove = 0.5)
 ## Plotting the reduction
 plot.space(trait_space, random_rm, main = "A - Random removal", defaults)
+
+## Back to normal colours
+defaults$col1 <- "blue"
+defaults$col2 <- "orange"
+
 
 ## The limit removal
 limit_rm <- reduce.space(trait_space, type = "limit", remove = 0.5)
