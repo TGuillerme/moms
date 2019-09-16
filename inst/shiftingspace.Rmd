@@ -15,12 +15,7 @@ A broad classification of metrics for summarising multidimensional spaces occupa
 -->
 
 
-
-
-
-
-
-
+<!-- Keywords: disparity, dissimilarity, ecology, evolution, multidimensionality, statistics -->
 
 
 
@@ -147,7 +142,7 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 
 <!-- 350 words and 4 points -->
 
-<!-- 
+
 Point 1: set the context for and purpose of the work;
 
 Point 2: indicate the approach and methods;
@@ -155,7 +150,6 @@ Point 2: indicate the approach and methods;
 Point 3: outline the main results;
 
 Point 4: identify the conclusions and the wider implications.
- -->
 
 
 Multidimensional analysis of traits are now a common tool-kit in ecology and evolution.
