@@ -2,7 +2,7 @@
 \usepackage[a4paper,left=2.5cm, right=2.5cm, top=1cm, bottom=1cm]{geometry}
 \usepackage{hyperref}
 \usepackage[osf]{mathpazo}
-\signature{Thomas Guillerme \\ Martin Brazeau}
+\signature{Thomas Guillerme \\ (on behalf of my co-authors)}
 \address{The University of Queensland \\School of Biological Sciences \\St Lucia QLD 4067, Australia \\guillert@tcd.ie}
 \longindentation=0pt
 \begin{document}
@@ -10,20 +10,24 @@
 \begin{letter}{}
 \opening{Dear Editors,}
 
-The assumption made in tree inference that phylogenetic data is independent is probably mostly erroneous.
-This assumption about data correlation was stated since the advent of Cladistics in the 1950s but is nowadays mainly ignored in phylogenetic endeavour when using molecular data (where it can be neglected due to the huge amount of available data).
-In morphological datasets, however, where the amount of characters are much smaller, correlation can lead to significant biases especially by favouring some topologies due to a specific choice of characters (whether this is done consciously by researchers or not).
-With the ``resurgence'' of the use of morphological data in phylogenetic analysis (namely with the Total Evidence tip-dating method, Ronquist \textit{et al.}, 2012, Sys. Biol), it is thus important to acknowledge limitations and caveats that come with the use of such data, namely how correlation patterns in morphological datasets can effect tree inference.
+Using patterns in multidimensional spaces to study biological processes is now a common toolkit in ecology and evolution.
+In such analysis, researchers typically use matrices where traits or transformed-traits are columns (e.g. anatomical measurements, community compositions) and observations are rows (e.g. specimens, field sites, etc.).
+These matrices are commonly referred to as morphospaces in evolution or trait-space in ecology.
+It is then possible to look at how observations or groups of observations occupy the trait space to understand biological processes.
+For example, if plant community A occupies more space trait-space than community B, the former is could be more diversed;
+or if the morphospace of a group of organisms increases after colonisation of an island, it could be experiencing an adaptive radiation.
+However, surprisingly very little work has been done on characterising what should be measured in these multidimensional analysis: what should be measured in a trait-space to accurately capture the pattern of difference between two communities or how trait-space occupancy changes through time?
+Furthermore, the parallel between these analysis in ecology and evolution has never been clearly acknowledged (to our knowledge).
 
-In our research article, entitled ``Influence of different modes of morphological characters correlation on tree inference'', we propose the first - to our knowledge - testing of the effect of characters correlation on tree topology based on a thorough simulation framework ($>$ 100 CPU years worth).
-Using a novel distance metric to measure direct phylogenetic correlation between characters, we simulated discrete morphological datasets that we then modified to increase or decrease the overall characters correlation within the datasets.
-We then measured the resulting topological differences (from both maximum parsimony and Bayesian trees) to assess the effect of characters correlation in the light of our known simulated parameters.
+In our research article, entitled ``Shifting spaces: how to summarise multidimensional spaces occupancy?'', we provide the first interdisciplinary review of 25 space occupancy metrics that uses the broad classification of metrics into volume, density and position to capture pattern changes in trait space.
+We assess the behaviour of metrics using simulations and a selection of interdisciplinary empirical datasets; these cover a wide range of potential data types and evolutionary/ecological questions.
+We also introduce a tool for Measuring Occupancy in Multidimensional Space ([`moms`](@@@)), which is a user-friendly open-source graphical interface tool to allow the tailored testing of metric behaviour for any use case.
+This will allow researchers to comprehensively assess the properties of their trait-space and metrics associated with their specific biological question.
 
-Our results suggest that datasets that have higher levels of correlation between characters negatively impact our ability to recover the correct tree topology.
-This is to be contrasted with datasets that have low levels of correlation (i.e. that are more homoplasic) which can still recover the correct topology, depending on the amount of data and the inference method used.
-These results, although non-surprising to researchers in the field, are the first - to our knowledge - to actually quantify the effect of characters correlation and provides practical data and reusable code allowing researcher to effectively measure the limitations of their empirical datasets.
-Furthermore, we suggest that using our proposed new metric, one could improve bootstrap procedures in phylogenetic analysis by ``biasing'' the bootstrap to favour characters with high or low correlation, depending on the purpose of the phylogenetic search.
-Finally, the code and data for this whole analysis is entirely repeatable through \url{https://github.com/TGuillerme/CharactersCorrelation/}.
+Furthermore, we are are convinced that open data and reproducible papers are the key part of the future of academia.
+Therefore, this entire paper and its supplementary is easily reproducible and based on open access dataset.
+In fact, the paper is wrapped in a \texttt{R} package format and can be compile as a vignette through \url{https://github.com/TGuillerme/moms}.
+We believe that this extra care put into making the paper easy to reproduce will foster not only a better understanding of multidimensional analysis but also future analysis on how the finding of this paper related beyond the fields of ecology and evolution.
 
 We look forward to hearing from you soon,
 
@@ -32,10 +36,3 @@ We look forward to hearing from you soon,
 
 \end{letter}
 \end{document}
-
-
-%Editors:
-%Sam Price, Daniele Silvestro
-
-%Reviewers
-%Graeme Lloyd, Dave Bapst, Emma Sherratt 
