@@ -334,7 +334,7 @@ moms::vdp.plot(vdp_space, disparity = vdp_disp,
 
 To allow a more confident assessment of whether trait space changes occur, and also to refine the characterization of trait space change, we suggest using multiple metrics to describe space occupancy the same way that multiple statistics are required to describe distributions.
 
-In this paper, we provide the first interdisciplinary review of space occupancy metrics that uses the broad classification of metrics into volume, density and position to capture pattern changes in trait space.
+In this paper, we provide the first interdisciplinary review of 25 space occupancy metrics that uses the broad classification of metrics into volume, density and position to capture pattern changes in trait space.
 We assess the behaviour of metrics using simulations and a selection of interdisciplinary empirical datasets; these cover a wide range of potential data types and evolutionary/ecological questions.
 We also introduce a tool for Measuring Occupancy in Multidimensional Space ([`moms`](@@@)), which is a user-friendly open-source graphical interface tool to allow the tailored testing of metric behaviour for any use case.
 This will allow resarchers to comprehensively assess the properties of their traitspace and metrics associated with their specific biological question.
@@ -537,14 +537,17 @@ Position metrics are expected to be most affected by this change.
 
 The algorithm to select $\rho$ or $D$ is described in greater detail in in the [Appendix](#Appendix_algorithm_reduce).
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue).")}
+
+<!-- Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one. -->
+
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one.")}
 set.seed(42)
 
 ## Change colors
 defaults$col1 <- "blue"
 defaults$col2 <- "orange"
 
-op <- par(mfrow = c(2,2), bty = "n")
+op <- par(mfrow = c(3,2), bty = "n")
 ## The elements
 elements <- 300
 ## The amount to remove
@@ -566,7 +569,6 @@ plot.space(trait_space, random_rm, main = "A - Random removal", defaults)
 defaults$col1 <- "blue"
 defaults$col2 <- "orange"
 
-
 ## The limit removal
 limit_rm <- reduce.space(trait_space, type = "limit", remove = 0.5)
 ## Plotting the reduction
@@ -582,16 +584,62 @@ displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
 ## Moving the space to the upper right corner (positive)
 plot.space(trait_space, displace_rm, main = "D - Position", defaults)
 
+## Test example
+set.seed(42)
+colours <- c("grey", "orange", "blue")
+par(bty = "n")
+## Plot size
+plot(NULL, ylim = c(0.8, 3.2), pch = 19, xlim = c(-1,1), xlab = "Centred and scaled space occupancy", ylab = "", xaxt = "n", yaxt = "n", main = "E - Space reduction results example (Table 6)")
+## Adding lines
+abline(v = 0, lty = 2, col = colours, lwd = 2)
+## Adding the x axis
+axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = TRUE, tick = TRUE, col.ticks = "black", col = "black", lwd = 2)
+## Adding the values
+values <- cbind(rnorm(30, mean = 0, sd = 0.2),
+                rnorm(30, mean = -0.75, sd = 0.13),
+                rnorm(30, mean = 0.75, sd = 0.2))
+quantile_vals <- apply(values, 2, quantile, probs = c(0.025, 0.250, 0.750, 0.975))
+centtend_vals <- apply(values, 2, median)
 
-## List of removals (for plotting the tables later)
-typical_removal <- list(space = trait_space,
-                        remove = list("random" = random_rm,
-                                      "limit(min)" = limit_rm,
-                                      "limit(max)" = !limit_rm,
-                                      "density(high)" = density_rm,
-                                      "density(low)" = !density_rm,
-                                      "displace(positive)" = displace_rm,
-                                      "displace(negative)" = !displace_rm))
+## Loop through the lines
+for(column in 1:3) {
+    ## Get the x y values
+    line_x_vals <- quantile_vals[, column]
+    line_y_vals <- rep(column, 2)
+
+    ## Add the lines
+    n_cis <- 4
+    for(ci in 1:(n_cis/2)) {
+        lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * 2, col = colours[column])
+    }
+}
+## Add the points
+points(x = centtend_vals, y = 1:ncol(values), pch = 19, col = colours, cex = 1.5 + 2)
+
+bc_1 <- dispRity::bhatt.coeff(values[,2], values[,1])
+bc_2 <- dispRity::bhatt.coeff(values[,3], values[,1])
+
+text(x = 0.2, y = 2.9,  labels = paste0(round(bc_1, 3), "\n(Probability of overlap between\nthe blue and the grey distributions)"), cex = 0.8)
+text(x = - 0.2, y = 1.9,  labels = paste0(round(bc_2, 3), "\n(Probability of overlap between\nthe orange and the grey distributions)"), cex = 0.8)
+
+## Some arrows
+arrows(x1 = centtend_vals[3], y1 = 2.5,
+       x0 = centtend_vals[3], y0 = 2.9,
+       col = "black", lwd = 1, length = 0.1, code = 1)
+text(labels = "Metric score from the\nremoval displayed in blue above\n(Limit, Density or Position).",
+     x = centtend_vals[3]-0.35, y = 2.35, cex = 0.8)
+
+arrows(x1 = centtend_vals[2], y1 = 2.1,
+       x0 = centtend_vals[2], y0 = 2.5,
+       col = "black", lwd = 1, length = 0.1, code = 2)
+text(labels = "Metric score from\nthe removal displayed\nin orange above\n(Limit, Density or Position).",
+     x = centtend_vals[2]+0.05, y = 2.75, cex = 0.8)
+
+arrows(x1 = centtend_vals[1]+0.4, y1 = 1.2,
+       x0 = centtend_vals[1]+0.05, y0 = 1.05,
+       col = "black", lwd = 1, length = 0.1, code = 1)
+text(labels = "Metric score from\nthe random removal.",
+     x = centtend_vals[1]+0.55, y = 1.3, cex = 0.8)
 ```
 
 To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non-reduced space for each dimension distribution or number of dimensions.
@@ -612,6 +660,13 @@ For example if a group expands in multiple dimensions (i.e. increase in volume),
 
 We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 3@@@) for testing respectively the effect of distribution and dimensions.
 The results of the ANOVAs (*p*-values) are reported in Table 6@@@ (see supplementary material for the full ANOVA results).
+
+
+
+
+<!-- TG: also mention that we do that for 25 metrics in total in the supplementary materials -->
+
+
 
 <!--  -->
 <!--  -->
@@ -755,10 +810,9 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 6@@@: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. The dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction. Results in blue and orange represent the blue and orange opposite scenarios in Fig. 3@@@ (blue,  the minimum limit, low density and negative shift orange, maximum limit, high density and positive shift) for respectively the volume, density and position changes.
-The displayed value in the plots are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange reductions and the random ones. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (Signif. codes: 0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1).
+Table 6@@@: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. See Fig. 3@@@ for interpretation of the figures. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (Signif. codes: 0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1).
 
-<!-- VW: Let's workshop this to see if we can have it non-repeating. It may even be worth adding one extra table that dissects the figures because the amount of information is too high to stay in someone's brain easily. -->
+<!-- TG: add the thingy to space change figure and shorten this fable caption -->
 
 As expected (Fig. 2@@@), some different metrics capture different aspects of space occupancy.
 In contrast to the clear hypothetical example in Fig. 2@@@, it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
@@ -769,9 +823,6 @@ Note however that the increase in volume does not correspond to an *actual* incr
 In terms of change in density (increase or decrease), only the Minimum spanning tree average distance and the Average nearest neighbour distance seem to capture a clear change in both directions.
 In terms of change in position (increase or decrease), only the Average displacements metric seems to capture a change a clear change in direction (albeit not in both directions).
 This is not surprising however, since the notion of positions becomes more and more complex to appreciate as dimensionality increases (i.e. beyond left/right (1D), up/down (2D) and front/back (3D)).
-<!-- VW:But does it warrant a cautionary use of the displacement metrics because of this lack of human-interpretable directionality? -->
-<!-- TG: I don't think so -->
-
 
 ## Empirical example
 
@@ -858,9 +909,10 @@ For example, in @hopkins2016's dataset, the orange group's mean is clearly highe
 
 # Discussion
 
-As expected we see a range of differences between the metrics themselves (Fig. 4@@@), their response to space shifting (Table 6@@@) and their effect on capturing differences in empirical datasets (Table 7@@@).
-This should not come as a surprise because a space occupancy metric is bound to capture different summary of the trait-spaces depending on both the metric and the trait space properties.
-<!-- VW: We need to work on this: We found what was expected and that's not surprising is perhaps not the best way to sell ! -->
+In this study, we tested twenty-five metrics of trait space occupancy on simulated and empirical datasets to assess how each metric captures changes in trait space volume, density and position.
+Our results show that the correlation between metric results can vary both within and between metric categories (Fig. 4@@@), highlighting the importance of understanding the metric classification for the interpretation of results
+Furthermore, our simulations show that different metrics capture different types of trait space change (Table 6@@@), meaning that the use of multiple metrics is important for comprehensive interpretation of trait space occupancy.
+We also show that the choice of metric impacts on the interpretation of group differences in empirical datasets (Table 7@@@), again emphasizing that metric choice has a real impact on specific biological questions.
 
 #### Metrics comparisons
 
@@ -869,6 +921,9 @@ For volume metrics, only the average distance from centroid and the sum of varia
 This is due to the sum of ranges and the ellispsoid volume being more affected by the number of dimensions and the type of trait-spaces [Table 6@@@; @cursedimensionality].
 This does not precludes using such metrics but raises caution about what they capture in which scenarios [@donohue2013; @Butler2012].
 We see the same pattern for the density metrics with the minimum spanning tree average distance and the average nearest neighbour distance being strongly correlated (correlation of 0.97; Table 6@@@), conversely to the minimum spanning tree distances evenness (correlation of respectively 0.18 and 0.20; Table 6@@@) that is also more affected by the number of dimensions and the type trait-space (Table 6@@@).
+
+
+<!-- TG: add somewhere "Some metrics can capture different aspects of trait-space occupancy at the same time: the average distance from centroid (vol) is correlated to the sum of variance (vol) but not to the ellipsoid volume (vol) but still to the average nearest neigbhour distance (density)."-->
 
 Furthermore, all metrics seem to behave following a normal distribution except for the ellipsoid volume which demonstrates a classic "curse of multidimensionality" with values increasing logarithmically first and then quickly decreasing to 0 [Fig. 4@@@; @cursedimensionality].
 Overall, the fact that we have such a range of correlations for such conserved distributions suggests that each metric can capture different summaries of space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
