@@ -97,11 +97,13 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' @description Make a volume, density, position combination plot
 #'
 #' @param vdp A list output from \code{\link{vdp.make}}
+#' @param plots Which output from \code{\link{vdp.make}} to plot (default is \code{1:8} for all plots).
 #' @param limits Optional, a set of plot limits
 #' @param pch The dots type to plot (default = 19 - full round dots)
 #' @param xlab, ylab The x and y labels (default is none - \code{""}).
 #' @param disparity optional, disparity values obtained from \code{\link{vdp.dispRity}} to be displayed as x labels
 #' @param plot.names optional, the plot names (passed as \code{main})
+#' @param mfrow optional, the display disposition to be passed to \code{par(mfrow)}. If left empty, the nearest square matrix is used.
 #' @param ... any additional argument to be passed to \code{\link[base]{plot}}.
 #' 
 #' @examples
@@ -123,7 +125,7 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' 
 #' @author Thomas Guillerme
 #' @export
-vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, plot.names, ...) {
+vdp.plot <- function(vdp, plots = 1:8, limits, pch = 19, xlab = "", ylab = "", disparity = NULL, plot.names, mfrow, ...) {
 
     ## Handle the limits
     if(missing(limits)) {
@@ -147,15 +149,22 @@ vdp.plot <- function(vdp, limits, pch = 19, xlab = "", ylab = "", disparity = NU
     }
 
     ## Plotting all the 
-    par(mfrow = c(2,4), bty = "n", mar = c(4, 3, 3, 1))
+    if(missing(mfrow)) {
+        ## Default (squared) mfrow
+        mfrow <- c(ceiling(sqrt(length(plots))),ceiling(sqrt(length(plots))))
+    }
+
+    par(mfrow = mfrow, bty = "n", mar = c(4, 3, 3, 1))
     ## Loop through each plot
-    for(one_plot in 1:length(vdp)) {
+    plot_name <- 0
+    for(one_plot in plots) {
+        plot_name <- plot_name + 1
         if(!is.null(disparity)) {
             ## Get the disparity values
-            plot(t(vdp[[one_plot]]), main = names(vdp)[[one_plot]],
+            plot(t(vdp[[one_plot]]), main = names(vdp)[[plot_name]],
                  xlim = limits, ylim = limits, pch = pch, xlab = disparity_lab[[one_plot]], ylab = ylab, ...)
         } else {
-            plot(t(vdp[[one_plot]]), main = names(vdp)[[one_plot]],
+            plot(t(vdp[[one_plot]]), main = names(vdp)[[plot_name]],
                  xlim = limits, ylim = limits, pch = pch, xlab = xlab, ylab = ylab, ...)
         }
     }
