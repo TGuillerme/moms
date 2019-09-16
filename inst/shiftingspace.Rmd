@@ -9,6 +9,23 @@ output:
     fig_height: 8
 ---
 
+
+<!-- Alternative (boring) title:
+A broad classification of metrics for summarising multidimensional spaces occupancy.
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- When toggling to html, toggle snippet `compilation_html` below to eval = TRUE -->
 
 <!-- To build the line numbered version (for submission) use the following yaml header snippet
@@ -126,6 +143,19 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
 
 # Abstract
+
+
+<!-- 350 words and 4 points -->
+
+<!-- 
+Point 1: set the context for and purpose of the work;
+
+Point 2: indicate the approach and methods;
+
+Point 3: outline the main results;
+
+Point 4: identify the conclusions and the wider implications.
+ -->
 
 
 Multidimensional analysis of traits are now a common tool-kit in ecology and evolution.
@@ -944,7 +974,7 @@ These differences in group's space occupancy depending on the metrics are also m
 This also highlights the influence of different groups size on top of the differences in trait spaces and metrics properties.
 Finally it is worth noting that the ellispoid volume only picks up accurate differences between groups in the @healy2019 dataset which is yet another illustration of the curse of multidimensionality: the @healy2019 dataset has only 6 dimensions compared to all the other ones having more than 41 dimensions [and the @marcy2016 dataset having 136 dimensions for which the ellipsoid volume can't be calculated; Table 7@@@; @cursedimensionality].
 
-## Caveats
+### Caveats
 
 While our simulations have been useful to illustrate the behavior of diverse space occupancy metrics, they have several caveats. 
 For example the trait spaces are simulated by treating each observation as independent.
@@ -956,7 +986,7 @@ This is a specific algorithmic choice was made in order to not confound changes 
 However, the results probably capture the general behaviour of each space occupancy metric since results are consistent between the simulated and emipirical analysis.
 Furthermore, the [`moms`](@@@) shiny app allows to test the caveats mentioned above by uploading empirical trait space and personalised space occupancy metrics.
 
-## Suggestions
+### Suggestions
 
 We insist that there is no metric better than another one and that researchers should use the most appropriate metrics based on their question and knowledge of both the metric and the trait-space properties.
 However, the findings of this study might suggest several points:
@@ -971,9 +1001,6 @@ In fact, if one studies an adaptive radiation in a group of organisms, it is wor
 Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
 We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and a easier understanding between ecology and evolution for which the metrics can be the similar but named differently and used for approximating different types of trait occupancy (Fig. 4@@@).
 
-# Conclusion
-<!-- TG: Maybe we don't need this header -->
-
 Multidimensional analysis have been acknowledged to be an essential toolkit modern biology [@adams2019] but can often be counter-intuitive [@cursedimensionality].
 It is thus crucial to accurately describe patterns in multidimensional trait spaces to be able to link them to biological processes of interest.
 Mainly, it is important to remember that there are no one-size-fits-all trait space occupancy metric.
@@ -982,8 +1009,23 @@ We thus believe that having a clearer understanding of both the properties of th
 
 # Acknowledgements
 
-Thanks to Natalie Jones for helping finding/sorting the ecological data.
-Money from the ARC DP170103227, FT180100634
+We thank Natalie Jones for pointing out to the empirical ecological datasets.
+We acknowledge funding from the Australian Research Council DP170103227 and FT180100634 awarded to VW.
+
+# Authors contributions
+
+TG, MNP, AM and VW designed the project.
+TG and AM collected the empirical dataset.
+TG ran the analyses and designed the software.
+TG, MNP, AM and VW wrote the manuscript.
+
+# Data Availability, repeatability and reproducibility
+
+The raw empirical data is available from the original papers @beck2014, @jones2015, @marcy2016, @hopkins2016, @wright2017 and @healy2019.
+The subset of the empirical data used in this analysis is available on figshare @@@.
+The modified empirical data is available in the package accompanying this manuscript (`data(moms::demo_data)`).
+The entirety of this manuscript (including the figures, tables and supplementary material) is repeatable and reproducible by compiling the vignette of the [GitHub `moms R` package](https://github/TGuillerme/moms) (see the `README` file for more information).
+The code for the `moms` shiny app open source and available from the [GitHub `moms R` package](https://github/TGuillerme/moms).
 
 # References
 
