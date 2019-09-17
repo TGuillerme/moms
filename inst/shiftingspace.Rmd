@@ -176,7 +176,7 @@ increased computational power and statistical methods, as well as by the impleme
 
 Ordination techniques (or dimensionality reduction) are a popular way to analyse sets of traits in concert and create a trait-space of the study system [see @legendre2012 for a summary].
 Such trait-space approach has been successfully used across many sub-disciplines in biology to either explore properties of the data or test hypothesis.
-For example, in palaeobiology, such trait-spaces can be used to look how groups of species change in terms of shared characteristics through time [e.g. @wright2017];
+For example, in palaeobiology, such trait-spaces can be used to look how groups of species change in terms of shared characteristics through time [e.g. @wright2017; @guillerme2018];
 in ecology, it can be used to compare two populations and see whether their overlap can be related to ecological processes such as competition [e.g. @jones2015].
 However, different fields use a different set of terms and approaches for such trait-space approaches (Table 1).
 In macroevolution, for example, such trait-spaces are commonly referred to as "morphospaces" [with the whole procedure often being often called "disparity analysis"; e.g. @adams2013geomorph; @marcy2016; @wright2017], while in ecology, such trait-spaces can be called "functional spaces" [and "dissimilarity analysis"; e.g. @diaz2016; @mammola2019].
