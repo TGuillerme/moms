@@ -182,6 +182,9 @@ However, different fields use a different set of terms and approaches for such t
 In macroevolution, for example, such trait-spaces are commonly referred to as "morphospaces" [with the whole procedure often being often called "disparity analysis"; e.g. @adams2013geomorph; @marcy2016; @wright2017], while in ecology, such trait-spaces can be called "functional spaces" [and "dissimilarity analysis"; e.g. @diaz2016; @mammola2019].
 Nonetheless, they are the same mathematical objects: matrices with columns representing a trait (or a transformation thereof) and rows representing observations [taxon, field site, etc.; @disprity].
 
+
+<!-- TG: check vocab from Tucker et al 2018 -->
+
 In mathematics | In ecology | In macroevolution | In this paper
 ---------------|------------|-------------------|---------------
 Matrix ($n \times d$) | Function-space, Eco-space, etc. | Morphospace, traitspace, etc. | trait-space
