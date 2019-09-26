@@ -10,8 +10,11 @@ output:
 ---
 
 
-<!-- Alternative (boring) title:
+<!-- Alternative title:
 A broad classification of metrics for summarising multidimensional spaces occupancy.
+Shifting spaces: which metrics best summarise occupancy in multidimensional spaces?
+Shifting spaces: choosing metrics to summarise multidimensional spaces occupancy
+Introducing MOMS: a user-friendly visualization tool to choose the best metrics for measuring multidimensional data
 -->
 
 
@@ -151,21 +154,53 @@ Point 3: outline the main results;
 Point 4: identify the conclusions and the wider implications.
  -->
 
-Multidimensional analysis of traits are now a common tool-kit in ecology and evolution.
-Such analysis are based on multidimensional datasets (in which each dimension represents a trait) that summarise all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
-Taxa will typically only occupy a subset of this space, so researchers apply one or more metrics to quantify the way in which organisms "inhabit" that trait-space.
-By using these metrics, researchers have investigated how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes (such as global warming events or mass extinctions).
 
-In macroevolutionary and ecological studies these metrics are often referred to as respectively disparity or dissimilarity metrics and can be generalised as space occupancy metrics.
-Although there are a few (well defined and well studied) space occupancy metrics that are used in ecology and evolution, we lack a general description of the majority of those metrics, especially in macroevolution.
+<!-- 
+@@@TODO:
+“ -> "
+” -> "
+ -->
+
+
+Multidimensional analysis of traits are now a common toolkit in ecology and evolution.
+Such analyses are based on multidimensional datasets in which each dimension represents a trait that summarise all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
+Taxa 
+<!-- AM: Just being pedantic – is it always taxa in ecology? Are there any studies on say, traits of an ecosystem or something like that? -->
+will typically only occupy a subset of this space, so researchers apply one or more metrics to quantify the way in which organisms “inhabit” that trait-space.
+Researchers use these metrics to investigate how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes, such as global warming
+<!-- AM: This term always seems a little outdated compared to “climate change” these days, but maybe you’re also referring to really ancient warming as well?  -->
+ events or mass extinctions.
+
+In macroevolutionary and ecological studies these metrics are often referred to as disparity or dissimilarity metrics, respectively, and can be generalised as “space occupancy metrics”
+<!-- AM: You’re coining this phrase right? Take credit   -->
+, a term that is applicable to both disciplines.
+<!-- AM: Or something like this, I thought this was an important point that should be emphasized in the abstract -->
+Although there are a few well-defined and well-studied space occupancy metrics that are used in ecology and evolution, we lack a general description of the majority of those metrics
+<!-- AM: This was confusing to me – I tried a slightly different sentence structure below, see if you like it.  -->
+, especially in macroevolution.
+<!--
+ AM: include:
+Besides a small number of well-defined and well-studied space occupancy metrics, the majority of commonly-used metrics in ecology and evolution lack general descriptions, especially in macroevolution.
+ MP: include:
+The mathematical and biological meaning of most space occupancy metrics is vague.
+The majority of widely-used space-occupancy metrics in ecology and evolution lack formal description; this problem is acutely true in studies of macroevolution disparity. 
+-->
 Therefore the mathematical and biological meaning of such space occupancy metrics can be vague.
-This has consequences when interpreting changes in space occupancy and linking them to biological phenomena.
-For example, does a reduction in volume in the trait-space correspond to episodes of extinction or changes in traits distribution? Does an overlap in trait-space corresponds to an overlap in ecological niches?
+This has consequences when interpreting
+<!-- AM: Maybe be more explicit / tangible here? 
+Or combine with last sentence? E.g …. “be vague, which can make it difficult to interpret space occupancy changes and link them to biological phenomena.”  -->
+changes in space occupancy and linking them to biological phenomena.
+For example, does a reduction in volume in the trait-space correspond to episodes of extinction or changes in traits distribution?
+Does an overlap in trait-space correspond to an overlap in ecological niches?
 
-Here we propose a broad classification of these space occupancy metrics into three categories: metrics that capture changes in volume, density or position of the trait-space.
-We analyse the behaviour of height space occupancy metrics (including two new ones focusing changes in density and position) on a series of simulated and empirical datasets.
-We found that there are no one-size-fits-all metric but that some metrics are better at capturing specific aspects of the trait-space.
-Furthermore we propose [`moms`](@@@), tool with a user friendly graphical interface that allows visualisation of numerical changes of diverse metrics following space transformations (e.g. contraction, displacement, etc.) and could help researchers with choosing the right space occupancy metrics knowing the properties of their trait-space and the biological question at hand.
+Here we propose a broad classification of space occupancy metrics into three categories that capture changes in volume, density, or position of the trait-space.
+We analyse the behaviour of eight space occupancy metrics including two novel ones to study changes in density and position on a series of simulated and empirical datasets.
+We find no one metric describes all of trait space but that some metrics are better at capturing certain aspects compared to other approaches.
+As no one metric is sufficient to describe the changes in trait space it is necessary for researchers to compare many metrics. This can be difficult as different softwares to do so will require different input data types and may require specialist skills.
+Here we introduced [`moms`](@@@), a user-friendly tool based on a graphical interface that allows users to compare and visualisation of numerical changes with a range  metrics.
+<!-- AM: My understanding is that this sentence is meant to convey that moms can both 1) visualize plot changes following a space transformation and 2) track the corresponding change(s) to the value of a metric or metrics. Is that right? If so, I think it would be really helpful to say this more clearly since this is the only sentence you’re using in the abstract to sell would-be moms users that this is the tool for them and it’s not too hard to use.   -->
+Users are also provided with tools to transform their data in space (e.g. contraction, displacement, etc.).
+These visualizations are designed to help researchers choose the right space occupancy metrics, given the properties of their trait-space and their biological question.
 
 
 # Introduction
