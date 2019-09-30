@@ -4,9 +4,11 @@ author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  pdf_document:
     fig_width: 8
     fig_height: 8
+    keep_tex: true
+  self_contained: false
 ---
 
 
@@ -124,7 +126,7 @@ figure <- function(name, add = FALSE, all_names = figures) {
 ```
 
 
-```{r compilation_html, echo = FALSE, eval = TRUE}
+```{r compilation_html, echo = FALSE, eval = FALSE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -132,36 +134,19 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 # Abstract
 
 
-<!-- 350 words and 4 points -->
-
-<!-- Point 1: set the context for and purpose of the work;
-
-Point 2: indicate the approach and methods;
-
-Point 3: outline the main results;
-
-Point 4: identify the conclusions and the wider implications.
- -->
-
-
-
-Multidimensional analysis of traits are now a common toolkit in ecology and evolution.
-Such analyses are based on multidimensional datasets in which each dimension represents a trait that summarise all observed and potential trait combinations in a multidimensional trait-space (e.g. a morphospace or an ecospace).
-Observations of interest will typically only occupy a subset of this space, so researchers apply one or more metrics to quantify the way in which organisms "inhabit" that trait-space.
+1. Multidimensional analysis of traits are now a common toolkit in ecology and evolution and are based on trait-spaces in which each dimension summarise the observed trait combination (a morphospace or an ecospace).
+Observations of interest will typically occupy a subset of this trait-space, and researchers will apply one or more metrics to quantify the way in which organisms "inhabit" that trait-space.
+In macroevolution and ecology these metrics are referred to as disparity or dissimilarity metrics and can be generalised as space occupancy metrics.
 Researchers use these metrics to investigate how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes, such as global warming events or mass extinctions.
+However, the mathematical and biological meaning of most space occupancy metrics is vague with the majority of widely-used metrics lacking formal description.
 
-In macroevolutionary and ecological studies these metrics are often referred to as disparity or dissimilarity metrics, respectively, and can be generalised as "space occupancy metrics", a term that is applicable to both disciplines.
-The mathematical and biological meaning of most space occupancy metrics is vague.
-The majority of widely-used space-occupancy metrics in ecology and evolution lack formal description; this problem is acutely true in studies of macroevolution disparity. 
-This has consequences when interpreting changes in space occupancy and linking them to biological phenomena.
-For example, does a reduction in volume in the trait-space correspond to episodes of extinction or changes in traits distribution?
-Does an overlap in trait-space correspond to an overlap in ecological niches?
+2. Here we propose a broad classification of space occupancy metrics into three categories that capture changes in volume, density, or position.
+We analyse the behaviour of 25 metrics to study changes in trait-space volume, density and position on a series of simulated and empirical datasets.
 
-Here we propose a broad classification of space occupancy metrics into three categories that capture changes in volume, density, or position of the trait-space.
-We analyse the behaviour of eight space occupancy metrics including two novel ones to study changes in density and position on a series of simulated and empirical datasets.
-We find no one metric describes all of trait space but that some metrics are better at capturing certain aspects compared to other approaches.
-As no one metric is sufficient to describe the changes in trait space it is necessary for researchers to compare many metrics. This can be difficult as different softwares to do so will require different input data types and may require specialist skills.
-Here we introduced [`moms`](@@@), a user-friendly tool based on a graphical interface that allows users to both visualise and measure changes space occupancy for any metric in simulated or imported trait-spaces.
+3. We find no one metric describes all of trait space but that some metrics are better at capturing certain aspects compared to other approaches and that their performance depends on both the trait-space and the hypothesis analysed. 
+However, our results confirm the three broad categories (volume, density and position) and allow to relate changes in any of these categories to biological phenomena.
+
+4. Since the choice of space occupancy metric should be specific to the data and question at had, we introduced [`moms`](@@@), a user-friendly tool based on a graphical interface that allows users to both visualise and measure changes space occupancy for any metric in simulated or imported trait-spaces.
 Users are also provided with tools to transform their data in space (e.g. contraction, displacement, etc.).
 This tool is designed to help researchers choose the right space occupancy metrics, given the properties of their trait-space and their biological question.
 
@@ -169,13 +154,11 @@ This tool is designed to help researchers choose the right space occupancy metri
 # Introduction
 
 Groups of species and environments share specific, easily recognisable, correlated characteristics of many kinds: guilds or biomes with shared phenotypic, physiological, phylogenetic or behavioural traits.
-Organisms or environments should therefore be studied as a set of traits rather than some specific traits in isolation [e.g. @donohue2013; @hopkins2017].
-Increased computational power and statistical methods, as well as their implementation in `R` packages has facilitated a recent explosion of multiple traits studies approaches [@oksanen2007vegan; @adams2013geomorph; @momocs; @blonder2018; @disprity].
-Ordination techniques (or dimensionality reduction) are a popular way to analyse sets of multiple traits and create a multidimensional [see @legendre2012 for a summary].
-These trait-space approaches have been successfully used across many sub-disciplines in biology to either explore properties of the data or test hypotheses.
-For example, in palaeobiology, workers use trait-spaces to study how groups of species' characteristics change through time [e.g. @wright2017]; in ecology, researchers study evidence of processes such as competition by the comparison of two populations to show whether they overlap in traits [e.g. @jones2015].
-However, different fields use a different set of terms and approaches for such trait-space approaches (Table 1).
-In macroevolution, for example, such trait-spaces are commonly referred to as "morphospaces" with the whole procedure often being often called "disparity analysis" [e.g. @adams2013geomorph; @marcy2016; @wright2017], while in ecology, such trait-spaces can be called "functional spaces" and or "dissimilarity analysis" [e.g. @diaz2016; @mammola2019].
+Organisms or environments should therefore be studied as a set of traits rather than some specific traits in isolation [@donohue2013; @hopkins2017].
+Biologists have increasingly been using ordination techniques [see @legendre2012 for a summary] to create multidimensional trait-spaces to either explore properties of the data or test hypotheses [@oksanen2007vegan; @adams2013geomorph; @blonder2018; @disprity].
+For example, in palaeobiology, @wright2017 use trait-spaces to study how groups of species' characteristics change through time; in ecology, @jones2015 study evidence of competition by looking at trait overlap between two populations.
+However, different fields use a different set of terms for such trait-space approaches (Table 1).
+In macroevolution, thhey are commonly referred to as "morphospaces" with the whole procedure often being often called "disparity analysis" [e.g. @adams2013geomorph; @marcy2016; @wright2017], while in ecology, they can be called "functional spaces" and or "dissimilarity analysis" [e.g. @diaz2016; @mammola2019].
 Nonetheless, they are the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations, such as taxon, field site, etc. [@disprity].
 
 In mathematics | In ecology | In macroevolution | In this paper
@@ -188,37 +171,35 @@ Statistic | Dissimilarity index or metric, hypervolume, functional diversity | D
 Multidimensional analysis | Dissimilarity analysis, trait analysis, etc. | Disparity analysis, disparity-through-time, etc. | multidimensional analysis
 Table 1@@@: terms and equivalence between mathematics, ecology and macroevolution.
 
-Ecologists and evolutionary biologists are also using trait-spaces for similar reasons.
-Across many sub-disciplines they will look at how their observations occupy the trait-space, often with respect to the same fundamental questions: are two groups overlapping in the trait-space?
+Ecologists and evolutionary biologists also often use trait-spaces with respect to the same fundamental questions: are groups overlapping in the trait-space?
 Are some regions of the trait-space not occupied?
-Or how do specific factors influence the occupancy of the trait-space?
-Studying the occupancy of trait-spaces is achieved in various ways such as using disparity metrics in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
-Although these space occupancy metrics are common in ecology and evolution, surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
+How do specific factors influence the occupancy of the trait-space?
+Studying the occupancy of trait-spaces can be achieved using disparity metrics in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
+However, although these space occupancy metrics are common in ecology and evolution, surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
 
 Different space occupancy metrics capture different aspects of the trait-space [ciampaglio2001; @villéger2008; @mammola2019].
-It may be widely-known by many in the field that distinct occupancy metrics elucidate different signals of the underlying space, but to our knowledge this is infrequently mentioned in peer-reviewed papers.
-First, space occupancy metrics are often named as the biological aspect they are describing (e.g. "disparity" or "functional dispersion") rather than what they are measuring (e.g. the sum of dimensions variance, etc.) which obscures the differences or similarities in space occupancy metrics between studies in both ecology and evolution.
+It may be widely-known by many in the field, but to our knowledge this is infrequently mentioned in peer-reviewed papers.
+First, space occupancy metrics are often named as the biological aspect they are describing (e.g. "disparity" or "functional diversity") rather than what they are measuring (e.g. the average pairwise distances) which obscures the differences or similarities between studies in both ecology and evolution.
 Second, in many studies in ecology and evolution, authors have focused on measuring the volume of the trait-space with different metrics [e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016].
-However, volume only represents a single aspects of multidimensional occupancy that disregards other aspects, such as the density [@geiger2008], the position [@wills2001; @ciampaglio2001], and the dissimilarity between groups [@oksanen2007vegan; @close2015].
-For example, any analysis of volume occupancy through trait space may remain constant, and this will lead to supporting a certain biological conclusion.
-Yet, an alternative aspect of multidimensional occupancy may indicate the position is changing while the volume is constant; this would likely lead to a different biological conclusion. 
-Measuring the volume would miss position information that might be of interest to biologists (e.g. a group of species maintains the same diversity of traits while also shifting towards a new ecological niche).
+However, volume only represents a single aspects of space occupancy, disregarding other aspects such as the group's density [@geiger2008] or the position [@wills2001; @ciampaglio2001].
+For example, any analysis of volume occupancy through trait-space may remain constant, and this will lead to supporting a certain biological conclusion.
+For example, if two groups occupy the same volume in trait-space, this will lead to supporting certain biological conclusions.
+Yet, an alternative aspect of space occupancy may indicate that the group's position is different; this would likely lead to a different biological conclusion (e.g. a group of species maintains the same diversity of traits but occupies a different niche).
 Using metrics that only measure one aspect of the multidimensional trait space may restrain the potential of multidimensional analysis [@villéger2008].
 
-Here we propose a broad classification of space occupancy metrics as used across ecology [@villéger2008] and evolution [@wills2001] and analyse their power to detect changes in multidimensional space occupancy in empirical and simulated data.
-We provide a review of each broad type of space occupancy metrics and propose a unified terminology aiming to foster communication between ecology and evolution.
+Here we propose a broad classification of space occupancy metrics as used across ecology and evolution and analyse their power to detect changes in multidimensional space occupancy in empirical and simulated data.
+We provide a review of each broad type of space occupancy metrics along with a unified terminology to foster communication between ecology and evolution.
 Unsurprisingly, we found no one metric describes all changes through a trait-space and the results from each metric are dependent on the characteristics of the space and the hypotheses.
-Furtheremore, because there can potentially be as many metrics as there are trait-spaces and studies, it would be a daunting task to propose clear generalities to space occupancy metrics behavior.
-Therefore, we propose [`moms`](@@@) user-friendly tool allowing researchers to design, experiment and visual their own space occupancy metric tailored for their specific project and helping them understanding the "null" behavior of their metrics of interest.
-<!-- AM: So good! I want this in the abstract!  -->
+Furthermore, because there can potentially be an infinite number of metrics, it would be impossible to propose clear generalities to space occupancy metrics behavior.
+Therefore, we propose [`moms`](@@@), a user-friendly tool allowing researchers to design, experiment and visualise their own space occupancy metric tailored for their specific project and helping them understanding the "null" behavior of their metrics of interest.
 
 
 ## Space occupancy metrics
 
 In this paper, we define trait-spaces as any matrix where rows are observations and columns are traits.
-In practice, these traits can widely vary in number and types: they could be coded as discrete [e.g. presence of absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated measures of 2- or 3-dimensions [e.g. landmark position; @marcy2016].
-Traits can also be measured by using relative observations such as community composition [e.g. @jones2015] or even some distance between observations [e.g. @close2015].
-However, regardless of the methodology used to build a trait-space, three broad occupancy metrics can be measured to investigate how observations are distributed in the trait-space: the volume which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1@@@; @villéger2008].
+These traits can widely vary in number and types: they could be coded as discrete [e.g. presence or absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated measures of 2- or 3-dimensions [e.g. landmark position; @marcy2016].
+Traits can also be measured by using relative observations [e.g. community compositions; @jones2015] or even some distance between observations [e.g. @close2015].
+However, regardless of the methodology used to build a trait-space, three broad occupancy metrics can be measured: the volume which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1@@@; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
 ```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).") }
@@ -265,18 +246,32 @@ Volume metrics measure the spread of a group in the trait-space.
 They can be interpreted as the amount of the trait-space that is occupied by observations.
 Typically, larger values for such metrics indicate the presence of more extreme trait combinations in the sample.
 For example, if group A has a bigger volume than group B, the observations in group A achieve more extreme trait combinations than in group B.
-This type of metric is widely used in both ecology [the hypervolume; @blonder2018; for example to compare group's niche overlap @mammola2019] and in evolution [the sum or product of ranges or variances @wills2001; @ciampaglio2001 or the Procrustes variance @adams2013geomorph].
+This type of metric is widely used in both ecology [the hypervolume; @blonder2018] and in evolution [the sum or product of ranges or variances; @wills2001].
 
-Although volume metrics are a highly suitable indicator for comparing a group's trait-space occupancy, it is limited to comparing the range of extreme trait-combinations between groups.
-Typically, volume metrics do not take into account the spread of the observations within a group.
+Although volume metrics are a suitable indicator for comparing a group's trait-space occupancy, it is limited to comparing the range of trait-combinations between groups.
+Volume metrics do not take into account the distribution of the observations within a group.
 In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the volume is simply driven by small number of extreme observations.
 
-This aspect of space occupancy is used routinely in ecology and macroevolution [@wills2001; @blonder2018] because disparity or dissimilarity analysis often look at the "spread" of observations in multidimensional space.
-For example @wright2017 uses the volume of trait-space to analyse how crinoid ecology changes through time relative to all the observed ecologies in the the crinoid trait-space.
-A larger "spread" at a specific point in time [e.g. in the Early Carboniferous - 360 to 330 million years ago (Mya); @wright2017] indicates a larger diversity of ecological feeding strategies.
+This aspect of space occupancy is used routinely in ecology and macroevolution:
+for example @wright2017 uses the volume of trait-space to analyse how crinoid ecology changes through time relative to all the observed ecologies in the the crinoid trait-space.
+A larger "spread" at a specific point in time [e.g. 360 to 330 million years ago (Mya); @wright2017] indicates a larger diversity of ecological feeding strategies.
 In general the volume of a group in the trait-space indicates how much trait combinations that group achieves in the trait-space.
 
 #### 2. Density
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Density metrics measure the distribution of a group in the trait-space.
 They can be interpreted as an indication of the distribution of the observations *within* a group in the trait-space; this can be considered as a measure of the "packedness", so spaces with higher density have more observations "packed" into that region.  
@@ -460,7 +455,7 @@ To measure how the metrics responded to changes within trait-spaces, we reduced 
 
 * **Randomly:** by randomly removing 50% of elements (Fig. 3@@@-A).
 This reflects a "null" biological model of changes in trait-space: the case when observations (e.g. species) are removed regardless of their intrinsic characteristics.
-For example, if diversity (i.e. number of species) is reduced by 50% but the trait-space volume remains the same, there is a decoupling between diversity and space occupancy [@ruta2013; @hopkins2013].
+For example, if diversity (i.e. number of species) is reduced by 50% but the trait-space volume remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
 Our selected metrics are expected to not be affected by this change.
 
 * **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that 50% elements are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 3@@@-B).
@@ -475,10 +470,8 @@ Density metrics are expected to be most affected by this change.
 This can reflect global changes in trait-space due, for example, to an entire group remaining diverse but occupying a different niche (e.g. in the transition from non-avian dinosaur to avian dinosaurs).
 Position metrics are expected to be most affected by this change.
 
-The algorithm to select $\rho$ or $D$ is described in greater detail in in the [Appendix](#Appendix_algorithm_reduce).
+The algorithm to select $\rho$ or $D$ is described in greater detail in in the Supplementary material 1.
 
-
-<!-- Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one. -->
 
 ```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each group are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait-space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value is the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one.")}
 
@@ -588,7 +581,7 @@ text(labels = "Metric score from\nthe random removal.",
 To measure the effect of space reduction, distribution and dimensionality on the metric, we first scaled the metric to be relative to the non-reduced space for each dimension distribution or number of dimensions.
 To do so, we subtracted the observed occupancy with no space reduction (i.e. base occupancy) to all the occupancy measurements of the reduced spaces and then divided it by the resulting maximum observed occupancy.
 This way, our occupancy metrics where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the occupancy metric value.
-We then measured the probability of overlap of the between the non-random removals (limit (max/min), density (high/low) and displacement (positive/negative)) and the random removals using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
+We then measured the probability of overlap of the between the non-random removals (limit (max/min), density (high/low) and displacement (positive/negative)) and the random removals using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943].
 
 ### Measuring the effect of space and dimensionality on shifting spaces
 
@@ -633,7 +626,7 @@ Table 5@@@: details of the six empirical trait-spaces.
 
 For each empirical trait-space we bootstrapped each group 500 times [@disprity] and applied the `r metric.names()` space occupancy metric to each pairs of groups.
 Note that when space occupancy could not be calculated (e.g. due to the curse of multidimensionality), we collapsed the metric value to 0 (i.e. no space occupancy was captured).
-We then compared the means of each groups using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943; @guillerme2016].
+We then compared the means of each groups using the Bhattacharrya Coefficient [i.e. the probability of overlap between two distributions; @bhattacharyya1943].
 The are displayed in Table 7@@@.
 
 <!--  -->
@@ -855,7 +848,7 @@ We also show that the choice of metric impacts the interpretation of group diffe
 Metrics within the same category of trait-space occupancy (volume, density or position) do not have the same level of correlation with each other.
 For volume metrics, only the average distance from centroid and the sum of variances are strongly correlated (Pearson correlation of 0.99; Fig. 4@@@) whereas the sum of ranges and the ellipsoid volume are more weekly correlated to them (ranging from 0.07 to 0.40; Fig. 4@@@).
 This is due to the sum of ranges and the ellipsoid volume being more affected by the number of dimensions and the type of trait-spaces [Table 6@@@; @cursedimensionality].
-This does not preclude using such metrics but raises caution about what they capture in which scenarios [@donohue2013; @Butler2012].
+This does not preclude using such metrics but raises caution about what they capture in which scenarios [@donohue2013].
 We see the same pattern for the density metrics with the minimum spanning tree average distance and the average nearest neighbour distance being strongly correlated (correlation of 0.97; Table 6@@@), conversely to the minimum spanning tree distances evenness (correlation of respectively 0.18 and 0.20; Table 6@@@) that is also more affected by the number of dimensions and the type trait-space (Table 6@@@).
 Some metrics can capture different aspects of trait-space occupancy at the same time: the average distance from centroid (volume proxy) is correlated to the sum of variance (volume proxy) but not to the ellipsoid volume (volume proxy) but still to the average nearest neigbhour distance (density proxy).
 
@@ -891,6 +884,7 @@ This might be due to the inherent complexity of "position" in a trait-space that
 
 Regarding the effect of dimensions and trait-space distribution, metrics seems to be either affected by neither of these factors or by both (Table 6@@@).
 Again, this should not preclude using metrics that are sensitive to trait-spaces' dimensions and distributions [e.g. the ellispoid volume is a good volume descriptor up until a moderate number of dimensions; @jackson2011; @donohue2013] but should be kept in mind.
+<!-- Remove jackson? -->
 
 #### Empirical examples
 
@@ -927,7 +921,7 @@ In fact, if one studies an adaptive radiation in a group of organisms, it is wor
 Third, we suggest to not name metrics as the biological aspect they are potentially describing (e.g. disparity or functional dispersion) but rather what they are measuring (e.g. sum of dimensions variance or the average distance from centroids).
 We believe this point will allow both a clearer understanding of what is measured (c.f. what is approximated) and an easier understanding between ecology and evolution for which the metrics can be the similar but named differently and used for approximating different types of trait occupancy (Fig. 4@@@).
 
-Multidimensional analysis has been acknowledged to be an essential toolkit modern biology [@adams2019] but can often be counter-intuitive [@cursedimensionality].
+Multidimensional analysis has been acknowledged to be an essential toolkit modern biology but can often be counter-intuitive [@cursedimensionality].
 It is thus crucial to accurately describe patterns in multidimensional trait-spaces to be able to link them to biological processes of interest.
 Mainly, it is important to remember that there are no one-size-fits-all trait-space occupancy metric.
 And that what a pattern captured by a specific space occupancy metric is often dependent on the properties of the trait-space and of the particular biological question of interest.
