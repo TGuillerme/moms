@@ -449,57 +449,6 @@ We performed all the tests using the `psych` package [@psych].
 <!--  -->
 <!--  -->
 <!--  -->
-<!-- EFFECT OF DIMENSIONALITY -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--
-## Effect of dimensionality
-
-Furthermore, high dimensional spaces ($>> 3$) are subject to the "curse of multidimensionality" [@cursedimensionality].
-This is link to the fact that the more dimensions, the more sparse the data becomes.
-In other words the probability of two points A and B overlapping in *n* dimensions is the probability of point A having the same value as point point B on dimension 1, 2, 3, etc...
-Thus this probability decreases as a product of the number of dimensions.
-This "curse" can make the interpretation of high dimensional data counter-intuitive.
-
-For example, the product of range is expected to decrease with the number of dimensions, regardless of the number of elements on each dimensions.
-This is counter-intuitive because:
-1) first, the range of values on a dimension is bounded to the number of elements on this dimensions (i.e. increasing the number of observations on one dimension can only increase the range, never decrease it);
-2) second, products are a classical example of the "curse" where multiplying a higher number of dimensions with a non-null probability of having a range of zero will irremediably result in 0 (i.e. an infinite number of positive values by 0 is still 0).
-
--->
-
-```{r fig_curse, eval=FALSE, echo = FALSE, fig.height = 8, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: Effect of the curse of dimensionality on different scaled disparity metrics. Metrics with containing products (ellipsoid volume, product of ranges or variances) are classically affected by the \"curse\" as they decrease more or less rapidly with an increase in dimensions. Note especially how the Product of Range actually increases and then decreases with the number of dimensions.")}
-set.seed(42)
-## Make a 50 dimensions space
-space <- space.maker(300, 50, rnorm, scree = rev(cumsum(rep(1/50, 50))))
-
-## Function wrappers
-disparity <- function(metric, dimensions, space) {
-    fast.disparity(group = 1:nrow(space), space = space, metric = metric, rare.dim = dimensions)
-}
-lapply.fun <- function(dimensions, metrics_list, space) {
-    unlist(lapply(metrics_list, disparity, dimensions = dimensions, space = space))
-}
-
-## Curse results
-curse_results <- sapply(2:50, lapply.fun, metrics_list = metrics_list, space = space)
-curse_results <- apply(curse_results, 1, function(x) return(x/max(x)))
-
-## Empty plot
-hue_colors <- default.palette(ncol(curse_results))
-par(bty = "n")
-plot(NULL, xlim = c(2,50), ylim = c(0,1),
-xlab = "Dimensions (decreasing variance)",
-ylab = "Scaled disparity")
-for(metric in 1:ncol(curse_results)) {
-    lines(curse_results[, metric], col = hue_colors[metric])
-}
-legend("bottomleft", metric_names, lty = 1, col = hue_colors)
-```
-<!--  -->
-<!--  -->
-<!--  -->
 <!-- SHIFTING SPACES -->
 <!--  -->
 <!--  -->
