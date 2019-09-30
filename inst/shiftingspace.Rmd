@@ -1,6 +1,6 @@
 ---
 title: "Shifting spaces: how to summarise multidimensional spaces occupancy? "
-author: "Thomas Guillerme, Mark Puttick, Ariel E Marcy, Vera Weisbecker"
+author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 bibliography: references.bib
 date: "`r Sys.Date()`"
 output:
