@@ -457,32 +457,32 @@ We generated trait spaces using the following combinations of size, distribution
 
 | space name | size  | distribution(s)                | dimensions variance | correlation |
 |------------|-------|--------------------------------|---------------------|-------------|
-| Uniform3   |200*3  | Uniform (min = -0.5, max = 0.5)| Equal            | none        |
-| Uniform15  |200*15 | Uniform                        | Equal            | none        |
-| Uniform50  |200*50 | Uniform                        | Equal            | none        |
-| Uniform150 |200*150| Uniform                        | Equal            | none        |
+| Uniform3   |200*3  | Uniform (min = -0.5, max = 0.5)| Equal            | None        |
+| Uniform15  |200*15 | Uniform                        | Equal            | None        |
+| Uniform50  |200*50 | Uniform                        | Equal            | None        |
+| Uniform150 |200*150| Uniform                        | Equal            | None        |
 | Uniform50c |200*50 | Uniform                        | Equal            | Random (between 0.1 and 0.9) |
-| Normal3    |200*3  | Normal  (mean = 0, sd = 1)     | Equal            | none        |
-| Normal15   |200*15 | Normal                         | Equal            | none        |
-| Normal50   |200*50 | Normal                         | Equal            | none        |
-| Normal150  |200*150| Normal                         | Equal            | none        |
+| Normal3    |200*3  | Normal  (mean = 0, sd = 1)     | Equal            | None        |
+| Normal15   |200*15 | Normal                         | Equal            | None        |
+| Normal50   |200*50 | Normal                         | Equal            | None        |
+| Normal150  |200*150| Normal                         | Equal            | None        |
 | Normal50c  |200*50 | Normal                         | Equal            | Random (between 0.1 and 0.9) |
-| Random     |200*50 | Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Equal            | none        |
-| PCA-like   |200*50 | Normal                         | Multiplicative           | none        |
-| PCO-like   |200*50 | Normal                         | Additive              | none        |
+| Random     |200*50 | Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Equal            | None        |
+| PCA-like   |200*50 | Normal                         | Multiplicative           | None        |
+| PCO-like   |200*50 | Normal                         | Additive              | None        |
 Table 3@@@: different simulated space distributions.
 
 The different in space sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of trait-space dimensions in literature: "low-dimension" spaces ($<15$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
 We used a distinct range of distributions (uniform, normal or random) to test the effect of observation distributions on the metrics.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal (i.e. $\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing (i.e. $\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive (using the cumulative sum of the inverse of the number of dimensions: $\sum_i^d(1/d)$).
-Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in Principal components analysis - PCA; e.g. @marcy2016; healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
+Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in principal components analysis - PCA; e.g. @marcy2016; healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
 Finally, we added a correlation parameter to take into account the potential correlation between different traits.
 We repeated the simulation of each trait-space 20 times (resulting in 260 trait-spaces).
 
 ## Spatial occupancy metrics
 
 We then measured `r metric.names()` different metrics on the resulting transformed spaces, including a new metric we produced.
-We also introduce two new metric (NAME) s which we expect to be only influenced by trait space position change, which to our knowledge is not available in the literature.
+We also introduce one new metric (the average displacements) which we expect to be only influenced by trait space position change, which to our knowledge is not available in the literature.
 
 
 | Name | Definition | Captures | Source | Notes  |
@@ -495,7 +495,7 @@ We also introduce two new metric (NAME) s which we expect to be only influenced 
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
 | Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | the density of pairs of observations in the trait-space (c.f. the Minimum spanning tree average distance above) |
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait-space. A value of 1 indicates that the observations' centroid is the centre of the trait-space |
-Table 4@@@: List of metric with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the eigen value of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
+Table 4@@@: List of metrics with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the eigen value of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
 
 We selected these `r metric.names()` space occupancy metrics to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
@@ -582,8 +582,6 @@ legend("bottomleft", metric_names, lty = 1, col = hue_colors)
 
 To measure how the metrics responded to changes within trait-spaces, we reduced the spaces by removing 50% of elements each time using the following algorithms:
 
-(e.g. expansion or reduction of niches), by density (e.g. different degrees of competition within a guild) and by position (e.g. ecological niche shift).
-
 * **Randomly:** by randomly removing 50% of elements (Fig. 3@@@-A).
 This reflects a "null" biological model of changes in trait-space: the case when observations (e.g. species) are removed regardless of their intrinsic characteristics.
 For example, if diversity (i.e. number of species) is reduced by 50% but the trait-space volume remains the same, there is a decoupling between diversity and space occupancy [@ruta2013; @hopkins2013].
@@ -607,7 +605,8 @@ The algorithm to select $\rho$ or $D$ is described in greater detail in in the [
 
 <!-- Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one. -->
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each groups are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait space change, the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value are the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one.")}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 3: different type of space reduction. Each panel displays two groups (orange and blue) of 50% of the data points each. Each group are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit in respectively orange and blue); C - by density (high and low in respectively orange and blue); and D - by position (positive and negative in respectively orange and blue). Panel E represents a typical display of the reduction results displayed in Table 6@@@: the dots represent the median space occupancy values across all simulations for each scenario of trait-space change, the solid and dashed line respectively the 50\% and 95\% confidence intervals. Results in grey are the random 50\% reduction (panel A). Results in blue and orange represent the blue and orange opposite scenarios from panels B, and D. The displayed numerical value is the probability of overlap (Bhattacharrya Coefficient) between the blue and orange distributions and the grey one.")}
+
 set.seed(42)
 
 ## Change colors
@@ -721,10 +720,12 @@ We then measured the probability of overlap of the between the non-random remova
 In some situations, distribution differences and the number of dimensions can have an effect on the metric results.
 For example, in a normally distributed space, a decrease in density can often lead to an increase in volume.
 This is not necessarily true in log-normal spaces or in uniform spaces for certain metrics (e.g. the convex hull of a lognormal space will be less sensitive to changes in density).
-Furthermore, high dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality] which makes them "behave" differently than their counterparts with a lower number of dimensions.
+Furthermore, high dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality] which makes them "behave"
+<!-- MP: I think this clarification – I could not think of a good way though…Alternatively leave it out and go on to the explanation in the next sentence. -->
+ differently than their counterparts with a lower number of dimensions.
 This is linked to data becoming sparser with increasing dimensions, such that the probability of two points A and B overlapping in *n* dimensions is the product of the probability of the two points overlapping on each dimensions($\prod_{i}^{d} P(A = B)_{Di}$).
 This probability decreases as a product of the number of dimensions.
-This "curse" can make the interpretation of high dimensional data counter-intuitive.
+Therefore, the "curse" can make the interpretation of high dimensional data counter-intuitive.
 For example if a group expands in multiple dimensions (i.e. increase in volume), the actual hypervolume can decrease (Fig. 4@@@ and Tables 6@@@, 7@@@).
 
 We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 3@@@) for testing respectively the effect of distribution and dimensions.
@@ -741,18 +742,20 @@ The results of the ANOVAs (*p*-values) are reported in Table 6@@@ (see supplemen
 
 ## Empirical examples
 
-To address the degree of which the simulations can be applied to real biological problems, we analysed the effect of the different space occupancy metrics on six different empirical studies covering a broad range of fields that employ trait-spaces analysis (palaeobiology, macroevolution, evo-devo, ecology, etc.).
+To address the degree to which the simulations can be applied to real biological problems, we analysed the effect of the different space occupancy metrics on six different empirical studies covering a broad range of fields that employ trait-space analyses (palaeobiology, macroevolution, evo-devo, ecology, etc.).
 For each of these six studies we generated trait-spaces from the data published with the papers.
-We then divided the trait-spaces into two groups and applied the space occupancy metric to each pair of groups to test whether different metrics captured different differences between groups.
-Both the grouping and the questions where based on a simplified version of the biological questions addressed in these papers (with no intention to re-analyse the data but to be representative of a sample of the diversity of questions).
+We then divided the trait-spaces into two biologically-relevant groups and tested whether the different metrics differentiated the groups in different ways.
+<!-- AM: I hope I didn’t cut out meaning  -->
+Both the grouping and the questions where based on a simplified version of the biological questions addressed in these papers (with no intention to re-analyse the data but to be representative of a sample of the diversity of questions in ecology and evolution).
 The procedures to generate the data and the groups varies from one study to the other but is detailed and fully reproducible in the supplementary materials.
+
 
 study | field | taxonomic Group | traits (data) | trait-space | size | groups (orange/blue in Table 7) | type of question |
 ------|-------|-----------------|---------------|-------------|------|--------|------------------|
-@beck2014 | palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
-@wright2017 | palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
-@marcy2016 | geometrics morphometrics | Rodentia | skull 2D landmark coordinates  | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genera of Gopher morphological distinct? |
-@hopkins2016 | geometrics morphometrics | Trilobita | 3D landmark coordinates | Ordination of a Procrustes Superimposition (PCA) | 46*46 | 36 adults vs. 10 adults | Are juvenile trilobites a subset of adult ones? |
+@beck2014 | Palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
+@wright2017 | Palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
+@marcy2016 | Evolution | Rodentia | skull 2D landmark coordinates  | Ordination of a Procrustes Superimposition (PCA) | 454*134 | 225 *Megascapheus* vs. 229 *Thomomys* | Are two genera of gopher morphologically distinct? |
+@hopkins2016 | Evolution | Trilobita | 3D landmark coordinates | Ordination of a Procrustes Superimposition (PCA) | 46*46 | 36 adults vs. 10 adults | Are juvenile trilobites a subset of adult ones? |
 @jones2015 | Ecology | Plantae | Communities species compositions | Ordination of a Jaccard distance matrix (PCO) | 48*47 | 24 aspens vs. 24 grasslands | Is there a difference in species composition between aspens and grasslands? |
 @healy2019 | Ecology | Animalia | Life history traits | Ordination (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 Table 5@@@: details of the six empirical trait-spaces.
@@ -947,7 +950,7 @@ Table 7@@@: Comparisons of different pairs of groups in different empirical trai
 
 Similarly as for the simulated results, the empirical ones indicate that there is no perfect one-size-fit all metric.
 For all `r metric.names()` metrics (expect the Ellispoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the metrics.
-For example, in the @beck2014's dataset, there is a clear non-overlap in space occupancy volume using the average distance from centroif or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the volume using the sum of ranges (overlap of 0.966).
+For example, in the @beck2014's dataset, there is a clear non-overlap in space occupancy volume using the average distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the volume using the sum of ranges (overlap of 0.966).
 However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average distance from centroid or the sum of variances - overlap of 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (overlap of 0).
 Furthermore, for each dataset, the absolute differences between each groups (i.e. mean of the orange group higher or lower than the one of the blue group) is not consistent depending on the metrics.
 For example, in @hopkins2016's dataset, the orange group's mean is clearly higher than the blue one when measuring the sum of ranges (overlap of 0) and the inverse is true when measuring the average displacements (overlap of 0).
