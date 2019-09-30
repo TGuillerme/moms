@@ -39,6 +39,20 @@ default.palette <- function(n) {
 }
 ```
 
+# Algorithm for selecting the parameters to reduce the space ($radius$, $displacement$, $density$)
+
+We used a recursive algorithm for selecting the parameter that removes $P$ = 50% elements.
+
+1. Select a random reduction parameters $R$.
+2. Remove elements from the space using $R$ resulting in $P'$ removed elements.
+If the remaining number of elements is to the required proportion $P$ ; exit the algorithm;
+Else go to 3.
+3. Get the different between the proportion of removed elements $P'$ and $P$.
+If the difference is positive set the increment parameter $R$ to $R = 1.1 \times R$, then go to 2.
+Else set $R = 0.9 \times R$, then go to 2.
+
+The algorithm is implemented in the `optimise.parameter` function in [reduce.space_fun.R](@@@).
+
 # Simulation data
 
 This section contains all the results and calculations (and plots them).
