@@ -39,7 +39,7 @@ metric_names <- c("Average distance from centroid",
 
 ## Prints the number of metrics in english (single = FALSE) or the list of metrics (single = TRUE)
 metric.names <- function(single = FALSE, names = metric_names) {
-  english_numbers <- c("one", "two", "three", "four", "five", "six", "seven", "height", "nine", "ten")
+  english_numbers <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
   if(!single) {
     if(length(names) > 10) {
       ## Return the digits
