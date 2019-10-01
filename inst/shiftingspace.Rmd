@@ -819,7 +819,7 @@ For example, in @hopkins2016's dataset, the orange group's mean is clearly highe
 
 # Discussion
 
-In this study, we tested twenty-five metrics of trait-space occupancy on simulated and empirical datasets to assess how each metric captures changes in trait-space volume, density and position.
+In this study, we tested 25 metrics of trait-space occupancy on simulated and empirical datasets to assess how each metric captures changes in trait-space volume, density and position.
 Our results show that the correlation between metrics can vary both within and between metric categories (Fig. 4@@@), highlighting the importance of understanding the metric classification for the interpretation of results.
 Furthermore, our simulations show that different metrics capture different types of trait-space change (Table 6@@@), meaning that the use of multiple metrics is important for comprehensive interpretation of trait-space occupancy.
 We also show that the choice of metric impacts the interpretation of group differences in empirical datasets (Table 7@@@), again emphasizing that metric choice has a real impact on the interpretation of  specific biological questions
@@ -828,55 +828,45 @@ We also show that the choice of metric impacts the interpretation of group diffe
 #### Metrics comparisons
 
 Metrics within the same category of trait-space occupancy (volume, density or position) do not have the same level of correlation with each other.
-For volume metrics, only the average distance from centroid and the sum of variances are strongly correlated (Pearson correlation of 0.99; Fig. 4@@@) whereas the sum of ranges and the ellipsoid volume are more weekly correlated to them (ranging from 0.07 to 0.40; Fig. 4@@@).
-This is due to the sum of ranges and the ellipsoid volume being more affected by the number of dimensions and the type of trait-spaces [Table 6@@@; @cursedimensionality].
-This does not preclude using such metrics but raises caution about what they capture in which scenarios [@donohue2013].
-We see the same pattern for the density metrics with the minimum spanning tree average distance and the average nearest neighbour distance being strongly correlated (correlation of 0.97; Table 6@@@), conversely to the minimum spanning tree distances evenness (correlation of respectively 0.18 and 0.20; Table 6@@@) that is also more affected by the number of dimensions and the type trait-space (Table 6@@@).
-Some metrics can capture different aspects of trait-space occupancy at the same time: the average distance from centroid (volume proxy) is correlated to the sum of variance (volume proxy) but not to the ellipsoid volume (volume proxy) but still to the average nearest neigbhour distance (density proxy).
+For example, the average distance from centroid (volume proxy) is highly correlated to the sum of variances (volume proxy - correlation of 0.99) and somewhat correlated with the minimum spanning tree average distance (density proxy - correlation of 0.66) but poorly with the ellipsoid volume (volume proxy - correlation of 0.17) and the minimum spanning tree distances evenness (density proxy - correlation of -0.05).
+Furthermore, the fact that we have such a range of correlations for normal distributions suggests that each metric can capture different summaries of space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
 
-
-Furthermore, the space occupancy values captured by all metrics behave following a normal distribution except for the ellipsoid volume which demonstrates a classic "curse of multidimensionality" with values increasing logarithmically first and then quickly decreasing to 0 [Fig. 4@@@; @cursedimensionality].
-Overall, the fact that we have such a range of correlations for normal distributions suggests that each metric can capture different summaries of space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
-Comparisons between more metrics are available in the Supplementary Material 4@@@ and show the same wide range of patterns.
-
-Analysing the properties of metrics in a trait-space prior to using them to answer macroevolutionary or ecological questions can bring valuable insights into what aspect of space occupancy they are capturing.
+<!-- Analysing the properties of metrics in a trait-space prior to using them to answer macroevolutionary or ecological questions can bring valuable insights into what aspect of space occupancy they are capturing.
 For example, if some space occupancy metrics captures the same pattern using the sum of variances and the sum of ranges, it is possible that the trait-space have really similar properties (i.e. space with equal normal dimensions).
+ -->
 
 #### Space shifting
 
-Most metrics capture a normal "null" space shift with no changes in space occupancy on average (i.e. randomly removing 50% of the data - in grey in Table 6@@@).
-This is a desirable behaviour for space occupancy metrics since most studies using space occupancy look at potential processes resulting in the observed space occupancy patterns [e.g. competition @brusatte2008, convergence @marcy2016, life history traits @healy2019, etc.].
-In this context, random changes in the space occupancy should not be picked up as a pattern to avoid false positive errors.
-However, the average nearest neighbour distance and the sum of ranges have a respectively positive and negative "null" median meaning that any decrease of elements will always lead to respectively and increase and a decrease of these metrics even when the process is random (Table 6@@@).
-This is not especially a bad property for both metrics (i.e. they can still be used to analysis changes in space occupancy) but it should be kept in mind that even random processes will increase or decrease the metric value which can lead to false positives or negatives. 
+Most metrics capture no changes in space occupancy for the "null" (random) space reduction (in grey in Table 6@@@).
+This is a desirable behaviour for space occupancy metrics since it will likely avoid false positive errors in empirical studies that estimate biological processes from space occupancy patterns [e.g. competition @brusatte2008, convergence @marcy2016, life history traits @healy2019, etc.].
+The average nearest neighbour distance and the sum of ranges have, however, a respectively
+positive and negative "null" median.
+This is not especially a bad property for both metrics but it should be kept in mind, if using the, that even random processes can increase or decrease the metric value.
 
-Regarding the changes in volume of the trait-spaces, the sum of variances and the average distance from centroid are excellent descriptors, with both maximum and minimum limit changes leading to a clear increase or decrease of the metrics values.
-However, as illustrated in the 2D examples in Fig. 3@@@-B, only the minimum limit changes (orange) should actually lead to a decrease of volume of the trait-space; the volume of the maximum limit shifted trait-spaces should have the same volume as the non-modified trait-space but with a hole in its centre ("hollowing out").
-Therefore, an increase in "volume" of the trait-space does not necessary always corresponds to an *actual* 3D volume increase but could also reflect a "hollowing" of the trait-space.
+Regarding the changes in volume, the sum of variances and the average distance from centroid are good descriptors (Table 6@@@).
+However, as illustrated in the 2D examples in Fig. 3@@@-B only the blue change results (maximum limit - Table 6@@@) should not result in a direct change in volume since the trait-space is merely "hollowed" out.
+That said, "hollowing" is more hard to conceptualise in many dimensions and the metrics can still be interpreted for comparing groups (orange has a smaller volume than blue).
 
 Regarding changes in density of the trait-spaces, the average nearest neigbhour distance and the minimum spanning tree average distance consistently detect changes in density with more precision for low density trait-spaces (in blue in Table 6@@@).
-However, these metrics seem to be also associated to a "null" increase: a small increase in the metric value could be due to a random change (null) or a small decrease in density (see above).
-In general, we can observe some degree of correlation between the changes in density and the changes in volume for most metric picking either signal (i.e. the average nearest neighbour distance picks both changes in density and in volume).
-This could be due to the generation of normally distributed spaces where a change in density often leads to a change in volume (i.e. to increase density in a normal distribution, one can simply reduce its tails).
+However, we can observe some degree of correlation between the changes in density and the changes in volume for most metric picking either signal (see above).
+This could be due to the use of normally distributed spaces where a change in density often leads to a change in volume.
 This is not necessary the case with empirical data.
 
-Regarding the changes in position of the trait-space, all but the average displacement metric seems to not be able to distinguish between a random change in trait-space (grey) and a positive or a negative displacement of the trait-space (blue and orange - Table 6@@@).
-Furthermore, the average displacement metric does not distinguish between and positive or a negative displacement of the trait-space: in both cases, the metric increases.
-This might be due to the inherent complexity of "position" in a trait-space that increases with the number of dimensions.
+Regarding the changes in position of the trait-space, all but the average displacement metric seems to not be able to distinguish between a random change in trait-space (grey) and a displacement of the trait-space (Table 6@@@).
+Furthermore, the average displacement metric does not distinguish between and positive or a negative displacement of the trait-space: this might be due to the inherent complexity of *position* in a multidimensional trait-space.
 
-Regarding the effect of dimensions and trait-space distribution, metrics seems to be either affected by neither of these factors or by both (Table 6@@@).
+<!-- Regarding the effect of dimensions and trait-space distribution, metrics seems to be either affected by neither of these factors or by both (Table 6@@@).
 Again, this should not preclude using metrics that are sensitive to trait-spaces' dimensions and distributions [e.g. the ellispoid volume is a good volume descriptor up until a moderate number of dimensions; @jackson2011; @donohue2013] but should be kept in mind.
-<!-- Remove jackson? -->
+ -->
 
 #### Empirical examples
 
 Although most differences are fairly consistent within each dataset with one group having a higher space occupancy score than the other for multiple metrics, this difference can be more or less pronounced within each dataset (ranging from no to nearly full overlap - BC $\in(0;0.995)$) and sometimes even reversed.
 This indicates that opposite conclusions can be drawn from a dataset depending on which space occupancy metric is considered.
-For example, in @wright2017 dataset where the blue group has a greater occupancy metric median value but for the average displacement metric showing a higher median displacement in the red group (Table 7@@@).
-These differences in group's space occupancy depending on the metrics are also more pronounced in the empirical datasets where the elements per group is highly different [@hopkins2016; @healy2019].
-This also highlights the influence of different groups size on top of the differences in trait-spaces and metrics properties.
-Finally, it is worth noting that the ellispoid volume only picks up accurate differences between groups in the @healy2019 dataset which is yet another illustration of the curse of multidimensionality: the @healy2019 dataset has only 6 dimensions compared to all the other ones having more than 41 dimensions [and the @marcy2016 dataset having 136 dimensions for which the ellipsoid volume can't be calculated; Table 7@@@; @cursedimensionality].
-
+For example, in @wright2017, crinoids after the Ordovician mass extinction have a higher median space occupancy metric value for all metrics but for the average displacement.
+These differences depending on the metrics are also more pronounced in the empirical datasets where the observations per group is unequal [@hopkins2016; @healy2019].
+<!-- Finally, it is worth noting that the ellispoid volume only picks up accurate differences between groups in the @healy2019 dataset which is yet another illustration of the curse of multidimensionality: the @healy2019 dataset has only 6 dimensions compared to all the other ones having more than 41 dimensions [and the @marcy2016 dataset having 136 dimensions for which the ellipsoid volume can't be calculated; Table 7@@@; @cursedimensionality].
+ -->
 ### Caveats
 
 While our simulations have been useful to illustrate the behavior of diverse space occupancy metrics, they have several caveats. For example, the trait-spaces are simulated by treating each observation as independent.
