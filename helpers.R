@@ -34,6 +34,10 @@
 # input$color_scheme <- "Greyscale"
 # input$scale_axis <- FALSE
 
+## Get all functions
+sourceDir("R/")
+
+
 ## Get the space details
 ## Return a space, or an error message to be written to output.
 get.space <- function(input, args.only = FALSE){

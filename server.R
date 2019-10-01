@@ -1,12 +1,5 @@
 library(shiny)
 library(dispRity)
-library(devtools)
-if(!require(moms)) {
-    devtools::install_github("TGuillerme/moms")
-}
-library(moms)
-
-
 
 ## Load the R functions
 source("helpers.R")
