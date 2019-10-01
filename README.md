@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/TGuillerme/moms.svg?branch=master)](https://travis-ci.org/TGuillerme/moms)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-<!-- [![DOI](https://zenodo.org/badge/84838115.svg)](https://zenodo.org/badge/latestdoi/84838115)
- -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3466146.svg)](https://doi.org/10.5281/zenodo.3466146)
+
 
 # **moms**: Measuring Occupancy in Multidimensional Space.
 
@@ -74,9 +74,12 @@ Authors
 
 Citations
 -------
-If you are using this package, please send [an email](mailto:guillert@tcd.ie) so that we can generate some DOI you can cite.
+If you are using this package, please cite (if the DOI is in there, even better!):
 
-> **NOTE HOWEVER THAT THIS IS AN EARLY STAGE OF THE APP/PAPER AND THAT IT CAN CHANGE SIGNIFICANTLY!**
+* Guillerme, T., Puttick MN., Marcy AE., & Weisbecker V. (**2019**). moms: measuring occupancy in multidimensional spaces. ZENODO. http://doi.org/10.5281/zenodo.3466146
 
-<!-- * Guillerme T, Puttick M, Weisbecker V. (**2018**) Shifting spaces: how to summarise multidimensional spaces occupancy?. *MEE*. [doi:]() -->
+    ###### [BibTeX](https://zenodo.org/record/3466146/export/hx), [CSL](https://zenodo.org/record/3466146/export/csl), [DataCite](https://zenodo.org/record/3466146/export/dcite3), [Dublin core](https://zenodo.org/record/3466146/export/xd), [Mendeley](https://www.mendeley.com/import/?url=https://zenodo.org/record/3466146), [more...](https://zenodo.org/record/3466146/#.XTpLtlBS8W8)
+    
+    
+> **NOTE HOWEVER THAT A PREPRINT AN (EVENTUALLY) A PAPER ASSOCIATED WITH THE PROJECT WILL BE RELESEADE!**
 
