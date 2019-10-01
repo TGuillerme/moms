@@ -3,7 +3,7 @@
 <!-- [![DOI](https://zenodo.org/badge/84838115.svg)](https://zenodo.org/badge/latestdoi/84838115)
  -->
 
-**moms**: Measuring Occupancy in Multidimensional Space.
+# **moms**: Measuring Occupancy in Multidimensional Space.
 
 <!-- <a href="https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
 Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222). --> 
@@ -15,6 +15,9 @@ Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution20
 Although `moms` is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with `moms`](@@@biorXivlink@@@) fully reproducible.
 These functions allow the reduce the space, make fancy plots or wrap up analysis in the context of the shiny app or the paper only.
 If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by `moms` for all the disparity calculations.
+
+<a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
+Check out the [presentation](https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961) associated with the project.
 
 ## Running `moms` online
 Super easy! Simply click on the following link:
