@@ -1,5 +1,4 @@
 library(shiny)
-library(shinyMatrix)
 library(dispRity)
 library(moms)
 
@@ -32,10 +31,10 @@ shinyServer(
                 shiny::updateNumericInput(session, "n_elements", max = nrow(space), value = nrow(space))
             }
 
-            ## Update the matrix input
-            if(input$space_type == "User") {
-                shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
-            }
+            # ## Update the matrix input
+            # if(input$space_type == "User") {
+            #     shinyMatrix::updateMatrixInput(session, "cor.matrix", value = diag(input$n_dimensions))
+            # }
 
             ## Return error
             if(class(space) == "character") {
