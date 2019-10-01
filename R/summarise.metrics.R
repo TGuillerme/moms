@@ -8,12 +8,7 @@
 #' @param scale whether to scale the metrics (relative to the observed disparity for the full space)
 #' @param relative whether to make the results relative to the non-changed space
 #' 
-#' @examples
-#'
-#' @seealso
-#' 
 #' @author Thomas Guillerme
-#' @export
 
 summarise.metrics <- function(results_list, cent.tend = median, quantiles = c(95, 50), scale = TRUE, relative = FALSE){
 

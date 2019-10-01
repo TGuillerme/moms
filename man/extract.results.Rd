@@ -18,12 +18,6 @@ extract.results(all_results, metric, element = "all", transfo = "all")
 \description{
 Extract specific results from the simulation lists
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }

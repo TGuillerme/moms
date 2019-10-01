@@ -28,7 +28,6 @@
 #' @seealso shift.space.simulation metric.simulation
 #' 
 #' @author Thomas Guillerme
-#' @export
 
 space.simulation <- function(distributions, dimensions, elements, replicates) {
 

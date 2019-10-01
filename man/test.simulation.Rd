@@ -49,8 +49,6 @@ test.simulation(results, test.fun)
 ## Apply the test only to the normal spaces
 test.simulation(results, test.fun, factors = c("normal", "lognorm"))
 
-}
-\seealso{
 
 }
 \author{

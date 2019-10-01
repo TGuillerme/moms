@@ -170,7 +170,7 @@ shinyUI(fluidPage(
               ),
           conditionalPanel(condition = "input.demo_data == \"Healy et al. 2019\"",
               helpText("A life history analysis of the pace of life in animals. The data is a 6 dimensions ordination (PCA) of 6 life history traits from 285 animal species.
-                Healy, K., Ezard, T.H., Jones, O.R., Salguero-Gómez, R. and Buckley, Y.M., 2019. Animal life history is shaped by the pace of life and the distribution of age-specific mortality and reproduction. Nature ecology & evolution, p.1.")
+                Healy, K., Ezard, T.H., Jones, O.R., Salguero-Gomez, R. and Buckley, Y.M., 2019. Animal life history is shaped by the pace of life and the distribution of age-specific mortality and reproduction. Nature ecology & evolution, p.1.")
               )
         ),
 

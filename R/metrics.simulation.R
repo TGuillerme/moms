@@ -25,7 +25,6 @@
 #' @seealso space.simulation shift.group.simulation
 #' 
 #' @author Thomas Guillerme
-#' @export
 
 metrics.simulation <- function(space, reduction, metrics, rare.dim = NULL, verbose = TRUE) {
 

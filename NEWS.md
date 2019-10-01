@@ -21,7 +21,7 @@ dispRity 0.2.0 (2016-04-01)
 
   * Blabla
  -->
- moms v0.3 (2019-09-16)
+ moms v0.3 (2019-10-01)
 =========================
 
 ### NEW FEATURES
@@ -31,6 +31,7 @@ dispRity 0.2.0 (2016-04-01)
 ### MINOR IMPROVEMENTS
 
   * the functions to generate the paper are now properly documented with examples
+  * pre-release cleaning
 
 moms v0.2 (2019-05-09)
 =========================

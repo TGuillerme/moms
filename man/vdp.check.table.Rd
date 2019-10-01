@@ -30,7 +30,7 @@ vdp.check.table(vdp_disp, vdp_list)
 
 }
 \seealso{
-\code{\link{vdp.make}}, \code{\link{vdp.dispRity}}
+vdp.make, vdp.dispRity
 }
 \author{
 Thomas Guillerme

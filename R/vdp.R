@@ -20,10 +20,10 @@
 #' ## Plotting the results with disparity
 #' vdp.plot(vdp_list, disparity = vdp_disp)
 #'
-#' @seealso \code{\link{vdp.plot}}, \code{\link{vdp.dispRity}}
+#' @seealso vdp.plot, vdp.dispRity
 #' 
 #' @author Thomas Guillerme
-#' @export
+
 vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 
     ## Make the origin space (vdp and fixed)
@@ -121,7 +121,7 @@ vdp.make <- function(base.range = c(-0.5, 0.5), extra.points = 0) {
 #' ## Plotting the results with disparity
 #' vdp.plot(vdp_list, disparity = vdp_disp)
 #' 
-#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.dispRity}}
+#' @seealso vdp.make, vdp.dispRity
 #' 
 #' @author Thomas Guillerme
 #' @export
@@ -196,7 +196,7 @@ vdp.plot <- function(vdp, plots = 1:8, limits, pch = 19, xlab = "", ylab = "", d
 #' ## Plotting the results with disparity
 #' vdp.plot(vdp_list, disparity = vdp_disp)
 #' 
-#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.plot}}
+#' @seealso vdp.make, vdp.plot
 #' 
 #' @author Thomas Guillerme
 #' @export
@@ -246,7 +246,7 @@ vdp.dispRity <- function(vdp, volume, density, position, base.relative = TRUE) {
 #' ## Plotting the results with disparity
 #' vdp.check.table(vdp_disp, vdp_list)
 #' 
-#' @seealso \code{\link{vdp.make}}, \code{\link{vdp.dispRity}}
+#' @seealso vdp.make, vdp.dispRity
 #' 
 #' @author Thomas Guillerme
 #' @export

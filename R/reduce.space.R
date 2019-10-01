@@ -7,7 +7,7 @@
 #' @param remove the proportion of elements to be removed (in probability)
 #' @param parameters the parameter(s) for removal selection (see details). If left empty, the \code{parameters} is estimated to reach the amount set by \code{remove}.
 #' @param tuning Optinal parameters for tuning the parameter estimations (if remove is required and parameters is missing) a list of three parameters: "max" for the maximum of operations, "tol" for the tuning (e.g. 0.1 close), "inc.steps" for the initial increment value during optimisation (default = 2 - the bigger the value, the slower the increment).
-#' @param verbose
+#' @param verbose wether to be verbose or not
 #' @param return.optim logical, whether to also return the optimal value.
 #' 
 #' @details
@@ -39,8 +39,6 @@
 #' plot(space, pch = 19, col = c("grey", "black")[as.factor(density)],
 #'      main = "Density removal")
 #' 
-#'
-#' @seealso
 #' 
 #' @author Thomas Guillerme
 

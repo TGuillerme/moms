@@ -2,7 +2,7 @@ import(dispRity)
 import(stats)
 import(grDevices)
 import(graphics)
-#importFrom("ellipse", "plotcorr")
+# importFrom("shinyMatrix", "matrixInput", "updateMatrixInput")
 
 ## Functions
 export(reduce.space)
@@ -10,6 +10,9 @@ export(vdp.make)
 export(vdp.dispRity)
 export(vdp.plot)
 export(vdp.check.table)
+
+## Shiny utilities (moms)
+# export(shinyMatrix.alias)
 
 ## Simulations (paper)
 export(space.simulation)

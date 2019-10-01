@@ -9,12 +9,8 @@
 #' @param overlap whether to add the Bhattacharyya Coefficients or not
 #' @param plot.param the plot parameters
 #'
-#' @examples
-#'
-#' @seealso
 #' 
 #' @author Thomas Guillerme
-#' @export
 
 generate.fable.plot <- function(data, metric, what, scale = TRUE, overlap = FALSE, plot.param) {
 

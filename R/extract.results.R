@@ -6,13 +6,8 @@
 #' @param metric which metric to extract
 #' @param element which element to extract (e.g. number of dimensions, type of space, etc.) can be "all"
 #' @param transfo which transformation to extract (e.g. random, density, etc.) can be "all"
-#'
-#' @examples
-#'
-#' @seealso
 #' 
 #' @author Thomas Guillerme
-#' @export
 
 extract.results <- function(all_results, metric, element = "all", transfo = "all") {
 

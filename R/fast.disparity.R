@@ -17,14 +17,11 @@
 #' ## A group of four observations
 #' group <- c(TRUE, TRUE, TRUE, TRUE, FALSE)
 #' 
-#' ## The disparity
+#' ## The disparity
 #' fast.disparity(group, space, metric, rare.dim = 5)
 #'
-#' @seealso
 #' 
 #' @author Thomas Guillerme
-#' @export
-#' 
 
 fast.disparity <- function(group, space, metric, rare.dim) {
     ## Setting up the default args

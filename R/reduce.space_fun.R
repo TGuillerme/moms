@@ -8,7 +8,6 @@
 # ' @param remove the proportion of elements to be removed (in probability)
 # ' @param verbose
 # ' @param space
-#' 
 ## Optimisation function
 optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
 

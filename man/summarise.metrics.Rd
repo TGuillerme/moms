@@ -21,12 +21,6 @@ summarise.metrics(results_list, cent.tend = median, quantiles = c(95,
 \description{
 Summarises the metric simulations the results for plotting and tables
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }

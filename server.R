@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyMatrix)
 library(dispRity)
 library(moms)
 

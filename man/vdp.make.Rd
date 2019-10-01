@@ -31,7 +31,7 @@ vdp.plot(vdp_list, disparity = vdp_disp)
 
 }
 \seealso{
-\code{\link{vdp.plot}}, \code{\link{vdp.dispRity}}
+vdp.plot, vdp.dispRity
 }
 \author{
 Thomas Guillerme

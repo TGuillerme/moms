@@ -37,7 +37,7 @@ vdp.plot(vdp_list, disparity = vdp_disp)
 
 }
 \seealso{
-\code{\link{vdp.make}}, \code{\link{vdp.plot}}
+vdp.make, vdp.plot
 }
 \author{
 Thomas Guillerme

@@ -23,12 +23,6 @@ generate.fable.plot(data, metric, what, scale = TRUE, overlap = FALSE,
 \description{
 Generates the plots for the fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }

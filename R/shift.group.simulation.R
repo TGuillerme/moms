@@ -17,7 +17,7 @@
 #' @seealso space.simulation metric.simulation
 #' 
 #' @author Thomas Guillerme
-#' @export
+
 shift.group.simulation <- function(space, remove, verbose = TRUE) {
 
     ## Double check for full TRUE or full FALSE
