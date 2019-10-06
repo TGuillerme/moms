@@ -2,6 +2,8 @@
 title: "Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 date: "`r Sys.Date()`"
+bibliography: references.bib
+csl: systematic-biology.csl
 output:
   html_document:
     fig_width: 12
@@ -39,7 +41,7 @@ default.palette <- function(n) {
 }
 ```
 
-```{r compilation_html, echo = FALSE, eval = TRUE}
+```{r compilation_html, echo = FALSE, eval = FALSE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -225,7 +227,7 @@ save.results(all_metrics_empirical_results)
 
 
 ```{r, loading_data}
-## Load all the data
+## Load all the data
 all_metrics_remove_02 <- load.results("all_metrics_remove_02")
 all_metrics_remove_05 <- load.results("all_metrics_remove_05")
 all_metrics_remove_08 <- load.results("all_metrics_remove_08")
