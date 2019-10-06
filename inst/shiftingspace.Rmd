@@ -2,14 +2,12 @@
 title: "Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 bibliography: references.bib
-csl: systematic-biology.csl
+csl: mee.csl
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 8
     fig_height: 8
-    keep_tex: true
-  self_contained: false
 ---
 
 
