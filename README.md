@@ -16,8 +16,9 @@ Although `moms` is distributed as a binary `R` package, it only contains functio
 These functions allow the reduce the space, make fancy plots or wrap up analysis in the context of the shiny app or the paper only.
 If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by `moms` for all the disparity calculations.
 
-<a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
-Check out the [presentation](https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961) associated with the project.
+Check out the <a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
+[presentation](https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961) and the <a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/OA.png" height="15" widht="15"/></a> 
+[preprint](https://www.biorxiv.org/content/10.1101/801571v1) associated with this project.
 
 ## Running `moms` online
 Super easy! Simply click on the following link:
@@ -48,7 +49,7 @@ Check out the app [manual](https://raw.githack.com/TGuillerme/moms/master/inst/m
 
 ## Associated paper
 
-By the following associated paper: [Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?](@@@biorXivlink@@@).
+By the following associated paper: [Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?](https://www.biorxiv.org/content/10.1101/801571v1)
 This paper details the behaviour of several disparity metrics and discuss the advantages and disadvantages of using them (or not).
 This paper is also **fully reproducible!**
 
@@ -79,7 +80,9 @@ If you are using this package, please cite (if the DOI is in there, even better!
 * Guillerme, T., Puttick MN., Marcy AE., & Weisbecker V. (**2019**). moms: measuring occupancy in multidimensional spaces. ZENODO. http://doi.org/10.5281/zenodo.3466146
 
     ###### [BibTeX](https://zenodo.org/record/3466146/export/hx), [CSL](https://zenodo.org/record/3466146/export/csl), [DataCite](https://zenodo.org/record/3466146/export/dcite3), [Dublin core](https://zenodo.org/record/3466146/export/xd), [Mendeley](https://www.mendeley.com/import/?url=https://zenodo.org/record/3466146), [more...](https://zenodo.org/record/3466146/#.XTpLtlBS8W8)
-    
-    
-> **NOTE HOWEVER THAT A PREPRINT AN (EVENTUALLY) A PAPER ASSOCIATED WITH THE PROJECT WILL BE RELESEADE!**
 
+If you are using the associated preprint, please cite:
+
+* Guillerme, T., Puttick MN., Marcy AE., & Weisbecker V. (**2019**). Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces? *bioRxiv* 801571; doi: https://doi.org/10.1101/801571 
+
+    ###### [BibTeX](https://www.biorxiv.org/highwire/citation/946606/bibtext), [RIS](https://www.biorxiv.org/highwire/citation/946606/ris), [End Note (xml)](https://www.biorxiv.org/highwire/citation/946606/endnote-8-xml), [Zotero](https://www.biorxiv.org/highwire/citation/946606/zotero), [Mendeley](https://www.biorxiv.org/highwire/citation/946606/mendeley), [more...](https://www.biorxiv.org/content/10.1101/801571v1)
