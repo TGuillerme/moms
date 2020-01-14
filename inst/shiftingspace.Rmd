@@ -126,7 +126,7 @@ figure <- function(name, add = FALSE, all_names = figures) {
 ```
 
 
-```{r compilation_html, echo = FALSE, eval = FALSE}
+```{r compilation_html, echo = FALSE, eval = TRUE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -280,7 +280,7 @@ These metrics have been used in ecology to compare the position of two groups re
 
 The use of multiple metrics to assess trait-space occupancy has the benefit of providing a more detailed characterisation of occupancy changes.
 If the question of interest is, say, to look at how space occupancy changes in response to mass extinction, using a single space occupancy metric can miss part of the picture: a change in volume could be decoupled from a change in position or density in trait-space.
-For example, the Cretaceous-Palaeogene extinction (66 million years ago - Mya) has been linked to an increase in volume of the mammalian trait-space [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of trait-space occupancy: does the radiation expands on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the trait-space [innovation, change in position; @endler2005]?
+For example, the <font style="color:blue">Cretaceous-Paleogene</font> extinction (66 million years ago - Mya) has been linked to an increase in volume of the mammalian trait-space [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of trait-space occupancy: does the radiation <font style="color:blue">expand</font> on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the trait-space [innovation, change in position; @endler2005]?
 Similarly, in ecology, if two groups occupy the same volume in the trait-space, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equal volume groups.
 
 
@@ -346,7 +346,8 @@ To do so, we performed the following steps (explained in more detail below):
 3.  We measured occupancy on the resulting transformed spaces using `r metric.names()` different space occupancy metrics;
 4.  We applied the same space occupancy metrics to six empirical datasets (covering a range of disciplines and a range of dataset properties).
 
-Note that the paper contains the results for only `r metric.names()` metrics, the results for the additional 17 metrics is available in the supplementary material 4.
+<font style="color:blue">Note that the paper contains the results for only `r metric.names()` metrics which were selected as representative of common metrics covering the volume, density and position trait-space aspects.</font>
+However, the results for the additional 17 metrics is available in the supplementary material 4.
 
 ## Generating spaces
 
@@ -367,12 +368,13 @@ We generated trait-spaces using the following combinations of size, distribution
 | Random     |200*50 | Normal, Uniform, Lognormal (meanlog = 0, sdlog = 1)| Equal            | None        |
 | PCA-like   |200*50 | Normal                         | Multiplicative           | None        |
 | PCO-like   |200*50 | Normal                         | Additive              | None        |
-Table 2: different simulated space distributions.
+Table 2: different simulated space distribution.
+<font style="color:blue"> *Name* of the simulated space in this paper; *dimensions* of the matrix (row\*columns); *distribution(s)* of the data on each dimensions (for the 'Random' space, each dimension is randomly chosen to be Normal, Uniform or Lognormal); *dimension variance*: distribution of the variance between dimensions (when equal, the dimensions have the same variance, otherwise, the variance per dimensions is decreasing either lognormally (multiplicative) or normally (additive); *correlation* between dimensions. </font>
 
 The differences in trait-space sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of dimensions in literature: "low-dimension" spaces ($<15$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
 We used a range of distributions (uniform, normal or random) to test the effect of observation distributions on the metrics.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal ($\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing ($\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive ($\sum_i^d(1/d)$).
-Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in principal components analysis - PCA; e.g. @marcy2016; healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
+Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in principal components analysis - PCA; e.g. @marcy2016; @healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
 Finally, we added a correlation parameter to take into account the potential correlation between different traits.
 We repeated the simulation of each trait-space 20 times (resulting in 260 trait-spaces).
 
