@@ -54,51 +54,122 @@ We've provided a version of the manuscript where the changes are highlighted in 
 
 * <p style="color:blue">L125 - "Paleogene" (spelling). NB: This is a name and hence there is not a formal UK- (palaeo-) versus US-spelling (paleo-) option here.</p>
 
-> We fixed thy typo.
+> We fixed this typo.
 
 * <p style="color:blue">L127 - "expand" (grammar).</p>
 
-> We fixed thy typo.
+> We fixed this typo.
 
 * <p style="color:blue">L152 - I applaud this approach over bombarding readers with information, but a brief note on why would be helpful (and what helped the ones in the main text make "the cut"; are these the most commonly used metrics?).</p>
 
 > We chose these metrics because of their contrasted results and because the where the ones commonly used to represent volume and position in the trait-space (expect for the average displacement). We've added a justification in the paper:
 
-*"Note that the paper contains the results for only height metrics which were selected as representative of common metrics covering the volume, density and position trait-space aspects. However, the results for the additional 17 metrics is available in the supplementary material 4."*
+*Note that the paper contains the results for only height metrics which were selected as representative of common metrics covering the volume, density and position trait-space aspects. However, the results for the additional 17 metrics is available in the supplementary material 4.*(line @@@)
 
 * <p style="color:blue">L155-156 - Both the table and contents require more information to understand them. Currently I have to go into the main text to get even a basic idea of what size means, for example.</p>
 
 > We expanded the table caption to:
 
-*Table 2: different simulated space distribution.* Name *of the simulated space in this paper;* dimensions *of the matrix (row\*columns);* distribution(s) *of the data on each dimensions (for the 'Random' space, each dimension is randomly chosen to be Normal, Uniform or Lognormal);* dimension variance *:distribution of the variance between dimensions (when equal, the dimensions have the same variance, otherwise, the variance per dimensions is decreasing either lognormally (multiplicative) or normally (additive);* correlation *between dimensions.*
+*Table 2: different simulated space distribution.* Name *of the simulated space in this paper;* dimensions *of the matrix (row\*columns);* distribution(s) *of the data on each dimensions (for the 'Random' space, each dimension is randomly chosen to be Normal, Uniform or Lognormal);* dimension variance *:distribution of the variance between dimensions (when equal, the dimensions have the same variance, otherwise, the variance per dimensions is decreasing either lognormally (multiplicative) or normally (additive);* correlation *between dimensions.*(line @@@)
 
 * <p style="color:blue">L165 - Missing \cite{} in TeX for healy?</p>
 
-> We fixed thy typo.
+> We fixed this typo.
 
 * <p style="color:blue">L167 - Isn't a correlation (i.e., co-linearity) between traits exactly what many ordination techniques use to reduce the dimensionality of the space? I.e., should they be correlated?</p>
+
+> Ordination techniques (e.g. PCA) do indeed produce spaces with uncorrelated dimensions. We added this extra simulation parameters for the cases when trait-spaces where not ordinated and could thus contain some degree of co-linearity. We've specified this in the main text:
+
+*Finally, we added a correlation parameter to take into account the potential correlation between different traits to illustrate the effect of co-linearity between traits (especially in non-ordinated trait-spaces).*(line @@@)
+
 * <p style="color:blue">L173 - I suspect many of the attributions for these metrics are inaccurate, referring instead to later synthetic works. E.g., sum of variances or ranges certainly goes back to Foote 1992. I think the original authors should get their due here!</p>
+
+> @@@ TODO: check references within the papers.
+
 * <p style="color:blue">L176 - "their" (grammar).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L214 - Grammar.</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L215 - Surely you mean degree of overlap? It seems like you can say absolutely if they do overlap (p=1). Clarification would help.</p>
+
+> We've changed "probability of overlap" to "amount of overlap" throughout the text.
+
 * <p style="color:blue">L216 - This could do with being a bit more informative for what each panel means. Specifically, panel E is probably the most important as it will need to be understood for the results to come to make sense. I.e., what does an ideal plot look like? A worst case scenario?</p>
+
+> @@@TODO: add another panel with the best and worst scenario.
+We've now modified panel E and added a panel F to show the "best" and "worst" case scenarios and developed the caption as follows:
+
+*@@@* (line @@@)
+
+
 * <p style="color:blue">L227 - "a decrease in density can often lead to an increase in volume" Surely this depends on the metric. E.g., how could range increase if data are removed? It seems like this is also a consideration for whether a metric is doing a good job. </p>
+
+> We apologise for this typo and meant that a **increase** in density (in a normal space) can lead to a **decrease** of volume (not the opposite): when increasing density of point in a normal space, the points further away from the space (which occur at a lower denisty) could be removed which would thus decrease the volume. More simply: tightening a space will reduce it's density (again, if the space is normally distributed). We've correct this error. 
+
 * <p style="color:blue">L229 - Again, I think the correct citation for this is an older work.</p>
+
+>@@@ TODO: check reference "“curse of multidimensionality” (Chávez et al. 2001):"
+
 * <p style="color:blue">L234 - This seems like a failure of the metric not a hyperdimensionality issue. I.e., shouldn't a good metric capture an expansion regardless of the number of axes involved? Perhaps I am missing something here, but if I specifically think of sum of ranges in a fixed dimension space then increasing the range on any single axis will increase the overall sum.</p>
+
+> The reviewer is totally correct here for the metric "sum of ranges", we here meant that the metric "hypervolume" (i.e. product of ranges) would decrease. We've clarified this in the manuscript:
+
+*if a group expands in multiple dimensions (i.e. increase in volume), the actual hypervolume <($\prod_{i}^{d} range_{Di}$) can decrease (line @@@)* (line @@@)
+
 * <p style="color:blue">L245 - "were" (grammar).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L262 - This Table/Figure is not as easy to interpret as the authors seem to think. I think it would help to show the ideal result for each case as a comparator.</p>
+
+> We improved the table readability by editing Figure 2 as detailed in comment about L216 above.
+
 * <p style="color:blue">L274 - "a change a clear change" (grammar).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L276 - It should be much easier to identify what the groups are here.</p>
+
+> @@@TODO: add the groups names in the caption.
+We've added the groups names for each dataset in the table caption.
+
 * <p style="color:blue">L282 - "except" (grammar).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L318 - "values" (grammar).</p>
-* <p style="color:blue">L332 - This makes perfect sense to me as direction in an ordination space is typically relative or would require some additional context (e.g., towards flatter/higher skulls).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L342 - "### Caveats" A Markdown subheader without a line break?</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L346 - "accurately" Missing word? "reflect"?</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L358 - Missing "a"?</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L362 - "at" (grammar).</p>
+
+> We fixed this typo.
+
 * <p style="color:blue">L366 - I would actually argue the opposite here. "Disparity" is simply poorly defined, but density and volume have clear meanings. However, specific tests make sense too. In other words, a good use would be something like "We used sum of ranges to capture volume of space occupied".</p>
+
+> We've changed the sentence to reflect the reviewer's opinion that we wholeheartedly agree with:
+
+*Third, we suggest to not name metrics as the biological aspect they are describing which can be vague (e.g. "disparity" or "functional dispersion") but rather what they are measuring and why (e.g. "We used sum of ranges to capture volume of space occupied").*(line @@@)
+
 * <p style="color:blue">SI4, P3 - Plot seems to get cropped by bottom of page.</p>
 
+>@@@ TODO: fix.
 
 # Reviewer: 2
 
