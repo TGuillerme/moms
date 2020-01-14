@@ -192,12 +192,25 @@ We've added the groups names for each dataset in the table caption.
 5. <p style="color:blue">The different statistics were evaluated and compared across datasets with different dimensionalities and distributions. While this seems feasible, the computation of p-values by ANOVA is not. This is not a question of type I error as you are not testing against sampling variation. In other words, you treat each dataset as a case drawn independently from the same distribution of datasets. Clearly, this is not what you are doing.</p>
 
 
+### Minor comments
+
 * <p style="color:blue">The term "trait space" does not need to be hyphenated.</p>
-* <p style="color:blue">line 11: "a subset of this trait-space"</p>
-<p style="color:blue">Either a "subset of this set" or a "subspace of this space" </p>
+
+> We removed the hyphen throughout the manuscript.
+
+* <p style="color:blue">line 11: "a subset of this trait-space" Either a "subset of this set" or a "subspace of this space" </p>
+
+> We changed it to:
+
+*a subspace of this space* (line @@@)
+
 * <p style="color:blue">l 39: typo "used"</p>
 
+> We fixed this typo.
+
 * <p style="color:blue"> 175: "eigenvalue" is a single word</p>
+
+> We fixed this typo.
 
 * <p style="color:blue">Table 3:  the formula for "average nearest neighbourhood distance" does not seem correct to me; last line, right column: what is a "centre of trait space"? </p>
 
