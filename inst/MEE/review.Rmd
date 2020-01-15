@@ -214,4 +214,9 @@ We've added the groups names for each dataset in the table caption.
 
 * <p style="color:blue">Table 3:  the formula for "average nearest neighbourhood distance" does not seem correct to me; last line, right column: what is a "centre of trait space"? </p>
 
-* <p style="color:blue">Table 5: A p-value cannot be 0.</p> 
+> We fixed the average nearest neighbour distance and specified the coordinates of the trait space (0, 0, ...)
+@@@TODO: check nearest neigbhour formula
+
+* <p style="color:blue">Table 5: A p-value cannot be 0.</p>
+
+> We changed our p-value rounding to display p-values rounded to 0 as <1e-3.
