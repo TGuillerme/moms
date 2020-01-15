@@ -293,6 +293,9 @@ s.test <- function(metric.ID, type, test.results = list("s" = space_test, "r" = 
             }
         }
     }
+    ## Converting p-values to non interesting values for reviewer 2
+    p_val <- as.character(p_val)
+    p_val <- ifelse(p_val == "0", "<1e-3", p_val)
     ## Display the results
     output <- paste("p = ", p_val, signif_token)
     return(noquote(output))
