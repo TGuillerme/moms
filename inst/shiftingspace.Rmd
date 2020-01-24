@@ -444,7 +444,7 @@ Position metrics are expected to be most affected by this change.
 
 The algorithm to select $\rho$ or $D$ is described in greater detail in in the Supplementary material 1.
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E represents a typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one.")}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results, where the space occupancy metric respectively manages or fails to captures a specific type of reduction (Table 5).")}
 
 set.seed(42)
 
@@ -489,19 +489,20 @@ displace_rm <- reduce.space(trait_space, type = "displacement", remove = 0.5)
 ## Moving the space to the upper right corner (positive)
 plot.space(trait_space, displace_rm, main = "D - Position", defaults)
 
-## Test example
+
+## Test example (positive)
 set.seed(42)
 colours <- c("grey", "orange", "blue")
 par(bty = "n")
 ## Plot size
-plot(NULL, ylim = c(0.8, 3.2), pch = 19, xlim = c(-1,1), xlab = "Centred and scaled space occupancy", ylab = "", xaxt = "n", yaxt = "n", main = "E - Space reduction results example (Table 5)")
+plot(NULL, ylim = c(0.8, 3.2), pch = 19, xlim = c(-1,1), xlab = "Centred and scaled space occupancy", ylab = "", xaxt = "n", yaxt = "n", main = "E - Space reduction \"ideal\" results example (Table 5)")
 ## Adding lines
 abline(v = 0, lty = 2, col = colours, lwd = 2)
 ## Adding the x axis
 axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = TRUE, tick = TRUE, col.ticks = "black", col = "black", lwd = 2)
 ## Adding the values
-values <- cbind(rnorm(30, mean = 0, sd = 0.2),
-                rnorm(30, mean = -0.75, sd = 0.13),
+values <- cbind(rnorm(30, mean = 0, sd = 0.15),
+                rnorm(30, mean = -0.75, sd = 0.15),
                 rnorm(30, mean = 0.75, sd = 0.2))
 quantile_vals <- apply(values, 2, quantile, probs = c(0.025, 0.250, 0.750, 0.975))
 centtend_vals <- apply(values, 2, median)
@@ -524,29 +525,49 @@ points(x = centtend_vals, y = 1:ncol(values), pch = 19, col = colours, cex = 1.5
 bc_1 <- dispRity::bhatt.coeff(values[,2], values[,1])
 bc_2 <- dispRity::bhatt.coeff(values[,3], values[,1])
 
-text(x = 0.2, y = 3,  labels = round(bc_1, 3), cex = 1.4)
+text(x = 0.2, y = 3,  labels = round(bc_2, 3), cex = 1.4)
 text(x = 0.2, y = 2.9,  labels = paste0("\n(Probability of overlap between\nthe blue and the grey distributions)"), cex = 0.8)
-text(x = -0.2, y = 2,  labels = round(bc_2, 3), cex = 1.4)
+text(x = -0.2, y = 2,  labels = round(bc_1, 3), cex = 1.4)
 text(x = - 0.2, y = 1.9,  labels = paste0("\n(Probability of overlap between\nthe orange and the grey distributions)"), cex = 0.8)
 
-## Some arrows
-arrows(x1 = centtend_vals[3], y1 = 2.5,
-       x0 = centtend_vals[3], y0 = 2.9,
-       col = "black", lwd = 1, length = 0.1, code = 1)
-text(labels = "Metric score from the\nremoval displayed in blue above\n(Limit, Density or Position).",
-     x = centtend_vals[3]-0.35, y = 2.35, cex = 0.8)
+## Test example (negative)
+set.seed(42)
+colours <- c("grey", "orange", "blue")
+par(bty = "n")
+## Plot size
+plot(NULL, ylim = c(0.8, 3.2), pch = 19, xlim = c(-1,1), xlab = "Centred and scaled space occupancy", ylab = "", xaxt = "n", yaxt = "n", main = "F -Space reduction \"worst\" results example (Table 5)")
+## Adding lines
+abline(v = 0, lty = 2, col = colours, lwd = 2)
+## Adding the x axis
+axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = TRUE, tick = TRUE, col.ticks = "black", col = "black", lwd = 2)
+## Adding the values
+values <- cbind(rnorm(30, mean = 0, sd = 0.15),
+                rnorm(30, mean = 0, sd = 0.17),
+                rnorm(30, mean = 0, sd = 0.2))
+quantile_vals <- apply(values, 2, quantile, probs = c(0.025, 0.250, 0.750, 0.975))
+centtend_vals <- apply(values, 2, median)
 
-arrows(x1 = centtend_vals[2], y1 = 2.1,
-       x0 = centtend_vals[2], y0 = 2.5,
-       col = "black", lwd = 1, length = 0.1, code = 2)
-text(labels = "Metric score from\nthe removal displayed\nin orange above\n(Limit, Density or Position).",
-     x = centtend_vals[2]+0.05, y = 2.75, cex = 0.8)
+## Loop through the lines
+for(column in 1:3) {
+    ## Get the x y values
+    line_x_vals <- quantile_vals[, column]
+    line_y_vals <- rep(column, 2)
 
-arrows(x1 = centtend_vals[1]+0.4, y1 = 1.2,
-       x0 = centtend_vals[1]+0.05, y0 = 1.05,
-       col = "black", lwd = 1, length = 0.1, code = 1)
-text(labels = "Metric score from\nthe random removal.",
-     x = centtend_vals[1]+0.55, y = 1.3, cex = 0.8)
+    ## Add the lines
+    n_cis <- 4
+    for(ci in 1:(n_cis/2)) {
+        lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * 2, col = colours[column])
+    }
+}
+## Add the points
+points(x = centtend_vals, y = 1:ncol(values), pch = 19, col = colours, cex = 1.5 + 2)
+
+bc_1 <- dispRity::bhatt.coeff(values[,2], values[,1])
+bc_2 <- dispRity::bhatt.coeff(values[,3], values[,1])
+
+text(x = 0.5, y = 3,  labels = round(bc_2, 3), cex = 1.4)
+text(x = -0.6, y = 2,  labels = round(bc_1, 3), cex = 1.4)
+
 ```
 
 To measure the effect of space reduction, distribution and dimensionality on the metric, we scaled the metric to be relative to the non-reduced space for each dimension distribution or number of dimensions.
