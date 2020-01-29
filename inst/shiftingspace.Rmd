@@ -394,9 +394,10 @@ We then measured `r metric.names()` different metrics on the resulting transform
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait space (coordinates: 0, 0, 0, ...). A value of 1 indicates that the observations' centroid is the centre of the trait space |
 Table 3: List of metrics with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the <font style="color:blue">eigenvalue</font> of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
-<!-- We selected these `r metric.names()` space occupancy metrics to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
+We selected these `r metric.names()` space occupancy metrics to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
 The supplementary material 4 contains the same analysis as described below, performed on a total of 25 metrics.
-Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows exploring the effect of many more metrics as well as the customisation of metrics by combining them or using user-designed functions. -->
+<font style="color:blue">Note that these metrics are specific to trait-spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).</font>
+Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows exploring the effect of many more metrics as well as the customisation of metrics by combining them or using user-designed functions.
 
 <!--  -->
 <!--  -->

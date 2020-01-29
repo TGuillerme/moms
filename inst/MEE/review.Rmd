@@ -24,12 +24,14 @@ We've provided a version of the manuscript where the changes are highlighted in 
 
 >@@@ Insist that we don't have a "magic bullet" metric (what was on line 281???)
 We've added a sixth panel to the Figure 2 were the two last panels shows an example of an ideal and bad metric to make it easier to understand the Table 5 results.
->@@@ Improve figure with space changes (with ideal/worst scenarios).
+>@@@ We've improved figure 3 with space changes (with ideal/worst scenarios).
 >@@@ Simplify simulation fable by only displaying volume for "volume" metrics etc.? Maybe not since we want to highlight that one metric can capture different things.
 
 <p style="color:blue">Aside from this, the only potentially fatal flaw in the paper is that it seems to assume features about the spaces that may not be true. For example, that they are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction). E.g., if the latter is not true then distance based measures (nearest neighbor and minimum spanning trees) are confounded. Similarly, if spaces are anisotropic then position based measures may be confounded. </p>
 
->@@@ Add a disclaimer that this works for Euclidean isotropic spaces and that different metrics should be used if these are not met.
+> We've added a disclaimer specifying that the metrics presented here work for Euclidean isotropic spaces:
+
+*Note that these metrics are specific to trait-spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).* lines@@@
 
 <p style="color:blue">Additionally, the authors use the term "occupancy" many times, but I do not think they ever really consider occupancy in the truest sense, as this would require knowing how much of the space is truly /occupiable/. For example, where are the true limits of a space (i.e., the "edges")? And are all points inside those limits realistically occupiable? Note that these are simply hard problems, and the authors do already consider other aspects of empirical spaces such as total number of dimensions and distributions of variance across axes. However, I think they could go further in making it clear to readers that these issues must be considered. A nice example of how this could be done was shown by Hillis et al. (2005; Systematic Biology, 54, 471–482). Their Figure 10 shows how ordinations can drastically distort distances. Otherwise, I simply think the authors need to state these issues plainly to help guide readers in their metric choice.</p>
 
