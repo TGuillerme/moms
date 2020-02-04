@@ -20,12 +20,21 @@ We've provided a version of the manuscript where the changes are highlighted in 
 
 # Reviewer: 1
 
-<p style="color:blue">In terms of potential modifications to the paper I would actually urge the authors to remove some material rather than add more. Specifically the paper entertains the notion (e.g., L281) that there might be a "magic bullet" metric that captures all three types of measure and that any metric could be applied to capture any of the three types of distribution. This seems a priori to be foolish. For example, sum of ranges could not reasonably be expected to capture density as it does not consider values between the edges (ranges) on any given axis. Similarly, if all points in a distribution were shifted exactly ten units in a specific direction then sum of ranges would remain identical. Thus this is clearly only ever going to be reasonably applied as a volume metric. One could also say something similar for nearest neighbor measures, which logically capture density, but would make no sense as a volume or position metric. I thus think lumping all metrics into a single "pot" of analyses is both a waste of time and more likely to lead to confusion on the part of the reader. This is especially true of the graphing (i.e., Figure 2E) where the "ideal" scenario will vary depending on the type of measure intended. Currently this makes Table 5 harder to understand than is necessary. Indeed, I would wager that the authors came up with their novel position metric purely because they realised none of the other metrics are logically intended to do this job. I thus suggest a priori defining each metric as a volume, density or position metric and showing only the tests for each in the main text (alongside the ideal plot for a metric that captures that feature well). In other words, sum of ranges would only appear in the volume tests and nearest neighbour only in the density tests. The full results can be moved to the SI, but I think Figure 3 already captures the fact that these metrics measure very different things for the most part (very few show strong positive correlation), as we would logically expect.</p>
+<p style="color:blue">In terms of potential modifications to the paper I would actually urge the authors to remove some material rather than add more. Specifically the paper entertains the notion (e.g., L281) that there might be a "magic bullet" metric that captures all three types of measure and that any metric could be applied to capture any of the three types of distribution. This seems a priori to be foolish. For example, sum of ranges could not reasonably be expected to capture density as it does not consider values between the edges (ranges) on any given axis. Similarly, if all points in a distribution were shifted exactly ten units in a specific direction then sum of ranges would remain identical. Thus this is clearly only ever going to be reasonably applied as a volume metric. One could also say something similar for nearest neighbor measures, which logically capture density, but would make no sense as a volume or position metric.</p>
 
->@@@ Insist that we don't have a "magic bullet" metric (what was on line 281???)
-We've added a sixth panel to the Figure 2 were the two last panels shows an example of an ideal and bad metric to make it easier to understand the Table 5 results.
->@@@ We've improved figure 3 with space changes (with ideal/worst scenarios).
->@@@ Simplify simulation fable by only displaying volume for "volume" metrics etc.? Maybe not since we want to highlight that one metric can capture different things.
+> On line 281, we did actually insist that there is "that there is no perfect one-size-fit all", we have now changed it to "there **can be** no perfect one-size-fit all metric" to highlight that we, like the reviewer agree that finding a "magic bullet" is foolish.
+
+<p style="color:blue">I thus think lumping all metrics into a single "pot" of analyses is both a waste of time and more likely to lead to confusion on the part of the reader. </p>
+
+> @@@ need to make sure this is clear throughout the manuscript
+
+
+<p style="color:blue">This is especially true of the graphing (i.e., Figure 2E) where the "ideal" scenario will vary depending on the type of measure intended. Currently this makes Table 5 harder to understand than is necessary. Indeed, I would wager that the authors came up with their novel position metric purely because they realised none of the other metrics are logically intended to do this job. I thus suggest a priori defining each metric as a volume, density or position metric and showing only the tests for each in the main text (alongside the ideal plot for a metric that captures that feature well). In other words, sum of ranges would only appear in the volume tests and nearest neighbour only in the density tests. The full results can be moved to the SI, but I think Figure 3 already captures the fact that these metrics measure very different things for the most part (very few show strong positive correlation), as we would logically expect.</p>
+
+> We clarified the Figure 2 to show the "ideal" scenario for any type of metric with two panels showing the best and worst scenarios for any metrics. We did not however separated the Table 5 for each different aspect (volume, position, density) since we wanted this table to illustrate how different metrics can capture different aspects at different degrees. For example, the Average distance from centroid (row 1 Table 5) captures changes in volume fairly well (column 1) but can also be influenced by changes in density (column 2). Thus changes in the Average distance from centroid are likely to correspond to changes in the volume of the trait space but could also be due to changes in density of the trait space (though not likely due to a change in position of the trait space). We added the following to the Table 5 caption to make it clearer:
+
+*This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in volume (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).* @@@lines
+
 
 <p style="color:blue">Aside from this, the only potentially fatal flaw in the paper is that it seems to assume features about the spaces that may not be true. For example, that they are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction). E.g., if the latter is not true then distance based measures (nearest neighbor and minimum spanning trees) are confounded. Similarly, if spaces are anisotropic then position based measures may be confounded. </p>
 
@@ -187,6 +196,17 @@ We've added the groups names for each dataset in the table caption.
  * <p style="color:blue"> "Volume" is a clear geometric concept, but it is used here for all kinds of formulas. The product of lengths (ranges, standard deviations, inter-quartile distances) in orthogonal directions can indeed be interpreted as a volume, but Procrustes variance (l 61) cannot (this is a sum, not a product of variances). Also the example in Figure 1A is wrong: a sum of ranges is not a volume. Also in Table 3, the first two formulas, "average distance from centroid" (which should read "square root of summed squared distances from centroid") and "sum of variances", are not volumes (and, by the way, they are the same except for the root and the division by n; hence their correlation in the example).</p>
 
  >@@@ Double check if they are the same + use a synonym for volume.
+
+
+Use synonyms for:
+volume -> size
+density -> arrangement
+position
+
+
+
+
+
 
  * <p style="color:blue"> Likewise, the term "density" is used in a way that I fail to understand. In statistics, "probability density" is a standard concept that also applies to multivariate data spaces. Sometimes, "density" is used here to describe a variance, e.g. in Fig. 1B, but it is not clear why. Also I don't understand the description in l 103-110.</p>
 
