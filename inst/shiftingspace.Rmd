@@ -268,6 +268,7 @@ They can be interpreted as the distribution of the observations *within* a group
 Groups with higher density have observations within it that tend to be more similar to each other.
 For example, if group A has a greater volume than group B but both have the same density, similar mechanisms could be driving both groups' <font style="color:blue">trait space</font> occupancy.
 However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process [@endler2005].
+<font style="color:blue">Note that density based metrics can be sensitive to sampling.</font>
 Density is less commonly measured compared to volume, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].
 
 #### 3. Position
@@ -389,12 +390,12 @@ We then measured `r metric.names()` different metrics on the resulting transform
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
 | Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
-| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @wills2001 | common metric used in palaeobiology [@ciampaglio2001] |
-| Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @wills2001 | more sensitive to outliers than the sum of variances |
+| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
+| Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @foote1992 | more sensitive to outliers than the sum of variances |
 | Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
-| Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @oksanen2007vegan | similar to the unscaled functional evenness [@villéger2008] |
+| Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
-| Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1990 | the density of pairs of observations in the trait space |
+| Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait space (coordinates: 0, 0, 0, ...). A value of 1 indicates that the observations' centroid is the centre of the trait space |
 Table 3: List of metrics with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the <font style="color:blue">eigenvalue</font> of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
@@ -917,7 +918,7 @@ We believe that having a clearer understanding of both the properties of the <fo
 
 # Acknowledgements
 
-We thank Natalie Jones and Kevin Healy for helping with the empirical ecological datasets.
+We thank Natalie Jones and Kevin Healy for helping with the empirical ecological datasets and two anonymous reviewer for their comments.
 We acknowledge funding from the Australian Research Council DP170103227 and FT180100634 awarded to VW.
 
 # Authors contributions

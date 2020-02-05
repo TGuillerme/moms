@@ -60,6 +60,8 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 <p style="color:blue">Some other thoughts the authors might want to consider (e.g., as additional discussion topics):</p>
 
+> We agree with the reviewers' three points below but due to the restricted amount of words allowed for this manuscript we could unfortunately only add short caveats. Note that these exact three points are discussed in a review paper (still in prep.) where they are discussed in more details.
+
 1. <p style="color:blue">At no point do the authors really discuss visualisation of spaces. E.g., why are these metrics important? Why can't workers simply make bivariate plots and interpet those? (There are good reasons, of course, but I think it would help to make these explicit to emphasise the need for this paper.)</p>
 
 > We've added a note saying that trait space occupancy cannot be studied beyond 2 or 3 dimensions using bi/tri-variate techniques:
@@ -74,7 +76,9 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 3. <p style="color:blue">What about sampling considerations? I would imagine both density and range would be correlated with sample size, albeit negatively and positively respectively. I don't think the authors are obliged to solve this issue, but it is another consideration of what makes a "good" metric that could be discussed.</p>
 
->@@@ Add a note about sampling and density
+> We've added the following caveats for the density metrics:
+
+*Note that density based metrics can be sensitive to sampling*. lines @@@
 
 ## Other minor corrections:
 
@@ -110,7 +114,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 * <p style="color:blue">L173 - I suspect many of the attributions for these metrics are inaccurate, referring instead to later synthetic works. E.g., sum of variances or ranges certainly goes back to Foote 1992. I think the original authors should get their due here!</p>
 
-> @@@ TODO: check references within the papers.
+> We've updated the attributions of the Sum of ranges and sum of variances to Foote 1992 as well as the Minimum Spanning tree distance to Sedgewick 1990.
 
 * <p style="color:blue">L176 - "their" (grammar).</p>
 
@@ -126,11 +130,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 * <p style="color:blue">L216 - This could do with being a bit more informative for what each panel means. Specifically, panel E is probably the most important as it will need to be understood for the results to come to make sense. I.e., what does an ideal plot look like? A worst case scenario?</p>
 
-> @@@TODO: add another panel with the best and worst scenario.
-We've now modified panel E and added a panel F to show the "best" and "worst" case scenarios and developed the caption as follows:
-
-*@@@* (line @@@)
-
+> We've modified figure 2 by showing a "worst" and "best" scenario (see above).
 
 * <p style="color:blue">L227 - "a decrease in density can often lead to an increase in volume" Surely this depends on the metric. E.g., how could range increase if data are removed? It seems like this is also a consideration for whether a metric is doing a good job. </p>
 
@@ -138,7 +138,7 @@ We've now modified panel E and added a panel F to show the "best" and "worst" ca
 
 * <p style="color:blue">L229 - Again, I think the correct citation for this is an older work.</p>
 
->@@@ TODO: check reference "“curse of multidimensionality” (Chávez et al. 2001):"
+>We change the reference to Bellman 1957.
 
 * <p style="color:blue">L234 - This seems like a failure of the metric not a hyperdimensionality issue. I.e., shouldn't a good metric capture an expansion regardless of the number of axes involved? Perhaps I am missing something here, but if I specifically think of sum of ranges in a fixed dimension space then increasing the range on any single axis will increase the overall sum.</p>
 
