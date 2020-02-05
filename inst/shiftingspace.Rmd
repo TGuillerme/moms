@@ -172,9 +172,11 @@ Statistic | Dissimilarity index or metric, hypervolume, functional diversity | D
 Multidimensional analysis | Dissimilarity analysis, trait analysis, etc. | Disparity analysis, disparity-through-time, etc. | multidimensional analysis
 Table 1: terms and equivalence between mathematics, ecology and macroevolution.
 
-Ecologists and evolutionary biologists also often use <font style="color:blue">trait spaces</font> with respect to the same fundamental questions: are groups overlapping in the <font style="color:blue">trait space</font>?
-Are some regions of the <font style="color:blue">trait space</font> not occupied?
-How do specific factors influence the occupancy of the <font style="color:blue">trait space</font>?
+Ecologists and evolutionary biologists also often use <font style="color:blue">trait spaces</font> with respect to the same fundamental questions:
+<font style="color:blue">are groups occupying the same amount of trait space?
+Do some groups have contain more species than others in the same amount of trait space?
+Are some specific factors correlated to different patterns of occupancy of the trait space (e.g. are some factors correlated with more occupancy)?</font>?
+<font style="color:blue">Because of the multidimensional nature of these trait spaces, it is often not possible to study them use bi- or tri-variate techniques.</font>
 Studying the occupancy of <font style="color:blue">trait spaces</font> can be achieved using disparity metrics in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
 However, although these space occupancy metrics are common in ecology and evolution, surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
 
@@ -188,6 +190,8 @@ Yet, an alternative aspect of space occupancy may indicate that the groups' posi
 Using metrics that only measure one aspect of the multidimensional <font style="color:blue">trait space</font> may restrain the potential of multidimensional analysis [@villéger2008].
 
 Here we propose a broad classification of space occupancy metrics as used across ecology and evolution and analyse their power to detect changes in <font style="color:blue">trait space</font> occupancy in simulated and empirical data.
+<font style="color:blue">Note that we refer to occupancy here as the general term for where observations are in a trait space.
+This definition excludes whether spaces are are truly "occupiable" (e.g. are there limits to the space, are some regions of the space inapplicable, etc.) which might be of importance in particulare spaces (e.g. in tree spaces; @Hillis2005). </font>
 We provide an assessment of each broad type of space occupancy metrics along with a unified terminology to foster communication between ecology and evolution.
 Unsurprisingly, we found no one metric describes all changes through a <font style="color:blue">trait space</font> and the results from each metric are dependent on the characteristics of the space and the hypotheses.
 Furthermore, because there can potentially be an infinite number of metrics, it would be impossible to propose clear generalities to space occupancy metrics behavior.
@@ -249,7 +253,7 @@ For example, if group A has a bigger volume than group B, the observations in A 
 This type of metric is widely used in both ecology [e.g. the hypervolume; @blonder2018] and in evolution [e.g. the sum or product of ranges or variances; @wills2001].
 
 Although volume metrics are a suitable indicator for comparing a group's <font style="color:blue">trait space</font> occupancy, it is limited to comparing the range of trait-combinations between groups.
-Volume metrics do not take into account the distribution of the observations within a group.
+Volume metrics do not take into account the distribution of the observations within a group <font style="color:blue">and can be sensible to innocupied "holes" in it [@blonder2018].</font>
 In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the volume is simply driven by small number of extreme observations.
 
 <!-- This aspect of space occupancy is used routinely in ecology and macroevolution:

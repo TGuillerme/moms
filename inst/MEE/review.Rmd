@@ -44,22 +44,33 @@ We've provided a version of the manuscript where the changes are highlighted in 
 
 <p style="color:blue">Additionally, the authors use the term "occupancy" many times, but I do not think they ever really consider occupancy in the truest sense, as this would require knowing how much of the space is truly /occupiable/. For example, where are the true limits of a space (i.e., the "edges")? And are all points inside those limits realistically occupiable? Note that these are simply hard problems, and the authors do already consider other aspects of empirical spaces such as total number of dimensions and distributions of variance across axes. However, I think they could go further in making it clear to readers that these issues must be considered. A nice example of how this could be done was shown by Hillis et al. (2005; Systematic Biology, 54, 471–482). Their Figure 10 shows how ordinations can drastically distort distances. Otherwise, I simply think the authors need to state these issues plainly to help guide readers in their metric choice.</p>
 
->@@@ Add a disclaimer about occupancy.
+>We thank the reviewer for point out this really interesting aspect and we have added the following disclaimer around the term "occupancy":
+
+*Note that we refer to occupancy here as the general term for where observations are in a trait space.
+This definition excludes whether spaces are are truly "occupiable" (e.g. are there limits to the space, are some regions of the space inapplicable, etc.) which might be of importance in particulare spaces (e.g. in tree spaces; @Hillis2005).* lines@@@
 
 
 <p style="color:blue">(I would also note that the authors currently post several questions that their metrics do not really answer, i.e., L47-48 "are groups overlapping in the trait-space? Are some regions of the trait-space not occupied? How do specific factors influence the occupancy of the trait-space?" These are good questions, but are not what the volume, density and position metrics actually capture. I would suggest rewording, or more explicitly state how these questions can be answered.)</p>
 
->@@@ Add a note about overlappings
+> We reworded the generic questions to correspond to what the volume, density and position can actually capture:
+
+*are groups occupying the same amount of trait space?
+Do some groups have contain more species than others in the same amount of trait space?
+Are some specific factors correlated to different patterns of occupancy of the trait space (e.g. are some factors correlated with more occupancy)?* lines @@@
 
 <p style="color:blue">Some other thoughts the authors might want to consider (e.g., as additional discussion topics):</p>
 
 1. <p style="color:blue">At no point do the authors really discuss visualisation of spaces. E.g., why are these metrics important? Why can't workers simply make bivariate plots and interpet those? (There are good reasons, of course, but I think it would help to make these explicit to emphasise the need for this paper.)</p>
 
->@@@ Add visualisation note
+> We've added a note saying that trait space occupancy cannot be studied beyond 2 or 3 dimensions using bi/tri-variate techniques:
+
+*Because of the multidimensional nature of these trait spaces, it is often not possible to study them use bi- or tri-variate techniques.* lines @@@
 
 2. <p style="color:blue">Volume measures generally assume convexity (hypercubes, hyperellipsoids, ranges), but what if the point distributions are concave or have voids (inoccupiable "holes")? This seems like another consideration of what a good metric is that is currently not discussed. Concavities can also be artefactual features of some ordinations (e.g., the "horseshoeing" seen with some spaces).</p>
 
->@@@ Add holley note
+> We've added the following caveat for the volume metrics:
+
+*Volume metrics do not take into account the distribution of the observations within a group and can be sensible to innocupied "holes" in it (Blonder et al. 2018).* lines@@@
 
 3. <p style="color:blue">What about sampling considerations? I would imagine both density and range would be correlated with sample size, albeit negatively and positively respectively. I don't think the authors are obliged to solve this issue, but it is another consideration of what makes a "good" metric that could be discussed.</p>
 
