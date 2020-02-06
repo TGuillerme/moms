@@ -1,5 +1,5 @@
 ---
-title: "Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
+title: "Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 date: "`r Sys.Date()`"
 bibliography: references.bib

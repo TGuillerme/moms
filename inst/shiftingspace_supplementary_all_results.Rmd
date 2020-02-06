@@ -1,11 +1,10 @@
 ---
-title: "Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
+title: "Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 date: "`r Sys.Date()`"
 bibliography: references.bib
-csl: systematic-biology.csl
 output:
-  html_document:
+  pdf_document:
     fig_width: 12
     fig_height: 6
 ---
@@ -51,13 +50,13 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 This section contains all the results and calculations (and plots them).
 The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz).
 
-## Metrics analysed
+## Measurements analysed
 
 
 ```{r all_metrics_list, echo = FALSE}
 ## Loading the list of metrics
 source("list.of.metrics.R")
-## General volume metrics
+## General size measures
 all_metrics <- list("av.pairwise" = function(matrix) return(mean(pairwise.dist(matrix)^2, na.rm = TRUE)),
                     "av.pair.ma"  = function(matrix) return(mean(pairwise.dist(matrix, method = "manhattan"), na.rm = TRUE)),
                     "med.pairwise"= function(matrix) return(median(pairwise.dist(matrix), na.rm = TRUE)),
@@ -115,7 +114,7 @@ all_metrics_names <- c("Average squared pairwise distance (dtt::dtt)",
 
 ```
 
-The metrics analysed are the `r paste(all_metrics_names, collapse = ", ")`.
+The measurements analysed are the `r paste(all_metrics_names, collapse = ", ")`.
 
 ## Running the simulations for the 25 metrics
 
@@ -235,7 +234,7 @@ all_metrics_empirical_results <- load.results("all_metrics_empirical_results")
 ```
 
 
-## Metrics pairwise comparisons
+## Measurements pairwise comparisons
 
 ```{r, pairwise_comparisons, fig.height = 12}
 ## getting the results to loop through (independent of the removal)
@@ -244,13 +243,14 @@ results_pairwise <- all_metrics_remove_02
 ## Plotting the pairwise results
 for(metric_ID in 1:length(all_metrics_names)) {
   pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = metric_ID)
+  cat(paste0(all_metrics_names[metric_ID], "\n"))
 }
 ```
 
-The metrics analysed are the `r paste(paste(names(all_metrics), all_metrics_names, sep = ": "), collapse = "; ")`.
+The measurements analysed are the `r paste(paste(names(all_metrics), all_metrics_names, sep = ": "), collapse = "; ")`.
 
 
-## Space shifting all metrics
+## Space shifting all measures
 
 
 ```{r running_anovas, echo = FALSE}
@@ -347,7 +347,7 @@ print.fable <- function(n_metrics, byrow, ncol, test) {
 print.fable(length(all_metrics), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
-### All metrics results 20% removal
+### All measures results 20% removal
 
 ```{r fable_all_metrics_02, echo = FALSE, eval = TRUE}
 ## Changing defaults
@@ -355,7 +355,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_02")
 res <- list("s" = space_test_02, "r" = all_dim_test_02)
 ```
 
-Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+Metric      | Size change  | Density change | Position change | Distribution effect | Dimensions effect |
 :-----------|----------------|-----------------|----------------|---------------------|-------------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
@@ -384,7 +384,7 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
 
 
-### All metrics results 50% removal
+### All measures results 50% removal
 
 ```{r fable_all_metrics_05, echo = FALSE, eval = TRUE}
 ## Changing defaults
@@ -392,7 +392,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_05")
 res <- list("s" = space_test_05, "r" = all_dim_test_05)
 ```
 
-Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+Measurements      | Size change  | Density change | Position change | Distribution effect | Dimensions effect |
 :-----------|----------------|-----------------|----------------|---------------------|-------------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
@@ -420,7 +420,7 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[24]` | `r plot.id(70)` | `r plot.id(71)` | `r plot.id(72)` | `r s.test(24, "s", res)` | `r s.test(24, "r", res)`|
 `r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
 
-### All metrics results 80% removal
+### All measures results 80% removal
 
 ```{r fable_all_metrics_08, echo = FALSE, eval = TRUE}
 ## Changing defaults
@@ -428,7 +428,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_all_metrics_08")
 res <- list("s" = space_test_08, "r" = all_dim_test_08)
 ```
 
-Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+Measurements      | Size change  | Density change | Position change | Distribution effect | Dimensions effect |
 :-----------|----------------|-----------------|----------------|---------------------|-------------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s", res)` | `r s.test(1, "r", res)`|
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s", res)` | `r s.test(2, "r", res)`|
@@ -457,7 +457,7 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
 
 
-## Empirical results (all metrics)
+## Empirical results (all measurements)
 
 
 ```{r test_empirical, echo = FALSE}
@@ -503,7 +503,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical_all_metrics")
 print.fable(length(all_metrics), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
-Metric      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
+Measurement      | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins et al. 2016 | Jones et al. 2015 | Healy et al. 2019  |
 :-----------|----------------|-----------------|------------------|----------------|------------------|----------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(26)` | `r plot.id(51)` | `r plot.id(76)` | `r plot.id(101)` | `r plot.id(126)`|
 `r name[2]` | `r plot.id(2)` | `r plot.id(27)` | `r plot.id(52)` | `r plot.id(77)` | `r plot.id(102)` | `r plot.id(127)`|

@@ -1,5 +1,5 @@
 ---
-title: "Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
+title: "Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
 date: "`r Sys.Date()`"
 output:
@@ -58,7 +58,7 @@ The algorithm is implemented in the `optimise.parameter` function in [reduce.spa
 This section contains all the results and calculations (and plots them).
 The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz).
 
-## Metrics analysed
+## Measurements analysed
 
 
 ```{r metrics_list_simulations, echo = FALSE, eval = TRUE}
@@ -66,7 +66,7 @@ The whole analysis takes approximatively 30 minutes to run (single core 2.2 GHz)
 source("list.of.metrics.R")
 ```
 
-The metrics analysed are the `r paste(metric_names, collapse = ", ")`.
+The measurements analysed are the `r paste(metric_names, collapse = ", ")`.
 
 ## Generating the data
 
