@@ -389,10 +389,10 @@ We then measured `r metric.names()` different metrics on the resulting transform
 
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
-| Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
+| Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
 | Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
 | Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @foote1992 | more sensitive to outliers than the sum of variances |
-| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hyper<font style="color:blue">size</font> [@diaz2016; @blonder2018] |
+| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
 | Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
 | Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
@@ -675,7 +675,7 @@ names(results_pairwise[[1]]) <- metric_names
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
 ```
 
-All the metrics were either positively correlated (Pearson correlation of 0.99 for the average distance from centroid and sum of variance or 0.97 for the average nearest neighbour distance and minimum spanning tree average length; Fig. 3) or somewhat correlated (ranging from 0.66 for the sum of variances and the ellipsoid volume to -0.09 between the average displacement and the average distance from centroid; Fig. 3).
+All the metrics were either positively correlated (Pearson correlation of 0.99 for the average Euclidean distance from centroid and sum of variance or 0.97 for the average nearest neighbour distance and minimum spanning tree average length; Fig. 3) or somewhat correlated (ranging from 0.66 for the sum of variances and the ellipsoid volume to -0.09 between the average displacement and the average Euclidean distance from centroid; Fig. 3).
 All metrics but the ellipsoid volume were normally (or nearly normally) distributed (Fig. 3).
 <!-- This is due to the ellipsoid volume being more sensitive to the curse of multidimensionality (many values close to 0).
  -->
@@ -738,14 +738,14 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. See Fig. 2 for interpretation of the figures distributions and values. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in <font style="color:blue">size</font> (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
+Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. See Fig. 2 for interpretation of the figures distributions and values. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average Euclidean distance from centroid (row 1) captures mainly changes in <font style="color:blue">size</font> (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
 
 
 As expected, some different metrics capture different aspects of space occupancy.
 However, it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
 We observe a clear decrease in median metric in less than a third of the space reductions (10/36).
 
-In terms of change in <font style="color:blue">size</font>, only the average distance from centroid and the sum of variances seem to capture a clear change in both directions.
+In terms of change in <font style="color:blue">size</font>, only the average Euclidean distance from centroid and the sum of variances seem to capture a clear change in both directions.
 However, the increase in <font style="color:blue">size</font> does not correspond to an *actual* increase in volume in the <font style="color:blue">trait space</font> (i.e. the volume from the blue observations in Fig. 2-B is equivalent to the one in Fig. 2-A).
 In terms of change in density, only the minimum spanning tree average distance and the average nearest neighbour distance seem to capture a clear change in both directions.
 In terms of change in position, only the average displacement metric seems to capture a clear change in direction (albeit not in both directions).
@@ -813,8 +813,8 @@ Table 6: Comparisons of pairs of groups in different empirical trait spaces. NAs
 
 Similarly as for the simulated results, the empirical ones indicate that there <font style="color:blue">can be</font> no perfect one-size-fit all metric.
 For all `r metric.names()` metrics (<font style="color:blue">except</font> the ellipsoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the metrics.
-For example, in the @beck2014's dataset, there is a clear <font style="color:blue">difference in  size</font> using the average distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the <font style="color:blue">size</font> using the sum of ranges (0.966).
-However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average distance from centroid or the sum of variances - 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (0).
+For example, in the @beck2014's dataset, there is a clear <font style="color:blue">difference in  size</font> using the average Euclidean distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the <font style="color:blue">size</font> using the sum of ranges (0.966).
+However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average Euclidean distance from centroid or the sum of variances - 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (0).
 Furthermore, for each dataset, the absolute differences between each groups is not consistent depending on the metrics.
 For example, in @hopkins2016's dataset, the orange group's mean is clearly higher than the blue one when measuring the sum of ranges (0) and the inverse is true when measuring the average displacement (0).
 
@@ -845,7 +845,7 @@ We also show that the choice of metric impacts the interpretation of group diffe
 #### Metrics comparisons
 
 Metrics within the same category of <font style="color:blue">trait space</font> occupancy (<font style="color:blue">size</font>, density or position) do not have the same level of correlation with each other.
-For example, the average distance from centroid (<font style="color:blue">size</font>) is highly correlated to the sum of variances (<font style="color:blue">size</font> - correlation of 0.99) and somewhat correlated with the minimum spanning tree average distance (density - correlation of 0.66) but poorly with the ellipsoid volume (<font style="color:blue">size</font> - correlation of 0.17) and the minimum spanning tree distances evenness (density - correlation of -0.05).
+For example, the average Euclidean distance from centroid (<font style="color:blue">size</font>) is highly correlated to the sum of variances (<font style="color:blue">size</font> - correlation of 0.99) and somewhat correlated with the minimum spanning tree average distance (density - correlation of 0.66) but poorly with the ellipsoid volume (<font style="color:blue">size</font> - correlation of 0.17) and the minimum spanning tree distances evenness (density - correlation of -0.05).
 Furthermore, the fact that we have such a range of correlations for normal distributions suggests that each metric can capture different summaries of space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
 
 <!-- Analysing the properties of metrics in a <font style="color:blue">trait space</font> prior to using them to answer macroevolutionary or ecological questions can bring valuable insights into what aspect of space occupancy they are capturing.
@@ -859,7 +859,7 @@ This is a desirable behaviour for space occupancy metrics since it will likely a
 However, the average nearest neighbour distance and the sum of ranges have a respectively positive and negative "null" median.
 This is not especially a bad property but it should be kept in mind that even random processes can increase or decrease these metric <font style:"color=blue">values</font>.
 
-Regarding the changes in <font style="color:blue">size</font>, the sum of variances and the average distance from centroid are good descriptors (Table 5).
+Regarding the changes in <font style="color:blue">size</font>, the sum of variances and the average Euclidean distance from centroid are good descriptors (Table 5).
 However, as illustrated in the 2D examples in Fig. 2-B only the blue change results (maximum limit - Table 5) should not result in a direct change in <font style="color:blue">overall size</font> since the <font style="color:blue">trait space</font> is merely "hollowed" out.
 That said, "hollowing" is more hard to conceptualise in many dimensions and the metrics can still be interpreted for comparing groups (orange has a smaller volume than blue).
 

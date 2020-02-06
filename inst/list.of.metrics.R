@@ -28,7 +28,7 @@ metrics_list    <- list("func.disp" = func.disp,
                         "ave.neigh" = c(mean, neighbours),
                         "av.displa" = c(mean, displacements))
 
-metric_names <- c("Average distance from centroid",
+metric_names <- c("Average Euclidean distance from centroid",
                   "Sum of variances",
                   "Sum of ranges",
                   "Ellipsoid volume",
