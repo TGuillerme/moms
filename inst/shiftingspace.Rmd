@@ -206,7 +206,7 @@ Traits can also be measured by using relative observations [e.g. community compo
 However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
-```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).") }
+```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Size (e.g. sum of ranges); B - Arrangement (e.g. pairwise distances); C - Position (e.g. distances from centroid).") }
 
 set.seed(11)
 ## Plot space function (utility shortcut)
@@ -246,14 +246,14 @@ par(op)
 
 #### 1. Size
 
-Volume metrics measure the spread of a group in the <font style="color:blue">trait space</font>.
+<font style="color:blue">Size</font> metrics measure the spread of a group in the <font style="color:blue">trait space</font>.
 They can be interpreted as the amount of the <font style="color:blue">trait space</font> that is occupied by observations.
 Typically, larger values for such metrics indicate the presence of more extreme trait combinations.
 For example, if group A has is bigger than group B, the observations in A achieve more extreme trait combinations than in B.
 This type of metric is widely used in both ecology [e.g. the hypervolume; @blonder2018] and in evolution [e.g. the sum or product of ranges or variances; @wills2001].
 
 Although <font style="color:blue">size</font> metrics are a suitable indicator for comparing a group's <font style="color:blue">trait space</font> occupancy, it is limited to comparing the range of trait-combinations between groups.
-Volume metrics do not take into account the distribution of the observations within a group <font style="color:blue">and can be sensible to innocupied "holes" in it [@blonder2018].</font>
+<font style="color:blue">Size</font> metrics do not take into account the distribution of the observations within a group <font style="color:blue">and can be sensible to innocupied "holes" in it [@blonder2018].</font>
 In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the <font style="color:blue">size</font> is simply driven by small number of extreme observations.
 
 <!-- This aspect of space occupancy is used routinely in ecology and macroevolution:
@@ -389,10 +389,10 @@ We then measured `r metric.names()` different metrics on the resulting transform
 
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
-| Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
-| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
-| Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @foote1992 | more sensitive to outliers than the sum of variances |
-| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
+| Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Size | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
+| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Size | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
+| Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Size | @foote1992 | more sensitive to outliers than the sum of variances |
+| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Size | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
 | Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
 | Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
@@ -438,7 +438,7 @@ Our selected metrics are expected to not be affected by this change.
 
 * **Limit:** by removing all observations with a distance from the centre of the <font style="color:blue">trait space</font> lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
 This can reflect a strict selection model where observations with trait values below or above a threshold are removed leading to an expansion or a contraction of the <font style="color:blue">trait space</font>.
-Volume metrics are expected to be most affected by this change.
+<font style="color:blue">Size</font> metrics are expected to be most affected by this change.
 
 * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is chosen such that 50% observations are selected) generating two density removals: *high* and *low* (respectively in orange and blue; Fig. 2-C).
 This can reflect changes within groups in the <font style="color:blue">trait space</font> due to ecological factors [e.g. competition can generate niche repulsion - lower density; @grant2006].
@@ -728,7 +728,7 @@ print.fable <- function(n_metrics, byrow, ncol, test) {
 print.fable(length(metrics_list), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
-Metric      | Volume change  | Density change | Position change | Distribution effect | Dimensions effect |
+Metric      | Size change  | Arrangement change | Position change | Distribution effect | Dimensions effect |
 :-----------|----------------|-----------------|----------------|---------------------|-------------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s")` | `r s.test(1, "r")`|
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s")` | `r s.test(2, "r")`|
