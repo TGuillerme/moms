@@ -140,11 +140,11 @@ In macroevolution and ecology these metrics are referred to as disparity or diss
 Researchers use these metrics to investigate how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes, such as global warming events or mass extinctions.
 However, the mathematical and biological meaning of most space occupancy metrics is vague with the majority of widely-used metrics lacking formal description.
 
-2. Here we propose a broad classification of space occupancy metrics into three categories that capture changes in volume, density, or position.
-We analyse the behaviour of 25 metrics to study changes in <font style="color:blue">trait space</font> volume, density and position on a series of simulated and empirical datasets.
+2. Here we propose a broad classification of space occupancy metrics into three categories that capture changes in <font style="color:blue">size</font>, density, or position.
+We analyse the behaviour of 25 metrics to study changes in <font style="color:blue">trait space size</font>, density and position on a series of simulated and empirical datasets.
 
 3. We find no one metric describes all of <font style="color:blue">trait space</font> but that some metrics are better at capturing certain aspects compared to other approaches and that their performance depends on both the <font style="color:blue">trait space</font> and the hypothesis analysed. 
-However, our results confirm the three broad categories (volume, density and position) and allow to relate changes in any of these categories to biological phenomena.
+However, our results confirm the three broad categories (<font style="color:blue">size</font>, density and position) and allow to relate changes in any of these categories to biological phenomena.
 
 4. Since the choice of space occupancy metric should be specific to the data and question at had, we introduced [`moms`](https://tguillerme.shinyapps.io/moms/), a user-friendly tool based on a graphical interface that allows users to both visualise and measure changes space occupancy for any metric in simulated or imported <font style="color:blue">trait spaces</font>.
 Users are also provided with tools to transform their data in space (e.g. contraction, displacement, etc.).
@@ -183,9 +183,9 @@ However, although these space occupancy metrics are common in ecology and evolut
 Different space occupancy metrics capture different aspects of the <font style="color:blue">trait space</font> [ciampaglio2001; @villéger2008; @mammola2019].
 It may be widely-known by many in the field, but to our knowledge this is infrequently mentioned in peer-reviewed papers.
 First, space occupancy metrics are often named as the biological aspect they are describing (e.g. "disparity" or "functional diversity") rather than what they are measuring (e.g. the average pairwise distances) which obscures the differences or similarities between studies.
-Second, in many studies in ecology and evolution, authors have focused on measuring the volume of the <font style="color:blue">trait space</font> with different metrics [e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016].
-However, volume only represents a single aspects of space occupancy, disregarding others such as the density [@geiger2008] or position [@wills2001; @ciampaglio2001].
-For example, if two groups occupy the same volume in <font style="color:blue">trait space</font>, this will lead to supporting certain biological conclusions.
+Second, in many studies in ecology and evolution, authors have focused on measuring the <font style="color:blue">size</font> of the <font style="color:blue">trait space</font> with different metrics [e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016].
+However, <font style="color:blue">the size of the trait space</font> only represents a single aspects of occupancy, disregarding others such as the density [@geiger2008] or position [@wills2001; @ciampaglio2001].
+For example, if two groups <font style="color:blue">have the same trait space size</font>, this will lead to supporting certain biological conclusions.
 Yet, an alternative aspect of space occupancy may indicate that the groups' position are different; this would likely lead to a different biological conclusion (e.g. the groups are equally diverse but occupy different niches).
 Using metrics that only measure one aspect of the multidimensional <font style="color:blue">trait space</font> may restrain the potential of multidimensional analysis [@villéger2008].
 
@@ -203,7 +203,7 @@ Therefore, we propose [`moms`](https://tguillerme.shinyapps.io/moms/), a user-fr
 In this paper, we define <font style="color:blue">trait spaces</font> as any matrix where rows are observations and columns are traits.
 These traits can widely vary in number and types: they could be coded as discrete [e.g. presence or absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated measures [e.g. landmark position; @marcy2016; Fourier ellipses; @momocs].
 Traits can also be measured by using relative observations [e.g. community compositions; @jones2015] or distance between observations [e.g. @close2015].
-However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the volume which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
+However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
 ```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Volume (e.g. sum of ranges); B - Density (e.g. average squared pairwise distances); C - Position (e.g. median distance from centroid).") }
@@ -219,8 +219,8 @@ trait_space <- space.maker(elements, 2, distribution = rnorm)
 ## Graphical parameters
 op <- par(mfrow = c(1,3), bty = "n")
 
-## The volume
-plot(trait_space, pch = defaults$pch, main = "A - Volume", xlab = "Trait 1", ylab = "Trait 2")
+## The size
+plot(trait_space, pch = defaults$pch, main = "A - Size", xlab = "Trait 1", ylab = "Trait 2")
 ## The range lines
 lines(x = range(trait_space[,1]), y = rep(mean(trait_space[,2]), 2), col = defaults$col1)
 lines(x = rep(mean(trait_space[,1]), 2), y = range(trait_space[,2]), col = defaults$col1)
@@ -244,32 +244,32 @@ points(trait_space, pch = defaults$pch)
 par(op)
 ```
 
-#### 1. Volume
+#### 1. Size
 
 Volume metrics measure the spread of a group in the <font style="color:blue">trait space</font>.
 They can be interpreted as the amount of the <font style="color:blue">trait space</font> that is occupied by observations.
 Typically, larger values for such metrics indicate the presence of more extreme trait combinations.
-For example, if group A has a bigger volume than group B, the observations in A achieve more extreme trait combinations than in B.
+For example, if group A has is bigger than group B, the observations in A achieve more extreme trait combinations than in B.
 This type of metric is widely used in both ecology [e.g. the hypervolume; @blonder2018] and in evolution [e.g. the sum or product of ranges or variances; @wills2001].
 
-Although volume metrics are a suitable indicator for comparing a group's <font style="color:blue">trait space</font> occupancy, it is limited to comparing the range of trait-combinations between groups.
+Although <font style="color:blue">size</font> metrics are a suitable indicator for comparing a group's <font style="color:blue">trait space</font> occupancy, it is limited to comparing the range of trait-combinations between groups.
 Volume metrics do not take into account the distribution of the observations within a group <font style="color:blue">and can be sensible to innocupied "holes" in it [@blonder2018].</font>
-In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the volume is simply driven by small number of extreme observations.
+In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the <font style="color:blue">size</font> is simply driven by small number of extreme observations.
 
 <!-- This aspect of space occupancy is used routinely in ecology and macroevolution:
-for example @wright2017 uses the volume of <font style="color:blue">trait space</font> to analyse how crinoid ecology changes through time relative to all the observed ecologies in the the crinoid <font style="color:blue">trait space</font>.
+for example @wright2017 uses the <font style="color:blue">size</font> of <font style="color:blue">trait space</font> to analyse how crinoid ecology changes through time relative to all the observed ecologies in the the crinoid <font style="color:blue">trait space</font>.
 A larger "spread" at a specific point in time [e.g. 360 to 330 million years ago (Mya); @wright2017] indicates a larger diversity of ecological feeding strategies.
-In general the volume of a group in the <font style="color:blue">trait space</font> indicates how much trait combinations that group achieves in the <font style="color:blue">trait space</font>. -->
+In general the <font style="color:blue">size</font> of a group in the <font style="color:blue">trait space</font> indicates how much trait combinations that group achieves in the <font style="color:blue">trait space</font>. -->
 
 #### 2. Density
 
 Density metrics measure the distribution of a group in the <font style="color:blue">trait space</font>.
 They can be interpreted as the distribution of the observations *within* a group in the <font style="color:blue">trait space</font>.
 Groups with higher density have observations within it that tend to be more similar to each other.
-For example, if group A has a greater volume than group B but both have the same density, similar mechanisms could be driving both groups' <font style="color:blue">trait space</font> occupancy.
+For example, if group A is greater than group B but both have the same density, similar mechanisms could be driving both groups' <font style="color:blue">trait space</font> occupancy.
 However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process [@endler2005].
 <font style="color:blue">Note that density based metrics can be sensitive to sampling.</font>
-Density is less commonly measured compared to volume, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].
+Density is less commonly measured compared to <font style="color:blue">size</font>, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].
 
 #### 3. Position
 
@@ -278,29 +278,29 @@ They can be interpreted as where a group lies in the <font style="color:blue">tr
 For example, if group A has a different position than group B, observations in A will have a different trait-combination than B.
 
 Position metrics may be harder to interpret in multidimensional spaces (i.e. beyond left/right, up/down and front/back).
-However, when thinking about unidimensional data (one trait), this metric is obvious: two groups A or B could have the same variance (i.e. "volume" or spread) with the same number of observations (i.e. density) but could have a different mean and thus be in different positions.
+However, when thinking about unidimensional data (one trait), this metric is obvious: two groups A or B could have the same variance (i.e. "<font style="color:blue">size</font>" or spread) with the same number of observations (i.e. density) but could have a different mean and thus be in different positions.
 These metrics have been used in ecology to compare the position of two groups relatively to each other [@mammola2019].
 
 ## No metric to rule them all: benefits of considering multiple metrics
 
 The use of multiple metrics to assess <font style="color:blue">trait space</font> occupancy has the benefit of providing a more detailed characterisation of occupancy changes.
-If the question of interest is, say, to look at how space occupancy changes in response to mass extinction, using a single space occupancy metric can miss part of the picture: a change in volume could be decoupled from a change in position or density in <font style="color:blue">trait space</font>.
-For example, the <font style="color:blue">Cretaceous-Paleogene</font> extinction (66 million years ago - Mya) has been linked to an increase in volume of the mammalian <font style="color:blue">trait space</font> [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of <font style="color:blue">trait space</font> occupancy: does the radiation <font style="color:blue">expand</font> on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the <font style="color:blue">trait space</font> [innovation, change in position; @endler2005]?
-Similarly, in ecology, if two groups occupy the same volume in the <font style="color:blue">trait space</font>, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equal volume groups.
+If the question of interest is, say, to look at how space occupancy changes in response to mass extinction, using a single space occupancy metric can miss part of the picture: a change in <font style="color:blue">size</font> could be decoupled from a change in position or density in <font style="color:blue">trait space</font>.
+For example, the <font style="color:blue">Cretaceous-Paleogene</font> extinction (66 million years ago - Mya) has been linked to an increase in <font style="color:blue">size</font> of the mammalian <font style="color:blue">trait space</font> [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of <font style="color:blue">trait space</font> occupancy: does the radiation <font style="color:blue">expand</font> on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the <font style="color:blue">trait space</font> [innovation, change in position; @endler2005]?
+Similarly, in ecology, if two groups have the same <font style="color:blue">trait space size</font>, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equal <font style="color:blue">sized</font> groups.
 
 
-```{r fig_metric_captures, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different volume (vol. - product of ranges), density (den. - average nearest neighbour distance) and position (pos. - average displacement) metrics capture different occupancy aspects in this simplified trait space. This illustrates how using only one specific space occupancy metric (e.g. the volume) will fail to capture changes in B (no change in volume), or partial changes in C (also change in density and position)."), eval = FALSE}
+```{r fig_metric_captures, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different size (size. - product of ranges), density (den. - average nearest neighbour distance) and position (pos. - average displacement) metrics capture different occupancy aspects in this simplified trait space. This illustrates how using only one specific space occupancy metric (e.g. the size) will fail to capture changes in B (no change in size), or partial changes in C (also change in density and position)."), eval = FALSE}
 
-## Making the volume/density/position space
+## Making the size/density/position space
 vdp_space <- moms::vdp.make()
 
 ## Measuring disparity
 vdp_disp <- moms::vdp.dispRity(vdp_space,
-                         volume = c(prod, ranges),
+                         size = c(prod, ranges),
                          density = c(mean, neighbours),
                          position = c(mean, displacements))
 
-## Checking the table of volume changes
+## Checking the table of size changes
 silent <- moms::vdp.check.table(vdp_disp, vdp_space)
 
 ## Plotting the results
@@ -311,7 +311,7 @@ moms::vdp.plot(vdp_space, plots = c(1, 4, 8), disparity = vdp_disp, mfrow = c(1,
 ```
 
 
-Here, we provide the first interdisciplinary review of 25 space occupancy metrics that uses the broad classification of metrics into volume, density and position to capture pattern changes in <font style="color:blue">trait space</font>.
+Here, we provide the first interdisciplinary review of 25 space occupancy metrics that uses the broad classification of metrics into <font style="color:blue">size</font>, density and position to capture pattern changes in <font style="color:blue">trait space</font>.
 We assess the behaviour of metrics using simulations and six interdisciplinary empirical datasets covering a wide range of potential data types and biological questions.
 We also introduce a tool for measuring occupancy in multidimensional space ([`moms`](https://tguillerme.shinyapps.io/moms/)), which is a user-friendly, open-source, graphical interface to allow the tailored testing of metric behaviour for any use case.
 [`moms`](https://tguillerme.shinyapps.io/moms/) will allow workers to comprehensively assess the properties of their <font style="color:blue">trait space</font> and the metrics associated with their specific biological question.
@@ -351,7 +351,7 @@ To do so, we performed the following steps (explained in more detail below):
 3.  We measured occupancy on the resulting transformed spaces using `r metric.names()` different space occupancy metrics;
 4.  We applied the same space occupancy metrics to six empirical datasets (covering a range of disciplines and a range of dataset properties).
 
-<font style="color:blue">Note that the paper contains the results for only `r metric.names()` metrics which were selected as representative of common metrics covering the volume, density and position <font style="color:blue">trait space</font> aspects.</font>
+<font style="color:blue">Note that the paper contains the results for only `r metric.names()` metrics which were selected as representative of common metrics covering the <font style="color:blue">size</font>, density and position <font style="color:blue">trait space</font> aspects.</font>
 However, the results for the additional 17 metrics is available in the supplementary material 4.
 
 ## Generating spaces
@@ -392,7 +392,7 @@ We then measured `r metric.names()` different metrics on the resulting transform
 | Average distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Volume | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
 | Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Volume | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
 | Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Volume | @foote1992 | more sensitive to outliers than the sum of variances |
-| Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
+| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Volume | @donohue2013 | less sensitive to outliers than the convex hull hyper<font style="color:blue">size</font> [@diaz2016; @blonder2018] |
 | Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
 | Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
@@ -433,7 +433,7 @@ To measure how the metrics responded to changes within <font style="color:blue">
 
 * **Randomly:** by randomly removing 50% of observations (Fig. 2-A).
 This reflects a "null" biological model of changes in <font style="color:blue">trait space</font>: the case when observations are removed regardless of their intrinsic characteristics.
-For example, if diversity is reduced by 50% but the <font style="color:blue">trait space</font> volume remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
+For example, if diversity is reduced by 50% but the <font style="color:blue">trait space size</font> remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
 Our selected metrics are expected to not be affected by this change.
 
 * **Limit:** by removing all observations with a distance from the centre of the <font style="color:blue">trait space</font> lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
@@ -450,7 +450,7 @@ Position metrics are expected to be most affected by this change.
 
 The algorithm to select $\rho$ or $D$ is described in greater detail in in the Supplementary material 1.
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of metrics, where the space occupancy metric respectively manages or fails to captures a specific type of reduction (i.e. volume, position or density; Table 5).")}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("Figure 2: different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of metrics, where the space occupancy metric respectively manages or fails to captures a specific type of reduction (i.e. size, position or density; Table 5).")}
 
 set.seed(42)
 
@@ -584,12 +584,12 @@ We then measured the <font style="color:blue">amount</font> of overlap between t
 ### Measuring the effect of space and dimensionality on shifting spaces
 
 Distribution differences and the number of dimensions can have an effect on the metric results.
-For example, in a normally distributed space, an <font style:"color=blue">increase</font> in density can often lead to a <font style:"color=blue">decrease</font> in volume.
+For example, in a normally distributed space, an <font style="color:blue">increase</font> in density can often lead to a <font style="color:blue">decrease</font> in <font style="color:blue">size</font>.
 This is not necessarily true in log-normal spaces or in uniform spaces for certain metrics.<!--  (e.g. the convex hull volume of a lognormal space will be less sensitive to changes in density) -->
 Furthermore, high dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality]: data becomes sparser with increasing number of dimensions, such that the probability of two points A and B overlapping in *n* dimensions is the product of the probability of the two points overlapping on each dimensions($\prod_{i}^{d} P(A = B)_{Di}$).
 This probability decreases as a product of the number of dimensions.
 Therefore, the "curse" can make the interpretation of high dimensional data counter-intuitive.
-For example if a group expands in multiple dimensions (i.e. increase in volume), the actual hypervolume <font style:"color=blue">($\prod_{i}^{d} range_{Di}$)</font> can decrease (Fig. 3 and Tables 6, 7).
+For example if a group expands in multiple dimensions (i.e. increase in <font style="color:blue">size</font>), the actual hypervolume <font style="color:blue">($\prod_{i}^{d} range_{Di}$)</font> can decrease (Fig. 3 and Tables 6, 7).
 
 We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 2) for testing respectively the effect of distribution and dimensions.
 The results of the ANOVAs (*p*-values) are reported in Table 5 (see supplementary material 3 for the full ANOVA result tables).
@@ -738,15 +738,15 @@ Metric      | Volume change  | Density change | Position change | Distribution e
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. See Fig. 2 for interpretation of the figures distributions and values. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in volume (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
+Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy metrics. See Fig. 2 for interpretation of the figures distributions and values. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in <font style="color:blue">size</font> (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
 
 
 As expected, some different metrics capture different aspects of space occupancy.
 However, it can be hard to predict the behaviour of each metric when 50% of the observations are removed.
 We observe a clear decrease in median metric in less than a third of the space reductions (10/36).
 
-In terms of change in volume, only the average distance from centroid and the sum of variances seem to capture a clear change in both directions.
-However, the increase in volume does not correspond to an *actual* increase in volume in the <font style="color:blue">trait space</font> (i.e. the volume from the blue observations in Fig. 2-B is equivalent to the one in Fig. 2-A).
+In terms of change in <font style="color:blue">size</font>, only the average distance from centroid and the sum of variances seem to capture a clear change in both directions.
+However, the increase in <font style="color:blue">size</font> does not correspond to an *actual* increase in volume in the <font style="color:blue">trait space</font> (i.e. the volume from the blue observations in Fig. 2-B is equivalent to the one in Fig. 2-A).
 In terms of change in density, only the minimum spanning tree average distance and the average nearest neighbour distance seem to capture a clear change in both directions.
 In terms of change in position, only the average displacement metric seems to capture a clear change in direction (albeit not in both directions).
 This is not surprising, since the notion of positions becomes more and more complex to appreciate as dimensionality increases (i.e. beyond left/right, up/down and front/back).
@@ -813,7 +813,7 @@ Table 6: Comparisons of pairs of groups in different empirical trait spaces. NAs
 
 Similarly as for the simulated results, the empirical ones indicate that there <font style="color:blue">can be</font> no perfect one-size-fit all metric.
 For all `r metric.names()` metrics (<font style="color:blue">except</font> the ellipsoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the metrics.
-For example, in the @beck2014's dataset, there is a clear non-overlap in space occupancy volume using the average distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the volume using the sum of ranges (0.966).
+For example, in the @beck2014's dataset, there is a clear <font style="color:blue">difference in  size</font> using the average distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the <font style="color:blue">size</font> using the sum of ranges (0.966).
 However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average distance from centroid or the sum of variances - 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (0).
 Furthermore, for each dataset, the absolute differences between each groups is not consistent depending on the metrics.
 For example, in @hopkins2016's dataset, the orange group's mean is clearly higher than the blue one when measuring the sum of ranges (0) and the inverse is true when measuring the average displacement (0).
@@ -836,7 +836,7 @@ For example, in @hopkins2016's dataset, the orange group's mean is clearly highe
 
 # Discussion
 
-Here we tested 25 metrics of <font style="color:blue">trait space</font> occupancy on simulated and empirical datasets to assess how each metric captures changes in <font style="color:blue">trait space</font> volume, density and position.
+Here we tested 25 metrics of <font style="color:blue">trait space</font> occupancy on simulated and empirical datasets to assess how each metric captures changes in <font style="color:blue">trait space size</font>, density and position.
 Our results show that the correlation between metrics can vary both within and between metric categories (Fig. 3), highlighting the importance of understanding the metric classification for the interpretation of results.
 Furthermore, our simulations show that different metrics capture different types of <font style="color:blue">trait space</font> change (Table 5), meaning that the use of multiple metrics is important for comprehensive interpretation of <font style="color:blue">trait space</font> occupancy.
 We also show that the choice of metric impacts the interpretation of group differences in empirical datasets (Table 6), again emphasizing that metric choice has a real impact on the interpretation of specific biological questions
@@ -844,8 +844,8 @@ We also show that the choice of metric impacts the interpretation of group diffe
 
 #### Metrics comparisons
 
-Metrics within the same category of <font style="color:blue">trait space</font> occupancy (volume, density or position) do not have the same level of correlation with each other.
-For example, the average distance from centroid (volume) is highly correlated to the sum of variances (volume - correlation of 0.99) and somewhat correlated with the minimum spanning tree average distance (density - correlation of 0.66) but poorly with the ellipsoid volume (volume - correlation of 0.17) and the minimum spanning tree distances evenness (density - correlation of -0.05).
+Metrics within the same category of <font style="color:blue">trait space</font> occupancy (<font style="color:blue">size</font>, density or position) do not have the same level of correlation with each other.
+For example, the average distance from centroid (<font style="color:blue">size</font>) is highly correlated to the sum of variances (<font style="color:blue">size</font> - correlation of 0.99) and somewhat correlated with the minimum spanning tree average distance (density - correlation of 0.66) but poorly with the ellipsoid volume (<font style="color:blue">size</font> - correlation of 0.17) and the minimum spanning tree distances evenness (density - correlation of -0.05).
 Furthermore, the fact that we have such a range of correlations for normal distributions suggests that each metric can capture different summaries of space occupancy ranging from obvious differences (for metrics not strongly correlated) to subtle ones (for metrics strongly correlated).
 
 <!-- Analysing the properties of metrics in a <font style="color:blue">trait space</font> prior to using them to answer macroevolutionary or ecological questions can bring valuable insights into what aspect of space occupancy they are capturing.
@@ -859,20 +859,20 @@ This is a desirable behaviour for space occupancy metrics since it will likely a
 However, the average nearest neighbour distance and the sum of ranges have a respectively positive and negative "null" median.
 This is not especially a bad property but it should be kept in mind that even random processes can increase or decrease these metric <font style:"color=blue">values</font>.
 
-Regarding the changes in volume, the sum of variances and the average distance from centroid are good descriptors (Table 5).
-However, as illustrated in the 2D examples in Fig. 2-B only the blue change results (maximum limit - Table 5) should not result in a direct change in volume since the <font style="color:blue">trait space</font> is merely "hollowed" out.
+Regarding the changes in <font style="color:blue">size</font>, the sum of variances and the average distance from centroid are good descriptors (Table 5).
+However, as illustrated in the 2D examples in Fig. 2-B only the blue change results (maximum limit - Table 5) should not result in a direct change in <font style="color:blue">overall size</font> since the <font style="color:blue">trait space</font> is merely "hollowed" out.
 That said, "hollowing" is more hard to conceptualise in many dimensions and the metrics can still be interpreted for comparing groups (orange has a smaller volume than blue).
 
 Regarding changes in density, the average nearest neigbhour distance and the minimum spanning tree average distance consistently detect changes in density with more precision for low density <font style="color:blue">trait spaces</font> (in blue in Table 5).
-However, we can observe some degree of correlation between the changes in density and the changes in volume for most metric picking either signal.
-This could be due to the use of normally distributed spaces where a change in density often leads to a change in volume.
+However, we can observe some degree of correlation between the changes in density and the changes in <font style="color:blue">size</font> for most metric picking either signal.
+This could be due to the use of normally distributed spaces where a change in density often leads to a change in <font style="color:blue">size</font>.
 This is not necessary the case with empirical data.
 
 Regarding the changes in position of the <font style="color:blue">trait space</font>, all but the average displacement metric seems to not be able to distinguish between a random change and a displacement of the <font style="color:blue">trait space</font> (Table 5).
 Furthermore, the average displacement metric does not distinguish between and positive or a negative displacement of the <font style="color:blue">trait space</font>: this might be due to the inherent complexity of *position* in a multidimensional <font style="color:blue">trait space</font>.
 
 <!-- Regarding the effect of dimensions and <font style="color:blue">trait space</font> distribution, metrics seems to be either affected by neither of these factors or by both (Table 5).
-Again, this should not preclude using metrics that are sensitive to <font style="color:blue">trait spaces</font>' dimensions and distributions [e.g. the ellispoid volume is a good volume descriptor up until a moderate number of dimensions; @jackson2011; @donohue2013] but should be kept in mind.
+Again, this should not preclude using metrics that are sensitive to <font style="color:blue">trait spaces</font>' dimensions and distributions [e.g. the ellispoid volume is a good <font style="color:blue">size</font> descriptor up until a moderate number of dimensions; @jackson2011; @donohue2013] but should be kept in mind.
  -->
 
 #### Empirical examples
@@ -891,7 +891,7 @@ First, the simulated observations in the <font style="color:blue">trait spaces</
 This is not the case in biology where observations can be spatially [@jones2015] or phylogenetically correlated [e.g. @beck2014].
 Second, the algorithm used to reduce the <font style="color:blue">trait spaces</font> might not always accurately <font style="color:blue">reflect</font> changes.
 This might favour some specific metrics over others, in particular for the changes in density that modifies the nearest neighbour density rather than changing the global density.
-This algorithmic choice was made in order to not confound changes in density along with changes in volume.
+This algorithmic choice was made in order to not confound changes in density along with changes in <font style="color:blue">size</font>.
 However, the results presented here probably capture the general behaviour of each metric since results are consistent between the simulated and empirical analysis.
 Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows to test the caveats mentioned above by uploading empirical <font style="color:blue">trait space</font>.
 
@@ -905,9 +905,9 @@ This follows the same logical thinking that the mean might not be sufficient to 
 Although using multiple metrics is not uncommon in macroevolutionary studies [e.g. @halliday2015] or in ecology [@mammola2019], they often do not cover contrasted aspects of the <font style="color:blue">trait space</font>.
 
 Second, we suggest selecting the metrics that best help answering the biological question <font style="color:blue">at</font> hand.
-If one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's volume increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
+If one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's <font style="color:blue">size</font> increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
 
-Third, we suggest to not name metrics as the biological aspect they are describing <font style="color:blue">which can be vague</font> (e.g. "disparity" or "functional dispersion") but rather what they are measuring <font style="color:blue">and why</font> (e.g. <font style="color:blue">"we used sum of ranges to capture volume of space occupied"</font>).
+Third, we suggest to not name metrics as the biological aspect they are describing <font style="color:blue">which can be vague</font> (e.g. "disparity" or "functional dispersion") but rather what they are measuring <font style="color:blue">and why</font> (e.g. <font style="color:blue">"we used sum of ranges to capture the trait space size"</font>).
 We believe this will allow both a clearer understanding of what *is* measured and a better communication between ecology and evolution research where metrics can be similar but have different names (Fig. 3).
 
 Multidimensional analyses have been acknowledged to be an essential tool-kit modern biology but can often be counter-intuitive [@cursedimensionality].
