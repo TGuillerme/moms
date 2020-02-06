@@ -14,6 +14,9 @@ Dear Editor,
 We've provided a version of the manuscript where the changes are highlighted in <font style="color:blue">blue</font>.
 
 
+@@@TODO: also update (compile) the supplementaries
+
+
 # Associate Editor Comments to Author:
 
 * <p style="color:blue">[...]The main problem pointed out by the second reviewer is that the manuscript suffers from a lack of accuracy and clarity in the use of mathematical terminology. I share this concern. I fact I found the manuscript difficult to follow at any level of detail. After reading I was left with little added understanding of what the different measures are supposed to measure or how they perform in these goals. For example, I did not understand the results in the seemingly central Table 5, and like the reviewers I found many mathematical statements to be odd or nonsensical. [...] The topic is certainly appropriate, but a revised manuscript must be substantially improved in mathematical clarity and rigor. The motivation and goals of the measures must be clearly laid out and evaluated. [...]</p>
@@ -223,10 +226,11 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 # Reviewer: 2
 
-1. <p style="color:blue">Many statistical and mathematical terms are used imprecisely or incorrectly. For instance:
+1. <p style="color:blue">Many statistical and mathematical terms are used imprecisely or incorrectly. For instance: </p>
+
  * <p style="color:blue"> The term "metric" has a particular meaning in statistics and geometry, but the term is used more vaguely in the sense of "measure" here. </p>
 
- >@@@ Change metric to measure?
+ >We changed mentions of metric to measurements to make it clearer we do not mean metric in a geometric sense. @@@TODO
 
  * <p style="color:blue"> "Volume" is a clear geometric concept, but it is used here for all kinds of formulas. The product of lengths (ranges, standard deviations, inter-quartile distances) in orthogonal directions can indeed be interpreted as a volume, but Procrustes variance (l 61) cannot (this is a sum, not a product of variances). Also the example in Figure 1A is wrong: a sum of ranges is not a volume. Also in Table 3, the first two formulas, "average distance from centroid" (which should read "square root of summed squared distances from centroid") and "sum of variances", are not volumes (and, by the way, they are the same except for the root and the division by n; hence their correlation in the example).</p>
 
