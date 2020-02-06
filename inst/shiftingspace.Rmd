@@ -206,7 +206,7 @@ Traits can also be measured by using relative observations [e.g. community compo
 However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
-```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Size (e.g. sum of ranges); B - Arrangement (e.g. pairwise distances); C - Position (e.g. distances from centroid).") }
+```{r fig_metrics_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy metrics. A - Size (e.g. sum of ranges); B - Density (e.g. pairwise distances); C - Position (e.g. distances from centroid).") }
 
 set.seed(11)
 ## Plot space function (utility shortcut)
@@ -263,13 +263,13 @@ In general the <font style="color:blue">size</font> of a group in the <font styl
 
 #### 2. Density
 
-Density metrics measure the distribution of a group in the <font style="color:blue">trait space</font>.
-They can be interpreted as the distribution of the observations *within* a group in the <font style="color:blue">trait space</font>.
-Groups with higher density have observations within it that tend to be more similar to each other.
-For example, if group A is greater than group B but both have the same density, similar mechanisms could be driving both groups' <font style="color:blue">trait space</font> occupancy.
+<font style="color:blue">Density metrics measure an indication of the quantity of observations in the trait space.
+They can be interpreted as the distribution of the observations *within* a group in the trait space.
+Groups with higher density have more observations within it (i.e. more observations per approximation of size) that will tend to be more similar to each other.
+For example, if group A is greater than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups' trait space occupancy.
 However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process [@endler2005].
-<font style="color:blue">Note that density based metrics can be sensitive to sampling.</font>
-Density is less commonly measured compared to <font style="color:blue">size</font>, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].
+Note that density based metrics can be sensitive to sampling.
+Density is less commonly measured compared to size, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008]. </font>
 
 #### 3. Position
 

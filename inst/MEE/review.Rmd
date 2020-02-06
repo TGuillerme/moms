@@ -31,9 +31,9 @@ We've provided a version of the manuscript where the changes are highlighted in 
 
 <p style="color:blue">This is especially true of the graphing (i.e., Figure 2E) where the "ideal" scenario will vary depending on the type of measure intended. Currently this makes Table 5 harder to understand than is necessary. Indeed, I would wager that the authors came up with their novel position metric purely because they realised none of the other metrics are logically intended to do this job. I thus suggest a priori defining each metric as a volume, density or position metric and showing only the tests for each in the main text (alongside the ideal plot for a metric that captures that feature well). In other words, sum of ranges would only appear in the volume tests and nearest neighbour only in the density tests. The full results can be moved to the SI, but I think Figure 3 already captures the fact that these metrics measure very different things for the most part (very few show strong positive correlation), as we would logically expect.</p>
 
-> We clarified the Figure 2 to show the "ideal" scenario for any type of metric with two panels showing the best and worst scenarios for any metrics. We did not however separated the Table 5 for each different aspect (volume, position, density) since we wanted this table to illustrate how different metrics can capture different aspects at different degrees. For example, the Average distance from centroid (row 1 Table 5) captures changes in volume fairly well (column 1) but can also be influenced by changes in density (column 2). Thus changes in the Average distance from centroid are likely to correspond to changes in the volume of the trait space but could also be due to changes in density of the trait space (though not likely due to a change in position of the trait space). We added the following to the Table 5 caption to make it clearer:
+> We clarified the Figure 2 to show the "ideal" scenario for any type of metric with two panels showing the best and worst scenarios for any metrics. We did not however separated the Table 5 for each different aspect (size, position, density) since we wanted this table to illustrate how different metrics can capture different aspects at different degrees. For example, the Average distance from centroid (row 1 Table 5) captures changes in size fairly well (column 1) but can also be influenced by changes in density (column 2). Thus changes in the Average distance from centroid are likely to correspond to changes in the size of the trait space but could also be due to changes in density of the trait space (though not likely due to a change in position of the trait space). We added the following to the Table 5 caption to make it clearer:
 
-*This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in volume (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).* @@@lines
+*This figure illustrates how different metrics can be influenced by different aspects of changes in the trait space. For example, the Average distance from centroid (row 1) captures mainly changes in size (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).* @@@lines
 
 
 <p style="color:blue">Aside from this, the only potentially fatal flaw in the paper is that it seems to assume features about the spaces that may not be true. For example, that they are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction). E.g., if the latter is not true then distance based measures (nearest neighbor and minimum spanning trees) are confounded. Similarly, if spaces are anisotropic then position based measures may be confounded. </p>
@@ -52,7 +52,7 @@ This definition excludes whether spaces are are truly "occupiable" (e.g. are the
 
 <p style="color:blue">(I would also note that the authors currently post several questions that their metrics do not really answer, i.e., L47-48 "are groups overlapping in the trait-space? Are some regions of the trait-space not occupied? How do specific factors influence the occupancy of the trait-space?" These are good questions, but are not what the volume, density and position metrics actually capture. I would suggest rewording, or more explicitly state how these questions can be answered.)</p>
 
-> We reworded the generic questions to correspond to what the volume, density and position can actually capture:
+> We reworded the generic questions to correspond to what the size, density and position can actually capture:
 
 *are groups occupying the same amount of trait space?
 Do some groups have contain more species than others in the same amount of trait space?
@@ -70,9 +70,9 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 2. <p style="color:blue">Volume measures generally assume convexity (hypercubes, hyperellipsoids, ranges), but what if the point distributions are concave or have voids (inoccupiable "holes")? This seems like another consideration of what a good metric is that is currently not discussed. Concavities can also be artefactual features of some ordinations (e.g., the "horseshoeing" seen with some spaces).</p>
 
-> We've added the following caveat for the volume metrics:
+> We've added the following caveat for the size metrics:
 
-*Volume metrics do not take into account the distribution of the observations within a group and can be sensible to innocupied "holes" in it (Blonder et al. 2018).* lines@@@
+*Size metrics do not take into account the distribution of the observations within a group and can be sensible to innocupied "holes" in it (Blonder et al. 2018).* lines@@@
 
 3. <p style="color:blue">What about sampling considerations? I would imagine both density and range would be correlated with sample size, albeit negatively and positively respectively. I don't think the authors are obliged to solve this issue, but it is another consideration of what makes a "good" metric that could be discussed.</p>
 
@@ -92,9 +92,9 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 * <p style="color:blue">L152 - I applaud this approach over bombarding readers with information, but a brief note on why would be helpful (and what helped the ones in the main text make "the cut"; are these the most commonly used metrics?).</p>
 
-> We chose these metrics because of their contrasted results and because the where the ones commonly used to represent volume and position in the trait-space (expect for the average displacement). We've added a justification in the paper:
+> We chose these metrics because of their contrasted results and because the where the ones commonly used to represent size and position in the trait-space (expect for the average displacement). We've added a justification in the paper:
 
-*Note that the paper contains the results for only height metrics which were selected as representative of common metrics covering the volume, density and position trait-space aspects. However, the results for the additional 17 metrics is available in the supplementary material 4.*(line @@@)
+*Note that the paper contains the results for only height metrics which were selected as representative of common metrics covering the size, density and position trait-space aspects. However, the results for the additional 17 metrics is available in the supplementary material 4.*(line @@@)
 
 * <p style="color:blue">L155-156 - Both the table and contents require more information to understand them. Currently I have to go into the main text to get even a basic idea of what size means, for example.</p>
 
@@ -134,7 +134,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 * <p style="color:blue">L227 - "a decrease in density can often lead to an increase in volume" Surely this depends on the metric. E.g., how could range increase if data are removed? It seems like this is also a consideration for whether a metric is doing a good job. </p>
 
-> We apologise for this typo and meant that a **increase** in density (in a normal space) can lead to a **decrease** of volume (not the opposite): when increasing density of point in a normal space, the points further away from the space (which occur at a lower denisty) could be removed which would thus decrease the volume. More simply: tightening a space will reduce it's density (again, if the space is normally distributed). We've correct this error. 
+> We apologise for this typo and meant that a **increase** in density (in a normal space) can lead to a **decrease** of size (not the opposite): when increasing density of point in a normal space, the points further away from the space (which occur at a lower denisty) could be removed which would thus decrease the size. More simply: tightening a space will reduce it's density (again, if the space is normally distributed). We've correct this error. 
 
 * <p style="color:blue">L229 - Again, I think the correct citation for this is an older work.</p>
 
@@ -144,7 +144,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 > The reviewer is totally correct here for the metric "sum of ranges", we here meant that the metric "hypervolume" (i.e. product of ranges) would decrease. We've clarified this in the manuscript:
 
-*if a group expands in multiple dimensions (i.e. increase in volume), the actual hypervolume <($\prod_{i}^{d} range_{Di}$) can decrease (line @@@)* (line @@@)
+*if a group expands in multiple dimensions (i.e. increase in size), the actual hypervolume <($\prod_{i}^{d} range_{Di}$) can decrease (line @@@)* (line @@@)
 
 * <p style="color:blue">L245 - "were" (grammar).</p>
 
@@ -190,11 +190,36 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 > We've changed the sentence to reflect the reviewer's opinion that we wholeheartedly agree with:
 
-*Third, we suggest to not name metrics as the biological aspect they are describing which can be vague (e.g. "disparity" or "functional dispersion") but rather what they are measuring and why (e.g. "We used sum of ranges to capture volume of space occupied").*(line @@@)
+*Third, we suggest to not name metrics as the biological aspect they are describing which can be vague (e.g. "disparity" or "functional dispersion") but rather what they are measuring and why (e.g. "We used sum of ranges to capture the size of occupied space occupied").*(line @@@)
 
 * <p style="color:blue">SI4, P3 - Plot seems to get cropped by bottom of page.</p>
 
 >We've fixed this display bug.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Reviewer: 2
 
@@ -205,22 +230,34 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
  * <p style="color:blue"> "Volume" is a clear geometric concept, but it is used here for all kinds of formulas. The product of lengths (ranges, standard deviations, inter-quartile distances) in orthogonal directions can indeed be interpreted as a volume, but Procrustes variance (l 61) cannot (this is a sum, not a product of variances). Also the example in Figure 1A is wrong: a sum of ranges is not a volume. Also in Table 3, the first two formulas, "average distance from centroid" (which should read "square root of summed squared distances from centroid") and "sum of variances", are not volumes (and, by the way, they are the same except for the root and the division by n; hence their correlation in the example).</p>
 
- >@@@ Double check if they are the same + use a synonym for volume.
-
-
-Use synonyms for:
-volume -> size
-density -> arrangement
-position
-
-
-
-
+ >We have chosen to change our broad category "volume" to "size" to avoid confusion with the mathematical definition of volume.
+ We have renamed the "average distance from centroid" to "average Euclidean distance from centroid".
+ Also, the similarity between the average Euclidean distance from centroid is indeed expected but we thought we leave both in the main text of the manuscript since they are commonly used.
 
 
  * <p style="color:blue"> Likewise, the term "density" is used in a way that I fail to understand. In statistics, "probability density" is a standard concept that also applies to multivariate data spaces. Sometimes, "density" is used here to describe a variance, e.g. in Fig. 1B, but it is not clear why. Also I don't understand the description in l 103-110.</p>
 
+ >Throughout the manuscript we use density in a more colloquial (or physical) way as suggest by the reviewer where density is an indication of the quantity of observations per units of size (volume, area, etc.): some trait-spaces can have the same size but contain different number of observations.
+ In a sense, this can be linked to probability density since a high value (density) in a probability density function of a distribution corresponds to the parts of the distribution with a high number of observations.
+ We have tried to make this clearer in our definition of the category of measurement:
+
+ *Density metrics measure an indication of the quantity of observations in the trait space.
+ They can be interpreted as the distribution of the observations* within *a group in the trait space.
+ Groups with higher density have more observations within it (i.e. more observations per approximation of size) that will tend to be more similar to each other.
+ For example, if group A is greater than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups' trait space occupancy.
+ However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process [@endler2005].
+ Note that density based metrics can be sensitive to sampling.
+ Density is less commonly measured compared to size, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].* lines@@@
+
+
+
+<!-- A - Size (e.g. sum of ranges); B - Arrangement (e.g. pairwise distances); C - Position (e.g. distances from centroid) -->
+
+
  >@@@ Use a synonym for density
+ >We have chosen to change our broad category name from "density" to "arrangement" to avoid confusion with the mathematical definition of volume.
+
+
 
  * <p style="color:blue"> The concept of a "position" of a group in trait space is not clear throughout the manuscript. E.g., in Fig 1C, the median distance from the centroid is considered a "position", but it is just another measure of disparity/variance. And why should "position metrics be harder to interpret in multidimensional spaces" (l 115)? </p>
 
