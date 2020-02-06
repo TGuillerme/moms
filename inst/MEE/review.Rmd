@@ -160,8 +160,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 * <p style="color:blue">L276 - It should be much easier to identify what the groups are here.</p>
 
-> @@@TODO: add the groups names in the caption.
-We've added the groups names for each dataset in the table caption.
+> We've added the groups names for each dataset in the table caption.
 
 * <p style="color:blue">L282 - "except" (grammar).</p>
 
@@ -195,7 +194,7 @@ We've added the groups names for each dataset in the table caption.
 
 * <p style="color:blue">SI4, P3 - Plot seems to get cropped by bottom of page.</p>
 
->@@@ TODO: fix.
+>We've fixed this display bug.
 
 # Reviewer: 2
 
