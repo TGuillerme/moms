@@ -206,7 +206,7 @@ Traits can also be measured by using relative observations [e.g. community compo
 However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
-```{r fig_measures_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy measures. A - Size (e.g. sum of ranges); B - Density (e.g. pairwise distances); C - Position (e.g. distances from centroid).") }
+```{r fig_measures_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy measures. A - Size (e.g. sum of ranges); B - Density (e.g. pairwise distances); C - Position (e.g. distances from centre).") }
 
 set.seed(11)
 ## Plot space function (utility shortcut)
@@ -277,7 +277,8 @@ Position measures where a group lies in <font style="color:blue">trait space</fo
 They can be interpreted as where a group lies in the <font style="color:blue">trait space</font> either relative to the space itself or relative to another group.
 For example, if group A has a different position than group B, observations in A will have a different trait-combination than B.
 
-Position measurements may be harder to interpret in multidimensional spaces (i.e. beyond left/right, up/down and front/back).
+Position measurements may be harder to interpret in multidimensional spaces.
+<font style="color:blue">For example in a 2D space, two groups can be equally distant from a fixed point but in different parts of the space left, right up or down (with the position possibilities increasing with the number of dimensions).</font>
 However, when thinking about unidimensional data (one trait), this measure is obvious: two groups A or B could have the same variance (i.e. "<font style="color:blue">size</font>" or spread) with the same number of observations (i.e. density) but could have a different mean and thus be in different positions.
 These measures have been used in ecology to compare the position of two groups relatively to each other [@mammola2019].
 
@@ -338,9 +339,9 @@ We also introduce a tool for measuring occupancy in multidimensional space ([`mo
 
 # Methods
 
-```{r measures_list, echo = FALSE}
+```{r metrics_list, echo = FALSE}
 ## Loading the list of measures
-source("list.of.measures.R")
+source("list.of.metrics.R")
 ```
 
 We tested how 25 different space occupancy measures relate to each other, are affected by modifications of traits space and affect group comparisons in empirical data.
@@ -348,10 +349,10 @@ To do so, we performed the following steps (explained in more detail below):
 
 1.  We simulated 13 different spaces with different sets of parameters;
 2.  We transformed these spaces by removing 50% of the observations following four different scenarios corresponding to different empirical scenarios: randomly, by limit (e.g. expansion or reduction of niches), by density (e.g. different degrees of competition within a guild) and by position (e.g. ecological niche shift).
-3.  We measured occupancy on the resulting transformed spaces using `r measure.names()` different space occupancy measures;
+3.  We measured occupancy on the resulting transformed spaces using `r metric.names()` different space occupancy measures;
 4.  We applied the same space occupancy measures to six empirical datasets (covering a range of disciplines and a range of dataset properties).
 
-<font style="color:blue">Note that the paper contains the results for only `r measure.names()` measures which were selected as representative of common metrics covering the <font style="color:blue">size</font>, density and position <font style="color:blue">trait space</font> aspects.</font>
+<font style="color:blue">Note that the paper contains the results for only `r metric.names()` measures which were selected as representative of common metrics covering the <font style="color:blue">size</font>, density and position <font style="color:blue">trait space</font> aspects.</font>
 However, the results for the additional 17 measures is available in the supplementary material 4.
 
 ## Generating spaces
@@ -385,7 +386,7 @@ We repeated the simulation of each <font style="color:blue">trait space</font> 2
 
 ## Spatial occupancy measures
 
-We then measured `r measure.names()` different metrics on the resulting transformed spaces, including a new measure we produced, the average displacement, which we expect to be influenced by changes in <font style="color:blue">trait space</font> position.
+We then measured `r metric.names()` different metrics on the resulting transformed spaces, including a new measure we produced, the average displacement, which we expect to be influenced by changes in <font style="color:blue">trait space</font> position.
 
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
@@ -399,7 +400,7 @@ We then measured `r measure.names()` different metrics on the resulting transfor
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait space (coordinates: 0, 0, 0, ...). A value of 1 indicates that the observations' centroid is the centre of the trait space |
 Table 3: List of measures with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the <font style="color:blue">eigenvalue</font> of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
-We selected these `r measure.names()` space occupancy measures to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
+We selected these `r metric.names()` space occupancy measures to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
 The supplementary material 4 contains the same analysis as described below, performed on a total of 25 measures.
 <font style="color:blue">Note that these measures are specific to trait-spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).</font>
 Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows exploring the effect of many more measures as well as the customisation of measures by combining them or using user-designed functions.
@@ -622,7 +623,7 @@ study | field | taxonomic Group | traits (data) | trait space | size | groups (o
 @healy2019 | Ecology | Animalia | Life history traits | Ordination of continuous traits (PCA) | 285*6 | 83 ecthotherms vs. 202 endotherms | Do endotherms have more diversified life history strategies than ectotherms? |
 Table 4: details of the six empirical trait spaces.
 
-For each empirical <font style="color:blue">trait space</font> we bootstrapped each group 500 times [@disprity] and applied the `r measure.names()` space occupancy measure to each pairs of groups.
+For each empirical <font style="color:blue">trait space</font> we bootstrapped each group 500 times [@disprity] and applied the `r metric.names()` space occupancy measure to each pairs of groups.
 <!-- Note that when space occupancy could not be calculated (e.g. due to the "curse of multidimensionality"), we collapsed the measure value to 0 (i.e. no space occupancy was captured). -->
 We then compared the means of each groups using the Bhattacharrya Coefficient [@bhattacharyya1943].
 
@@ -669,7 +670,7 @@ space_test <- test.simulation(remove_05, test = anova.fun, scale = TRUE,
 
 ## Adding proper names
 results_pairwise <- remove_05
-names(results_pairwise[[1]]) <- measure_names
+names(results_pairwise[[1]]) <- metric_names
 
 ## Plotting the pairwise results
 pairwise.plot(results_pairwise, scale = TRUE, type = "base", plot = "cor")
@@ -685,7 +686,7 @@ More comparisons between measures are available in the supplementary materials 4
 
 ```{r fable_results, fig.show='hide', echo=FALSE, fig.height=3, fig.width=3}
 ## The measures names (shortened vector)
-name <- measure_names
+name <- metric_names
 
 ## Making a list of parameters for each mini plot
 plot.param <- list(scaler = 3,
@@ -694,14 +695,14 @@ plot.param <- list(scaler = 3,
                    quantiles = c(95, 50),
                    cent.tend = median,
                    pch = 19,
-                   measure.max = length(measures_list),
+                   metric.max = length(metrics_list),
                    cex = 2)
 
 ## Looping through each mini plot for every measure
-for(measure in 1:length(measures_list)) {
-    generate.fable.plot(data = remove_05, measure = measure, what = "limits", plot.param = plot.param, overlap = TRUE)
-    generate.fable.plot(data = remove_05, measure = measure, what = "densit", plot.param = plot.param, overlap = TRUE)
-    generate.fable.plot(data = remove_05, measure = measure, what = "displa", plot.param = plot.param, overlap = TRUE)
+for(metric in 1:length(metrics_list)) {
+    generate.fable.plot(data = remove_05, metric = metric, what = "limits", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = remove_05, metric = metric, what = "densit", plot.param = plot.param, overlap = TRUE)
+    generate.fable.plot(data = remove_05, metric = metric, what = "displa", plot.param = plot.param, overlap = TRUE)
 }
 
 ```
@@ -725,7 +726,7 @@ print.fable <- function(n_measures, byrow, ncol, test) {
   }
 }
 ## Getting the fable to copy paste under the table header below.
-print.fable(length(measures_list), byrow = TRUE, ncol = 3, test = TRUE)
+print.fable(length(metrics_list), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
 Measure      | Size change  | Arrangement change | Position change | Distribution effect | Dimensions effect |
@@ -781,7 +782,7 @@ data_names <- c("Beck and Lee 2014", "Wright 2017", "Marcy et al. 2016",
                 "Hopkins and Pearson 2016", "Jones et al. 2015", "Healy et al. 2019")
 
 for(dataset in 1:length(data_names)){
-    for(measure in 1:length(measures_list)){
+    for(measure in 1:length(metrics_list)){
         ## Plotting the results
         generate.fable.empirical(data = empirical_results[[dataset]][[measure]],
                                  test = disparity_test[[dataset]][[measure]],
@@ -796,7 +797,7 @@ body(plot.id)[[3]] <- substitute(chain <- "fable_results_empirical")
 ```
 
 ```{r, echo = FALSE, eval = FALSE}
-print.fable(length(measures_list), byrow = FALSE, ncol = 6, test = FALSE)
+print.fable(length(metrics_list), byrow = FALSE, ncol = 6, test = FALSE)
 ```
 
 Measure     | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins and Pearson 2016 | Jones et al. 2015 | Healy et al. 2019  |
@@ -812,7 +813,7 @@ Measure     | Beck and Lee 2014  | Wright 2017 | Marcy et al. 2016 | Hopkins and
 Table 6: Comparisons of pairs of groups in different empirical trait spaces. NAs are used for cases where space occupancy could not be measured due to the curse of multidimensionality. The displayed values are the <font style="color:blue">amount</font> of overlap between both groups (Bhattacharrya Coefficient). The orange and blue boxplots represent the trait space occupancy for the following groups from left to right: crown *vs.* stem mammals; crinoids before *vs.* after the end-Ordovician extinction;  *Megascapheus* *vs.* *Thomomys*; adults *vs.* juveniles trilobites; aspens *vs.* grasslands communities; ecthotherms *vs.* endotherms.
 
 Similarly as for the simulated results, the empirical ones indicate that there <font style="color:blue">can be</font> no perfect one-size-fit all measurement.
-For all `r measure.names()` measures (<font style="color:blue">except</font> the ellipsoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the measures.
+For all `r metric.names()` measures (<font style="color:blue">except</font> the ellipsoid volume) we see either one group or the other having a bigger mean than the other and no consistent case where a group has a bigger mean than the other for all the measures.
 For example, in the @beck2014's dataset, there is a clear <font style="color:blue">difference in  size</font> using the average Euclidean distance from centroid or the sum of variances (overlaps of respectively 0.175 and 0.159) but no overlap when measuring the <font style="color:blue">size</font> using the sum of ranges (0.966).
 However, for the @hopkins2016's dataset, this pattern is reversed (no clear differences for the average Euclidean distance from centroid or the sum of variances - 0.701 and 0.865 respectively) but a clear difference for the sum of ranges (0).
 Furthermore, for each dataset, the absolute differences between each groups is not consistent depending on the measures.

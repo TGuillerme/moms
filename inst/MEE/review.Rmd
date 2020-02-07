@@ -14,6 +14,10 @@ Dear Editor,
 We've provided a version of the manuscript where the changes are highlighted in <font style="color:blue">blue</font>.
 
 
+We believe that some of the parts that the manuscript that the reviewers found unclear were due to the differences of usage of the term "disparity" (which seems to have a disparate meanings throughout the literature depending on the author).
+This is why we have deliberately tried to not refer to this term in the manuscript (appart for several specific instances) in order to distance ourselves from the "disparity" meaning*s*, and to try to bridge the gap between evolution and ecology where "disparity" is actually rarely used.
+
+
 @@@TODO: also update (compile) the supplementaries
 
 
@@ -230,7 +234,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
  * <p style="color:blue"> The term "metric" has a particular meaning in statistics and geometry, but the term is used more vaguely in the sense of "measure" here. </p>
 
- >We changed mentions of metric to measurements to make it clearer we do not mean metric in a geometric sense. @@@TODO
+ >We changed mentions of metric to measurements to make it clearer we do not mean metric in a geometric sense.
 
  * <p style="color:blue"> "Volume" is a clear geometric concept, but it is used here for all kinds of formulas. The product of lengths (ranges, standard deviations, inter-quartile distances) in orthogonal directions can indeed be interpreted as a volume, but Procrustes variance (l 61) cannot (this is a sum, not a product of variances). Also the example in Figure 1A is wrong: a sum of ranges is not a volume. Also in Table 3, the first two formulas, "average distance from centroid" (which should read "square root of summed squared distances from centroid") and "sum of variances", are not volumes (and, by the way, they are the same except for the root and the division by n; hence their correlation in the example).</p>
 
@@ -238,34 +242,19 @@ Are some specific factors correlated to different patterns of occupancy of the t
  We have renamed the "average distance from centroid" to "average Euclidean distance from centroid".
  Also, the similarity between the average Euclidean distance from centroid is indeed expected but we thought we leave both in the main text of the manuscript since they are commonly used.
 
-
  * <p style="color:blue"> Likewise, the term "density" is used in a way that I fail to understand. In statistics, "probability density" is a standard concept that also applies to multivariate data spaces. Sometimes, "density" is used here to describe a variance, e.g. in Fig. 1B, but it is not clear why. Also I don't understand the description in l 103-110.</p>
 
  >Throughout the manuscript we use density in a more colloquial (or physical) way as suggest by the reviewer where density is an indication of the quantity of observations per units of size (volume, area, etc.): some trait-spaces can have the same size but contain different number of observations.
  In a sense, this can be linked to probability density since a high value (density) in a probability density function of a distribution corresponds to the parts of the distribution with a high number of observations.
  We have tried to make this clearer in our definition of the category of measurement:
 
- *Density metrics measure an indication of the quantity of observations in the trait space.
- They can be interpreted as the distribution of the observations* within *a group in the trait space.
- Groups with higher density have more observations within it (i.e. more observations per approximation of size) that will tend to be more similar to each other.
- For example, if group A is greater than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups' trait space occupancy.
- However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process [@endler2005].
- Note that density based metrics can be sensitive to sampling.
- Density is less commonly measured compared to size, but it is still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008].* lines@@@
-
-
-
-<!-- A - Size (e.g. sum of ranges); B - Arrangement (e.g. pairwise distances); C - Position (e.g. distances from centroid) -->
-
-
- >@@@ Use a synonym for density
- >We have chosen to change our broad category name from "density" to "arrangement" to avoid confusion with the mathematical definition of volume.
-
-
+ *Density measures an indication of the quantity of observations in the trait space. They can be interpreted as the distribution of the observations within a group in the trait space. Groups with higher density have more observations within it (i.e. more observations per approximation of size) that will tend to be more similar to each other. For example, if group A is greater than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups’ trait space occupancy. However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process (Endler et al. 2005). Note that density based measures can be sensitive to sampling. Density is less commonly measured compared to size, but it is still used in both ecology (e.g. the minimum spanning tree length; Oksanen et al. 2007) and evolution (e.g. the average pairwise distance; Harmon et al. 2008).* lines@@@
 
  * <p style="color:blue"> The concept of a "position" of a group in trait space is not clear throughout the manuscript. E.g., in Fig 1C, the median distance from the centroid is considered a "position", but it is just another measure of disparity/variance. And why should "position metrics be harder to interpret in multidimensional spaces" (l 115)? </p>
 
- >@@@ Define position better and add a general note that metrics, although they measure something precisely (e.g. variance) can be used to measure a specific aspect (e.g. position). Also maybe add a note that we do not embrace a restrictive term for disparity hence the low use of this world in the paper.
+ > We've changed the position metric in Fig. 1C from "average distance from centroid" to "distances to centre". In this specific case the centre (0,0) of the space and the centroid (-0.23, -0.46) actually differ (though this is not always the case, especially when looking at all the data in a PCA for example). Although we agree that the "distances from centroid" gives an approximation of size, the "distances from centre" gives an approximation of position (i.e. for observations that are further away from the centre). This can be generalised to any measurements like "distances from a fixed point" which will give an idea of the position of a group in trait space. This also links to our comment on line 115 about the difficulty of interpreting position measures in trait space: if two groups have the same position in trait space (say using the average displacement measurement), it just indicates that are equally away from a fixed point (say the centre) but not whether they are in the same position in the trait space (e.g. in a 2D space, groups can be equally distant from the centre left, right up or down - these possible positions will of course increases with each additional dimensions). We've specified this in the main text:
+
+ *For example in a 2D space, two groups can be equally distant from a fixed point but in different parts of the space left, right up or down (with the position possibilities increasing with the number of dimensions).* lines@@@
 
  * <p style="color:blue"> A data matrix is not yet a "space" (l 80). In addition to a set of elements, a mathematical space requires some relations between the elements, such as a metric or nearness relationship (for assessable discussions of mathematical spaces in biology see, e.g., Stadler et al. 2002 J Theor Biol, Mitteroecker & Huttegger 2009 Biol Theory).</p>
 
