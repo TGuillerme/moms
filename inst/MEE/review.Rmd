@@ -19,6 +19,8 @@ This is why we have deliberately tried to not refer to this term in the manuscri
 
 
 @@@TODO: also update (compile) the supplementaries
+@@@Add reference to Bazzi et al Curr. Biol.
+@@@Cite Mammalo new paper https://www.biorxiv.org/content/10.1101/2020.01.25.919373v1.full.pdf
 
 
 # Associate Editor Comments to Author:
