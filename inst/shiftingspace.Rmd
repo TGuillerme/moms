@@ -378,7 +378,7 @@ Table 2: different simulated space distribution.
 <font style="color:blue"> *Name* of the simulated space in this paper; *dimensions* of the matrix (row\*columns); *distribution(s)* of the data on each dimensions (for the 'Random' space, each dimension is randomly chosen to be Normal, Uniform or Lognormal); *dimension variance*: distribution of the variance between dimensions (when equal, the dimensions have the same variance, otherwise, the variance per dimensions is decreasing either lognormally (multiplicative) or normally (additive); *correlation* between dimensions. </font>
 
 The differences in <font style="color:blue">trait space</font> sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of dimensions in literature: "low-dimension" spaces ($<15$) are common in ecology [@mammola2019] whereas high dimension spaces ($>100$) are common in macroevolution [@hopkins2017].
-We used a range of distributions (uniform, normal or random) to test the effect of observation distributions on the measurements.
+We used a range of distributions (uniform, normal or <font style="color:blue">a random combination of uniform, normal and lognormal</font>) to test the effect of observation distributions on the measurements.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal ($\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing ($\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive ($\sum_i^d(1/d)$).
 Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in principal components analysis - PCA; e.g. @marcy2016; @healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
 Finally, we added a correlation parameter to take into account the potential correlation between different traits <font style="color:blue">to illustrate the effect of co-linearity between traits (especially in non-ordinated <font style="color:blue">trait spaces</font>).</font>
@@ -393,16 +393,16 @@ We then measured `r metric.names()` different metrics on the resulting transform
 | Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Size | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
 | Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Size | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
 | Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Size | @foote1992 | more sensitive to outliers than the sum of variances |
-| Ellipsoid <font style="color:blue">size</font> | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Size | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
+| Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Size | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
 | Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
-| Average nearest neighbour distance | $min\left(\sqrt{\sum_{i}^{n}{({q}_{i}-p_{i})^2}}\right)\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
+| Average nearest neighbour distance | $\sqrt{\sum_{i}^{n}{min({q}_{i}-p_{i})^2}})\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait space (coordinates: 0, 0, 0, ...). A value of 1 indicates that the observations' centroid is the centre of the trait space |
 Table 3: List of measures with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the <font style="color:blue">eigenvalue</font> of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
 We selected these `r metric.names()` space occupancy measures to illustrate how they capture different aspects of space occupancy (but note that this is not an expression of our preference).
 The supplementary material 4 contains the same analysis as described below, performed on a total of 25 measures.
-<font style="color:blue">Note that these measures are specific to trait-spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).</font>
+<font style="color:blue">Note that these measures are specific to trait spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).</font>
 Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows exploring the effect of many more measures as well as the customisation of measures by combining them or using user-designed functions.
 
 <!--  -->
@@ -579,7 +579,8 @@ text(x = -0.6, y = 2,  labels = round(bc_1, 3), cex = 1.4)
 
 To assess the effect of space reduction, distribution and dimensionality on the measure, we scaled the measure to be relative to the non-reduced space for each dimension distribution or number of dimensions.
 We subtracted the observed occupancy with no space reduction to all the occupancy measures of the reduced spaces and then divided it by the resulting maximum observed occupancy.
-Our occupancy measures where scaled between -1 and 1 with a value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the occupancy measure value.
+<font style="color:blue">Since the occupancy measures are dependent on their trait space, we scaled and centred them between -1 and 1 to make them comparable.</font>
+A value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the occupancy measure value.
 We then measured the <font style="color:blue">amount</font> of overlap between the non-random removals (limit, density and position) and the random removals using the Bhattacharrya Coefficient [<font style="color:blue">amount</font> of overlap between two distributions; @bhattacharyya1943].
 
 ### Measuring the effect of space and dimensionality on shifting spaces
@@ -587,8 +588,9 @@ We then measured the <font style="color:blue">amount</font> of overlap between t
 Distribution differences and the number of dimensions can have an effect on the measure results.
 For example, in a normally distributed space, an <font style="color:blue">increase</font> in density can often lead to a <font style="color:blue">decrease</font> in <font style="color:blue">size</font>.
 This is not necessarily true in log-normal spaces or in uniform spaces for certain measures.<!--  (e.g. the convex hull volume of a lognormal space will be less sensitive to changes in density) -->
-Furthermore, high dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality]: data becomes sparser with increasing number of dimensions, such that the probability of two points A and B overlapping in *n* dimensions is the product of the probability of the two points overlapping on each dimensions($\prod_{i}^{d} P(A = B)_{Di}$).
-This probability decreases as a product of the number of dimensions.
+Furthermore, high dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality]: data becomes sparser with increasing number of dimensions.
+<font style="color:blue">This can have two main unforeseen mathematical consequence: 1) the probability of overlap between two groups decreases as a product of the number of dimensions; and  2) the amount of samples needed to "fill" the spaces increases exponentially [see this interactive illustration by Toph Tucker](https://observablehq.com/@tophtucker/theres-plenty-of-room-in-the-corners).
+Furthermore computational time can be increased exponentially rather than linearly with the number of dimensions.</font>
 Therefore, the "curse" can make the interpretation of high dimensional data counter-intuitive.
 For example if a group expands in multiple dimensions (i.e. increase in <font style="color:blue">size</font>), the actual hypervolume <font style="color:blue">($\prod_{i}^{d} range_{Di}$)</font> can decrease (Fig. 3 and Tables 6, 7).
 
