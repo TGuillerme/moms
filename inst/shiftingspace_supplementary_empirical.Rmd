@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 bibliography: references.bib
 csl: mee.csl
 output:
-  html_document:
+  pdf_document:
     fig_width: 12
     fig_height: 6
 ---
