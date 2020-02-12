@@ -33,11 +33,6 @@ This is why we have deliberately tried to not refer to this term in the manuscri
 
 > On line 281, we did actually insist that there is "that there is no perfect one-size-fit all", we have now changed it to "there **can be** no perfect one-size-fit all metric" to highlight that we, like the reviewer agree that finding a "magic bullet" is foolish.
 
-<p style="color:blue">I thus think lumping all metrics into a single "pot" of analyses is both a waste of time and more likely to lead to confusion on the part of the reader. </p>
-
-> @@@ need to make sure this is clear throughout the manuscript
-
-
 <p style="color:blue">This is especially true of the graphing (i.e., Figure 2E) where the "ideal" scenario will vary depending on the type of measure intended. Currently this makes Table 5 harder to understand than is necessary. Indeed, I would wager that the authors came up with their novel position metric purely because they realised none of the other metrics are logically intended to do this job. I thus suggest a priori defining each metric as a volume, density or position metric and showing only the tests for each in the main text (alongside the ideal plot for a metric that captures that feature well). In other words, sum of ranges would only appear in the volume tests and nearest neighbour only in the density tests. The full results can be moved to the SI, but I think Figure 3 already captures the fact that these metrics measure very different things for the most part (very few show strong positive correlation), as we would logically expect.</p>
 
 > We clarified the Figure 2 to show the "ideal" scenario for any type of metric with two panels showing the best and worst scenarios for any metrics. We did not however separated the Table 5 for each different aspect (size, position, density) since we wanted this table to illustrate how different metrics can capture different aspects at different degrees. For example, the Average distance from centroid (row 1 Table 5) captures changes in size fairly well (column 1) but can also be influenced by changes in density (column 2). Thus changes in the Average distance from centroid are likely to correspond to changes in the size of the trait space but could also be due to changes in density of the trait space (though not likely due to a change in position of the trait space). We added the following to the Table 5 caption to make it clearer:
@@ -153,7 +148,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 > The reviewer is totally correct here for the metric "sum of ranges", we here meant that the metric "hypervolume" (i.e. product of ranges) would decrease. We've clarified this in the manuscript:
 
-*if a group expands in multiple dimensions (i.e. increase in size), the actual hypervolume <($\prod_{i}^{d} range_{Di}$) can decrease (line @@@)* (line @@@)
+*if a group expands in multiple dimensions (i.e. increase in size), the actual hypervolume <($\prod_{i}^{d} range_{Di}$) can decrease.* (line @@@)
 
 * <p style="color:blue">L245 - "were" (grammar).</p>
 
@@ -260,12 +255,10 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
  * <p style="color:blue"> A data matrix is not yet a "space" (l 80). In addition to a set of elements, a mathematical space requires some relations between the elements, such as a metric or nearness relationship (for assessable discussions of mathematical spaces in biology see, e.g., Stadler et al. 2002 J Theor Biol, Mitteroecker & Huttegger 2009 Biol Theory).</p>
 
- >@@@ Not sure I agree with this definition but see the references.
-<!-- 
  Here we followed the general mathematical definition of space as a set with some mathematical structure. The exact definition of a mathematical set and structure is way beyond our mathematical comfort zone (and towards logics and philosophy - we specifically followed the [simplification explained here](https://math.stackexchange.com/questions/177937/difference-between-space-and-mathematical-structure)).
- The definition in Mitteroecker & Huttegger 2009 is specific to "morphospaces" whereas the Stadler et al 2002 one is more close to trait spaces as vaguely defined in our manuscript: 
+ The definition in Mitteroecker & Huttegger 2009 is specific to "morphospaces" whereas the Stadler et al 2002 one is more close to trait spaces as vaguely defined in our manuscript which we have now updated to:
 
- Mitteroecker & Huttegger 2009: "morphospace is based on the Euclidean tangent space to Kendall’s shape space, which is a Riemannian manifold" -->
+ *In this paper, we define trait spaces as any matrix where rows are observations and columns are traits, where both observations and traits are structurally related (e.g. there is a phylogenetic relation between observations - and traits, etc.).* lines@@@
 
  * <p style="color:blue"> What is a "random" distribution, as opposed to a normal or uniform distribution (e.g., l 160)?</p>
 
@@ -292,9 +285,6 @@ Furthermore computational time can be increased exponentially rather than linear
 
 4. <p style="color:blue">I miss a discussion of how the measurement scales of the variables can influence the described statistics. I seems that all the variables are assumed to have an interval scale, for some statistics also a ratio scale. Is this realistic? Also nothing is mentioned about the topology of the multivariate data spaces: Do the spaces need to be metric or even Euclidean? Do the units and scales of the variables all need to be the same?</p>
 
-<!-- *Note that these metrics are specific to trait-spaces that are Euclidean (distances in the space reflect true distances between points) and isotropic (it is as easy to traverse the space in any direction).* lines@@@
- -->
-
 > See our response to reviewer 1 comment on the trait space properties (lines @@@). Furthermore, we specified that we scale the measurements as to make them comparable since they are relative to each trait space:
 
 *Since the occupancy measures are dependent on their trait space, we scaled and centred them between -1 and 1 to make them comparable.* lines @@@
@@ -318,11 +308,17 @@ plot(space, xlim = c(-1.5e3, 1.5e3), ylim = c(-1.5e3, 1.5e3),
 5. <p style="color:blue">The different statistics were evaluated and compared across datasets with different dimensionalities and distributions. While this seems feasible, the computation of p-values by ANOVA is not. This is not a question of type I error as you are not testing against sampling variation. In other words, you treat each dataset as a case drawn independently from the same distribution of datasets. Clearly, this is not what you are doing.</p>
 
 
+Compare the distribution of disparity scores with a change in dimensions.
+The null is that there is no difference between the disparity score and the dimensions.
 
+- We can use a permutation test to test whether the disparities per number of dimensions are different than the overall disparities?
+- We can use a series of wilcox tests of one series of disparities vs. all disparities from that parameter n times resulting in 5 p-values?/5
 
 
 >@@@ Fix this problem
 
+<!-- We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 2) for testing respectively the effect of distribution and dimensions.
+The results of the ANOVAs (*p*-values) are reported in Table 5 (see supplementary material 3 for the full ANOVA result tables). -->
 
 ### Minor comments
 

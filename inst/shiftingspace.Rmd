@@ -200,7 +200,7 @@ Therefore, we propose [`moms`](https://tguillerme.shinyapps.io/moms/), a user-fr
 
 ## Space occupancy measures
 
-In this paper, we define <font style="color:blue">trait spaces</font> as any matrix where rows are observations and columns are traits.
+<font style="color:blue">In this paper, we define trait spaces as any matrix where rows are observations and columns are traits, where both observations and traits are structurally related (e.g. there is a phylogenetic relation between observations - and traits, etc.).</font>
 These traits can widely vary in number and types: they could be coded as discrete [e.g. presence or absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated measures [e.g. landmark position; @marcy2016; Fourier ellipses; @momocs].
 Traits can also be measured by using relative observations [e.g. community compositions; @jones2015] or distance between observations [e.g. @close2015].
 However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy metrics can be measured: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
@@ -292,16 +292,16 @@ Similarly, in ecology, if two groups have the same <font style="color:blue">trai
 
 ```{r fig_measure_captures, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 2: Illustration how three different size (size. - product of ranges), density (den. - average nearest neighbour distance) and position (pos. - average displacement) measurements capture different occupancy aspects in this simplified trait space. This illustrates how using only one specific space occupancy measure (e.g. the size) will fail to capture changes in B (no change in size), or partial changes in C (also change in density and position)."), eval = FALSE}
 
-## Making the size/density/position space
+## Making the volume/density/position space
 vdp_space <- moms::vdp.make()
 
 ## Measuring disparity
 vdp_disp <- moms::vdp.dispRity(vdp_space,
-                         size = c(prod, ranges),
+                         volume = c(prod, ranges),
                          density = c(mean, neighbours),
                          position = c(mean, displacements))
 
-## Checking the table of size changes
+## Checking the table of volume changes
 silent <- moms::vdp.check.table(vdp_disp, vdp_space)
 
 ## Plotting the results
@@ -381,7 +381,7 @@ The differences in <font style="color:blue">trait space</font> sizes (200 $\time
 We used a range of distributions (uniform, normal or <font style="color:blue">a random combination of uniform, normal and lognormal</font>) to test the effect of observation distributions on the measurements.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal ($\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing ($\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive ($\sum_i^d(1/d)$).
 Both multiplicative and cumulative reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [in a lognormal way in principal components analysis - PCA; e.g. @marcy2016; @healy2019; and in a normal way in Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
-Finally, we added a correlation parameter to take into account the potential correlation between different traits <font style="color:blue">to illustrate the effect of co-linearity between traits (especially in non-ordinated <font style="color:blue">trait spaces</font>).</font>
+Finally, we added a correlation parameter to take into account the potential correlation between different traits <font style="color:blue">to illustrate the effect of co-linearity between traits (especially in non-ordinated trait spaces).</font>
 We repeated the simulation of each <font style="color:blue">trait space</font> 20 times (resulting in 260 <font style="color:blue">trait spaces</font>).
 
 ## Spatial occupancy measures
