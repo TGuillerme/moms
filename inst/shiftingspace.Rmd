@@ -24,6 +24,7 @@ output:
     keep_tex: true
   self_contained: false
 
+Instead of
 
 output:
   html_document:
@@ -281,6 +282,9 @@ Position measurements may be harder to interpret in multidimensional spaces.
 <font style="color:blue">For example in a 2D space, two groups can be equally distant from a fixed point but in different parts of the space left, right up or down (with the position possibilities increasing with the number of dimensions).</font>
 However, when thinking about unidimensional data (one trait), this measure is obvious: two groups A or B could have the same variance (i.e. "<font style="color:blue">size</font>" or spread) with the same number of observations (i.e. density) but could have a different mean and thus be in different positions.
 These measures have been used in ecology to compare the position of two groups relatively to each other [@mammola2019].
+
+
+<!-- @@@Add here orientation?  -->
 
 ## No measure to rule them all: benefits of considering multiple measures
 
@@ -741,7 +745,7 @@ Measure      | Size change  | Arrangement change | Position change | Distributio
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures. See Fig. 2 for interpretation of the figures distributions and values. _p_-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimensions (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. For example, the Average Euclidean distance from centroid (row 1) captures mainly changes in <font style="color:blue">size</font> (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
+Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures. See Fig. 2 for interpretation of the figures distributions and values. F-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimension represent the ratio of sum squared difference within and between groups (the higher, the more the factor has an effect on the measure) and associated _p_-values (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. For example, the Average Euclidean distance from centroid (row 1) captures mainly changes in <font style="color:blue">size</font> (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
 
 
 As expected, some different measures capture different aspects of space occupancy.

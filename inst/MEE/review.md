@@ -1,7 +1,7 @@
 ---
 title: "MEE-19-10-743 Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?"
 author: "Thomas Guillerme, Mark N. Puttick, Ariel E. Marcy, Vera Weisbecker"
-date: "`r Sys.Date()`"
+date: "2020-02-12"
 output:
   html_document:
     fig_width: 8
@@ -293,7 +293,8 @@ Furthermore computational time can be increased exponentially rather than linear
 
 > We did not mention however whether the units in the trait space need to be Euclidean, scaled, homoscedastic, etc. since this can vary between studies and measurements. In our case most our measures are assuming only a Euclidean isotropic space but not necessarily scaled. The scaling issue of the traits (variables) has more importance in representing the data (e.g. plotting a projection of the trait space) but less in measuring occupancy. This is illustrated in the exaggerated example below:
 
-```{r, eval = FALSE}
+
+```r
 ## A small trait space with a huge scale and distribution difference per axis
 space <- cbind(rnorm(10, sd = 1e3), rlnorm(10, sdlog = 1e-3))
 ## The ellipsoid volume can be calculated using both axis:
@@ -328,7 +329,8 @@ The null is that there is no difference between the disparity score and the dime
 We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 2) for testing respectively the effect of distribution and dimensions.
 The results of the ANOVAs (*p*-values) are reported in Table 5 (see supplementary material 3 for the full ANOVA result tables). -->
 
-```{r, eval = FALSE, print = FALSE}
+
+```r
 ## The data
 data <- matrix(c(6, 8, 13, 8, 12, 9, 4, 9, 11, 5, 11, 8, 3, 6, 7, 4, 8, 12 ), ncol = 3, nrow = 6, byrow = TRUE)
 
