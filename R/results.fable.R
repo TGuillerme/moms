@@ -264,9 +264,12 @@ s.test <- function(metric.ID, type, test.results = list("s" = space_test, "r" = 
     ## White spaces
     rownames(print_results) <- c("f.", "res.")
     print_results <- ifelse(is.na(print_results), "", print_results)
-    ## Add the tokens
+        
+    ## Get the values
+    f_val <- as.numeric(print_results[1,4])
     p_val <- as.numeric(print_results[1,5])
 
+    ## Add the tokens
     if(is.na(p_val)){
         return(noquote("NA"))
     }
@@ -297,6 +300,6 @@ s.test <- function(metric.ID, type, test.results = list("s" = space_test, "r" = 
     p_val <- as.character(p_val)
     p_val <- ifelse(p_val == "0", "<1e-3", p_val)
     ## Display the results
-    output <- paste("p = ", p_val, signif_token)
+    output <- paste0("F = ", f_val, " ; ", "p = ", p_val, signif_token)
     return(noquote(output))
 }
