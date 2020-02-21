@@ -281,6 +281,19 @@ Are some specific factors correlated to different patterns of occupancy of the t
  Here we followed the general mathematical definition of space as a set with some mathematical structure. The exact definition of a mathematical set and structure is way beyond our mathematical comfort zone (and towards logics and philosophy - we specifically followed the [simplification explained here](https://math.stackexchange.com/questions/177937/difference-between-space-and-mathematical-structure)).
  The definition in Mitteroecker & Huttegger 2009 is specific to "morphospaces" whereas the Stadler et al 2002 one is more close to trait spaces as vaguely defined in our manuscript which we have now updated to:
 
+
+ <!-- Mittroecker and Huttegger: morphospaces, are mathematical
+spaces describing and relating the phenotypic configuration
+of biological organisms and are central tools in nowadays theoretical
+and mathematical biology. They have been used both in
+a merely metaphorical sense and in the context of actual mathematical
+and statistical computations. In a typical morphospace,
+the morphological configuration of an organism is represented
+by a single point, and the dimensionality of the space is determined
+by the number of measured variables (Q-space). -->
+
+
+<!-- Add we generalise Mittroecker and Huttegger's definition beyond morphology; Add that spaces do not need to be Euclidean (though they thrive to be!) -->
  *In this paper, we define trait spaces as any matrix where rows are observations and columns are traits, where both observations and traits are structurally related (e.g. there is a phylogenetic relation between observations - and traits, etc.).* lines@ 83-85
 
  * <p style="color:blue"> What is a "random" distribution, as opposed to a normal or uniform distribution (e.g., l 160)?</p>
