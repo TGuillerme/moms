@@ -225,13 +225,13 @@ For example, if group A is bigger than group B, the observations in A achieve mo
 This type of measure is widely used in both ecology [e.g. the hypervolume; @blonder2018] and in evolution [e.g. the sum or product of ranges or variances; @wills2001].
 
 Although <font style="color:blue">size</font> measures are suitable indicators of a group's <font style="color:blue">trait space</font> occupancy, they are limited to comparing the range of trait-combinations between groups.
-<font style="color:blue">Size</font> measures do not take into account the distribution of the observations within a group <font style="color:blue">and can be insensitive to unoccupied "holes" in the trait space [@blonder2018].</font>
+<font style="color:blue">Size measures do not take into account the distribution of the observations within a group and can be insensitive to unoccupied "holes" in the trait space [@blonder2018] in which case the volumes can be overestimated.</font>
 In other words, they can make it difficult to determine whether all the observations are on the edge of the volume or whether the <font style="color:blue">size</font> is simply driven by a small number of extreme observations.
 
 
 #### 2. Density
 
-<font style="color:blue">Density measures give an indication of the quantity of observations in the trait space. %AM: per unit of trait space? Or is that implied in the definition of trait space?
+<font style="color:blue">Density measures give an indication of the quantity of observations in the trait space.
 They can be interpreted as the distribution of the observations *within* a group in the trait space.
 Groups with higher density contain more observations (i.e. more observations per approximation of size) that will tend to be more similar to each other.
 For example, if group A is greater is size than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups' trait space occupancy. 

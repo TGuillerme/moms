@@ -10,15 +10,13 @@ output:
 
 Dear Editor,
 
-> Mark, Ariel and Vera: this is still a drafty version! Ignore the colours business and the blocks with three @ (@@@) are still not written properly, so if you want to comment them, please don't worry about the tone and the grammar. (the places with a single @ are just the line tags that I'll have to update before resubmission)
 
 @@@please find below our detailed response to the reviewers comments. For clarity, the reviewer's comments are in <font style="color:blue">blue</font> and our response in black with the modified text in the manuscript in *italic*.
 We've provided a version of the manuscript where the changes are highlighted in <font style="color:blue">blue</font>.
 
 
 We believe that some of the parts that the manuscript that the reviewers found unclear were due to the differences of usage of the term "disparity" (which seems to have a disparate meanings throughout the literature depending on the author).
-This is why we have deliberately tried to not refer to this term in the manuscript (appart for several specific instances) in order to distance ourselves from the "disparity" meaning*s*, and to try to bridge the gap between evolution and ecology, the latter of which rarely uses "disparity". %AM: assuming you meant that disparity is rarely used in ecology? 
-
+This is why we have deliberately tried to not refer to this term in the manuscript (appart for several specific instances) in order to distance ourselves from the "disparity" meaning*s*, and to try to bridge the gap between evolution and ecology, the latter of which rarely uses "disparity".
 
 @@@TODO: also update (compile) the supplementaries
 @@@Add reference to Bazzi et al Curr. Biol.
@@ -33,14 +31,16 @@ This is why we have deliberately tried to not refer to this term in the manuscri
 
 <p style="color:blue">In terms of potential modifications to the paper I would actually urge the authors to remove some material rather than add more. Specifically the paper entertains the notion (e.g., L281) that there might be a "magic bullet" metric that captures all three types of measure and that any metric could be applied to capture any of the three types of distribution. This seems a priori to be foolish. For example, sum of ranges could not reasonably be expected to capture density as it does not consider values between the edges (ranges) on any given axis. Similarly, if all points in a distribution were shifted exactly ten units in a specific direction then sum of ranges would remain identical. Thus this is clearly only ever going to be reasonably applied as a volume metric. One could also say something similar for nearest neighbor measures, which logically capture density, but would make no sense as a volume or position metric.</p>
 
-> VW: @@@So the first and most important comments are due to reviewer 1  totally misunderstanding the paper, and I think we need to deal with this assertively; One of the overarching issues is lack of clarity but it is _totally_ clear across the manuscript that we are not proposing a one-size-fits-all approach. Calling us foolish for doing something that we did the opposite of, then accusing us of making up a metric to fit our agenda, is unprofessional to say the least. I think we need to demonstrate their failure to understand the basic premise, which is plastered all over the ms, and pull them up on the making-up-stuff accusation. Suggestion below:
+> We are sorry that the reviewer missed the point and we totally agree with them: it is foolish to have one-size-fit-all metric. This is why we mentioned it throughout the manuscript and have now highlighted it more to be sure there is no confusion. On line 281, we did actually insist that there is "that there is no perfect one-size-fit all", we have now changed it to "there **can be** no perfect one-size-fit all metric" to highlight that we, like the reviewer agree that finding a "magic bullet" is foolish. We have now highlighted that throughout the manuscript, for example:
 
-> Reviewer 1 asserts that we propose a "foolish" one-size-fits-all approach for space occupancy metrics, and moves on to suggest that we "made up" our novel position matrix to support this otherwise unsupportable agenda. This is a serious misunderstanding, as the stated intent of this paper, repeated throughout, is to highlight that a one-size-fits-all approach is _not_ possible for the measurement of space occupancy. References to this are throughout the mansucript, for example abstract (point three: "We find no one measure describes all of trait space but that some measures are better at capturing certain aspects compared to other approaches..."). And again in  line 281 we state again that there is "that there is no perfect one-size-fit all...".
->@@@VW we could nuke this by listing all the instances were we state that one-size-fits-all does not work. I have done that in the past but it might be too much? 
->@@@VW again, the reasoning reviewer 1 gives here is exactly the reasoning we apply in this manuscript, INSERT TEXT HERE TO DEMONSTRATE
+*no one measure describes all changes through a trait space and the results from each measurement are dependent on the characteristics of the space and the hypotheses* lines @@@
 
+*Similarly as for the simulated results, the empirical ones indicate that there can be no perfect one-size-fit all measurement.* lines @@@
 
-> @@@TG: softer response version: We are sorry that the reviewer missed the point and we totally agree with them: it is foolish to have one-size-fit-all metric. This is why we mentioned it throughout the manuscript and have now highlighted it more to be sure there is no confusion. On line 281, we did actually insist that there is "that there is no perfect one-size-fit all", we have now changed it to "there **can be** no perfect one-size-fit all metric" to highlight that we, like the reviewer agree that finding a "magic bullet" is foolish.
+*We suggest using multiple measures to tackle different aspects of the trait space.* lines @@@
+
+*We insist that no measure is better than the next one and that researchers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.* lines @@@x§
+
 
 <p style="color:blue">This is especially true of the graphing (i.e., Figure 2E) where the "ideal" scenario will vary depending on the type of measure intended. Currently this makes Table 5 harder to understand than is necessary. Indeed, I would wager that the authors came up with their novel position metric purely because they realised none of the other metrics are logically intended to do this job. </p>
 
@@ -91,13 +91,13 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
 > We added a note saying that trait space occupancy cannot be studied beyond two or three dimensions using bi/tri-variate techniques:@@@VW: I would elaborate a little on this and possibly cite some historical instances of where this was a problem (but we could also say that this is obvious, given the huge field of multidimensional biology, what a strange comment)
 
-*Because of the multidimensional nature of these trait spaces, it is often not possible to study them use bi- or tri-variate techniques.* lines@ 47-49
+*Because of the multidimensional nature of these trait spaces, it is often not possible to study them using bi- or tri-variate techniques.* lines@ 47-49
 
 2. <p style="color:blue">Volume measures generally assume convexity (hypercubes, hyperellipsoids, ranges), but what if the point distributions are concave or have voids (inoccupiable "holes")? This seems like another consideration of what a good metric is that is currently not discussed. Concavities can also be artefactual features of some ordinations (e.g., the "horseshoeing" seen with some spaces).</p>
 
 > We've added the following caveat for the size metrics:
 
-*Volume measures do not take into account the distribution of the observations within a group and can be sensitive to unoccupied "holes" in it (Blonder et al. 2018), in which case the volumes can be overestimated.* lines@ 104-105
+*Size measures do not take into account the distribution of the observations within a group and can be insensitive to unoccupied "holes" in the trait space (Blonder et al. 2018) in which case the volumes can be overestimated.* lines@ 104-105
 
 3. <p style="color:blue">What about sampling considerations? I would imagine both density and range would be correlated with sample size, albeit negatively and positively respectively. I don't think the authors are obliged to solve this issue, but it is another consideration of what makes a "good" metric that could be discussed.</p>
 
@@ -254,7 +254,10 @@ Are some specific factors correlated to different patterns of occupancy of the t
 
  * <p style="color:blue"> The term "metric" has a particular meaning in statistics and geometry, but the term is used more vaguely in the sense of "measure" here. </p>
 
- > We changed mentions of metric to measure to make it clearer we do not mean metric in a geometric sense.
+ > We changed mentions of metric to measure to make it clearer we do not mean metric in a geometric sense. We also added the following precision in the introduction:
+
+ *Note that here with use the term "measure" to designate the mathematical formula measuring an aspect of the multidimensional space, this measure is often a metric but doesn't necessarily needs to be.* lines @@@
+
 
  * <p style="color:blue"> "Volume" is a clear geometric concept, but it is used here for all kinds of formulas. The product of lengths (ranges, standard deviations, inter-quartile distances) in orthogonal directions can indeed be interpreted as a volume, but Procrustes variance (l 61) cannot (this is a sum, not a product of variances). Also the example in Figure 1A is wrong: a sum of ranges is not a volume. Also in Table 3, the first two formulas, "average distance from centroid" (which should read "square root of summed squared distances from centroid") and "sum of variances", are not volumes (and, by the way, they are the same except for the root and the division by n; hence their correlation in the example).</p>
 
@@ -268,7 +271,7 @@ Are some specific factors correlated to different patterns of occupancy of the t
  In a sense, this can be linked to probability density since a high value (density) in a probability density function of a distribution corresponds to the parts of the distribution with a high number of observations.
  We have tried to make this clearer in our definition of the category of measurement:
 
- *Density measures an indication of the quantity of observations in the trait space. They can be interpreted as the distribution of the observations within a group in the trait space. Groups with higher density have more observations within it (i.e. more observations per approximation of size) that will tend to be more similar to each other. For example, if group A is greater than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups’ trait space occupancy. However, this might suggest that A is older and had more time to achieve more extreme trait combinations under essentially the same process (Endler et al. 2005). Note that density based measures can be sensitive to sampling. Density is less commonly measured compared to size, but it is still used in both ecology (e.g. the minimum spanning tree length; Oksanen et al. 2007) and evolution (e.g. the average pairwise distance; Harmon et al. 2008).* lines@ 109-118 %AM: I tried to edit this a little in the ms rmd and I think the "however" is catching up the reviewer - since it can mean "but" whereas here I think you mean, "more specifically"
+ *Density measures give an indication of the quantity of observations in the trait space. They can be interpreted as the distribution of the observations* within *a group in the trait space. Groups with higher density contain more observations (i.e. more observations per approximation of size) that will tend to be more similar to each other. For example, if group A is greater is size than group B and both have the same density (observations are equally distant within each group), similar mechanisms could be driving both groups' trait space occupancy.  Indeed, this pattern could suggest that A is older and has had more time to achieve more extreme trait combinations under essentially the same process as younger, smaller group B (Endler et al. 2005). Note that density based measures can be sensitive to sampling. Density measures are less common compared to size measures, but they are still used in both ecology (e.g. the minimum spanning tree length; Oksanen et al. 2007) and evolution (e.g. the average pairwise distance; Harmon et al. 2008).* lines@ 109-118
 
  * <p style="color:blue"> The concept of a "position" of a group in trait space is not clear throughout the manuscript. E.g., in Fig 1C, the median distance from the centroid is considered a "position", but it is just another measure of disparity/variance. And why should "position metrics be harder to interpret in multidimensional spaces" (l 115)? </p>
 
@@ -292,6 +295,7 @@ the morphological configuration of an organism is represented
 by a single point, and the dimensionality of the space is determined
 by the number of measured variables (Q-space). -->
 
+<!-- @@@ TG: also added to table 1. -->
 
 <!-- Add we generalise Mittroecker and Huttegger's definition beyond morphology; Add that spaces do not need to be Euclidean (though they thrive to be!) -->
  *In this paper, we define trait spaces as any matrix where rows are observations and columns are traits, where both observations and traits are structurally related (e.g. there is a phylogenetic relation between observations - and traits, etc.).* lines@ 83-85
@@ -309,7 +313,9 @@ This was actually also highlighted by reviewer 1 ("Much of what the authors disc
 However, as reviewer 1 also highlights: "sadly much of the existing literature has failed to take much of this on board".
 We of course share the same opinion and this observation was at the origin of this whole paper: providing a basis for "helping workers consider what may be best to use for their own data" (reviewer 1).
 Furthermore, we are not only proposing a "trivial" conclusion but we also put some effort into providing a novel tool (`moms`) allowing researchers to make their own decision on which metric to use in their specific case (rather than "blindly" following our suggestions) and propose some specific terms (space occupancy, trait spaces, size, density and position measurements, etc...) that aim to bridge the gap between ecology and evolution that both use multidimensional methods to study similar essential biological questions but with different approaches and a different jargon.
-Through this paper we thus propose some basis for both fields to learn from each other and hopefully allowing future fruitful collaborations. @@@VW love this paragraph! %AM Same!!
+Through this paper we thus propose some basis for both fields to learn from each other and hopefully allowing future fruitful collaborations.
+
+<!-- @@@VW love this paragraph! %AM Same!! -->
 
 
 3. <p style="color:blue">The brief discussion of the "curse of dimensionality" is interesting and could be extended, as this is relevant for many modern datasets. However, the statement about the "probability of two points A and B overlapping in n dimensions" is inappropriate, as this probability is zero for continuous variables, regardless of dimension.</p>
@@ -385,8 +391,6 @@ F_ratio <- between_group_ss/within_group_ss
 
 # F-ratio thresholf at 0.05 for both degrees of freedom F(2, 15) = 3.68
 # Since F_ratio > F(2, 15), the hypothesis can be rejected (all groups are the same)
-
-# The fuck is wrong with that...
 ```
 
 ### Minor comments
