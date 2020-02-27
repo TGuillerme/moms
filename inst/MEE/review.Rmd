@@ -64,7 +64,7 @@ This is why we have deliberately tried to not refer to this term in the manuscri
 >We thank the reviewer for point out this really interesting aspect and we have added the following disclaimer around the term "occupancy":
 
 *Note that we refer to occupancy here as the general term for where observations are in a trait space.
-This definition excludes whether spaces are are truly "occupiable" (e.g. are there limits to the space, are some regions of the space inapplicable, etc.) which might be of importance in particulare spaces (e.g. in tree spaces; Hillis et al. 2005).* lines@ 70-74
+This definition excludes whether spaces are are truly "occupiable" (e.g. are there limits to the space, are some regions of the space inapplicable, etc.) which might be of importance in particulare spaces.* lines@ 70-74
 
 <p style="color:blue">(I would also note that the authors currently post several questions that their metrics do not really answer, i.e., L47-48 "are groups overlapping in the trait-space? Are some regions of the trait-space not occupied? How do specific factors influence the occupancy of the trait-space?" These are good questions, but are not what the volume, density and position metrics actually capture. I would suggest rewording, or more explicitly state how these questions can be answered.)</p>
 
