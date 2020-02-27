@@ -11,21 +11,13 @@ output:
 Dear Editor,
 
 
-@@@please find below our detailed response to the reviewers comments. For clarity, the reviewer's comments are in <font style="color:blue">blue</font> and our response in black with the modified text in the manuscript in *italic*.
+Please find below our detailed response to the reviewers comments. For clarity, the reviewer's comments are in <font style="color:blue">blue</font> and our response in black with the modified text in the manuscript in *italic*.
 We've provided a version of the manuscript where the changes are highlighted in <font style="color:blue">blue</font>.
-
 
 We believe that some of the parts that the manuscript that the reviewers found unclear were due to the differences of usage of the term "disparity" (which seems to have a disparate meanings throughout the literature depending on the author).
 This is why we have deliberately tried to not refer to this term in the manuscript (appart for several specific instances) in order to distance ourselves from the "disparity" meaning*s*, and to try to bridge the gap between evolution and ecology, the latter of which rarely uses "disparity".
 
 @@@TODO: also update (compile) the supplementaries
-@@@Add reference to Bazzi et al Curr. Biol.
-@@@Cite Mammalo new paper https://www.biorxiv.org/content/10.1101/2020.01.25.919373v1.full.pdf
-
-
-# Associate Editor Comments to Author:
-
-* <p style="color:blue">[...]The main problem pointed out by the second reviewer is that the manuscript suffers from a lack of accuracy and clarity in the use of mathematical terminology. I share this concern. I fact I found the manuscript difficult to follow at any level of detail. After reading I was left with little added understanding of what the different measures are supposed to measure or how they perform in these goals. For example, I did not understand the results in the seemingly central Table 5, and like the reviewers I found many mathematical statements to be odd or nonsensical. [...] The topic is certainly appropriate, but a revised manuscript must be substantially improved in mathematical clarity and rigor. The motivation and goals of the measures must be clearly laid out and evaluated. [...]</p>
 
 # Reviewer: 1
 
