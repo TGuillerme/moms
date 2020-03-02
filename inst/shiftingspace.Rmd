@@ -36,15 +36,17 @@ output:
 
 Switch the text highlighting by replacing
 
-<font style="color:blue">
+<@@@font style="color:blue">
 to:
-\textcolor{blue}{
+\@@@textcolor{blue}{
 
 and 
 
-</font>
+<@@@/font>
 to:
-}%col_tag\n
+}@@@%col_tag\n
+
+And then edit the }%col_tags in latex
 
 ----
 and edit the save .tex file to add the following
@@ -129,23 +131,23 @@ However, the mathematical and biological meaning of most space occupancy measure
 2. Here we propose a broad classification of space occupancy measures into three categories that capture changes in <font style="color:blue">size</font>, density, or position.
 We analyse the behaviour of 25 measures to study changes in <font style="color:blue">trait space size</font>, density and position on a series of simulated and empirical datasets.
 
-3. We find no one measure describes all of <font style="color:blue">trait space</font> but that some measures are better at capturing certain aspects but that their performance depends on both the <font style="color:blue">trait space</font> and the hypothesis analysed. 
+3. We find no one measure describes all of <font style="color:blue">trait space</font> but that some measures are better at capturing certain aspects and that their performance depends on both the <font style="color:blue">trait space</font> and the hypothesis analysed. 
 Our results confirm the three broad categories (<font style="color:blue">size</font>, density and position) and allow us to relate changes in any of these categories to biological phenomena.
 
-4. Since the choice of space occupancy measures should be specific to the data and question at had, we introduced [`moms`](https://tguillerme.shinyapps.io/moms/), a user-friendly tool based on a graphical interface that allows users to both visualise and measure changes in space occupancy for any measurement <font style="color:blue">trait spaces</font>.
-This tool is designed to help researchers choose the right space occupancy measures, given the properties of their <font style="color:blue">trait space</font> and their biological question.
+4. Since the choice of space occupancy measures is specific to the data and question, we introduced [`moms`](https://tguillerme.shinyapps.io/moms/), a tool based allowing users to both visualise and capture changes in space occupancy for any measurement.
+[`moms`](https://tguillerme.shinyapps.io/moms/) is designed to help workers choose the right space occupancy measures, given the properties of their <font style="color:blue">trait space</font> and their biological question.
 <font style="color:blue">By providing guidelines and common vocabulary for space occupancy analysis, we hope to help bridging the gap in multidimensional research between ecology and evolution.</font>
 
 # Introduction
 
-Groups of species and environments share specific, easily recognisable, correlated characteristics: guilds or biomes with shared phenotypic, physiological, phylogenetic or behavioural traits.
+Groups of species and environments share specific, recognisable, correlated characteristics: guilds or biomes with shared phenotypic, physiological, phylogenetic or behavioural traits.
 Organisms or environments should therefore be studied as a set of traits rather than some specific traits in isolation [@donohue2013; @hopkins2017].
 Biologists have increasingly been using ordination techniques [see @legendre2012 for a summary] to create multidimensional <font style="color:blue">trait spaces</font> to either explore properties of the data or test hypotheses [e.g. @oksanen2007vegan; @blonder2018; @disprity].
 For example, in palaeobiology, @wright2017 <font style="color:blue">used trait spaces</font> to study how groups of species' characteristics change through time; in ecology, @jones2015 study evidence of competition by looking at trait overlap between two populations.
 However, different fields use a different set of terms for such approaches (Table 1).
-Nonetheless, they are the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations, such as taxon, field site, etc. [@disprity].
+Nonetheless, they use the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations [taxon, field site, etc.; @disprity].
 
-In mathematics | In ecology | In macroevolution | In this paper
+Mathematics | Ecology | Macroevolution | This paper
 ---------------|------------|-------------------|---------------
 Matrix ($n \times d$) <font style="color:blue">with a structural relation between rows and columns</font> | Function-space, Eco-space, etc. | Morphospace, traitspace, etc. | trait space
 Rows (*n*) | Taxa, field sites, environments, etc. | Taxa, specimen, populations, etc. | observations
@@ -155,36 +157,36 @@ Statistic | Dissimilarity index or metric, hypervolume, functional diversity | D
 Multidimensional analysis | Dissimilarity analysis, trait analysis, etc. | Disparity analysis, disparity-through-time, etc. | multidimensional analysis
 Table 1: terms and equivalence between mathematics, ecology and macroevolution.
 
-Ecologists and evolutionary biologists also often use <font style="color:blue">trait spaces</font> with respect to the same fundamental questions:
+Ecologists and evolutionary biologists often use <font style="color:blue">trait spaces</font> with respect to the same fundamental questions:
 <font style="color:blue">are groups occupying the same amount of trait space?
 Do some groups contain more species than others in the same amount of trait space?
 Are some specific factors correlated with different patterns of trait space occupancy?
-Because of the multidimensional nature of these trait spaces, it is often not possible to study them using bi- or tri-variate techniques.</font>
-Studying the occupancy of <font style="color:blue">trait spaces</font> can be achieved using disparity <font style="color:blue">indices</font> in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
-Despite the commonalities between <font style="color:blue">the space occupancy measures used in ecology and evolution (which are often metric but don't necessarily need to be)</font>, surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
+Because of the multidimensional nature of these trait spaces, it is often not possible to study them using bi- or tri-variate techniques [@diaz2016; @hopkins2017; @mammola2019].</font>
+Studying the occupancy of <font style="color:blue">trait spaces is done using disparity indices</font> in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
+Despite the commonalities between <font style="color:blue">the measures used in ecology and evolution (which are often metric but don't necessarily need to be)</font>, surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
 
-Different <font style="color:blue">space occupancy measures capture different aspects of the trait space</font> [ciampaglio2001; @villéger2008; @mammola2019].
+Different <font style="color:blue">occupancy measures capture different aspects of  trait space</font> [ciampaglio2001; @villéger2008; @mammola2019].
 It may be widely-known, but to our knowledge is infrequently mentioned in peer-reviewed papers.
 First, <font style="color:blue">space occupancy measures</font> are often named as the biological aspect they are describing ("disparity", "functional diversity") rather than what they are measuring (e.g. the product of ranges), which obscures the differences and similarities between studies.
 Second, in many studies in ecology and evolution, authors have focused on measuring the <font style="color:blue">size of the trait space</font> [e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016].
-However, <font style="color:blue">the size of the trait space</font> only represents a single aspects of occupancy, disregarding others such as the density [@geiger2008] or position [@wills2001; @ciampaglio2001].
-For example, if two groups <font style="color:blue">have the same trait space size</font>, this can support certain biological conclusions.
+However, <font style="color:blue">the size of the trait space</font> only represents one aspects of occupancy, disregarding others such as the density [@geiger2008] or position [@wills2001; @ciampaglio2001].
+For example, if two groups <font style="color:blue">have the same size</font>, this can support certain biological conclusions.
 Yet, an alternative aspect of space occupancy may indicate that the groups' position are different, leading to a different biological conclusion (e.g. the groups are equally diverse but occupy different niches).
-<font style="color:blue">Using measures that only capture one aspect of the multidimensional trait space</font> may restrain the potential of multidimensional analysis [@villéger2008].
+<font style="color:blue">Using measures that only capture one aspect of the trait space</font> may restrain the potential of multidimensional analysis [@villéger2008].
 
-Here we propose a broad classification of space occupancy measures as used across ecology and evolution and analyse their power to detect changes in <font style="color:blue">trait space</font> occupancy in simulated and empirical data (<font style="color:blue">regardless of whether spaces are are truly "occupiable" which might be important in some cases - e.g. if the space is infinite or if some regions inapplicable)</font>.
+Here we propose a broad classification of space occupancy measures as used across ecology and evolution and study their power to detect changes in <font style="color:blue">trait space</font> occupancy in simulated and empirical data (<font style="color:blue">regardless of whether spaces are are truly "occupiable" which might be important in some cases - e.g. if the space is infinite or if some regions inapplicable)</font>.
 We provide an assessment of each broad type of space occupancy measures along with a unified terminology to foster communication between ecology and evolution. 
 Unsurprisingly, we found no one measure describes all changes and that the results from each measures are dependent on the characteristics of the space and the hypotheses.
 Furthermore, because there can be an infinite number of measures, it would be impossible to propose clear generalities to space occupancy measures behaviour.
-Therefore, we propose [`moms`](https://tguillerme.shinyapps.io/moms/), a user-friendly tool allowing researchers to design, experiment and visualise their own space occupancy measure tailored for their specific project as well as helping them to understand the "null" behaviour of their measures of interest.
+Therefore, we propose [`moms`](https://tguillerme.shinyapps.io/moms/), a tool allowing researchers to design, experiment and visualise their own space occupancy measure tailored for their specific project and helping them understanding the "null" behaviour of the measures of interest.
 
 
 ## Space occupancy measures
 
-<font style="color:blue">In this paper, we define trait spaces as any matrix where rows are observations and columns are their related traits.</font>
-These traits can vary in number and types: they could be discrete [e.g. presence or absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated [e.g. landmark position; @marcy2016].
+<font style="color:blue">Here we define trait spaces as any matrix where rows are observations and columns are their related traits.</font>
+These traits can vary in number and types: they could be discrete [e.g. presence or absence of a bone; @beck2014; @wright2017], continuous measurements [e.g. leaf area; @diaz2016] or more sophisticated ones [e.g. landmark position; @marcy2016].
 Traits can also be measured by using relative observations [e.g. community compositions; @jones2015] or distance between observations [e.g. @close2015].
-However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy measures can be used: the <font style="color:blue">size</font> which will approximate the amount of space occupied, the density which will approximate the distribution in space and the position which will approximate the location in space [Fig. 1; @villéger2008].
+However, regardless of the methodology used to build a <font style="color:blue">trait space</font>, three broad occupancy measures can be used: the <font style="color:blue">size</font> which approximates the amount of space occupied, the density which approximates the distribution in space and the position which approximates the location in space [Fig. 1; @villéger2008].
 Of course any combination of these three aspects is always possible.
 
 ```{r fig_measures_types, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Figure 1: different type of information captured by space occupancy measures: (A) size, (B) density and (C() position.") }
@@ -230,12 +232,12 @@ par(op)
 <font style="color:blue">Size captures the spread of a group in the trait space</font>.
 They can be interpreted as the amount of the <font style="color:blue">trait space</font> that is occupied by observations.
 Typically, larger values for such measures indicate the presence of more extreme trait combinations.
-For example, if group A is bigger than group B, the observations in A achieve more extreme trait combinations than in B.
+For example, if group A is bigger than B, the observations in A achieve more extreme trait combinations than in B.
 This type of measure is widely used in both ecology [e.g. the hypervolume; @blonder2018] and in evolution [e.g. the sum or product of ranges or variances; @wills2001].
 
 Although <font style="color:blue">size measures are suitable indicators of a group's trait space</font> occupancy, they are limited to comparing the range of trait-combinations between groups.
-<font style="color:blue">Size measures do not take into account the distribution of the observations within a group and can be insensitive to unoccupied "holes" in the trait space [@blonder2018] in which case the volumes can be overestimated.</font>
-In other words, they can make it difficult to determine whether all the observations are on the edge of the hypervolume or whether the <font style="color:blue">size</font> is simply driven by outliers.
+<font style="color:blue">Size measures do not take into account the distribution of the observations within a group and can often be insensitive to unoccupied "holes" in the trait space (overstimating the size; @blonder2018).</font>
+They can make it difficult to determine whether all the observations are on the edge of the group's distribution or whether the <font style="color:blue">size</font> is simply driven by outliers.
 
 
 #### 2. Density
@@ -244,7 +246,7 @@ In other words, they can make it difficult to determine whether all the observat
 They can be interpreted as the distribution of the observations *within* a group in the trait space.
 Groups with higher density contain more observations that will tend to be more similar to each other.
 For example, if group A is greater is size than group B and both have the same density, similar mechanisms could be driving both groups' trait space occupancy. 
-Indeed, this pattern could suggest that A is older and has had more time to achieve more extreme trait combinations under essentially the same process as younger, smaller group B [@endler2005].
+This pattern could suggest that A is older and has had more time to achieve extreme trait combinations under essentially the same process as younger, smaller group B [@endler2005].
 Note that density based measures can be sensitive to sampling (e.g. if only living species are present).
 Density measures are less common compared to size measures, but they are still used in both ecology [e.g. the minimum spanning tree length; @oksanen2007vegan] and evolution [e.g. the average pairwise distance; @geiger2008]. </font>
 
@@ -257,19 +259,19 @@ For example, if group A has a different position than group B, A will have a dif
 Position measures may be harder to interpret in multidimensional spaces.
 <font style="color:blue">In a 2D space, two groups can be equally distant from a fixed point but in different parts of the space (left, right, up, or down - with the amount of parts of space increasing with dimensions).</font>
 However, when thinking about unidimensional data, this measure is obvious: two groups A or B could have the same variance (<font style="color:blue">size</font>) with the same number of observations (density) but could have two different means and thus be in different positions.
-These measures have been used in ecology to compare the position of two groups relative to each other [@mammola2019].
+These measures are used in ecology to compare the position of two groups relative to each other [@mammola2019].
 
 
 ## No measure to rule them all: benefits of considering multiple measures
 
 The use of multiple measurements to assess <font style="color:blue">trait space</font> occupancy has the benefit of providing a more detailed characterisation of occupancy changes.
-If the question of interest is to look at how space occupancy changes in response to mass extinction, using a single space occupancy measure can miss part of the picture: a change in <font style="color:blue">size could be decoupled from a change in position or density in trait space</font>.
+If the question is to look at how space occupancy changes in response to mass extinction, using a single space occupancy measure can miss part of the picture: a change in <font style="color:blue">size could be decoupled from a change in position or density in trait space</font>.
 For example, the <font style="color:blue">Cretaceous-Paleogene extinction (66 million years ago) shows an increase in size of the mammalian trait space</font> [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of <font style="color:blue">trait space occupancy: does the radiation expand</font> on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the <font style="color:blue">trait space</font> [innovation, change in position; @endler2005]?
 Similarly, in ecology, if two groups have the same <font style="color:blue">trait space size</font>, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equally <font style="color:blue">sized</font> groups.
 
-Here, we provide the first interdisciplinary review of 25 space occupancy measures that uses the broad classification into <font style="color:blue">size</font>, density and position to capture pattern changes in <font style="color:blue">trait space</font>.
-We assess the behaviour of measures using simulations and six interdisciplinary empirical datasets covering a wide range of potential data types and biological questions.
-We also introduce a tool for measuring occupancy in multidimensional space ([`moms`](https://tguillerme.shinyapps.io/moms/)), which is a user-friendly, open-source, graphical interface tailored to test the behaviour of measures for any use case.
+Here, we provide the first interdisciplinary review of 25 space occupancy measures that uses the broad classification into <font style="color:blue">size, density and position to capture pattern changes in trait space</font>.
+We assess the behaviour of measures using simulations and six interdisciplinary empirical datasets covering a range of potential data types and biological questions.
+We also introduce a tool for measuring occupancy in multidimensional space ([`moms`](https://tguillerme.shinyapps.io/moms/)), which is tailored to test the behaviour of measures for any use case.
 [`moms`](https://tguillerme.shinyapps.io/moms/) allows workers to comprehensively assess the properties of their <font style="color:blue">trait space</font> and the measures associated with their specific biological question.
 
 
@@ -306,7 +308,7 @@ We tested how 25 space occupancy measures relate to each other, are affected by 
 3.  We measured occupancy on the resulting transformed spaces using `r metric.names()` different space occupancy measures;
 4.  We applied the same space occupancy measures to six empirical datasets (covering a range of disciplines and a range of dataset properties).
 
-<font style="color:blue">Note that the paper contains the results for only `r metric.names()` measures which were selected as representative of common metrics covering the size, density and position trait space aspects.</font>
+<font style="color:blue">Note that the paper contains the results for only `r metric.names()` measures which were selected as representative of common measures covering the size, density and position trait space aspects.</font>
 The results for an additional 17 measures is available in the supplementary material 4.
 
 ## Generating spaces
@@ -331,12 +333,12 @@ We generated <font style="color:blue">trait spaces</font> using the following co
 Table 2: different simulated space distribution.
 <font style="color:blue"> *Name* of the simulated space; *dimensions* of the matrix (row\*columns); *distribution(s)* of the data on each dimensions (for the 'Random', dimensions are randomly chosen between Normal, Uniform or Lognormal); *dimension variance*: distribution of the variance between dimensions (when equal, the dimensions have the same variance); *correlation* between dimensions. </font>
 
-The differences in <font style="color:blue">trait space</font> sizes (200 $\times$ 3, 200 $\times$ 15, 200 $\times$ 50 or 200 $\times$ 150) reflects the range of dimensions in literature [e.g. hopkins2017; @mammola2019].
+The differences in <font style="color:blue">trait space</font> sizes (200 elemeents for 3, 15, 50 or 150 dimensions) reflects the range found in literature [e.g. hopkins2017; @mammola2019].
 We used a range of distributions (uniform, normal or <font style="color:blue">a random combination of uniform, normal and lognormal</font>) to test the effect of observation distributions on the measurements.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal ($\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing ($\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive ($\sum_i^d(1/d)$).
 Both reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [lognormal in principal components analysis - PCA; e.g. @marcy2016; @healy2019; and normal win Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
 Finally, we added a correlation parameter <font style="color:blue">to illustrate the effect of co-linearity between traits (especially in non-ordinated trait spaces).</font>
-We repeated the simulation of each <font style="color:blue">trait space</font> 20 times (resulting in 260 <font style="color:blue">trait spaces</font>).
+We repeated the simulation of each <font style="color:blue">trait space</font> 20 times (resulting in 260 spaces).
 
 ## Spatial occupancy measures
 
@@ -344,19 +346,19 @@ We then <font style="color:blue"> calculated `r metric.names()` different measur
 
 | Name | Definition | Captures | Source | Notes  |
 |------|------------|----------|--------|--------|
-| Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Size | @laliberté2010 | equivalent to the functional dispersion (FDis) in @laliberté2010 (without abundance) |
-| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Size | @foote1992 | common metric used in palaeobiology [@ciampaglio2001; @wills2001] |
+| Average Euclidean distance from centroid | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}{d}$ | Size | @laliberté2010 | the functional dispersion (FDis - without abundance) |
+| Sum of variances | $\sum_{i}^{d}{\sigma^{2}{k_i}}$ | Size | @foote1992 | common measure used in palaeobiology [@ciampaglio2001; @wills2001] |
 | Sum of ranges | $\sum_{i}^{d}{\|\text{max}(d_{i})-\text{min}(d_{i})\|}$ | Size | @foote1992 | more sensitive to outliers than the sum of variances |
 | Ellipsoid volume | $\frac{\pi^{d/2}}{\Gamma(\frac{d}{2}+1)}\displaystyle\prod_{i}^{d} (\lambda_{i}^{0.5})$ | Size | @donohue2013 | less sensitive to outliers than the convex hull hypervolume [@diaz2016; @blonder2018] |
 | Minimum spanning tree average distance | $\frac{\sum(\text{branch length})}{n}$ | Density | @sedgewick1990 | similar to the unscaled functional evenness [@villéger2008] |
 | Minimum spanning tree distances evenness | $\frac{\sum\text{min}\left(\frac{\text{branch length}}{\sum\text{branch length}}\right)-\frac{1}{n-1}}{1-\frac{1}{n-1}}$ | Density | @villéger2008 | the functional evenness without weighted abundance [FEve; @villéger2008] |
-| Average nearest neighbour distance | $\sqrt{\sum_{i}^{n}{min({q}_{i}-p_{i})^2}})\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations in the trait space |
+| Average nearest neighbour distance | $\sqrt{\sum_{i}^{n}{min({q}_{i}-p_{i})^2}})\times \frac{1}{n}$ | Density | @foote1992 | the density of pairs of observations |
 | Average displacement | $\frac{\sqrt{\sum_{i}^{n}{({k}_{n})^2}}}{\sqrt{\sum_{i}^{n}{({k}_{n}-Centroid_{k})^2}}}$ | Position | This paper | the ratio between the observations' position from their centroid and the centre of the trait space (coordinates: 0, 0, 0, ...). A value of 1 indicates that the observations' centroid is the centre of the trait space |
 Table 3: List of measures with *n* being the number of observations, *d* the total number of dimensions, *k* any specific row in the matrix, *Centroid* being their mean and $\sigma^{2}$ their variance. $\Gamma$ is the Gamma distribution and $\lambda_{i}$ the <font style="color:blue">eigenvalue</font> of each dimension and ${q}_{i}$ and $p_{i}$ are any pairs of coordinates.
 
 We selected these `r metric.names()` space occupancy measures to illustrate how they capture different aspects of space occupancy (not as an expression of our preference).
 <font style="color:blue">These measures are specific to Euclidean and isotropic trait spaces (which is not necessary for all measures).</font>
-The supplementary material 4 contains the same analysis as described below, performed on a total of 25 measures.
+The supplementary material 4 contains the same analysis as described below, performed on 17 measures.
 Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows exploration into the effect of many more measures as well as the customisation of measures by combining them or using user-designed functions.
 
 <!--  -->
@@ -388,10 +390,10 @@ To assess how the measures responded to changes within <font style="color:blue">
 
 * **Randomly:** by randomly removing 50% of observations (Fig. 2-A).
 This reflects a "null" biological model of changes in <font style="color:blue">trait space</font>: the case when observations are removed regardless of their intrinsic characteristics.
-For example, if diversity is reduced by 50% but the <font style="color:blue">trait space size</font> remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
+For example, if diversity is reduced by 50% but the <font style="color:blue">space size</font> remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
 Our selected measures are expected to not be affected by this change.
 
-* **Limit:** by removing all observations with a distance from the centre of the <font style="color:blue">trait space</font> lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
+* **Limit:** by removing observations within a distance from the centre of the <font style="color:blue">trait space</font> lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
 This can reflect a strict selection model where observations with trait values below or above a threshold are removed leading to an expansion or a contraction of the <font style="color:blue">trait space</font>.
 <font style="color:blue">Size</font> measures are expected to be most affected by this change.
 
@@ -400,7 +402,7 @@ This can reflect changes within groups in the <font style="color:blue">trait spa
 Density measures are expected to be most affected by this change.
 
 * **Position:** by removing points similarly as for **Limit** but using the distance from the furthest point from the centre generating two position removals: *positive* and *negative* (respectively in orange and blue; Fig. 2-D).
-This can reflect global changes in <font style="color:blue">trait space</font> due, for example, to an entire group remaining diverse but occupying a different niche.
+This can reflect global changes in <font style="color:blue">trait space</font> (e.g. if an entire group remaining diverse but occupying a different niche).
 Position measures are expected to be most affected by this change.
 
 The algorithm to select $\rho$ or $D$ is described in the Supplementary material 1.
@@ -531,8 +533,8 @@ text(x = -0.6, y = 2,  labels = round(bc_1, 3), cex = 1.4)
 
 ```
 
-<font style="color:blue">Because occupancy measures are dependent on the space, we scaled and centred them between -1 and 1 to make them comparable (by subtracting the observed occupancy without space reduction to all the measures of the reduced spaces and then divided it by the maximum observed occupancy).</font>
-A value of 0 indicating no effect of the space reduction and $>0$ and $<0$ respectively indicating an increase or decrease in the occupancy measure value.
+<font style="color:blue">Because occupancy measures are dependent on the space, we scaled and centred them between -1 and 1 to make them comparable (by subtracting the observed occupancy without reduction to all the measures of the reduced spaces and then divided it by the maximum observed occupancy).</font>
+A value of 0 indicates no effect of the space reduction and $>0$ and $<0$ respectively indicates an increase or decrease in the measure value.
 We then measured the <font style="color:blue">amount</font> of overlap between the non-random removals (limit, density and position) and the random removals using the Bhattacharrya Coefficient [@bhattacharyya1943].
 
 ### Measuring the effect of space and dimensionality
@@ -541,11 +543,11 @@ Distribution differences and the number of dimensions can have an effect on the 
 For example, in a normally distributed space, an <font style="color:blue">increase in density can often lead to a decrease in size (though this is not necessarily true if the space is log-normal or uniform)</font>.
 High dimensional spaces (>10) are subject to the "curse of multidimensionality" [@cursedimensionality]: data becomes sparser with increasing number of dimensions.
 <font style="color:blue">This can have two main consequences: 1) the probability of overlap between two groups decreases as a product of the number of dimensions; and 2) the amount of samples needed to "fill" the spaces increases exponentially [see this interactive illustration by Toph Tucker](https://observablehq.com/@tophtucker/theres-plenty-of-room-in-the-corners).</font>
-Therefore, the "curse" can make the interpretation of high dimensional data counter-intuitive.
+The "curse" can make the interpretation of high dimensional data counter-intuitive.
 For example if a group expands in multiple dimensions (i.e. increase in <font style="color:blue">size</font>), the actual hypervolume <font style="color:blue">($\prod_{i}^{d} range_{Di}$)</font> can decrease (Fig. 3 and Tables 6, 7).
 
 We measured the effect of space distribution and dimensionality using an ANOVA ($occupancy \sim distribution$ and $occupancy \sim dimensions$) by using all spaces with 50 dimensions and the uniform and normal spaces with equal variance and no correlation with 3, 15, 50, 100 and 150 dimensions (Table 2) for testing respectively the effect of distribution and dimensions.
-The results of the ANOVAs (F and *p*-values) are reported in Table 5 (see supplementary material 3 for the full results).
+The results of the ANOVAs (<font style="color:blue">F and *p*-values</font>) are reported in Table 5 (full results in supplementary material 3).
 
 
 <!--  -->
@@ -565,7 +567,7 @@ Both the grouping and the questions <font style="color:blue">were</font> based o
 The procedures to generate the data and the groups varies between studies and is detailed in the supplementary materials 2.
 
 
-study | field | taxonomic Group | traits (data) | trait space | size | groups (orange/blue in Table 6) | type of question |
+study | field | taxonomic group | traits | trait space | size | groups | question |
 ------|-------|-----------------|---------------|-------------|------|--------|------------------|
 @beck2014 | Palaeontology | Mammalia | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 106*105 | 52 crown vs. 54 stem | Are crown mammals more disparate than stem mammals?|
 @wright2017 | Palaeontology | Crinoidea | discrete morphological phylogenetic data | Ordination of a distance matrix (PCO) | 42*41 | 16 before vs. 23 after | Is there a difference in disparity before and after the Ordovician mass extinction?|
@@ -693,7 +695,7 @@ Measure      | Size change  | Density change | Position change | Distribution ef
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures. See Fig. 2 for interpretation of the figures distributions and values. F-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimension represent the ratio of sum squared difference within and between groups (the higher, the more the factor has an effect on the measure) and associated _p_-values (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. E.g. the Average Euclidean distance from centroid (row 1) captures mainly changes in <font style="color:blue">size (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3)</font>.
+Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures.<font style="color:blue"> See Fig. 2 for interpretation of the figures distributions and values. F-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimension represent the ratio of sum squared difference within and between groups (the higher, the more the factor has an effect on the measure) and associated _p_-values (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. E.g. the Average Euclidean distance from centroid (row 1) captures mainly changes in size (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3)</font>.
 
 As expected, some different measures capture different aspects of space occupancy.
 However, it can be hard to predict the behaviour of each measure when 50% of the observations are removed.
@@ -806,7 +808,7 @@ For example, the average Euclidean distance from centroid (<font style="color:bl
 #### Space shifting
 
 Most measures capture no changes in space occupancy for the "null" (random) space reduction (in grey in Table 5).
-This is a desirable behaviour for space occupancy measures since it will likely avoid false positive errors in empirical studies that estimate biological processes from space occupancy patterns [e.g. convergence @marcy2016, life history traits @healy2019].
+This is a desirable behaviour for space occupancy measures since it will likely avoid false positive errors in studies that estimate biological processes from space occupancy patterns [e.g. convergence @marcy2016, life history traits @healy2019].
 However, the average nearest neighbour distance and the sum of ranges have a respectively positive and negative "null" median.
 This is not especially a bad property but it should be kept in mind that even random processes can increase or decrease these measures' <font style:"color=blue">values</font>.
 
@@ -828,14 +830,15 @@ Regarding the changes in position, only the average displacement measure seems a
 Although most differences are fairly consistent within each dataset with one group having a higher space occupancy score than the other for multiple measures, this difference can be more or less pronounced within each dataset (ranging from no to nearly full overlap - BC $\in(0;0.995)$) and sometimes even reversed.
 This indicates that opposite conclusions can be drawn from a dataset depending on which space occupancy measure is considered.
 <!-- For example, in @wright2017, crinoids after the Ordovician mass extinction have a higher median measure value for all measures but for the average displacement.
- -->These differences depending on the measures are also more pronounced in the empirical datasets where the observations per group are unequal [@hopkins2016; @healy2019].
+ -->
+These differences depending on the measures are also more pronounced in the empirical datasets where the observations per group are unequal [@hopkins2016; @healy2019].
 
 ### Caveats
 
-While our simulations have been useful to illustrate the behaviour of diverse space occupancy measures, they have several caveats.
+While our simulations are useful to illustrate the behaviour of diverse space occupancy measures, they have several caveats.
 First, the simulated observations in the <font style="color:blue">trait spaces</font> are independent.
 This is not the case in biology where observations can be spatially [@jones2015] or phylogenetically correlated [e.g. @beck2014].
-Second, the algorithm used to reduce the <font style="color:blue">trait spaces</font> might not always accurately <font style="color:blue">reflect</font> changes.
+Second, the algorithm used to reduce the <font style="color:blue">trait spacesmight not always accurately reflect changes</font>.
 This might favour some specific measures over others, in particular for the changes in density that modify the nearest neighbour density rather than changing the global density.
 This algorithmic choice was made in order to not confound changes in density along with changes in <font style="color:blue">size</font>.
 However, the results presented here probably capture the general behaviour of each measure since results are consistent between the simulated and empirical analysis.
@@ -843,7 +846,7 @@ Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows workers to t
 
 ### Conclusions
 
-We insist that no measure is better than the next one and that researchers should identify the most appropriate measures based on their <font style="color:blue">trait space</font> properties as well as their specific biological question.
+We insist that no measure is better than the next one and that workers should identify the most appropriate measures based on their <font style="color:blue">trait space</font> properties as well as their specific biological question.
 However, following the findings of this study we make several suggestions:
 
 First, we suggest using multiple measures to tackle different aspects of the <font style="color:blue">trait space</font>. 
@@ -853,7 +856,7 @@ Although using multiple measures is not uncommon in macroevolutionary studies [e
 Second, we suggest selecting the measures that best address the biological question <font style="color:blue">at</font> hand.
 If one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's <font style="color:blue">size</font> increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
 
-Third, we suggest to not name measures after the biological aspect they often describe <font style="color:blue">which can be vague</font> (e.g. "disparity" or "functional dispersion") but rather after what they are measuring <font style="color:blue">and why</font> (e.g. <font style="color:blue">"we used sum of ranges to measure the trait space size"</font>).
+Third, we suggest not naming measures after the biological aspect they describe <font style="color:blue">which can be vague (e.g. "disparity" or "functional dispersion") but rather after what they are measuring and why (e.g. "we used sum of ranges to measure the space size").</font>
 We believe this will support both a clearer understanding of what *is* measured as well as better communication between ecology and evolution research where measures can be similar but have different names.
 
 Multidimensional analyses have been acknowledged as essential tools in modern biology but they can often be counter-intuitive [@cursedimensionality].
@@ -881,6 +884,5 @@ The subsets of the empirical data used in this analysis are available on figshar
 [DOI: 10.6084/m9.figshare.9943181.v1](https://doi.org/10.6084/m9.figshare.9943181.v1).
 The modified empirical data are available in the package accompanying this manuscript (`data(moms::demo_data)`).
 This manuscript (including the figures, tables and supplementary material) is repeatable and reproducible by compiling the vignette of the [GitHub `moms R` package](https://github/TGuillerme/moms).
-The code for the `moms` shiny app is available from the [GitHub `moms R` package](https://github/TGuillerme/moms).
 
 # References
