@@ -558,6 +558,7 @@ The results of the ANOVAs (<font style="color:blue">F and *p*-values</font>) are
 <!--  -->
 <!--  -->
 
+
 ## Empirical examples
 
 We analysed the effect of the different space occupancy measures on six different empirical studies covering a range of fields that employ <font style="color:blue">trait space</font> analyses.
