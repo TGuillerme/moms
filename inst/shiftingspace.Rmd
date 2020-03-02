@@ -10,7 +10,6 @@ output:
     fig_height: 8
     keep_tex: true
   self_contained: false
-
 ---
 
 
@@ -34,6 +33,20 @@ output:
     fig_width: 8
     fig_height: 8
 ---
+
+Switch the text highlighting by replacing
+
+<font style="color:blue">
+to:
+\textcolor{blue}{
+
+and 
+
+</font>
+to:
+}%col_tag\n
+
+----
 and edit the save .tex file to add the following
 
 \usepackage{lineno} %in the package header
@@ -42,7 +55,6 @@ and edit the save .tex file to add the following
 
 \modulolinenumbers[1] % just after the \begin{document} tag
 \linenumbers
-
  -->
 
 
