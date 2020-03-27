@@ -1,4 +1,5 @@
 \documentclass[]{article}
+\usepackage{lineno}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -86,8 +87,12 @@ summarise occupancy in multidimensional spaces?}
   \postdate{\par}
     \date{2020-03-27}
 
+\linespread{1.6}
 
 \begin{document}
+\modulolinenumbers[1]
+\linenumbers
+
 \maketitle
 
 \section{Abstract}\label{abstract}
@@ -146,6 +151,8 @@ different set of terms for such approaches (Table 1). Nonetheless, they
 use the same mathematical objects: matrices with columns representing an
 original or transformed trait value and rows representing observations
 (taxon, field site, etc.; Guillerme 2018).
+
+\renewcommand\baselinestretch{1}\selectfont
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -216,10 +223,11 @@ Disparity analysis, disparity-through-time, etc.\strut
 multidimensional analysis\strut
 \end{minipage}\tabularnewline
 \bottomrule
+\caption{terms and equivalence between mathematics, ecology and
+macroevolution.}
 \end{longtable}
 
-Table 1: terms and equivalence between mathematics, ecology and
-macroevolution.
+\renewcommand\baselinestretch{1.6}\selectfont
 
 Ecologists and evolutionary biologists often use trait spaces with
 respect to the same fundamental questions: are groups occupying the same
@@ -296,12 +304,16 @@ position which approximates the location in space (Fig. 1; Villéger et
 al. 2008). Of course any combination of these three aspects is always
 possible.
 
+\renewcommand\baselinestretch{1}\selectfont
+
 \begin{figure}
 \centering
 \includegraphics{shiftingspace_files/figure-latex/fig_measures_types-1.pdf}
 \caption{different type of information captured by space occupancy
 measures: (A) size, (B) density and (C) position.}
 \end{figure}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 \paragraph{1. Size}\label{size}
 
@@ -429,6 +441,8 @@ density and position trait space aspects. The results for an additional
 
 We generated trait spaces using the following combinations of size,
 distributions, variance and correlation:
+
+\renewcommand\baselinestretch{1}\selectfont
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule
@@ -589,15 +603,16 @@ Additive\strut
 None\strut
 \end{minipage}\tabularnewline
 \bottomrule
-\end{longtable}
-
-Table 2: different simulated space distribution. \emph{Name} of the
+\caption{different simulated space distribution. \emph{Name} of the
 simulated space; \emph{dimensions} of the matrix (row*columns);
 \emph{distribution(s)} of the data on each dimensions (for the `Random',
 dimensions are randomly chosen between Normal, Uniform or Lognormal);
 \emph{dimension variance}: distribution of the variance between
 dimensions (when equal, the dimensions have the same variance);
-\emph{correlation} between dimensions.
+\emph{correlation} between dimensions.}
+\end{longtable}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 The differences in trait space sizes (200 elemeents for 3, 15, 50 or 150
 dimensions) reflects the range found in literature (e.g.~hopkins2017;
@@ -626,6 +641,8 @@ measures}\label{spatial-occupancy-measures}
 We then calculated eight different measures on the resulting transformed
 spaces, including a new one, the average displacement, which we expect
 to be influenced by changes in trait space position.
+
+\renewcommand\baselinestretch{1}\selectfont
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule
@@ -737,14 +754,15 @@ indicates that the observations' centroid is the centre of the trait
 space\strut
 \end{minipage}\tabularnewline
 \bottomrule
-\end{longtable}
-
-Table 3: List of measures with \emph{n} being the number of
+\caption{list of measures with \emph{n} being the number of
 observations, \emph{d} the total number of dimensions, \emph{k} any
 specific row in the matrix, \emph{Centroid} being their mean and
 \(\sigma^{2}\) their variance. \(\Gamma\) is the Gamma distribution and
 \(\lambda_{i}\) the eigenvalue of each dimension and \({q}_{i}\) and
-\(p_{i}\) are any pairs of coordinates.
+\(p_{i}\) are any pairs of coordinates.}
+\end{longtable}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 We selected these eight space occupancy measures to illustrate how they
 capture different aspects of space occupancy (not as an expression of
@@ -813,10 +831,12 @@ removed 50\% of observations each time using the following algorithms:
 The algorithm to select \(\rho\) or \(D\) is described in the
 Supplementary material 1.
 
+\renewcommand\baselinestretch{1}\selectfont
+
 \begin{figure}
 \centering
-\includegraphics{shiftingspace_files/figure-latex/fig_reduce_space-1.pdf}
-\caption{different type of space reduction. Each panel displays two
+\includegraphics[width=0.8\textwidth]{shiftingspace_files/figure-latex/fig_reduce_space-1.pdf}
+\caption{\small{different type of space reduction. Each panel displays two
 groups of 50\% of the data points each. Each group (orange and blue) are
 generated using the following algorithm: A - randomly; B - by limit
 (maximum and minimum limit); C - by density (high and low); and D - by
@@ -832,8 +852,10 @@ blue or orange distributions and the grey one. Panel E and F shows
 respectively the ``ideal'' and ``worst'' results for any type of
 measures, where the space occupancy measurement respectively manages or
 fails to captures a specific type of reduction (i.e.~size, position or
-density; Table 5).}
+density; Table 5).}}
 \end{figure}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 Because occupancy measures are dependent on the space, we scaled and
 centred them between -1 and 1 to make them comparable (by subtracting
@@ -887,136 +909,139 @@ papers (with no intention to re-analyse the data and questions). The
 procedures to generate the data and the groups varies between studies
 and is detailed in the supplementary materials 2.
 
+\renewcommand\baselinestretch{1}\selectfont
+
 \begin{longtable}[]{@{}llllllll@{}}
 \toprule
-\begin{minipage}[b]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[b]{0.06\columnwidth}\raggedright\strut
 study\strut
-\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright\strut
 field\strut
-\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\raggedright\strut
 taxonomic group\strut
-\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright\strut
 traits\strut
 \end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright\strut
 trait space\strut
-\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright\strut
 size\strut
-\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright\strut
 groups\strut
-\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\raggedright\strut
 question\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Beck and Lee (2014)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Palaeontology\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Mammalia\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 discrete morphological phylogenetic data\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of a distance matrix (PCO)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 106*105\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 52 crown vs.~54 stem\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Are crown mammals more disparate than stem mammals?\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Wright (2017)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Palaeontology\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Crinoidea\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 discrete morphological phylogenetic data\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of a distance matrix (PCO)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 42*41\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 16 before vs.~23 after\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Is there a difference in disparity before and after the Ordovician mass
 extinction?\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Marcy et al. (2016)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Evolution\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Rodentia\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 skull 2D landmark coordinates\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of a Procrustes Superimposition (PCA)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 454*134\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 225 \emph{Megascapheus} vs.~229 \emph{Thomomys}\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Are two genera of gopher morphologically distinct?\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Hopkins and Pearson (2016)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Evolution\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Trilobita\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 3D landmark coordinates\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of a Procrustes Superimposition (PCA)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 46*46\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 36 adults vs.~10 juveniles\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Are juvenile trilobites a subset of adult ones?\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Jones et al. (2015)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Ecology\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Plantae\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Communities species compositions\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of a Jaccard distance matrix (PCO)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 48*47\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 24 aspens vs.~24 grasslands\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Is there a difference in species composition between aspens and
 grasslands?\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Healy et al. (2019)\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 Ecology\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
 Animalia\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Life history traits\strut
 \end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 Ordination of continuous traits (PCA)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 285*6\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 83 ecthotherms vs.~202 endotherms\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
 Do endotherms have more diversified life history strategies than
 ectotherms?\strut
 \end{minipage}\tabularnewline
 \bottomrule
+\caption{details of the six empirical trait spaces.}
 \end{longtable}
 
-Table 4: details of the six empirical trait spaces.
+\renewcommand\baselinestretch{1.6}\selectfont
 
 For each empirical trait space we bootstrapped each group 500 times
 (Guillerme 2018) and applied the eight space occupancy measure to each
@@ -1027,6 +1052,8 @@ Bhattacharrya Coefficient (Bhattacharyya 1943).
 
 \subsection{Measure comparisons}\label{measure-comparisons-1}
 
+\renewcommand\baselinestretch{1}\selectfont
+
 \begin{figure}
 \centering
 \includegraphics{shiftingspace_files/figure-latex/fig_measure_correlation-1.pdf}
@@ -1035,6 +1062,8 @@ the upper right corner are the Pearson correlations. The red line are
 linear regressions (with the confidence intervals in grey). Av.:
 average; dist.: distance; min.: minimum; span.: spanning.}
 \end{figure}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 All the measures were either positively correlated (Pearson correlation
 of 0.99 for the average Euclidean distance from centroid and sum of
@@ -1046,6 +1075,8 @@ centroid; Fig. 3). All measures but the ellipsoid volume were normally
 (or nearly normally) distributed (Fig. 3).
 
 \subsection{Space shifting}\label{space-shifting}
+
+\renewcommand\baselinestretch{1}\selectfont
 
 \begin{longtable}[]{@{}llllll@{}}
 \toprule
@@ -1169,9 +1200,7 @@ F = 10.742 ; p = \textless{}1e-3***\strut
 F = 26.829 ; p = \textless{}1e-3***\strut
 \end{minipage}\tabularnewline
 \bottomrule
-\end{longtable}
-
-Table 5: Results of the effect of space reduction, space dimension
+\caption{results of the effect of space reduction, space dimension
 distributions and dimensions number of the different space occupancy
 measures. See Fig. 2 for interpretation of the figures distributions and
 values. F-values for distribution effect and dimensions effect
@@ -1184,7 +1213,10 @@ measure) and associated \emph{p}-values (0 `***' 0.001 `**' 0.01 `*'
 be influenced by different aspects of changes in the trait space. E.g.
 the Average Euclidean distance from centroid (row 1) captures mainly
 changes in size (column 1), but also captures changes in density (column
-2) but does not capture changes in position (column 3).
+2) but does not capture changes in position (column 3).}
+\end{longtable}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 As expected, some different measures capture different aspects of space
 occupancy. However, it can be hard to predict the behaviour of each
@@ -1204,6 +1236,8 @@ to appreciate as dimensionality increases (i.e.~beyond left/right,
 up/down and front/back).
 
 \subsection{Empirical example}\label{empirical-example}
+
+\renewcommand\baselinestretch{1}\selectfont
 
 \begin{longtable}[]{@{}lllllll@{}}
 \toprule
@@ -1361,13 +1395,14 @@ Average displacements\strut
 \includegraphics{shiftingspace_files/figure-latex/fable_results_empirical-48.pdf}\strut
 \end{minipage}\tabularnewline
 \bottomrule
-\end{longtable}
-
-Table 6: Comparisons of pairs of groups in different empirical trait
+\caption{comparisons of pairs of groups in different empirical trait
 spaces. NAs are used for cases where space occupancy could not be
 measured due to the curse of multidimensionality. The displayed values
 are the amount of overlap between both groups (Bhattacharrya
-Coefficient).
+Coefficient).}
+\end{longtable}
+
+\renewcommand\baselinestretch{1.6}\selectfont
 
 Similarly as for the simulated results, the empirical ones indicate that
 there can be no perfect one-size-fit all measurement. For all eight
