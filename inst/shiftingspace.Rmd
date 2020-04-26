@@ -59,6 +59,116 @@ and edit the save .tex file to add the following
 \linenumbers
  -->
 
+<!--
+# Response to reviewers
+
+We a really grateful for the reviewers refreshing, positive and constructive comments and we've addressed them all as detailed below.
+
+## Reviewer 1 (Stefano Mammola)
+
+In a conceptually similar study in the context of species distribution modelling (DOI: 10.1111/2041-210X.12397), Qiao and colleagues termed this general idea the “no silver bullet” paradigm (making a metaphor with the mythology of lycanthropes). This is certainly a very important point also in trait-based science. 
+
+> @@@TG: Check this paper
+
+1) While reading the text, it was not entirely clear to me what exactly the “moms” tool is. Is this an R package, or just a set of functions? Would be helpful if you could briefly specify.
+
+> @@@TG: Add an extra section explaining how moms fit in.
+
+2)  I suspect taht your proposed classification may somewhat overlap with the general classification scheme of diversity indexes by Pavoine and Bonsall (2011; Biological review), later expanded by Tucker et al. (2017; Biological Reviews) in the context of phylogenetic metrics (but it’s actually the same). In a nutshell, they grouped metrics/indexes in three main category of ‘Richness’, ‘Divergence’ and ‘Regularity’ components. In their view, these three concepts should capture the primary mathematical operation inherent to each metric, namely:
+i) the ‘richness’ dimension encompasses indexes representing the sum of difference among taxa (sum);
+ii) the ‘divergence’ dimension encompasses indexes representing functional (or phylogenetic) dissimilarity, reflecting the average difference among taxa (mean); and
+iii) the  ‘regularity’ dimension encompasses indexes representing functional (or phylogenetic) variance, reflecting how regular the difference among taxa in an assemblages are (variance).
+I see some overlap with your method, but also differences. It would be worth briefly acknowledging this and perhaps exploring the main conceptual differences and why your classification is an advance.
+
+> @@@TG: Add a reference to these works.
+We were not aware of these references and we are grateful for the reviewer pointing them out. There is so much overlapping work on ecology and evolution but so few visibility between them! Adding these references and concepts is definitely improving the main idea of this paper!
+
+3) The approach you choose for simulating changes in the multidimensional space (Figure 2) is  very interesting. While I was thinking about it, I indulged with an idea (but please ignore if not appropriate):
+
+I thought it would be useful to try linking the different changes in the multidimensional space to actual example of biological processes (e.g., giving few examples in the description in the method or in the discussion). This, because similar changes in the trait space may occur in the real world due to different processes and, by providing examples grounded in the real world you may enhance the appealing of the ms to a broader audience.
+For example, from the perspective of a conservation biologist, you may argue that ‘limit’ and ‘position’ change in the trait space may occur when there is the destruction of habitats with narrow environmental conditions that filters for few species possessing specific traits. I’m primarily a cave biologist: this mental bias made me think that, for example, if you open a quarry that destroys a cave (not an unfrequent event! DOI: 10.1093/biosci/biz064), you may end up removing from the trait space all points from a specific position, namely those traits clearly selected by the permanent darkness of the subterranean world. If trait 1 is a gradient of eye size and trait 2 a gradient of body pigment, you would remove trait contribution of specialized invertebrates with no eyes and no pigment. The ‘density’ change may occur, e.g., due to global wildlife trade, when there is the exploitation of only species with specific traits within the total functional tree of life (see DOI: 10.1126/science.aav5327). For example, the fishing industry exploits, within any given species, primarily fishes of larger size, thus selecting for specific densities in the size/weight trait space composed of the multiple species. And so on (these are just random examples to illustrate my point).
+
+
+> @@@TG: add examples
+
+–––––– Minor Line comments
+
+-L34: “studied” instead of “study”
+
+> We fixed this typo.
+
+L35-37: I think merging together these two sentences would put more emphasis on your idea... E.g. “While different fields use a different set of terms for such approaches (Table 1), they actually focus on the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations (taxon, field site, etc.; Guillerme 2018). 
+
+> Merged these sentences.
+
+-L63: “are are”
+
+> We fixed this typo.
+
+-Table 1: 
+‘functional space’ instead of ‘function-space’? 
+Morphospace I think is also widely used in ecology. 
+Please add “etc.” at the end of the text in the cell “statistic” intersected “ecology”. Wouldn’t the “hypervolume” mentioned in the same cell more fit in the “Matrix (n x d)” row?
+
+> We fixed these cells in the table. However, we did not add "hypervolume" to the "Mathematics" column. We use the term "statistic" here as a statistic (i.e. a measure) which does include the hypervolume as used in ecology. We've specified this.
+
+
+-330–332: True, but there are at least two recent examples of attempt in this sense, the very recent package TPD (DOI: 10.1002/ecy.2876) and new functions in BAT (doi: 10.1101/2020.01.25.919373; shameless self-promotion and still a preprint). Both approaches covers metric in the Richness, Divergence, and Regularity domains (which should be a possible equivalent to your Size, Density, and Position view).
+
+> @@@TG: add this references
+
+-Figure 2: why the dots are in black and white in the first inset?
+
+> The black dots are the 50% randomly removed points. We've specified this in the caption.
+
+
+## Reviewer: 2 (Neil Brocklehurst)
+
+A general suggestion to start with. The authors state in their conclusions, very diplomatically, that "...no measure is better than the next one...". While I agree with the sentiment in the context of their conclusions (that different metrics show different things, and you should choose a variety of metrics relevant to the issue under study), would it not be accurate to say that your results indicate some metrics are worse than others? Three leapt out at me in table 5: Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances,  seem to produce changes in value following random removals comparable to those seen in not one, but all three varieties of separation (limit, density and position) . Would it be fair to say that these metrics are, shall we say, problematic?
+
+> @@@TG: we agree with the reviewer and have toned down or "diplomacy" level. We now also state concern about certain types of metrics that are highly sensitive to outliers or to the number of dimensions.
+
+Following on from this: its worth testing, or at the very least acknowledging, that some metrics probably respond to incomplete sampling worse than others? Or are certain targeted separations (by limit, density or position) harder to detect with incomplete sampling? A test of this would be reasonably simple; after carrying out the separations by limit, density or position, randomly delete different numbers of data points to see how this affects the results. I realise this would be a large number of extra analyses to ask for and may be considered beyond the immediate scope of the paper, so I’ll leave the choice of whether or not to do the actual analyses up to the authors, but I think it should at least be discussed in the text. 
+
+> @@@TG: We believe this is a really interesting point that we didn't covered in the previous version of the manuscript. However we did not really found a way to fit in as a point in the main text. We've rerun part of the analysis (reproducibility made that easy!) and added a novel supplementary material covering the effect of sampling in details.
+
+Some more specific comments:
+Fig 2, panels E and F, and similar in table 5: the dots and lines representing the changes in occupancy for blue, orange and random groups. I assume the dot is the median and the solid and dashed lines are quartiles and ranges, but specify in caption, please
+
+> We already specified that "the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals" (Caption Figure 2). We've now also added it to the Table 5 caption.
+
+Table 5 headers are inconsistent with the terms used in the text and figure 5. In the text and figure 5 you describe Limit and Density parameters for changes, but the headers talk about size change and arrangement change. Maybe this will create confusion (particularly the ‘arrangement’ header, which might not naturally be associated in peoples minds with density)?
+
+> @@@ TG: fix this throughout the manuscript
+Nice spotting, this comes from a classic version mashup. We've fixed this throughout the manuscript.
+
+And finally some typos and wording comments:
+
+First sentence of the abstrach: “Multidimensional analysis of traits are now a common in ecology and evolution…”; should be either “…now common in…” or “…now a common method in…”
+
+> We remove "a".
+
+Abstract, line 8: “…subspace of this space…”; maybe say subset instead of subspace? The two ‘spaces’ next two each other makes slightly awkward reading
+
+> We've changed "subspace" to "subset".
+
+Intro line 48: “ciampaglio2001”; Space missing between name and year, name needs capital letter
+Methods, page 8, line 153: “hopkins2017”; Space missing between name and year, name needs capital letter
+
+> We fixed the references.
+
+Page 20, line 317: “spacesmight” missing space between words
+
+> We've added a space.
+
+ -->
+
+
+
+
+
+
+
 
 ```{r header, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
 ## Repeatability note:
@@ -122,8 +232,8 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 # Abstract
 
 
-Multidimensional analysis of traits are now a common in ecology and evolution and are based on trait spaces in which each dimension summarises the observed trait combination (a morphospace or an ecospace).
-Observations of interest will typically occupy a subspace of this space, and researchers will calculate one or more measures to quantify how organisms "inhabit" that space.
+Multidimensional analysis of traits are now common in ecology and evolution and are based on trait spaces in which each dimension summarises the observed trait combination (a morphospace or an ecospace).
+Observations of interest will typically occupy a <font style="color:blue">subset</font> of this space, and researchers will calculate one or more measures to quantify how organisms "inhabit" that space.
 In macroevolution and ecology these measures are referred to as disparity or dissimilarity metrics and can be generalised as space occupancy measures.
 Researchers use these measures to investigate how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes.
 However, the mathematical and biological meaning of most space occupancy measures is vague with the majority of widely-used measures lacking formal description.
@@ -142,17 +252,16 @@ By providing guidelines and common vocabulary for space occupancy analysis, we h
 Groups of species and environments share specific, recognisable, correlated characteristics: guilds or biomes with shared phenotypic, physiological, phylogenetic or behavioural traits.
 Organisms or environments should therefore be studied as a set of traits rather than some specific traits in isolation [@donohue2013; @hopkins2017].
 Biologists have increasingly been using ordination techniques [see @legendre2012 for a summary] to create multidimensional trait spaces to either explore properties of the data or test hypotheses [e.g. @oksanen2007vegan; @blonder2018; @disprity].
-For example, in palaeobiology, @wright2017 used trait spaces to study how groups of species' characteristics change through time; in ecology, @jones2015 study evidence of competition by looking at trait overlap between two populations.
-However, different fields use a different set of terms for such approaches (Table 1).
-Nonetheless, they use the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations [taxon, field site, etc.; @disprity].
+For example, in palaeobiology, @wright2017 used trait spaces to study how groups of species' characteristics change through time; in ecology, @jones2015 <font style="color:blue"> studied </font> evidence of competition by looking at trait overlap between two populations.
+<font style="color:blue"> While different fields use a different set of terms for such approaches (Table 1), they actually focus on the same mathematical objects: matrices with columns representing an original or transformed trait value and rows representing observations [taxon, field site, etc.; @disprity]. </font>
 
 Mathematics | Ecology | Macroevolution | This paper
 --------------------|--------------------|--------------------|------------
-Matrix ($n \times d$) with a structural relation between rows and columns | Function-space, Eco-space, etc. | Morphospace, traitspace, etc. | trait space
+Matrix ($n \times d$) with a structural relation between rows and columns | <font style="color:blue"> Functional space, morphospace </font>, etc. | Morphospace, traitspace, etc. | trait space
 Rows (*n*) | Taxa, field sites, environments, etc. | Taxa, specimen, populations, etc. | observations
 Columns (*d*) | Traits, Ordination scores, distances, etc. | Traits, Ordination scores, distances, etc. | dimensions
 Matrix subset ($m \times d$; $m \leq n$) | Treatments, phylogenetic group (clade), etc. | Clades, geological stratum, etc. | group
-Statistic | Dissimilarity index or metric, hypervolume, functional diversity | Disparity metric or index | space occupancy measure
+Statistic <font style="color:blue"> (i.e. a measure) </font>  | Dissimilarity index or metric, hypervolume, functional diversity, <font style="color:blue"> etc. </font> | Disparity metric or index | space occupancy measure
 Multidimensional analysis | Dissimilarity analysis, trait analysis, etc. | Disparity analysis, disparity-through-time, etc. | multidimensional analysis
 Table 1: terms and equivalence between mathematics, ecology and macroevolution.
 
@@ -164,7 +273,7 @@ Because of the multidimensional nature of these trait spaces, it is often not po
 Studying the occupancy of trait spaces is done using disparity indices in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
 Despite the commonalities between the measures used in ecology and evolution (which are often metric but don't necessarily need to be), surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
 
-Different occupancy measures capture different aspects of  trait space [ciampaglio2001; @villéger2008; @mammola2019].
+Different occupancy measures capture different aspects of  trait space [@ciampaglio2001; @villéger2008; @mammola2019].
 It may be widely-known, but to our knowledge is infrequently mentioned in peer-reviewed papers.
 First, space occupancy measures are often named as the biological aspect they are describing ("disparity", "functional diversity") rather than what they are measuring (e.g. the product of ranges), which obscures the differences and similarities between studies.
 Second, in many studies in ecology and evolution, authors have focused on measuring the size of the trait space [e.g. ellipsoid volume @donohue2013; hypervolume @diaz2016; product of variance @wright2017; Procrustes variance @marcy2016].
@@ -173,7 +282,7 @@ For example, if two groups have the same size, this can support certain biologic
 Yet, an alternative aspect of space occupancy may indicate that the groups' position are different, leading to a different biological conclusion (e.g. the groups are equally diverse but occupy different niches).
 Using measures that only capture one aspect of the trait space may restrain the potential of multidimensional analysis [@villéger2008].
 
-Here we propose a broad classification of space occupancy measures as used across ecology and evolution and study their power to detect changes in trait space occupancy in simulated and empirical data (regardless of whether spaces are are truly "occupiable" which might be important in some cases - e.g. if the space is infinite or if some regions inapplicable).
+Here we propose a broad classification of space occupancy measures as used across ecology and evolution and study their power to detect changes in trait space occupancy in simulated and empirical data (regardless of whether spaces are truly "occupiable" which might be important in some cases - e.g. if the space is infinite or if some regions inapplicable).
 We provide an assessment of each broad type of space occupancy measures along with a unified terminology to foster communication between ecology and evolution. 
 Unsurprisingly, we found no one measure describes all changes and that the results from each measures are dependent on the characteristics of the space and the hypotheses.
 Furthermore, because there can be an infinite number of measures, it would be impossible to propose clear generalities to space occupancy measures behaviour.
@@ -355,7 +464,7 @@ We generated trait spaces using the following combinations of size, distribution
 Table 2: different simulated space distribution.
  *Name* of the simulated space; *dimensions* of the matrix (row\*columns); *distribution(s)* of the data on each dimensions (for the 'Random', dimensions are randomly chosen between Normal, Uniform or Lognormal); *dimension variance*: distribution of the variance between dimensions (when equal, the dimensions have the same variance); *correlation* between dimensions. 
 
-The differences in trait space sizes (200 elemeents for 3, 15, 50 or 150 dimensions) reflects the range found in literature [e.g. hopkins2017; @mammola2019].
+The differences in trait space sizes (200 elemeents for 3, 15, 50 or 150 dimensions) reflects the range found in literature [e.g. @hopkins2017; @mammola2019].
 We used a range of distributions (uniform, normal or a random combination of uniform, normal and lognormal) to test the effect of observation distributions on the measurements.
 We used different levels of variance for each dimensions in the spaces by making the variance on each dimension either equal ($\sigma_{D1} \simeq \sigma_{D2} \simeq \sigma_{Di}$) or decreasing ($\sigma_{D1} < \sigma_{D2} < \sigma_{Di}$) with the decreasing factor being either multiplicative (using the cumulative product of the inverse of the number of dimensions: $\prod_i^d(1/d)$) or additive ($\sum_i^d(1/d)$).
 Both reductions of variance are used to illustrate the properties of ordinations where the variance decreases per dimensions [lognormal in principal components analysis - PCA; e.g. @marcy2016; @healy2019; and normal win Multidimensional Scaling - MDS, PCO or PCoA; e.g. @close2015; @wright2017].
@@ -430,7 +539,7 @@ Position measures are expected to be most affected by this change.
 The algorithm to select $\rho$ or $D$ is described in the Supplementary material 1.
 
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly; B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of measures, where the space occupancy measurement respectively manages or fails to captures a specific type of reduction (i.e. size, position or density; Table 5).")}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly (the removed elements are displayed in black and the analysed ones in grey); B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of measures, where the space occupancy measurement respectively manages or fails to captures a specific type of reduction (i.e. size, position or density; Table 5).")}
 
 set.seed(42)
 
@@ -719,7 +828,7 @@ Measure      | Size change  | Arrangement change | Position change | Distributio
 `r name[6]` | `r plot.id(16)` | `r plot.id(17)` | `r plot.id(18)` | `r s.test(6, "s")` | `r s.test(6, "r")`|
 `r name[7]` | `r plot.id(19)` | `r plot.id(20)` | `r plot.id(21)` | `r s.test(7, "s")` | `r s.test(7, "r")`|
 `r name[8]` | `r plot.id(22)` | `r plot.id(23)` | `r plot.id(24)` | `r s.test(8, "s")` | `r s.test(8, "r")`|
-Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures. See Fig. 2 for interpretation of the figures distributions and values. F-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimension represent the ratio of sum squared difference within and between groups (the higher, the more the factor has an effect on the measure) and associated _p_-values (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. E.g. the Average Euclidean distance from centroid (row 1) captures mainly changes in size (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
+Table 5: Results of the effect of space reduction, space dimension distributions and dimensions number of the different space occupancy measures. The dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. See Fig. 2 for details on the interpretation of the figures distributions and values. F-values for distribution effect and dimensions effect represents respectively the effect of the ANOVAs space occupancy ~ distributions and space occupancy ~ dimension represent the ratio of sum squared difference within and between groups (the higher, the more the factor has an effect on the measure) and associated _p_-values (0 '\*\*\*' 0.001 '\*\*' 0.01 '\*' 0.05 '.' 0.1 '' 1). This figure illustrates how different measures can be influenced by different aspects of changes in the trait space. E.g. the Average Euclidean distance from centroid (row 1) captures mainly changes in size (column 1), but also captures changes in density (column 2) but does not capture changes in position (column 3).
 
 As expected, some different measures capture different aspects of space occupancy.
 However, it can be hard to predict the behaviour of each measure when 50% of the observations are removed.
@@ -863,7 +972,7 @@ These differences depending on the measures are also more pronounced in the empi
 While our simulations are useful to illustrate the behaviour of diverse space occupancy measures, they have several caveats.
 First, the simulated observations in the trait spaces are independent.
 This is not the case in biology where observations can be spatially [@jones2015] or phylogenetically correlated [e.g. @beck2014].
-Second, the algorithm used to reduce the trait spacesmight not always accurately reflect changes.
+Second, the algorithm used to reduce the trait <font style="color:blue"> spaces might </font> not always accurately reflect changes.
 This might favour some specific measures over others, in particular for the changes in density that modify the nearest neighbour density rather than changing the global density.
 This algorithmic choice was made in order to not confound changes in density along with changes in size.
 However, the results presented here probably capture the general behaviour of each measure since results are consistent between the simulated and empirical analysis.
@@ -892,7 +1001,7 @@ We believe that having a clearer understanding of both the properties of the tra
 
 # Acknowledgements
 
-We thank Natalie Jones and Kevin Healy for helping with the empirical datasets and two anonymous reviewer for their comments.
+We thank Natalie Jones and Kevin Healy for helping with the empirical datasets and Stefano Mammola and Neil Brocklehurst for their positive and encouraging reviews.
 We acknowledge funding from the Australian Research Council DP170103227 and FT180100634 awarded to VW.
 
 # Authors contributions
