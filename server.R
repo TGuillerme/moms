@@ -12,7 +12,6 @@ shinyServer(
     function(input, space, output, session) {
         # Plotting function
         output$plot_out <- renderPlot({
-
             # ## Profiling
             # Rprof(moms_profiling <- "moms_profiling.log", memory.profiling = TRUE )
 
@@ -166,8 +165,6 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Disparity
             ## ~~~~~~~~~~
-
-            ## Some dummy table
             output$table_out <- renderTable({
 
                 ## Name the elements
@@ -257,9 +254,57 @@ shinyServer(
             #     })
             # }
 
+            ## ~~~~~~~~~~
+            ## Disparity
+            ## ~~~~~~~~~~
+            output$plot_simulations <- renderPlot({
+                ## Make a bunch of spaces
+                spaces <- run.simulations(input, n_replicates = 15)
+
+                #TODO: fix bug here!
+
+
+                ## Calculate disparity
+                lapply.dispRity <- function(groups, input) {
+                    input$rarefaction <- FALSE
+                    return(do.call(dispRity, handle.metrics(input, dispRity_args = list(data = groups))$args)$disparity)
+                }
+                disparities <- do.call(rbind, lapply(lapply(spaces, lapply.dispRity, input), unlist))
+
+                ## Calculate the probability of overlap
+                bc <- bhatt.coeff(disparities[,1], disparities[,2])
+                ylabel <- paste0("Distribution overlap: ", round(bc, 2), "\n(Bhattacharrya Coefficient)")
+
+                ## Plotting the results
+                par(bty = "n", las = 1)
+                ## Plot size
+                plot(NULL, ylim = c(0, 2.5), pch = 19, xlim = range(disparities), xlab = "Space occupancy", ylab = "", yaxt = "n", main = ylabel)
+
+                ## Adding the values
+                quantile_vals <- apply(disparities, 2, quantile, probs = c(0.025, 0.250, 0.750, 0.975))
+                centtend_vals <- apply(disparities, 2, median)
+
+                ## Loop through the lines
+                for(column in 1:2) {
+                    ## Get the x y values
+                    line_x_vals <- quantile_vals[, column]
+                    line_y_vals <- rep(column, 2)
+
+                    ## Add the lines
+                    n_cis <- 4
+                    for(ci in 1:(n_cis/2)) {
+                        lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * 2, col = defaults$palette[column])
+                    }
+                }
+                ## Add the points
+                points(x = centtend_vals, y = 1:2, pch = 19, col = defaults$palette, cex = 1.5 + 1)
+                ## Add the legend
+                legend("bottomright", pch = 19, col = defaults$palette, legend = c(paste0(input$reduce, " reduction"), "Random reduction"))
+            })
         },
         ## Plot size
-        height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))
+        # height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))
+        height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/9, 0))
         )
     }
 )

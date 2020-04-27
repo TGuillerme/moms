@@ -1,7 +1,7 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$space_type <- "Input"
+# input$space_type <- "User"
 # input$demo_data <- "Beck and Lee 2014"
 # input$n_dimensions <- 2
 # input$n_elements <- 300
@@ -240,6 +240,9 @@ get.space <- function(input, args.only = FALSE){
     ## Making the space
     space <- do.call(dispRity::space.maker, space_args, quote = TRUE)
 
+    ## Add rownames
+    rownames(space) <- seq(1:nrow(space))
+
     if(!is.matrix(space)) {
         return("Impossible to generate space.\nTry changing the parameters combinations\nor the distribution parameters.")
     }
@@ -247,13 +250,11 @@ get.space <- function(input, args.only = FALSE){
     return(space)
 }
 
-
 #' Getting the character details
 #' @param session Shiny session (to allow updating of character selection)
 #' @return a character string if character extracted correctly,
 #'  a list (detailing the error message to be displayed) if there's an error.
 get.reduction <- function(input, space, session) {
-
 
     ## Demo space
     if(input$use_demo_groups == TRUE){
@@ -264,9 +265,6 @@ get.reduction <- function(input, space, session) {
         dataset <- switch.demo.dataset(input)
         return(1:dim(demo_data[[dataset]]$matrix)[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
     }
-
-
-
 
 
     ## Set the parameters
@@ -308,7 +306,6 @@ get.reduction <- function(input, space, session) {
 
     return(remove)
 }
-
 
 ## Handles the dispRity metric
 handle.metrics <- function(input, dispRity_args, session) {
@@ -569,7 +566,6 @@ render.snippet <- function(input) {
     return(paste(c(libraries_head, libraries, space_maker_head, space_maker, reduce_space_head, reduce_space, custom_groups_head, custom_groups, meas_disparity_head, meas_disparity, sum_disparity_head, sum_disparity), collapse = "\n"))
 }
 
-
 ## Display the error message
 plot.error <- function(text, col = "#cc6644", font = 1, cex = 1.2, ...) {
     ## Empty plot
@@ -580,14 +576,6 @@ plot.error <- function(text, col = "#cc6644", font = 1, cex = 1.2, ...) {
 
 ## Get proportional change in a table
 get.prop.change <- function(table, change = "change", rarefaction) {
-    # if(input$rarefaction) {
-    #     ## Get the proportional change
-    #     proportional_change <- table[2,3]/table[1,3]*100-100
-    #     ## Adding the proportional change
-    #     table <- cbind(table, c("", paste(round(proportional_change, 2), "%")))
-    #     ## Change the column name
-    #     colnames(table)[4] <- change
-    # } else {
     ## Get the proportional change
     obs_values <- na.omit(table[,3])
     proportional_change <- obs_values[2]/obs_values[1]*100-100
@@ -616,6 +604,7 @@ get.prop.change <- function(table, change = "change", rarefaction) {
     return(table)
 }
 
+## Switch between the demo datasets
 switch.demo.dataset <- function(input) {
     switch(input$demo_data,
        "Beck and Lee 2014"  = {dataset <- 1},
@@ -627,3 +616,29 @@ switch.demo.dataset <- function(input) {
        )
     return(dataset)
 }
+
+## Run the simulations
+run.simulations <- function(input, n_replicates) {
+    ## Get the spaces
+    spaces <- replicate(n_replicates, get.space(input), simplify = FALSE)
+    ## Reduce the spaces
+    lapply.reduction <- function(space, input, session) {
+        input2 <- input
+        input2$reduce <- "Random"
+        return(list("reduced" = get.reduction(input, space, session),
+                    "random" =  get.reduction(input2, space, session)))
+    }
+    reduced_spaces <- lapply(spaces, lapply.reduction, input, session)
+
+    #TODO: fix bug here! (probably due to "session")
+
+
+    ## Create the groups of disparity data
+    make.groups <- function(space, reduction) {
+        custom.subsets(space, group = list("Reduced" = rownames(space)[reduction[[1]]],
+                                           "Random" = rownames(space)[reduction[[2]]]))
+    }
+    return(mapply(make.groups, spaces, reduced_spaces, SIMPLIFY = FALSE))
+}
+
+

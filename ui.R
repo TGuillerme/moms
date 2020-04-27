@@ -233,7 +233,7 @@ shinyUI(fluidPage(
       ),
 
       ## Main panel
-      column(width = 5,
+      column(width = 4,
         ## Plots the algorithm results
         # uiOutput("plot.ui", width = "auto"),
 
@@ -248,7 +248,24 @@ shinyUI(fluidPage(
 
         plotOutput("plot_out", width = "100%", height = "auto"),    
         h3("Multidimensional space occupancy (disparity):"),
-        tableOutput("table_out")
+        tableOutput("table_out"),
+
+        actionButton("simulate", label = "Run simulations"),
+        # checkboxInput("simulate", label = "Run simulations", value = FALSE),
+        helpText("Runs simulations for the space modification and compare them to random change ", a(href="https://www.biorxiv.org/content/10.1101/801571v1", "(Guillerme et al. 2020)", rel = "noopener noreferrer", target = "_blank"), ". WARNING: this can take from several minutes to run depending on the parameters and the app traffic."),
+        conditionalPanel(condition = "input.simulate > 0",
+          conditionalPanel(condition = "input.reduce != \"None\"",
+            conditionalPanel(condition = "input.space_type == \"User\"",
+              plotOutput("plot_simulations")
+            ),
+            conditionalPanel(condition = "input.space_type != \"User\"",
+                helpText("Simulations can only run for user defined spaces. Select \"User\" in the \"Select the type of space to use:\" panel and rerun the simulations.")
+            )                  
+          ),
+          conditionalPanel(condition = "input.reduce == \"None\"",
+            helpText("Simulations can only run for a selected space modification.")
+          )
+        )
     ),
 
       ## Left panel
