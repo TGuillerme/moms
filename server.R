@@ -204,19 +204,23 @@ shinyServer(
 
                 ## Rendering the output table
                 table_out <- summary(disparity)
-
+                
                 ## Add names
-                rownames(table_out) <- table_out$subsets
+                if(!input$rarefaction) {
+                    rownames(table_out) <- table_out$subsets
+                } else {
+                    colnames(table_out)[4] <- "Bootstrap\nmedian"
+                }
                 colnames(table_out)[3] <- metrics_handle$name
 
                 if(input$reduce != "None") {
                     ## Add the change column (if groups are not pre-made)
                     if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
                         ## Return full table with proportional difference
-                        return(get.prop.change(table_out, change = "difference"))
+                        return(get.prop.change(table_out, change = "difference", rarefaction = input$rarefaction))
                     } else {
                         ## Get the proportional change
-                        table_out <- get.prop.change(table_out)
+                        table_out <- get.prop.change(table_out, change = "change", rarefaction = input$rarefaction)
 
                         ## Print the output
                         return(table_out[,-1])

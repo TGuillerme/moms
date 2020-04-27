@@ -315,7 +315,7 @@ handle.metrics <- function(input, dispRity_args, session) {
 
     ## Metrics selection
     switch(input$metric_choice,
-        Volume = {
+        Size = {
             metric_name <- input$metric1
             switch(input$metric1,
                 "Ellipsoid volume" = {
@@ -430,6 +430,11 @@ handle.metrics <- function(input, dispRity_args, session) {
         Position = {
             metric_name <- input$metric3
             switch(input$metric3,
+                "Angles deviations" = {
+                    dispRity_args$metric <- c(sd, angles)
+                    dispRity_code <- "sd(dispRity::angles(matrix))"
+                },
+
                 "Average displacement (Euclidean)" = {
                     dispRity_args$metric <- c(mean, displacements)
                     dispRity_code <- "mean(dispRity::displacements(matrix))"
@@ -438,6 +443,10 @@ handle.metrics <- function(input, dispRity_args, session) {
                     dispRity_args$metric <- c(mean, displacements)
                     dispRity_args$method <- "manhattan"
                     dispRity_code <- "mean(dispRity::displacements(matrix, method = \"manhattan\"))"
+                },
+                "Deviations variation coefficient" = {
+                    dispRity_args$metric <- function(matrix) {dev <- deviations(matrix); return(sd(dev)/mean(dev))}
+                    dispRity_code <- "sd(dispRity::deviations(matrix))/mean(dispRity::deviations(matrix))"
                 },
                 "Median distance from centre (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
@@ -459,6 +468,13 @@ handle.metrics <- function(input, dispRity_args, session) {
             
             ## Get functions
             if(input$metric_specific2 == "NULL") {
+
+                ## Both NULL metrics
+                error_msg <- paste0("One metric dimension level must be non NULL.")
+                if(input$metric_specific1 == "NULL") {
+                    return(error_msg)
+                }
+
                 dispRity_args$metric <- eval(parse(text = input$metric_specific1))
                 ## Export the code (for eventual display)
                 dispRity_code <- paste0(input$metric_specific1, "(matrix)")
@@ -502,6 +518,22 @@ handle.metrics <- function(input, dispRity_args, session) {
         dispRity_code <- input$manually_show_metric
     }
 
+    if(input$rarefaction == TRUE) {
+        ## Get the sampling value
+        if(class(dispRity_args$data) == "dispRity") {
+            ## Get the minimum group size
+            group_size <- min(size.subsets(dispRity_args$data))
+        } else {
+            group_size <- nrow(dispRity_args$data)
+        }
+        ## Get the rarefaction number
+        rare_number <- round(input$n_rarefaction/100 * group_size)
+        ## Correct the rarefaction number (if < 3)
+        rare_number <- ifelse(rare_number < 3, 3, rare_number)
+
+        ## Rarefy the data
+        dispRity_args$data <- boot.matrix(dispRity_args$data, rarefaction = rare_number)
+    }
 
     return(list(args = dispRity_args, name = metric_name, code = dispRity_code))
 }
@@ -547,13 +579,39 @@ plot.error <- function(text, col = "#cc6644", font = 1, cex = 1.2, ...) {
 }
 
 ## Get proportional change in a table
-get.prop.change <- function(table, change = "change") {
+get.prop.change <- function(table, change = "change", rarefaction) {
+    # if(input$rarefaction) {
+    #     ## Get the proportional change
+    #     proportional_change <- table[2,3]/table[1,3]*100-100
+    #     ## Adding the proportional change
+    #     table <- cbind(table, c("", paste(round(proportional_change, 2), "%")))
+    #     ## Change the column name
+    #     colnames(table)[4] <- change
+    # } else {
     ## Get the proportional change
-    proportional_change <- table[2,3]/table[1,3]*100-100
-    ## Adding the proportional change
-    table <- cbind(table, c("", paste(round(proportional_change, 2), "%")))
-    ## Change the column name
-    colnames(table)[4] <- change
+    obs_values <- na.omit(table[,3])
+    proportional_change <- obs_values[2]/obs_values[1]*100-100
+    ## Add a new column
+    table <- cbind(table, "")
+    table[,ncol(table)] <- as.character(table[,ncol(table)])
+    ## Add the proportional changes
+    table[which(table[,3] == obs_values[2]), ncol(table)] <- paste(round(proportional_change, 2), "%")
+
+    ## Rename the column
+    colnames(table)[ncol(table)] <- change
+
+    if(rarefaction) {
+        ## Add bootstrapped values
+        proportional_changes <- table[-1,4]/table[1,4]*100-100
+        ## Add a new column
+        table <- cbind(table, "")
+        table[,ncol(table)] <- as.character(table[,ncol(table)])
+        ## Add the bootstrap proportional changes
+        table[-1, ncol(table)] <- paste(round(proportional_changes, 2), "%")
+
+        ## Rename the column
+        colnames(table)[ncol(table)] <- paste0("bootstrapped ",change)
+    }
 
     return(table)
 }

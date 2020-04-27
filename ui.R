@@ -260,10 +260,10 @@ shinyUI(fluidPage(
         h2("Space occupancy metric (disparity)"),
 
         ## Metric - input$level1
-        selectInput("metric_choice", label = "Metric type", choices = list("Volume", "Density", "Position", "User"), selected = "Volume"),
+        selectInput("metric_choice", label = "Metric type", choices = list("Size", "Density", "Position", "User"), selected = "Size"),
 
-        conditionalPanel(condition = "input.metric_choice == \"Volume\"",
-          selectInput("metric1", label = h5("Volume metric"),
+        conditionalPanel(condition = "input.metric_choice == \"Size\"",
+          selectInput("metric1", label = h5("Size metric"),
                       choices = list(
                                     "Ellipsoid volume",
                                     "Convex hull surface",
@@ -299,8 +299,10 @@ shinyUI(fluidPage(
         conditionalPanel(condition = "input.metric_choice == \"Position\"",
           selectInput("metric3", label = h5("Position metric"),
                       choices = list(
+                                    "Angles deviations",
                                     "Average displacement (Euclidean)",
                                     "Average displacement (Manhattan)",
+                                    "Deviations variation coefficient",
                                     "Median distance from centre (Euclidean)",
                                     "Median distance from centre (Manhattan)"
                                     ), selected = "Median displacement (Euclidean)")
@@ -308,8 +310,7 @@ shinyUI(fluidPage(
 
         conditionalPanel(condition = "input.metric_choice == \"User\"",
           selectInput("metric_specific1", label = "Dimension level 1 metrics:",
-                      choices = list(#"NULL",
-                                    "convhull.volume",
+                      choices = list("convhull.volume",
                                     "convhull.surface",
                                     "diagonal",
                                     "ellipse.volume",
@@ -323,10 +324,13 @@ shinyUI(fluidPage(
                                     "prod",
                                     "sd",
                                     "sum",
-                                    "mode.val"), selected = "mean"),
+                                    "mode.val",
+                                    "NULL"), selected = "mean"),
           selectInput("metric_specific2", label = "Dimension level 2 metrics:",
                       choices = list("NULL",
+                                    "angles",
                                     "centroids",
+                                    "deviations",
                                     "displacements",
                                     "neighbours",
                                     "pairwise.dist",
@@ -337,6 +341,13 @@ shinyUI(fluidPage(
                                     "span.tree.length"), selected = "NULL"),
           helpText("Select one or two metrics (e.g. 'ellipsoid.volume' and 'NULL' or 'sum' and 'variances').")
         ),
+
+        ## Sampling
+        checkboxInput("rarefaction", label = "Change sampling (rarefaction)", value = FALSE),
+        conditionalPanel(condition = "input.rarefaction == true",
+          sliderInput("n_rarefaction", label = "Sampling proportion (%):", min = 1, max = 100, value = 100),
+          helpText("Changing the proportion of the number of elements to sample in both groups (down to three elements).")
+          ),
 
         ## Show the metric
         checkboxInput("show_metric", label = "Show metric code", value = FALSE),
