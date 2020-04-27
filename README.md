@@ -12,7 +12,7 @@ Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution20
 
 ### What isn't `moms`?
 **`moms` is not a package for measuring disparity!** 
-Although `moms` is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with `moms`](@@@biorXivlink@@@) fully reproducible.
+Although `moms` is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with `moms`](https://www.biorxiv.org/content/10.1101/801571v1) fully reproducible.
 These functions allow the reduce the space, make fancy plots or wrap up analysis in the context of the shiny app or the paper only.
 If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by `moms` for all the disparity calculations.
 
