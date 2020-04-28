@@ -51,7 +51,7 @@ get.space <- function(input, args.only = FALSE){
     if(input$space_type == "Input"){
         ## Load the file
         shiny::req(input$upload_input_matrix)
-        space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = FALSE))
+        space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = NULL, header = FALSE))
 
         ## Check whether it can work out with rownames
         if(class(space) != "matrix") {
@@ -63,13 +63,13 @@ get.space <- function(input, args.only = FALSE){
         if(!is.numeric(space)) {
             ## Is not numeric
             ## Try reload with row or col names
-            space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = 1, header = FALSE))
+            space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = 1, header = FALSE))
             ## Try changing parameters
             if(!is.numeric(space)) {
-                space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = NULL, header = TRUE))
+                space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = NULL, header = TRUE))
             } 
             if(!is.numeric(space)) {
-                space <- as.matrix(read.csv(file = input$upload_input_matrix$name, row.names = 1, header = TRUE))
+                space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = 1, header = TRUE))
             }
         }
 
@@ -216,7 +216,7 @@ get.space <- function(input, args.only = FALSE){
             correlation_value_csv <- input$correlation_value_csv
             if(!is.null(correlation_value_csv)) {
                 ## Read the matrix
-                cor.matrix <- as.matrix(read.csv(file = correlation_value_csv$name, header = FALSE))
+                cor.matrix <- as.matrix(read.csv(file = input$correlation_value_csv$datapath, header = FALSE))
                 diag(cor.matrix) <- 1
                 cor.matrix[upper.tri(cor.matrix)] <- cor.matrix[lower.tri(cor.matrix)]
                 if(any(cor.matrix > 1)) {

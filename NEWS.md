@@ -32,7 +32,11 @@ dispRity 0.2.0 (2016-04-01)
 ### MINOR IMPROVEMENTS
 
   * changed type of space occupancy names to fit the revised paper
+  <!-- * updated manual to the newest version -->
 
+### BUG FIXES
+
+  * Manual data input now works correctly
 
  moms v0.3 (2019-10-01)
 =========================
