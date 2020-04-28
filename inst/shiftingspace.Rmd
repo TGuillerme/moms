@@ -79,8 +79,8 @@ In a conceptually similar study in the context of species distribution modelling
 "Therefore, we propose the [`moms`](https://tguillerme.shinyapps.io/moms/) shiny app to allow workers to help them choose their set of space occupancy measurements (and test the caveats mentioned above).
 `moms` is an online graphical user interface to help analyse multidimensional data.
 It allows users to upload their dataset of interest (or simulate one with specific parameters) and measure space occupancy using a variety of implemented measures (namely, but not only, the ones used in this study).
-Furthermore, it allows to simulate space shifting similarly as in this paper to test whether some measures capture or not some specific changes in space.
-However, `moms` is not a tool for analysing multidimensional data _per se_ but rather for helping workers to chose the space occupancy metric the most appropriated to their data and question.
+Furthermore, it allows @@@to simulate space shifting similarly as in this paper@@@ @@@VW this seems awkward - something like "Furthermore, teh package allows simulation of shifts in morphospace (occupancy?) as also presented in this paper? to test whether some measures capture specific changes in space.
+However, `moms` is not a tool for analysing multidimensional data _per se_ but rather for helping workers to chose the space occupancy metric most appropriate to their data and question.
 To run multidimensional analysis, we suggest using dedicated `R` packages (such as - but not limited to: @oksanen2007vegan, @momocs, @bat2015, @disprity)." l.@@@
 
 2)  I suspect that your proposed classification may somewhat overlap with the general classification scheme of diversity indexes by Pavoine and Bonsall (2011; Biological review), later expanded by Tucker et al. (2017; Biological Reviews) in the context of phylogenetic metrics (but it’s actually the same). In a nutshell, they grouped metrics/indexes in three main category of ‘Richness’, ‘Divergence’ and ‘Regularity’ components. In their view, these three concepts should capture the primary mathematical operation inherent to each metric, namely:
@@ -92,7 +92,7 @@ I see some overlap with your method, but also differences. It would be worth bri
 >We were not aware of these references and we are grateful for the reviewer pointing them out. There is so much overlapping work on ecology and evolution but so few visibility between them! Adding these references and concepts is definitely improving the main idea of this paper!
 
 Note that this classification bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
-However, contrary to @tucker2017 basing their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance). l.@@@
+However, while @tucker2017 based their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance). l.@@@
 
 
 3) The approach you choose for simulating changes in the multidimensional space (Figure 2) is  very interesting. While I was thinking about it, I indulged with an idea (but please ignore if not appropriate):
@@ -139,13 +139,13 @@ Please add “etc.” at the end of the text in the cell “statistic” interse
 > The black dots are the 50% randomly removed points. We've specified this in the caption.
 
 
-## Reviewer: 2 (Neil Brocklehurst)
+## Reviewer: 2 (Neil Brocklehurst) 
 
 A general suggestion to start with. The authors state in their conclusions, very diplomatically, that "...no measure is better than the next one...". While I agree with the sentiment in the context of their conclusions (that different metrics show different things, and you should choose a variety of metrics relevant to the issue under study), would it not be accurate to say that your results indicate some metrics are worse than others? Three leapt out at me in table 5: Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances,  seem to produce changes in value following random removals comparable to those seen in not one, but all three varieties of separation (limit, density and position) . Would it be fair to say that these metrics are, shall we say, problematic?
 
 > We agree with the reviewer and have toned down or "diplomacy" level. We now also state concern about certain types of metrics that are highly sensitive to outliers or to the number of dimensions:
 
-We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
+>@@@VW green here? We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
 For example, the results for the Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances produced results in the reduced space often similar to the randomly reduced spaces (Table 5).
 This does not make them "bad" measures but rather heavily context dependent.
 Regardless, we believe that workers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.
@@ -164,7 +164,7 @@ This effect is especially expected to be acerbated in macroevolutionary studies 
 Some more specific comments:
 Fig 2, panels E and F, and similar in table 5: the dots and lines representing the changes in occupancy for blue, orange and random groups. I assume the dot is the median and the solid and dashed lines are quartiles and ranges, but specify in caption, please
 
-> We already specified that "the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals" (Caption Figure 2). We've now also added it to the Table 5 caption.
+> We already specified that "the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals" (Caption Figure 2). We've now also added this to the Table 5 caption.
 
 Table 5 headers are inconsistent with the terms used in the text and figure 5. In the text and figure 5 you describe Limit and Density parameters for changes, but the headers talk about size change and arrangement change. Maybe this will create confusion (particularly the ‘arrangement’ header, which might not naturally be associated in peoples minds with density)?
 
