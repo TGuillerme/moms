@@ -254,7 +254,7 @@ get.space <- function(input, args.only = FALSE){
 #' @param session Shiny session (to allow updating of character selection)
 #' @return a character string if character extracted correctly,
 #'  a list (detailing the error message to be displayed) if there's an error.
-get.reduction <- function(input, space, session) {
+get.reduction <- function(input, space) {
 
     ## Demo space
     if(input$use_demo_groups == TRUE){
@@ -489,7 +489,9 @@ handle.metrics <- function(input, dispRity_args, session) {
     if(input$show_metric == TRUE) {
         ## Update the metric display
         metric_display <- paste0("user.metric <- function(matrix) {\n\t", dispRity_code, "\n}")
-        shiny::updateTextAreaInput(session, "manually_show_metric", value = metric_display)
+        if(!missing(session)) {
+            shiny::updateTextAreaInput(session, "manually_show_metric", value = metric_display)
+        }
     }
 
     if(input$edit_metric == TRUE) {
@@ -621,22 +623,23 @@ switch.demo.dataset <- function(input) {
 run.simulations <- function(input, n_replicates) {
     ## Get the spaces
     spaces <- replicate(n_replicates, get.space(input), simplify = FALSE)
+
     ## Reduce the spaces
-    lapply.reduction <- function(space, input, session) {
-        input2 <- input
-        input2$reduce <- "Random"
-        return(list("reduced" = get.reduction(input, space, session),
-                    "random" =  get.reduction(input2, space, session)))
+    lapply.reduction <- function(space, input) {
+        ## Convert the random reduction function (to be only random)
+        get.reduction.random <- get.reduction
+        body(get.reduction.random)[[3]] <- body(get.reduction)[[3]][[3]][[2]]
+
+        ## Run the reductions
+        return(list("reduced" = get.reduction(input, space),
+                    "random" =  get.reduction.random(input, space)))
     }
-    reduced_spaces <- lapply(spaces, lapply.reduction, input, session)
-
-    #TODO: fix bug here! (probably due to "session")
-
+    reduced_spaces <- lapply(spaces, lapply.reduction, input)
 
     ## Create the groups of disparity data
     make.groups <- function(space, reduction) {
-        custom.subsets(space, group = list("Reduced" = rownames(space)[reduction[[1]]],
-                                           "Random" = rownames(space)[reduction[[2]]]))
+        return(custom.subsets(space, group = list("Reduced" = rownames(space)[reduction[[1]]],
+                                                  "Random" = rownames(space)[reduction[[2]]])))
     }
     return(mapply(make.groups, spaces, reduced_spaces, SIMPLIFY = FALSE))
 }

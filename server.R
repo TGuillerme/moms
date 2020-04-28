@@ -57,7 +57,7 @@ shinyServer(
             ## Reducing the space
             ## ~~~~~~~~~~
             if(input$reduce != "None") {
-                reduced_space <- get.reduction(input, space, session)
+                reduced_space <- get.reduction(input, space)
 
                 ## Return error
                 if(class(reduced_space) == "character") {
@@ -257,17 +257,19 @@ shinyServer(
             ## ~~~~~~~~~~
             ## Disparity
             ## ~~~~~~~~~~
+
             output$plot_simulations <- renderPlot({
                 ## Make a bunch of spaces
                 spaces <- run.simulations(input, n_replicates = 15)
 
-                #TODO: fix bug here!
-
-
                 ## Calculate disparity
                 lapply.dispRity <- function(groups, input) {
-                    input$rarefaction <- FALSE
-                    return(do.call(dispRity, handle.metrics(input, dispRity_args = list(data = groups))$args)$disparity)
+                    ## Edit the handle.metric function to not deal with rarefactions
+                    handle.metrics.no.rare <- handle.metrics
+                    body(handle.metrics.no.rare)[[5]] <- NULL
+
+                    ## Get the disparity values
+                    return(do.call(dispRity, handle.metrics.no.rare(input, dispRity_args = list(data = groups))$args)$disparity)
                 }
                 disparities <- do.call(rbind, lapply(lapply(spaces, lapply.dispRity, input), unlist))
 
@@ -293,13 +295,13 @@ shinyServer(
                     ## Add the lines
                     n_cis <- 4
                     for(ci in 1:(n_cis/2)) {
-                        lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * 2, col = defaults$palette[column])
+                        lines(x = line_x_vals[c(ci, n_cis-(ci-1))], y = line_y_vals, lty = (n_cis/2 - ci + 1), lwd = ci * 1.5 * 2, col = defaults$palette[[column]])
                     }
                 }
                 ## Add the points
-                points(x = centtend_vals, y = 1:2, pch = 19, col = defaults$palette, cex = 1.5 + 1)
+                points(x = centtend_vals, y = 1:2, pch = 19, col = unlist(defaults$palette), cex = 1.5 + 1)
                 ## Add the legend
-                legend("bottomright", pch = 19, col = defaults$palette, legend = c(paste0(input$reduce, " reduction"), "Random reduction"))
+                legend("bottomright", pch = 19, col = unlist(defaults$palette), legend = c(paste0(input$reduce, " reduction"), "Random reduction"))
             })
         },
         ## Plot size

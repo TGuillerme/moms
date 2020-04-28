@@ -5,7 +5,7 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("moms: Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme T, Puttick MN, Marcy AE, and Weisbecker V (2019). Moms: an exploratory tool for multidimensional space analyses. doi:", a(href="", ""), "."),
+    p("Guillerme T, Puttick MN, Marcy AE, and Weisbecker V (2020). Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces? doi:", a(href="", ""), "."),
     p(a(href="https://rawcdn.githack.com/TGuillerme/moms/master/inst/moms_vignette.html", "USER MANUAL", rel = "noopener noreferrer", target = "_blank")),
     hr(),
 
