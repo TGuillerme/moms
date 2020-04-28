@@ -39,7 +39,7 @@ If you want to analyse multidimensional spaces, we suggest you use the many `R` 
 
 This is what `moms` looks like:
 
-![moms interface](moms_screenshots/moms_example.png "Figure 1: `moms` interface")
+![Figure 1: `moms` interface](moms_screenshots/full_interface.png "Figure 1: `moms` interface")
 
 There are six panels (that can change in size and content!):
 
@@ -59,12 +59,12 @@ The basic `moms` pipeline would probably go as follow:
 
 It is then possible to explore either the effect of the space modification on different metrics by changing the metric (until you find the one that suits your question) or by changing the space modification (until you find what type of space modification the metric measures, or not).
 
-### Creating a space
+### Creating a space {#createspace}
 
 The easiest way is to let `moms` create a space for you you can chose the number of dimensions and the number of observations using the sliders.
 You can do this using the `"User"` option in the space generation [panel (1)](#basics):
 
-![user space](moms_screenshots/Simulated_spaces.png "Figure 2: setting the space parameters")
+![Figure 2: setting the space parameters](moms_screenshots/Simulated_spaces.png "Figure 2: setting the space parameters")
 
 This panel allows to select:
 
@@ -111,7 +111,7 @@ To check the available arguments, refer to the specific function in the `R` manu
 
 Once a space is parametrised (or imported), it is possible to modify it by selecting a modification algorithm in the "Space modification" menu.
 
-![reduce space](moms_screenshots/Reduce_spaces_options.png "Figure 3: reducing the space")
+![Figure 3: reducing the space](moms_screenshots/Reduce_spaces_options.png "Figure 3: reducing the space")
 
 Four modifications are implemented:
 
@@ -144,7 +144,7 @@ This option gives you various choices between Dimension level 1 metrics and Dime
 The Dimensions level of a metric is reflecting the dimensionality level of the transformation of a matrix using this metric.
 For example, the arithmetic mean (`mean`) transforms a matrix (dimension level 3) into a single value (dimension level 1 - see Figure 5).
 
-![dimension levels](moms_screenshots/dispRity_fun.png "Figure 5: metrics dimensions levels")
+![Figure 5: metrics dimensions levels](moms_screenshots/dispRity_fun.png "Figure 5: metrics dimensions levels")
 
 This allows you to combine different metrics, for example, the sum (dimension level 1) of the variances of each column of the matrix (dimension level 2).
 
@@ -154,13 +154,38 @@ You can modify metrics by using the `R` synthax and any functions from the `stat
 
 You can visualise the metric values in the [space occupancy panel (5)](#basics).
 
+#### Sampling {#sampling}
+
+It is also possible to look at the effect of sampling by ticking the `"Change sampling (rarefaction)"` box.
+This will display a slider allowing you to select the number of elements you want to sample for the overall space or for the reduced space.
+The sampling uses the bootstrap procedure from the `dispRity::boot.matrix()` function and allows to reduce the number of elements by performing 100 bootstraps and resampling `n` elements each time (from the sampling proportion value on the slider).
+Note that the proportion of elements sampled is determined by the size of the reduced subset.
+For example in a multidimensional space with 300 elements and a randomly reduced subset including 50% of elements (150), 100% sampling corresponds to 150 elements, 50% sampling to 75 elements, etc...
+
+### Results and simulations
+
+Once all the options carefully selected to correspond to your analysis and biological question, you can see the resulting displays in the [result panel (5)](#basics).
+
+![Figure 6: results panels with sampling and simulations.](moms_screenshots/moms_results.png "Figure 6: results panels with sampling and simulations.")
+
+By default, this panel displays the space occupancy measure (depending on the chosen metric) for the full space and for the reduced space.
+It also shows the proportional difference between the full space and the reduced one (ideally you'd want this value to decrease proportionally to the elements removed!).
+If using the [sampling option](#sampling), the results also display the median bootstrap value for the subsets with all elements (third column first and third row in Fig 6.), the median bootstrapped values for the rarefied samples (the one with less elements: third column first and third row in Fig. 6) and the 95% and 50% confidence intervals for these estimations.
+The table also displays the proportional effect of sampling compared to the full dataset in the last column.
+Ideally you want these values to be close to 0 for the full dataset and close to the proportional change for the reduced subset.
+
+#### Simulations
+
+It is also possible, when parametrising a user input space ([see space section above](#createspace)), to simulate how does your chosen space occupancy metric compares in a selected reduced space to a random one.
+This option can take several minutes to run depending on the shiny apps sever traffic (or your machine if you're running the locally).
+The results will are displayed in a graph and show the proportion of overlap between the space occupancy in the reduced space (bottom in Fig. 6) and the ones from a random removal (top in Fig. 6).
+The more these distributions overlap (measured by the Bhattacharrya Coefficient), the more likely your metric will pick up random signal rather than the real signal from your reduction. 
 
 ### Changing the display
 
-Finally you can modify the display of [space panel (3)](#basics) by using the [display panel (6)](#basics).
+Finally, you can modify the display of [space panel (3)](#basics) by using the [display panel (6)](#basics).
 This one allows to select which axis (dimensions) to be displayed, what colour palette to use and finally whether to scale the axis or not.
 This latest option can be useful when dimensions don't have the same variance.
-
 
 ## `moms` and `dispRity`
 
