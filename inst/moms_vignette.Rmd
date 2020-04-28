@@ -35,6 +35,12 @@ A tool for analysing multidimensional data.
 `moms` is a tool for helping to choose multidimensional space occupancy metrics, it should not be used to actually analyse the spaces.
 If you want to analyse multidimensional spaces, we suggest you use the many `R` packages available: [`dispRity`](https://cran.r-project.org/web/packages/dispRity/index.html), [`vegan`](https://cran.r-project.org/web/packages/vegan/index.html) or [`Momocs`](https://cran.r-project.org/web/packages/Momocs/index.html) or whatever tools suits you best!
 
+### Potential bugs
+
+`moms` is a software that is continually updated (and tested!) it can therefore contain some bugs.
+If you find any such bug or if there is a feature that you would like to see in the next version of the software, please email me (<guillert@tcd.ie>) or if you are a GitHub user, directly create an issue on the [GitHub page](https://github.com/TGuillerme/moms).
+This really helps developing the software further and will be useful to other users!
+
 ## The basics {#basics}
 
 This is what `moms` looks like:
