@@ -59,7 +59,7 @@ and edit the save .tex file to add the following
 \linenumbers
  -->
 
-<!--
+
 # Response to reviewers
 
 We a really grateful for the reviewers refreshing, positive and constructive comments and we've addressed them all as detailed below.
@@ -68,30 +68,48 @@ We a really grateful for the reviewers refreshing, positive and constructive com
 
 In a conceptually similar study in the context of species distribution modelling (DOI: 10.1111/2041-210X.12397), Qiao and colleagues termed this general idea the “no silver bullet” paradigm (making a metaphor with the mythology of lycanthropes). This is certainly a very important point also in trait-based science. 
 
-> @@@TG: Check this paper
+> This is indeed a really similar idea with similar conclusions. We've now added a reference to niche modeling in the introduction:
+
+"This can also be extended to more complex ecological concepts such as niche modelling [@qiao2015]." l.@@@
 
 1) While reading the text, it was not entirely clear to me what exactly the “moms” tool is. Is this an R package, or just a set of functions? Would be helpful if you could briefly specify.
 
-> @@@TG: Add an extra section explaining how moms fit in.
+> We've added an extra section explaining what the `moms` tool is. We've also added a sampling (see reviewer 2) and simulation feature allowing users to replicate the results of this paper with several clicks or exploring the properties of their own metrics:
 
-2)  I suspect taht your proposed classification may somewhat overlap with the general classification scheme of diversity indexes by Pavoine and Bonsall (2011; Biological review), later expanded by Tucker et al. (2017; Biological Reviews) in the context of phylogenetic metrics (but it’s actually the same). In a nutshell, they grouped metrics/indexes in three main category of ‘Richness’, ‘Divergence’ and ‘Regularity’ components. In their view, these three concepts should capture the primary mathematical operation inherent to each metric, namely:
+"Therefore, we propose the [`moms`](https://tguillerme.shinyapps.io/moms/) shiny app to allow workers to help them choose their set of space occupancy measurements (and test the caveats mentioned above).
+`moms` is an online graphical user interface to help analyse multidimensional data.
+It allows users to upload their dataset of interest (or simulate one with specific parameters) and measure space occupancy using a variety of implemented measures (namely, but not only, the ones used in this study).
+Furthermore, it allows to simulate space shifting similarly as in this paper to test whether some measures capture or not some specific changes in space.
+However, `moms` is not a tool for analysing multidimensional data _per se_ but rather for helping workers to chose the space occupancy metric the most appropriated to their data and question.
+To run multidimensional analysis, we suggest using dedicated `R` packages (such as - but not limited to: @oksanen2007vegan, @momocs, @bat2015, @disprity)." l.@@@
+
+2)  I suspect that your proposed classification may somewhat overlap with the general classification scheme of diversity indexes by Pavoine and Bonsall (2011; Biological review), later expanded by Tucker et al. (2017; Biological Reviews) in the context of phylogenetic metrics (but it’s actually the same). In a nutshell, they grouped metrics/indexes in three main category of ‘Richness’, ‘Divergence’ and ‘Regularity’ components. In their view, these three concepts should capture the primary mathematical operation inherent to each metric, namely:
 i) the ‘richness’ dimension encompasses indexes representing the sum of difference among taxa (sum);
 ii) the ‘divergence’ dimension encompasses indexes representing functional (or phylogenetic) dissimilarity, reflecting the average difference among taxa (mean); and
 iii) the  ‘regularity’ dimension encompasses indexes representing functional (or phylogenetic) variance, reflecting how regular the difference among taxa in an assemblages are (variance).
 I see some overlap with your method, but also differences. It would be worth briefly acknowledging this and perhaps exploring the main conceptual differences and why your classification is an advance.
 
-> @@@TG: Add a reference to these works.
-We were not aware of these references and we are grateful for the reviewer pointing them out. There is so much overlapping work on ecology and evolution but so few visibility between them! Adding these references and concepts is definitely improving the main idea of this paper!
+>We were not aware of these references and we are grateful for the reviewer pointing them out. There is so much overlapping work on ecology and evolution but so few visibility between them! Adding these references and concepts is definitely improving the main idea of this paper!
+
+Note that this classification bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
+However, contrary to @tucker2017 basing their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance). l.@@@
+
 
 3) The approach you choose for simulating changes in the multidimensional space (Figure 2) is  very interesting. While I was thinking about it, I indulged with an idea (but please ignore if not appropriate):
 
 I thought it would be useful to try linking the different changes in the multidimensional space to actual example of biological processes (e.g., giving few examples in the description in the method or in the discussion). This, because similar changes in the trait space may occur in the real world due to different processes and, by providing examples grounded in the real world you may enhance the appealing of the ms to a broader audience.
 For example, from the perspective of a conservation biologist, you may argue that ‘limit’ and ‘position’ change in the trait space may occur when there is the destruction of habitats with narrow environmental conditions that filters for few species possessing specific traits. I’m primarily a cave biologist: this mental bias made me think that, for example, if you open a quarry that destroys a cave (not an unfrequent event! DOI: 10.1093/biosci/biz064), you may end up removing from the trait space all points from a specific position, namely those traits clearly selected by the permanent darkness of the subterranean world. If trait 1 is a gradient of eye size and trait 2 a gradient of body pigment, you would remove trait contribution of specialized invertebrates with no eyes and no pigment. The ‘density’ change may occur, e.g., due to global wildlife trade, when there is the exploitation of only species with specific traits within the total functional tree of life (see DOI: 10.1126/science.aav5327). For example, the fishing industry exploits, within any given species, primarily fishes of larger size, thus selecting for specific densities in the size/weight trait space composed of the multiple species. And so on (these are just random examples to illustrate my point).
 
+> We've added this reviewer's example (although not all to also balance with examples from macroevolution):
+    
+This type of change could be due to habitat destruction [e.g. @mammola2019b] or to mass extinctions [e.g. @wright2017]. l.@@@
 
-> @@@TG: add examples
+This type of change could be due to accelerated rates of evolution [@close2015] or to differences in modes of life in macroevolution [e.g. @healy2019]. l.@@@
 
-–––––– Minor Line comments
+This type of change could be due changes in evolutionary trajectories [@endler2005] or to differences in ecosystem compositions [e.g. @jones2015]. l.@@@
+
+
+### Minor Line comments
 
 -L34: “studied” instead of “study”
 
@@ -112,10 +130,9 @@ Please add “etc.” at the end of the text in the cell “statistic” interse
 
 > We fixed these cells in the table. However, we did not add "hypervolume" to the "Mathematics" column. We use the term "statistic" here as a statistic (i.e. a measure) which does include the hypervolume as used in ecology. We've specified this.
 
-
 -330–332: True, but there are at least two recent examples of attempt in this sense, the very recent package TPD (DOI: 10.1002/ecy.2876) and new functions in BAT (doi: 10.1101/2020.01.25.919373; shameless self-promotion and still a preprint). Both approaches covers metric in the Richness, Divergence, and Regularity domains (which should be a possible equivalent to your Size, Density, and Position view).
 
-> @@@TG: add this references
+> We've added these references on line @@@.
 
 -Figure 2: why the dots are in black and white in the first inset?
 
@@ -126,11 +143,23 @@ Please add “etc.” at the end of the text in the cell “statistic” interse
 
 A general suggestion to start with. The authors state in their conclusions, very diplomatically, that "...no measure is better than the next one...". While I agree with the sentiment in the context of their conclusions (that different metrics show different things, and you should choose a variety of metrics relevant to the issue under study), would it not be accurate to say that your results indicate some metrics are worse than others? Three leapt out at me in table 5: Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances,  seem to produce changes in value following random removals comparable to those seen in not one, but all three varieties of separation (limit, density and position) . Would it be fair to say that these metrics are, shall we say, problematic?
 
-> @@@TG: we agree with the reviewer and have toned down or "diplomacy" level. We now also state concern about certain types of metrics that are highly sensitive to outliers or to the number of dimensions.
+> We agree with the reviewer and have toned down or "diplomacy" level. We now also state concern about certain types of metrics that are highly sensitive to outliers or to the number of dimensions:
+
+We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
+For example, the results for the Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances produced results in the reduced space often similar to the randomly reduced spaces (Table 5).
+This does not make them "bad" measures but rather heavily context dependent.
+Regardless, we believe that workers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.
+We believe this could be fostered by following these several suggestions: l.@@@
+
 
 Following on from this: its worth testing, or at the very least acknowledging, that some metrics probably respond to incomplete sampling worse than others? Or are certain targeted separations (by limit, density or position) harder to detect with incomplete sampling? A test of this would be reasonably simple; after carrying out the separations by limit, density or position, randomly delete different numbers of data points to see how this affects the results. I realise this would be a large number of extra analyses to ask for and may be considered beyond the immediate scope of the paper, so I’ll leave the choice of whether or not to do the actual analyses up to the authors, but I think it should at least be discussed in the text. 
 
-> @@@TG: We believe this is a really interesting point that we didn't covered in the previous version of the manuscript. However we did not really found a way to fit in as a point in the main text. We've rerun part of the analysis (reproducibility made that easy!) and added a novel supplementary material covering the effect of sampling in details.
+> We agree again with this reviewer's point and find this a really interesting point. We've updated the results in the supplementary material to highlight what happens when removing 80% and 20% of the elements (rather than 50%).
+We've also added a sampling option to the latest version of the `moms` app allowing to test the effect of sampling on the metric of choice and, finally, we've added the following mentions to sampling issues in the caveat section:
+
+Furthermore, we did not take into account the effect of sampling on space occupancy measurements (but see additional results with 80% and 20% space reduction in the supplementary materials 4).
+In fact, sampling has been previously shown to have an effect on measurements depending on range or volumes (e.g. the sum of ranges or the hypervolume @ciampaglio).
+This effect is especially expected to be acerbated in macroevolutionary studies when using the fossil record [@brocklehurst2013] but can be tackled using rarefaction and bootstrapping techniques [@disprity]. l.@@@
 
 Some more specific comments:
 Fig 2, panels E and F, and similar in table 5: the dots and lines representing the changes in occupancy for blue, orange and random groups. I assume the dot is the median and the solid and dashed lines are quartiles and ranges, but specify in caption, please
@@ -139,8 +168,7 @@ Fig 2, panels E and F, and similar in table 5: the dots and lines representing t
 
 Table 5 headers are inconsistent with the terms used in the text and figure 5. In the text and figure 5 you describe Limit and Density parameters for changes, but the headers talk about size change and arrangement change. Maybe this will create confusion (particularly the ‘arrangement’ header, which might not naturally be associated in peoples minds with density)?
 
-> @@@ TG: fix this throughout the manuscript
-Nice spotting, this comes from a classic version mashup. We've fixed this throughout the manuscript.
+> Nice spotting, this comes from a classic version mashup. We've fixed this in the table header and double checked throughout the manuscript.
 
 And finally some typos and wording comments:
 
@@ -160,13 +188,6 @@ Methods, page 8, line 153: “hopkins2017”; Space missing between name and yea
 Page 20, line 317: “spacesmight” missing space between words
 
 > We've added a space.
-
- -->
-
-
-
-
-
 
 
 
@@ -369,13 +390,20 @@ In a 2D space, two groups can be equally distant from a fixed point but in diffe
 However, when thinking about unidimensional data, this measure is obvious: two groups A or B could have the same variance (size) with the same number of observations (density) but could have two different means and thus be in different positions.
 These measures are used in ecology to compare the position of two groups relative to each other [@mammola2019].
 
+<font style="color:blue">
+Note that this classification into size, density and position bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
+However, contrary to @tucker2017 basing their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance).
+</font>
 
 ## No measure to rule them all: benefits of considering multiple measures
 
 The use of multiple measurements to assess trait space occupancy has the benefit of providing a more detailed characterisation of occupancy changes.
 If the question is to look at how space occupancy changes in response to mass extinction, using a single space occupancy measure can miss part of the picture: a change in size could be decoupled from a change in position or density in trait space.
 For example, the Cretaceous-Paleogene extinction (66 million years ago) shows an increase in size of the mammalian trait space [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of trait space occupancy: does the radiation expand on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the trait space [innovation, change in position; @endler2005]?
-Similarly, in ecology, if two groups have the same trait space size, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equally sized groups.
+Similarly, in ecology, if two groups have the same trait space size, it can be interesting to look at differences in density within these two groups: different selection pressure can lead to different density within equally sized groups. 
+<font style="color:blue">This can also be extended to more complex ecological concepts such as niche modelling [@qiao2015].</font>
+
+
 
 
 ```{r fig_measure_captures, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Illustration how three different size (size. - product of ranges), density (den. - average nearest neighbour distance) and position (pos. - average displacement) measurements capture different occupancy aspects in this simplified trait space. This illustrates how using only one specific space occupancy measure (e.g. the size) will fail to capture changes in B (no change in size), or partial changes in C (also change in density and position)."), eval = FALSE}
@@ -526,14 +554,17 @@ Our selected measures are expected to not be affected by this change.
 
 * **Limit:** by removing observations within a distance from the centre of the trait space lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
 This can reflect a strict selection model where observations with trait values below or above a threshold are removed leading to an expansion or a contraction of the trait space.
+<font style="color:blue">This type of change could be due to habitat destruction [e.g. @mammola2019b] or to mass extinctions [e.g. @wright2017].</font>
 Size measures are expected to be most affected by this change.
 
 * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is chosen such that 50% observations are selected) generating two density removals: *high* and *low* (respectively in orange and blue; Fig. 2-C).
 This can reflect changes within groups in the trait space due to ecological factors [e.g. niche repulsion resulting in lower density; @grant2006].
+<font style="color:blue">This type of change could be due to accelerated rates of evolution [@close2015] or to differences in modes of life in macroevolution [e.g. @healy2019].</font>
 Density measures are expected to be most affected by this change.
 
 * **Position:** by removing points similarly as for **Limit** but using the distance from the furthest point from the centre generating two position removals: *positive* and *negative* (respectively in orange and blue; Fig. 2-D).
 This can reflect global changes in trait space (e.g. if an entire group remaining diverse but occupying a different niche).
+<font style="color:blue">This type of change could be due changes in evolutionary trajectories [@endler2005] or to differences in ecosystem compositions [e.g. @jones2015].</font>
 Position measures are expected to be most affected by this change.
 
 The algorithm to select $\rho$ or $D$ is described in the Supplementary material 1.
@@ -818,7 +849,7 @@ print.fable <- function(n_measures, byrow, ncol, test) {
 print.fable(length(metrics_list), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
-Measure      | Size change  | Arrangement change | Position change | Distribution effect | Dimensions effect |
+Measure      | Size change  | Density change | Position change | Distribution effect | Dimensions effect |
 :-----------|----------------|-----------------|----------------|---------------------|-------------------|
 `r name[1]` | `r plot.id(1)` | `r plot.id(2)` | `r plot.id(3)` | `r s.test(1, "s")` | `r s.test(1, "r")`|
 `r name[2]` | `r plot.id(4)` | `r plot.id(5)` | `r plot.id(6)` | `r s.test(2, "s")` | `r s.test(2, "r")`|
@@ -958,13 +989,11 @@ This is not necessarily the case with empirical data.
 Regarding the changes in position, only the average displacement measure seems able to distinguish between a random change and a displacement of the trait space (Table 5).
 However, the average displacement measure does not distinguish between positive or negative displacement: this might be due to the inherent complexity of *position* in a multidimensional trait space.
 
-
 #### Empirical examples
 
 Although most differences are fairly consistent within each dataset with one group having a higher space occupancy score than the other for multiple measures, this difference can be more or less pronounced within each dataset (ranging from no to nearly full overlap - BC $\in(0;0.995)$) and sometimes even reversed.
 This indicates that opposite conclusions can be drawn from a dataset depending on which space occupancy measure is considered.
 For example, in @wright2017, crinoids after the Ordovician mass extinction have a higher median measure value for all measures but for the average displacement.
-
 These differences depending on the measures are also more pronounced in the empirical datasets where the observations per group are unequal [@hopkins2016; @healy2019].
 
 ### Caveats
@@ -976,16 +1005,38 @@ Second, the algorithm used to reduce the trait <font style="color:blue"> spaces 
 This might favour some specific measures over others, in particular for the changes in density that modify the nearest neighbour density rather than changing the global density.
 This algorithmic choice was made in order to not confound changes in density along with changes in size.
 However, the results presented here probably capture the general behaviour of each measure since results are consistent between the simulated and empirical analysis.
-Furthermore, [`moms`](https://tguillerme.shinyapps.io/moms/) allows workers to test the caveats mentioned above by uploading empirical trait spaces.
+
+<font style="color:blue"> 
+Furthermore, we did not take into account the effect of sampling on space occupancy measurements (but see additional results with 80% and 20% space reduction in the supplementary materials 4).
+In fact, sampling has been previously shown to have an effect on measurements depending on range or volumes (e.g. the sum of ranges or the hypervolume @ciampaglio2001).
+This effect is especially expected to be acerbated in macroevolutionary studies when using the fossil record [@brocklehurst2013] but can be tackled using rarefaction and bootstrapping techniques [@disprity].
+</font>
+
+### Using `moms` to choose the appropriate measurements
+
+<font style="color:blue">
+Therefore, we propose the [`moms`](https://tguillerme.shinyapps.io/moms/) shiny app to allow workers to help them choose their set of space occupancy measurements (and test the caveats mentioned above).
+`moms` is an online graphical user interface to help analyse multidimensional data.
+It allows users to upload their dataset of interest (or simulate one with specific parameters) and measure space occupancy using a variety of implemented measures (namely, but not only, the ones used in this study).
+Furthermore, it allows to simulate space shifting similarly as in this paper to test whether some measures capture or not some specific changes in space.
+However, `moms` is not a tool for analysing multidimensional data _per se_ but rather for helping workers to chose the space occupancy metric the most appropriated to their data and question.
+To run multidimensional analysis, we suggest using dedicated `R` packages (such as - but not limited to: @oksanen2007vegan, @momocs, @bat2015, @disprity).
+</font>
+
 
 ### Conclusions
 
-We insist that no measure is better than the next one and that workers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.
-However, following the findings of this study we make several suggestions:
+<font style="color:blue">
+We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
+For example, the results for the Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances produced results in the reduced space often similar to the randomly reduced spaces (Table 5).
+This does not make them "bad" measures but rather heavily context dependent.
+Regardless, we believe that workers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.
+We believe this could be fostered by following these several suggestions:
+</font>
 
 First, we suggest using multiple measures to tackle different aspects of the trait space. 
 This follows the same logical thinking that the mean might not be sufficient to describe a distribution (e.g. the variance might be a good additional descriptor).
-Although using multiple measures is not uncommon in macroevolutionary studies [e.g. @halliday2015] or in ecology [@mammola2019], they often do no cover more than one of the three categories of trait space measures.
+Although using multiple measures is not uncommon in macroevolutionary studies [e.g. @halliday2015] or in ecology [@mammola2019], they often do no cover more than one of the three categories of trait space measures <font style="color:blue">(but see the recent work of @carmona2019 and @mammola2020).</font>
 
 Second, we suggest selecting the measures that best address the biological question at hand.
 If one studies an adaptive radiation in a group of organisms, it is worth thinking what would be the expected null model: would the group's size increase (radiation in all directions), would it increase in density (niche specialisation) or would it shift in position (radiation into a new set of niches)?
