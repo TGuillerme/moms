@@ -254,8 +254,8 @@ body(plot.id)[[2]] <- substitute(type <- ".png")
 
 
 Multidimensional analysis of traits are now common in ecology and evolution and are based on trait spaces in which each dimension summarises the observed trait combination (a morphospace or an ecospace).
-Observations of interest will typically occupy a <font style="color:blue">subset</font> of this space, and researchers will calculate one or more measures to quantify how organisms "inhabit" that space.
-In macroevolution and ecology these measures are referred to as disparity or dissimilarity metrics and can be generalised as space occupancy measures.
+Observations of interest will typically occupy a <font style="color:blue">subset</font> of this space, and researchers will calculate one or more measures to quantify how organisms inhabit that space.
+In macroevolution and ecology these measures called disparity or dissimilarity metrics and are generalised as space occupancy measures.
 Researchers use these measures to investigate how space occupancy changes through time, in relation to other groups of organisms, and in response to global environmental changes.
 However, the mathematical and biological meaning of most space occupancy measures is vague with the majority of widely-used measures lacking formal description.
 
