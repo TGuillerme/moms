@@ -5,7 +5,7 @@ bibliography: references.bib
 csl: mee.csl
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 8
     fig_height: 8
     keep_tex: true
@@ -94,7 +94,6 @@ I see some overlap with your method, but also differences. It would be worth bri
 Note that this classification bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
 However, while @tucker2017 based their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance). l.@@@
 
-
 3) The approach you choose for simulating changes in the multidimensional space (Figure 2) is  very interesting. While I was thinking about it, I indulged with an idea (but please ignore if not appropriate):
 
 I thought it would be useful to try linking the different changes in the multidimensional space to actual example of biological processes (e.g., giving few examples in the description in the method or in the discussion). This, because similar changes in the trait space may occur in the real world due to different processes and, by providing examples grounded in the real world you may enhance the appealing of the ms to a broader audience.
@@ -158,7 +157,7 @@ Following on from this: its worth testing, or at the very least acknowledging, t
 We've also added a sampling option to the latest version of the `moms` app allowing to test the effect of sampling on the metric of choice and, finally, we've added the following mentions to sampling issues in the caveat section:
 
 Furthermore, we did not take into account the effect of sampling on space occupancy measurements (but see additional results with 80% and 20% space reduction in the supplementary materials 4).
-In fact, sampling has been previously shown to have an effect on measurements depending on range or volumes (e.g. the sum of ranges or the hypervolume @ciampaglio).
+In fact, sampling has been previously shown to have an effect on measurements depending on range or volumes (e.g. the sum of ranges or the hypervolume @ciampaglio2001).
 This effect is especially expected to be acerbated in macroevolutionary studies when using the fossil record [@brocklehurst2013] but can be tackled using rarefaction and bootstrapping techniques [@disprity]. l.@@@
 
 Some more specific comments:
@@ -245,7 +244,7 @@ if(!all(c("empirical_results.Rda") %in% list.files(DATA_PATH))) {
 }
 ```
 
-```{r compilation_html, echo = FALSE, eval = FALSE}
+```{r compilation_html, echo = FALSE, eval = TRUE}
 ## Changing defaults
 body(plot.id)[[2]] <- substitute(type <- ".png")
 ```
@@ -404,31 +403,6 @@ If the question is to look at how space occupancy changes in response to mass ex
 For example, the Cretaceous-Paleogene extinction (66 million years ago) shows an increase in size of the mammalian trait space [adaptive radiation; @halliday2015] but more specific questions can be answered by looking at other aspects of trait space occupancy: does the radiation expand on previously existing morphologies [elaboration, increase in density; @endler2005] or does it explore new regions of the trait space [innovation, change in position; @endler2005]?
 Similarly, in ecology, if two groups have the same trait space size, <font style="color:blue">the differences in density within these two groups is potentially illuminating:</font> different selection pressure can lead to different density within equally sized groups. 
 <font style="color:blue">This can also be extended to more complex ecological concepts such as niche modelling [@qiao2015].</font>
-
-
-
-
-```{r fig_measure_captures, echo = FALSE, fig.height = 3, fig.width = 9, results = 'hide', fig.cap = paste("Illustration how three different size (size. - product of ranges), density (den. - average nearest neighbour distance) and position (pos. - average displacement) measurements capture different occupancy aspects in this simplified trait space. This illustrates how using only one specific space occupancy measure (e.g. the size) will fail to capture changes in B (no change in size), or partial changes in C (also change in density and position)."), eval = FALSE}
-
-## Making the volume/density/position space
-vdp_space <- moms::vdp.make()
-
-## Measuring disparity
-vdp_disp <- moms::vdp.dispRity(vdp_space,
-                         volume = c(prod, ranges),
-                         density = c(mean, neighbours),
-                         position = c(mean, displacements))
-
-## Checking the table of volume changes
-silent <- moms::vdp.check.table(vdp_disp, vdp_space)
-
-## Plotting the results
-moms::vdp.plot(vdp_space, plots = c(1, 4, 8), disparity = vdp_disp, mfrow = c(1, 3),
-        plot.names = c("A - Base (no changes)", #A
-                       "B - Change in position", #D
-                       "C - Change in vol. den. & pos.")) #I
-```
-
 
 Here, we provide the first interdisciplinary review of 25 space occupancy measures that uses the broad classification of measures into size, density and position to capture pattern changes in trait space.
 We assess the behaviour of measures using simulations and six interdisciplinary empirical datasets covering a wide range of potential data types and biological questions.
