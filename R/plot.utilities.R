@@ -314,7 +314,7 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     results_per_metric <- lapply(as.list(metrics_names), get.results, results)
 
     ## Remake into a matrix if it wrong format
-    if(class(results_per_metric[[1]][[1]]) == "list") {
+    if(class(results_per_metric[[1]][[1]])[1] == "list") {
         make.matrix <- function(list) {
             return(matrix(unlist(list), nrow = 1, dimnames = list(c("all"))))
         }
@@ -358,14 +358,14 @@ pairwise.plot <- function(results, scale = TRUE, type, factors, plot = "pairs", 
     }
 
     ## Flip the tables
-    results_table <- do.call(cbind, lapply(tables, function(x)return(x[,1])))
+    results_table <- as.data.frame(do.call(cbind, lapply(tables, function(x)return(x[,1]))))
     ## Add the factors
-    results_table <- cbind(tables[[1]][,2], results_table)
+    results_table <- cbind(as.factor(tables[[1]][,2]), results_table)
     ## Correct the factors
     present_factors <- unique(results_table[,1])
-    if(max(present_factors) !=  length(present_factors)) {
-        results_table[,1] <- results_table[,1] - (max(present_factors) - length(present_factors))
-    }
+    # if(max(present_factors) != length(present_factors)) {
+    #     results_table[,1] <- results_table[,1] - (max(present_factors) - length(present_factors))
+    # }
     colnames(results_table) <- c("space", metrics_names)
 
     ## Plotting
