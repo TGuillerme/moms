@@ -12,7 +12,7 @@ context("reduce.space")
 test_that("reduce.space works", {
 
     ## Sanitizing
-    #expect_error(reduce.space())
+    expect_error(reduce.space())
 
     set.seed(42)
     space <- dispRity::space.maker(300, 2, distribution = rnorm)

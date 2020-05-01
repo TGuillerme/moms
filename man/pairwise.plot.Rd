@@ -4,8 +4,15 @@
 \alias{pairwise.plot}
 \title{Pairwise plots}
 \usage{
-pairwise.plot(results, scale = TRUE, type, factors, plot = "pairs",
-  plot.param, ...)
+pairwise.plot(
+  results,
+  scale = TRUE,
+  type,
+  factors,
+  plot = "pairs",
+  plot.param,
+  ...
+)
 }
 \arguments{
 \item{results}{the list of results}

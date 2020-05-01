@@ -4,8 +4,14 @@
 \alias{generate.fable.plot}
 \title{Generates fable plots}
 \usage{
-generate.fable.plot(data, metric, what, scale = TRUE, overlap = FALSE,
-  plot.param)
+generate.fable.plot(
+  data,
+  metric,
+  what,
+  scale = TRUE,
+  overlap = FALSE,
+  plot.param
+)
 }
 \arguments{
 \item{data}{the disparity data}

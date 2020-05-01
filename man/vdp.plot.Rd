@@ -4,8 +4,18 @@
 \alias{vdp.plot}
 \title{Make vdp plot}
 \usage{
-vdp.plot(vdp, plots = 1:8, limits, pch = 19, xlab = "", ylab = "",
-  disparity = NULL, plot.names, mfrow, ...)
+vdp.plot(
+  vdp,
+  plots = 1:8,
+  limits,
+  pch = 19,
+  xlab = "",
+  ylab = "",
+  disparity = NULL,
+  plot.names,
+  mfrow,
+  ...
+)
 }
 \arguments{
 \item{vdp}{A list output from \code{\link{vdp.make}}}

@@ -32,7 +32,7 @@ dispRity 0.2.0 (2016-04-01)
 ### MINOR IMPROVEMENTS
 
   * changed type of space occupancy names to fit the revised paper
-  <!-- * updated manual to the newest version -->
+  * updated manual to the newest version
 
 ### BUG FIXES
 

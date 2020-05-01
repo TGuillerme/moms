@@ -4,8 +4,15 @@
 \alias{reduce.space}
 \title{Reduce space}
 \usage{
-reduce.space(space, type, remove, parameters, tuning, verbose = FALSE,
-  return.optim = FALSE)
+reduce.space(
+  space,
+  type,
+  remove,
+  parameters,
+  tuning,
+  verbose = FALSE,
+  return.optim = FALSE
+)
 }
 \arguments{
 \item{space}{the trait space}

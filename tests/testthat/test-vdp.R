@@ -39,14 +39,14 @@ test_that("vdp.make works", {
 
 ## Test dispRity
 test_that("vdp.dispRity works", {
-    expect_error(vdp.dispRity(vdp.make(), volume = "c(1, 32)",
+    expect_warning(expect_error(vdp.dispRity(vdp.make(), volume = "c(1, 32)",
                                      density = c(mean, neighbours),
-                                     position = c(mean, displacements)))
+                                     position = c(mean, displacements))))
     ## Get some disparity values
-    test <- vdp.dispRity(vdp.make(), volume = c(prod, ranges),
+    expect_warning(test <- vdp.dispRity(vdp.make(), volume = c(prod, ranges),
                                      density = c(mean, neighbours),
                                      position = c(mean, displacements),
-                                     base.relative = FALSE)
+                                     base.relative = FALSE))
     
     expect_equal(length(test), 3)
     expect_equal(names(test), c("volume", "density", "position"))
@@ -64,10 +64,10 @@ test_that("vdp.dispRity works", {
         )
 
     ## Get some disparity values
-    test <- vdp.dispRity(vdp.make(), volume = c(prod, ranges),
+    expect_warning(test <- vdp.dispRity(vdp.make(), volume = c(prod, ranges),
                                      density = c(mean, neighbours),
                                      position = c(mean, displacements),
-                                     base.relative = TRUE)
+                                     base.relative = TRUE))
     expect_equal(
         unname(unlist(test[[1]]))
         ,c(1, 4, 1, 1, 4, 2.25, 1, 0.062)
@@ -86,10 +86,10 @@ test_that("vdp.dispRity works", {
 test_that("vdp.plot works", {
     test <- vdp.make()
     ## Add disparity values
-    disp <- vdp.dispRity(test, volume = c(prod, ranges),
+    expect_warning(disp <- vdp.dispRity(test, volume = c(prod, ranges),
                                density = c(mean, neighbours),
                                position = c(mean, displacements),
-                               base.relative = TRUE)
+                               base.relative = TRUE))
 
     test_table <- vdp.check.table(disp, test)
     expect_equal(unname(test_table), matrix(round(unlist(disp), 3), nrow = 3, byrow = TRUE))
@@ -105,10 +105,10 @@ test_that("vdp.plot works", {
     expect_null(vdp.plot(test, col = "red"))
 
     ## Add disparity values
-    disp <- vdp.dispRity(test, volume = c(prod, ranges),
+    expect_warning(disp <- vdp.dispRity(test, volume = c(prod, ranges),
                                density = c(mean, neighbours),
                                position = c(mean, displacements),
-                               base.relative = TRUE)
+                               base.relative = TRUE))
 
     expect_null(vdp.plot(test, disparity = disp))
 

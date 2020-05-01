@@ -4,8 +4,7 @@
 \alias{s.test}
 \title{Display p-value from test}
 \usage{
-s.test(metric.ID, type, test.results = list(s = space_test, r =
-  all_dim_test))
+s.test(metric.ID, type, test.results = list(s = space_test, r = all_dim_test))
 }
 \arguments{
 \item{metric.ID}{The ID of the metric (i.e. row number)}

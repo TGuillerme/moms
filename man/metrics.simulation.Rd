@@ -4,8 +4,7 @@
 \alias{metrics.simulation}
 \title{Apply metrics}
 \usage{
-metrics.simulation(space, reduction, metrics, rare.dim = NULL,
-  verbose = TRUE)
+metrics.simulation(space, reduction, metrics, rare.dim = NULL, verbose = TRUE)
 }
 \arguments{
 \item{space}{a list of spaces}
