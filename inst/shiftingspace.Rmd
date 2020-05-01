@@ -5,7 +5,7 @@ bibliography: references.bib
 csl: mee.csl
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  pdf_document:
     fig_width: 8
     fig_height: 8
     keep_tex: true
@@ -291,7 +291,7 @@ Do some groups contain more species than others in the same amount of trait spac
 Are some specific factors correlated with different patterns of trait space occupancy?
 Because of the multidimensional nature of these trait spaces, it is often not possible to study them using bi- or tri-variate techniques [@diaz2016; @hopkins2017; @mammola2019].
 Studying the occupancy of trait spaces is done using disparity indices in macroevolution [@wills2001; @hopkins2017; @disprity] or comparing hypervolumes in ecology [@donohue2013; @diaz2016; @blonder2018; @mammola2019].
-Despite the commonalities between the measures used in ecology and evolution (which are often metric but don't necessarily need to be[@@@ citation?]), surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
+Despite the commonalities between the measures used in ecology and evolution (which are often metric but don't necessarily need to be), surprisingly little work has been published on their behaviour [but see @ciampaglio2001; @villéger2008; @mammola2019].
 
 Different occupancy measures capture different aspects of  trait space [@ciampaglio2001; @villéger2008; @mammola2019].
 <font style="color:blue">This</font> may be widely-known, but to our knowledge it is infrequently mentioned in peer-reviewed papers.
@@ -306,10 +306,10 @@ Here we propose a broad classification of space occupancy measures as used acros
 <font style="color:blue">Note this does not account whether or not it is possible for a space to be occupied (e.g., some spaces may represent biologically impossible shapes); this, however, may be important in some cases, such as testing whether a region is infinite or not.</font>
 We provide an assessment of each broad type of space occupancy measures along with a unified terminology to foster communication between ecology and evolution. 
 Unsurprisingly, we found no one measure describes all changes <font style="color:blue">in space</font> and that the results from each measures are dependent on the characteristics of the space and the hypotheses.
-Furthermore, because there can be an infinite number of measures, it would be impossible to propose clear generalities to space occupancy measures behaviour. 
-<!-- [[@@@NOTE -- I DO QUITE UNDERSTAND THIS SENTENCE, PLEASE CLARIFY]]. -->
-Therefore, we propose [`moms`](https://tguillerme.shinyapps.io/moms/), a tool for researchers to design, experiment and visualise their own space occupancy measure tailored for their project.
-<font style="color:blue">The tool will help researchers understand the "null" behaviour of the measures of interest.</font>
+
+<font style="color:blue">There can be an infinite number of measures and that it is thus impossible to propose a comprehensive analysis for all the measures properties respective to how they measure changes in trait space.
+We therefore propose [`moms`](https://tguillerme.shinyapps.io/moms/), a tool for researchers to design, experiment and visualise their own space occupancy measure tailored for their project.
+The tool will help researchers understand the "null" behaviour of the measures of interest.</font>
 
 ## Space occupancy measures
 
@@ -439,7 +439,7 @@ source("list.of.metrics.R")
 We tested how 25 space occupancy measures relate to each other, are affected by modifications of traits space and affect group comparisons in empirical data:
 
 1.  We simulated 13 different spaces with different sets of parameters;
-2.  We transformed these spaces by removing 50% of the observations following four different scenarios corresponding to different empirical scenarios: randomly, by limit (e.g. expansion or reduction of niches), by density (e.g. different degrees of competition within a guild), and by position (e.g. ecological niche shift).
+2.  We transformed these spaces by removing 50% of the observations following four different scenarios corresponding to different empirical scenarios: randomly, by <font style="color:blue">size</font> (e.g. expansion or reduction of niches), by density (e.g. different degrees of competition within a guild), and by position (e.g. ecological niche shift).
 3.  We measured occupancy on the resulting transformed spaces using `r metric.names()` different space occupancy measures;
 4.  We applied the same space occupancy measures to six empirical datasets (covering a range of disciplines and a range of dataset properties).
 
@@ -528,7 +528,7 @@ This reflects a "null" biological model of changes in trait space: the case when
 For example, if diversity is reduced by 50% but the space size remains the same, there is a decoupling between diversity and space occupancy [@ruta2013].
 Our selected measures are expected to not be affected by this change.
 
-* **Limit:** by removing observations within a distance from the centre of the trait space lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
+* **<font style="color:blue">Size</font>:** by removing observations within a distance from the centre of the trait space lower or greater than a radius $\rho$ (where $\rho$ is chosen such that 50% observations are selected) generating two limit removals: *maximum* and *minimum* (respectively in orange and blue; Fig. 2-B).
 This can reflect a strict selection model where observations with trait values below or above a threshold are removed leading to an expansion or a contraction of the trait space.
 <font style="color:blue">This type of change could be due to habitat destruction [e.g. @mammola2019b] or to mass extinctions [e.g. @wright2017].</font>
 Size measures are expected to be most affected by this change.
@@ -540,7 +540,7 @@ This can reflect changes within groups in the trait space due to ecological fact
 <font style="color:blue">This type of change could be due to accelerated rates of evolution [@close2015] or to differences in modes of life in macroevolution [e.g. @healy2019].</font>
 Density measures are expected to be most affected by this change.
 
-* **Position:** by removing points similarly as for **Limit** but using the distance from the furthest point from the centre generating two position removals: *positive* and *negative* (respectively in orange and blue; Fig. 2-D).
+* **Position:** by removing points similarly as for **<font style="color:blue">Size</font>** but using the distance from the furthest point from the centre generating two position removals: *positive* and *negative* (respectively in orange and blue; Fig. 2-D).
 This can reflect global changes in trait space (e.g. if an entire group remaining diverse but occupying a different niche).
 <font style="color:blue">This type of change could be due changes in evolutionary trajectories [@endler2005] or to differences in ecosystem compositions [e.g. @jones2015].</font>
 Position measures are expected to be most affected by this change.
@@ -548,7 +548,7 @@ Position measures are expected to be most affected by this change.
 The algorithm to select $\rho$ or $D$ is described in the Supplementary material 1.
 
 
-```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly (the removed elements are displayed in black and the analysed ones in grey); B - by limit (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of measures, where the space occupancy measurement respectively manages or fails to captures a specific type of reduction (i.e. size, position or density; Table 5).")}
+```{r fig_reduce_space, echo = FALSE, fig.height = 12, fig.width = 8, results = 'hide', fig.cap = paste("different type of space reduction. Each panel displays two groups of 50% of the data points each. Each group (orange and blue) are generated using the following algorithm: A - randomly (the removed elements are displayed in black and the analysed ones in grey); B - by size (maximum and minimum limit); C - by density (high and low); and D - by position (positive and negative). Panel E et F represents two typical display of the reduction results displayed in Table 5: the dots represent the median space occupancy values across all simulations for each scenario of trait space change (Table 2), the solid and dashed line respectively the 50% and 95% confidence intervals. Results in grey are the random 50% reduction (panel A). Results in blue and orange represent the opposite scenarios from panels B, C, and D. The displayed value is the amount of overlap (Bhattacharrya Coefficient) between the blue or orange distributions and the grey one. Panel E and F shows respectively the \"ideal\" and \"worst\" results for any type of measures, where the space occupancy measurement respectively manages or fails to captures a specific type of reduction (i.e. size, position or density; Table 5).")}
 
 set.seed(42)
 
@@ -676,7 +676,7 @@ text(x = -0.6, y = 2,  labels = round(bc_1, 3), cex = 1.4)
 
 Because occupancy measures are dependent on the space, we scaled and centred them between -1 and 1 to make them comparable (by subtracting the observed occupancy without reduction to all the measures of the reduced spaces and then divided it by the maximum observed occupancy).
 A value of 0 indicates no effect of the space reduction and $>0$ and $<0$ respectively indicates an increase or decrease in the measure value.
-We then measured the amount of overlap between the non-random removals (limit, density and position) and the random removals using the Bhattacharrya Coefficient [@bhattacharyya1943].
+We then measured the amount of overlap between the non-random removals (<font style="color:blue">size</font>, density and position) and the random removals using the Bhattacharrya Coefficient [@bhattacharyya1943].
 
 ### Measuring the effect of space and dimensionality
 
