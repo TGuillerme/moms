@@ -5,7 +5,7 @@ bibliography: references.bib
 csl: mee.csl
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  html_document:
     fig_width: 8
     fig_height: 8
     keep_tex: true
@@ -391,10 +391,8 @@ In a 2D space, two groups can be equally distant from a fixed point but in diffe
 However, when thinking about unidimensional data, this measure is obvious: two groups A or B could have the same variance (size) with the same number of observations (density) but could have two different means and thus be in different positions.
 These measures are used in ecology to compare the position of two groups relative to each other [@mammola2019].
 
-<font style="color:blue">
-Note that this classification into size, density and position bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
-However, while @tucker2017 based their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance).
-</font>
+<font style="color:blue"> Note that this classification into size, density and position bears some similarities with @tucker2017 classifying phylogenetic diversity measurements into richness, divergence and regularity categories.
+However, while @tucker2017 based their classification on the mathematical operation inherent to each metrics (the sum for richness, the mean for divergence and the variance for regularity), our three broad classifications are based on their geometric properties regardless of the formula of each metric (e.g. the size of a space can be calculated using a sum, mean or/and variance). </font>
 
 ## No measure to rule them all: benefits of considering multiple measures
 
@@ -985,33 +983,27 @@ This might favour some specific measures over others, in particular for the chan
 This algorithmic choice was made in order to not confound changes in density along with changes in size.
 However, the results presented here probably capture the general behaviour of each measure since results are consistent between the simulated and empirical analysis.
 
-<font style="color:blue"> 
-Furthermore, we did not take into account the effect of sampling on space occupancy measurements (but see additional results with 80% and 20% space reduction in the supplementary materials 4).
+<font style="color:blue"> Furthermore, we did not take into account the effect of sampling on space occupancy measurements (but see additional results with 80% and 20% space reduction in the supplementary materials 4).
 In fact, sampling has been previously shown to have an effect on measurements depending on range or volumes (e.g. the sum of ranges or the hypervolume @ciampaglio2001).
-This effect is especially expected to be acerbated in macroevolutionary studies when using the fossil record [@brocklehurst2013] but can be tackled using rarefaction and bootstrapping techniques [@disprity].
-</font>
+This effect is especially expected to be acerbated in macroevolutionary studies when using the fossil record [@brocklehurst2013] but can be tackled using rarefaction and bootstrapping techniques [@disprity]. </font>
 
 ### Using `moms` to choose the appropriate measurements
 
-<font style="color:blue">
-Therefore, we propose the [`moms`](https://tguillerme.shinyapps.io/moms/) shiny app to allow workers to help them choose their set of space occupancy measurements (and test the caveats mentioned above).
+<font style="color:blue">Therefore, we propose the [`moms`](https://tguillerme.shinyapps.io/moms/) shiny app to allow workers to help them choose their set of space occupancy measurements (and test the caveats mentioned above).
 `moms` is an online graphical user interface to help analyse multidimensional data.
 It allows users to upload their dataset of interest (or simulate one with specific parameters) and measure space occupancy using a variety of implemented measures (namely, but not only, the ones used in this study).
 Furthermore, the package allows simulation of shifts in trait space occupancy as also presented in this paper to test whether some measures capture specific changes in space.
 However, `moms` is not a tool for analysing multidimensional data _per se_ but rather for helping workers to chose the space occupancy measure most appropriated to their data and question.
-To run multidimensional analysis, we suggest using dedicated `R` packages (such as - but not limited to: @oksanen2007vegan, @momocs, @bat2015, @disprity).
-</font>
+To run multidimensional analysis, we suggest using dedicated `R` packages (such as - but not limited to: @oksanen2007vegan, @momocs, @bat2015, @disprity). </font>
 
 
 ### Conclusions
 
-<font style="color:blue">
-We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
+<font style="color:blue">We insist that although no measure is objectively better than the next one, some can be more problematic than other in specific contexts. 
 For example, the results for the Sum of Ranges, Minimum spanning tree average distances, and to a lesser extent average nearest neighbour distances produced results in the reduced space often similar to the randomly reduced spaces (Table 5).
 This does not make them "bad" measures but rather heavily context dependent.
 Regardless, we believe that workers should identify the most appropriate measures based on their trait space properties as well as their specific biological question.
-We believe this could be fostered by following these several suggestions:
-</font>
+We believe this could be fostered by following these several suggestions: </font>
 
 First, we suggest using multiple measures to tackle different aspects of the trait space. 
 This follows the same logical thinking that the mean might not be sufficient to describe a distribution (e.g. the variance might be a good additional descriptor).
