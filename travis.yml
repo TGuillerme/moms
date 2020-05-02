@@ -6,25 +6,25 @@ warnings_are_errors: false
 r:
 - release
 
-# addons:
-#   apt:
-#     packages:
-#       - libv8-dev
+addons:
+  apt:
+    packages:
+      - libv8-dev
 
 # whitelist
 branches:
   only:
     - master
 
-# r_binary_packages:
-#   - ape
-#   - covr
-#   - devtools
-#   - knitr
-#   - stats
-#   - roxygen2
-#   - shiny
-#   - testthat
+r_binary_packages:
+  - ape
+  - covr
+  - devtools
+  - knitr
+  - stats
+  - roxygen2
+  - shiny
+  - testthat
 
 r_github_packages:
   - TGuillerme/dispRity
