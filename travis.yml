@@ -16,15 +16,15 @@ branches:
   only:
     - master
 
-r_binary_packages:
-  - ape
-  - covr
-  - devtools
-  - knitr
-  - stats
-  - roxygen2
-  - shiny
-  - testthat
+# r_binary_packages:
+#   - ape
+#   - covr
+#   - devtools
+#   - knitr
+#   - stats
+#   - roxygen2
+#   - shiny
+#   - testthat
 
 r_github_packages:
   - TGuillerme/dispRity
