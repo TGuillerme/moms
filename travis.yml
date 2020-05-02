@@ -6,10 +6,10 @@ warnings_are_errors: false
 r:
 - release
 
-addons:
-  apt:
-    packages:
-      - libv8-dev
+# addons:
+#   apt:
+#     packages:
+#       - libv8-dev
 
 # whitelist
 branches:
