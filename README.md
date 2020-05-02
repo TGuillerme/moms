@@ -2,11 +2,9 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3466146.svg)](https://doi.org/10.5281/zenodo.3466146)
 
-
 # **moms**: Measuring Occupancy in Multidimensional Space.
 
-<!-- <a href="https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
-Check out the [presentation](https://figshare.com/articles/Guillerme_Evolution2017_pdf/5140222). --> 
+
 ### What is `moms`?
 `moms` is a shiny app that helps understanding the multidimensional space occupancy metrics that can be used in ecology and evolution.
 
