@@ -347,7 +347,7 @@ print.fable <- function(n_metrics, byrow, ncol, test) {
 print.fable(length(all_metrics), byrow = TRUE, ncol = 3, test = TRUE)
 ```
 
-### All measures results 20% removal
+# Table 1: All measures results 20% removal
 
 ```{r fable_all_metrics_02, echo = FALSE, eval = TRUE}
 ## Changing defaults
@@ -384,7 +384,7 @@ Metric      | Size change  | Density change | Position change | Distribution eff
 `r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
 
 
-### All measures results 50% removal
+# Table 2: All measures results 50% removal
 
 ```{r fable_all_metrics_05, echo = FALSE, eval = TRUE}
 ## Changing defaults
@@ -420,7 +420,7 @@ Measurements      | Size change  | Density change | Position change | Distributi
 `r name[24]` | `r plot.id(70)` | `r plot.id(71)` | `r plot.id(72)` | `r s.test(24, "s", res)` | `r s.test(24, "r", res)`|
 `r name[25]` | `r plot.id(73)` | `r plot.id(74)` | `r plot.id(75)` | `r s.test(25, "s", res)` | `r s.test(25, "r", res)`|
 
-### All measures results 80% removal
+# Table 3: All measures results 80% removal
 
 ```{r fable_all_metrics_08, echo = FALSE, eval = TRUE}
 ## Changing defaults
