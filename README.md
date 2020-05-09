@@ -59,12 +59,6 @@ To reproduce the paper you can follow these steps:
  2. Press on the compile button.
  3. Your reproduced paper should now be in the `inst/` directory.
 
-Alternatively, you can directly compile the paper in html from the `R` console using:
-
-```r
-## Compiling the paper in html
-rmarkdown::render("inst/shiftingspace.Rmd", html_document())
-```
 
 Authors
 -------
