@@ -10,13 +10,13 @@
 
 ### What isn't `moms`?
 **`moms` is not a package for measuring disparity!** 
-Although `moms` is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with `moms`](https://www.biorxiv.org/content/10.1101/801571v1) fully reproducible.
+Although `moms` is distributed as a binary `R` package, it only contains functions for running the shiny app and making the [paper associated with `moms`](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.6452) fully reproducible.
 These functions allow the reduce the space, make fancy plots or wrap up analysis in the context of the shiny app or the paper only.
 If you want to measure disparity, we highly recommend the use of the [`dispRity` `R` package](https://github.com/TGuillerme/dispRity) which is used by `moms` for all the disparity calculations.
 
 Check out the <a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/logo-FS.png" height="15" widht="15"/></a> 
 [presentation](https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961) and the <a href="https://figshare.com/articles/Shifting_spaces_which_disparity_or_dissimilarity_metrics_best_summarise_occupancy_in_multidimensional_spaces_/9922961"><img src="http://tguillerme.github.io/images/OA.png" height="15" widht="15"/></a> 
-[preprint](https://www.biorxiv.org/content/10.1101/801571v1) associated with this project.
+[paper](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.6452) associated with this project.
 
 ## Running `moms` online
 Super easy! Simply click on the following link:
@@ -47,7 +47,7 @@ Check out the app [manual](https://raw.githack.com/TGuillerme/moms/master/inst/m
 
 ## Associated paper
 
-By the following associated paper: [Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces?](https://www.biorxiv.org/content/10.1101/801571v1)
+By the following associated paper: [Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces?](https://doi.org/10.1002/ece3.6452 )
 This paper details the behaviour of several disparity metrics and discuss the advantages and disadvantages of using them (or not).
 This paper is also **fully reproducible!**
 
@@ -69,12 +69,6 @@ Citations
 -------
 If you are using this package, please cite (if the DOI is in there, even better!):
 
-* Guillerme, T., Puttick MN., Marcy AE., & Weisbecker V. (**2019**). moms: measuring occupancy in multidimensional spaces. ZENODO. http://doi.org/10.5281/zenodo.3466146
+* Guillerme, T, Puttick, MN, Marcy, AE, Weisbecker, V. Shifting spaces: Which disparity or dissimilarity measurement best summarize occupancy in multidimensional spaces?. *Ecol Evol.* **2020**; 00: 1– 16. https://doi.org/10.1002/ece3.6452 
 
-    ###### [BibTeX](https://zenodo.org/record/3466146/export/hx), [CSL](https://zenodo.org/record/3466146/export/csl), [DataCite](https://zenodo.org/record/3466146/export/dcite3), [Dublin core](https://zenodo.org/record/3466146/export/xd), [Mendeley](https://www.mendeley.com/import/?url=https://zenodo.org/record/3466146), [more...](https://zenodo.org/record/3466146/#.XTpLtlBS8W8)
-
-If you are using the associated preprint, please cite:
-
-* Guillerme, T., Puttick MN., Marcy AE., & Weisbecker V. (**2019**). Shifting spaces: which disparity or dissimilarity metrics best summarise occupancy in multidimensional spaces? *bioRxiv* 801571; doi: https://doi.org/10.1101/801571 
-
-    ###### [BibTeX](https://www.biorxiv.org/highwire/citation/946606/bibtext), [RIS](https://www.biorxiv.org/highwire/citation/946606/ris), [End Note (xml)](https://www.biorxiv.org/highwire/citation/946606/endnote-8-xml), [Zotero](https://www.biorxiv.org/highwire/citation/946606/zotero), [Mendeley](https://www.biorxiv.org/highwire/citation/946606/mendeley), [more...](https://www.biorxiv.org/content/10.1101/801571v1)
+   ##### [Download citation](https://onlinelibrary.wiley.com/action/showCitFormats?doi=10.1002%2Fece3.6452)
