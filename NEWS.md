@@ -21,7 +21,15 @@ dispRity 0.2.0 (2016-04-01)
 
   * Blabla
  -->
- moms v1.0 (2020-04-28) *pre-release*
+ moms v1.1 (2020-07-08)
+=========================
+
+### NEW FEATURES
+
+  * added `"evenness"` reduction algorithm
+
+
+ moms v1.0 (2020-04-28)
 =========================
 
 ### NEW FEATURES

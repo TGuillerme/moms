@@ -45,7 +45,7 @@
 reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALSE, return.optim = FALSE) {
 
     ## Add sanitizing
-    type_available <- c("random", "limit", "displacement", "density")
+    type_available <- c("random", "limit", "displacement", "density", "evenness")
     ## Tolerance
     if(missing(tuning)) {
         tuning <- list()
@@ -116,6 +116,22 @@ reduce.space <- function(space, type, remove, parameters, tuning, verbose = FALS
             }  
             ## Parameter to optimise
             parameters$optimise <- parameters$diameter
+        },
+        evenness = {
+            ## Parameters
+            if(is.null(parameters$bw)) {
+                parameters$bw <- bw.nrd0
+            }
+            ## Make the probability vector
+            prob_vector <- get.prob.vector(space, bw = parameters$bw)
+
+            ## Number of elements
+            elements <- nrow(space)
+
+            ## Return a portion of the space
+            to_remove <- sample(1:elements, elements*remove,
+                                prob = prob_vector)
+            return(1:elements %in% to_remove)
         }
     )
 

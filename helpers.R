@@ -281,6 +281,9 @@ get.reduction <- function(input, space) {
         },
         Density = {
             type <- "density"
+        },
+        Evenness = {
+            type <- "evenness"
         }
     )
 

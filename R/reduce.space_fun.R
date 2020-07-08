@@ -144,3 +144,33 @@ get.neigbhours <- function(distance, diameter = 0.1) {
     ## Select the neighbors
     return(unique(neighbors[neighbors[,1] != neighbors[,2]]))
 }
+get.prob.vector <- function(space, bw) {
+    ## Get the scaled variance per axis
+    get.dimension.correction <- function(space) {
+        var_axis <- apply(space, 2, var)
+        return(var_axis/sum(var_axis))
+    }
+
+    ## Get the sampling prob per axis
+    get.prob.axis <- function(axis, bw) {
+        ## Select the breaks
+        band_width <- bw(axis)
+        breaks <- seq(from = min(axis - band_width), to = max(axis + band_width), by = band_width) 
+
+        ## Get the counts
+        counts <- hist(axis, breaks = breaks, plot = FALSE)$counts
+
+        ## Sort each values in each breaks
+        proba_counts <- cut(axis, breaks)
+
+        ## Transform the levels into the probabilities
+        levels(proba_counts) <- counts/sum(counts)
+        return(as.numeric(as.character(proba_counts)))
+    }
+
+    ## Count the probability of sampling per axis
+    probabilities_table <- apply(space, 2, get.prob.axis, bw)
+
+    ## Get the sum probability vector (scaled)
+    return(apply(probabilities_table/get.dimension.correction(space), 1, sum))
+}
