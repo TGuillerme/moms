@@ -13,17 +13,16 @@ optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
 
     ## Initialise the optimisation
     counter <- 0
-    bad_loop <- 0 ## Can run in three bad loops in a row (when the optimisation gives the same results as 2 optimisation ago)
     increment <- 1
 
     ## First run
-    prev_prev_diff <- previous_diff <- difference <- length(which(do.call(fun, args)))-criterion
+    difference <- length(which(do.call(fun, args)))-criterion
 
     ## Optimisation loop
     while(difference != 0) {
 
         ## Tolerance
-        if(abs(difference) < round(tuning$tol*criterion)) {
+        if(abs(difference) < tuning$tol*criterion) {
             break
         }
 
@@ -56,16 +55,12 @@ optimise.parameter <- function(fun, args, criterion, tuning, verbose) {
             }
         }
 
-        ## Update the differences
-        prev_prev_diff <- previous_diff
-        previous_diff <- difference
+        ## Update the difference
         difference <- new_difference
 
-        if(counter < tuning$max && bad_loop < 2) {
-            ## Increment the counter
+        ## Increment the counter
+        if(counter < tuning$max) {
             counter <- counter + 1
-            ## Increment the bad loop
-            bad_loop <- ifelse(prev_prev_diff == difference, bad_loop + 1, 0)
             if(verbose) cat(".")
         } else {
             break
@@ -102,14 +97,15 @@ optimise.results <- function(to_remove, fun, remove, args, tuning, verbose = FAL
 }
 
 ## The different run functions
-run.size.removal <- function(space, parameters) {
+run.limit.removal <- function(space, parameters) {
     return(apply(space, 1, point.in.circle, centre = parameters$centre, radius = parameters$optimise))
 }
-# run.position.removal <- function(space, parameters, scree) {
+# run.displacement.removal <- function(space, parameters, scree) {
 #     return(apply(space, 1, select.value, value = parameters$optimise* ))
 # }
 run.density.removal <- function(space, parameters, scree) {
-    return(1:nrow(space) %in% get.neigbhours(distance = parameters$distance, diameter = parameters$optimise))
+    close_neigbhours <- get.neigbhours(distance = parameters$distance, diameter = parameters$optimise)
+    return(1:nrow(space) %in% close_neigbhours)
 }
 
 # ' @description Selecting points within a circle
@@ -118,7 +114,12 @@ run.density.removal <- function(space, parameters, scree) {
 # ' @param radius the radius for removal
 # ' 
 point.in.circle <- function(point, centre, radius) {
-    return(sqrt(sum(diff(rbind(centre, point))^2)) < radius)
+
+    ## Measure the distance from the center
+    distance <- as.numeric(dist(rbind(centre, point)))
+
+    ## Results
+    return(ifelse(distance < radius, TRUE, FALSE))
 }
 
 # ' @description Select only the points above one value
@@ -142,40 +143,4 @@ get.neigbhours <- function(distance, diameter = 0.1) {
 
     ## Select the neighbors
     return(unique(neighbors[neighbors[,1] != neighbors[,2]]))
-}
-
-
-# ' @description Selects pairs of nearest neighbours
-# ' @param space the space
-# ' @param bw the bandwidth selector function
-# '
-get.prob.vector <- function(space, bw) {
-    ## Get the scaled variance per axis
-    get.dimension.correction <- function(space) {
-        var_axis <- apply(space, 2, var)
-        return(var_axis/sum(var_axis))
-    }
-
-    ## Get the sampling prob per axis
-    get.prob.axis <- function(axis, bw) {
-        ## Select the breaks
-        band_width <- bw(axis)
-        breaks <- seq(from = min(axis - band_width), to = max(axis + band_width), by = band_width) 
-
-        ## Get the counts
-        counts <- hist(axis, breaks = breaks, plot = FALSE)$counts
-
-        ## Sort each values in each breaks
-        proba_counts <- cut(axis, breaks)
-
-        ## Transform the levels into the probabilities
-        levels(proba_counts) <- counts/sum(counts)
-        return(as.numeric(as.character(proba_counts)))
-    }
-
-    ## Count the probability of sampling per axis
-    probabilities_table <- apply(space, 2, get.prob.axis, bw)
-
-    ## Get the sum probability vector (scaled)
-    return(apply(probabilities_table/get.dimension.correction(space), 1, sum))
 }

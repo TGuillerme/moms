@@ -5,7 +5,7 @@ shinyUI(fluidPage(
   wellPanel(
 
     titlePanel("moms: Measuring Occupancy in Multidimensional Spaces"),
-    p("Guillerme T, Puttick MN, Marcy AE, and Weisbecker V (2020). Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces? Ecology and Evolution. doi: ", a(href="https://doi.org/10.1002/ece3.6452", "10.1002/ece3.6452"), "."),
+    p("Guillerme T, Puttick MN, Marcy AE, and Weisbecker V (2020). Shifting spaces: which disparity or dissimilarity measurement best summarise occupancy in multidimensional spaces? doi:", a(href="", ""), "."),
     p(a(href="https://rawcdn.githack.com/TGuillerme/moms/master/inst/moms_vignette.html", "USER MANUAL", rel = "noopener noreferrer", target = "_blank")),
     hr(),
 
@@ -182,7 +182,7 @@ shinyUI(fluidPage(
         ## --------------------
 
         ## Modify space - input$reduce
-        selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density", "Evenness"), selected = "None"),
+        selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density"), selected = "None"),
 
         ## All removals
         conditionalPanel(condition = "input.reduce != \"None\"",
