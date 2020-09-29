@@ -424,7 +424,15 @@ handle.metrics <- function(input, dispRity_args, session) {
                 "Minimum spanning tree average length" = {
                     dispRity_args$metric <- function(matrix) sum(span.tree.length(matrix))/nrow(matrix)
                     dispRity_code <- "sum(dispRity::span.tree.length(matrix))/nrow(matrix)"
-                }
+                },
+                "Nearest neighbours standard deviation (Euclidean)" = {
+                    dispRity_args$metric <- function(matrix) sd(neighbours(matrix))
+                    dispRity_code <- "sd(dispRity::neighbours(matrix))"
+                },
+                "Nearest neighbours standard deviation (Manhattan)" = {
+                    dispRity_args$metric <- function(matrix) sd(neighbours(matrix, method = "manhattan"))
+                    dispRity_code <- "sd(dispRity::neighbours(matrix, method = \"manhattan\")"
+                } 
             )
         },
         Position = {

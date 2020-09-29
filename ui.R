@@ -184,6 +184,11 @@ shinyUI(fluidPage(
         ## Modify space - input$reduce
         selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density", "Evenness"), selected = "None"),
 
+        conditionalPanel(condition = "input.reduce == \"Limit\"", helpText("Expecting changes in size.")),
+        conditionalPanel(condition = "input.reduce == \"Displace\"", helpText("Expecting changes in position.")),
+        conditionalPanel(condition = "input.reduce == \"Density\"", helpText("Expecting changes in density.")),
+        conditionalPanel(condition = "input.reduce == \"Evenness\"", helpText("Expecting changes in density.")),
+
         ## All removals
         conditionalPanel(condition = "input.reduce != \"None\"",
           sliderInput("remove", label = "Proportion to remove:", min = 0.1, max = 0.9, value = 0.5),
@@ -309,7 +314,9 @@ shinyUI(fluidPage(
                                     "Functional evenness (Villéger et al. 2008)",
                                     "Median pairwise distance (Euclidean)",
                                     "Median pairwise distance (Manhattan)",
-                                    "Minimum spanning tree average length"
+                                    "Minimum spanning tree average length",
+                                    "Nearest neighbours standard deviation (Euclidean)",
+                                    "Nearest neighbours standard deviation (Manhattan)"
                                     ), selected = "Median nearest neighbours distance (Euclidean)")
         ),
 
