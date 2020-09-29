@@ -8,7 +8,7 @@ addons:
       - sourceline: 'ppa:opencpu/imagemagick'
     packages:
       - libmagick++-dev
-      - libv8-dev
+#      - libv8-dev
       
 # whitelist
 branches:
