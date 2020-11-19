@@ -31,13 +31,13 @@ The following sections contain the methodology and the code to generate the six 
 
 ### Palaeontological (discrete) data
 
-For the discrete morphological data, we calculated a distance matrix from the original discrete morphological matrices from @beck2014 and @wright2017 using the maximum observable distance [@lloyd2016, @lehmann2019] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, gower1966, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
+For the discrete morphological data, we calculated a distance matrix from the original discrete morphological matrices from @beck2014 and @wright2017 using the maximum observable distance [@lloyd2016, @lehmann2019] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, gower1966, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{mord} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ taxa. 
 
 ```{r load_claddis_empirical}
 ## Creating the trait-spaces
-beck_traitspace <- Claddis.ordination("../data/raw/Beck2014.nex", distance = "MORD")
-wright_traitspace <- Claddis.ordination("../data/raw/Wright2017.nex", distance = "MORD")
+beck_traitspace <- Claddis.ordination("../data/raw/Beck2014.nex", distance = "mord")
+wright_traitspace <- Claddis.ordination("../data/raw/Wright2017.nex", distance = "mord")
 ```
 
 For both datasets we created two groups, the crown versus the stem mammals for @beck2014 and the crinoids occuring before and after the Ordovician-Silurian boundary (455-430 million years ago - Mya).
@@ -173,7 +173,7 @@ save.results(gmm)
 
 For the @jones2015 dataset, we converted the spreadsheet "aspen & grass richness & abund" from the data from @jones2015 into a .csv file (now available in `/data/raw`).
 We then selected only the `wholeplot` entries and separated the studied plot between `aspen` and `grassland` and converted the species presence data into a presence/absence matrix.
-From this matrix we calculated a Jaccard distance matrix [@oksanen2007vegan] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{MORD} + c* = d_{Euclidean}; @cailliez1983).
+From this matrix we calculated a Jaccard distance matrix [@oksanen2007vegan] that we then ordinated using a classical multidimensional scaling (MDS; [@torgerson1965, cailliez1983]) by adding a constant **c\*** to make the distances Euclidean ($d_{mord} + c* = d_{Euclidean}; @cailliez1983).
 This resulted in ***k*** eigenvectors for each matrix where ***k*** is equal to $n-1$ field sites. 
 
 ```{r load_jones_empirical, eval = TRUE}
@@ -228,6 +228,9 @@ healy_data <- read.csv("../data/raw/Healy2019.csv")
 
 ## Cleaning up the data
 healy_traits <- healy_data[, -c(1, 8, 9)]
+
+## Rownames
+rownames(healy_traits) <- paste0(healy_data$species_match, rownames(healy_traits))
 
 ## Ordinating the traits
 healy_ordination <- prcomp(healy_traits)$x
