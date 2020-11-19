@@ -35,7 +35,7 @@ shinyServer(
             # }
 
             ## Return error
-            if(class(space) == "character") {
+            if(class(space)[[1]] == "character") {
                 plot.error(space)
                 return(NULL)
             }
@@ -189,7 +189,7 @@ shinyServer(
                 }
 
                 ## Handling the disparity metrics
-                metrics_handle <- handle.metrics(input, dispRity_args = list(data = groups), session)
+                metrics_handle <<- handle.metrics(input, dispRity_args = list(data = groups), session)
 
                 ## Errors from metrics_handle
                 if(class(metrics_handle) == "character") {
@@ -303,6 +303,28 @@ shinyServer(
                 ## Add the legend
                 legend("bottomright", pch = 19, col = unlist(defaults$palette), legend = c(paste0(input$reduce, " reduction"), "Random reduction"))
             })
+
+            output$plot_testmetric <- renderPlot({
+
+                ## Switch the shifts
+                do_shift <- switch(input$reduce,
+                                   "Random"   = "random",
+                                   "Limit"    = "size",
+                                   "Displace" = "position",
+                                   "Density"  = "density",
+                                   "Evenness" = "evenness")
+
+                ## Make a bunch of spaces
+                test_metric <- test.metric(space, metric = metrics_handle$args[[-1]], shifts = do_shift)
+
+                ## Plotting parameters
+                colours <- rev(unlist(defaults$palette)[1:ifelse(do_shift == "random", 1, 2)])
+                ylabel <- metrics_handle$name
+
+                ## Plotting the results
+                plot(test_metric, col = colours, ylab = ylabel)
+            })
+
         },
         ## Plot size
         # height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))

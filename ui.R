@@ -255,9 +255,12 @@ shinyUI(fluidPage(
         h3("Multidimensional space occupancy (disparity):"),
         tableOutput("table_out"),
 
+        h3("Extra analyses:"),
+        helpText("The following extra analyses are based on ", a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.6452", "(Guillerme et al. 2020)", rel = "noopener noreferrer", target = "_blank"), ". WARNING: they can take between few seconds to several minutes to run depending on the parameters and the shiny app traffic."),
+
         actionButton("simulate", label = "Run simulations"),
         # checkboxInput("simulate", label = "Run simulations", value = FALSE),
-        helpText("Runs simulations for the space modification and compare them to random change ", a(href="https://www.biorxiv.org/content/10.1101/801571v1", "(Guillerme et al. 2020)", rel = "noopener noreferrer", target = "_blank"), ". WARNING: this can take from several minutes to run depending on the parameters and the app traffic."),
+        helpText("Runs simulations for the space modification and compare them to random change."),
         conditionalPanel(condition = "input.simulate > 0",
           conditionalPanel(condition = "input.reduce != \"None\"",
             conditionalPanel(condition = "input.space_type == \"User\"",
@@ -266,6 +269,17 @@ shinyUI(fluidPage(
             conditionalPanel(condition = "input.space_type != \"User\"",
                 helpText("Simulations can only run for user defined spaces. Select \"User\" in the \"Select the type of space to use:\" panel and rerun the simulations.")
             )                  
+          ),
+          conditionalPanel(condition = "input.reduce == \"None\"",
+            helpText("Simulations can only run for a selected space modification.")
+          )
+        ),
+
+        actionButton("testmetric", label = "Test metric"),
+        helpText("Tests whether the metric captures the space modification. A slope indicates changes in the metric relative to the trait space size."),
+        conditionalPanel(condition = "input.testmetric > 0",
+          conditionalPanel(condition = "input.reduce != \"None\"",
+            plotOutput("plot_testmetric")                 
           ),
           conditionalPanel(condition = "input.reduce == \"None\"",
             helpText("Simulations can only run for a selected space modification.")
@@ -413,8 +427,15 @@ shinyUI(fluidPage(
         
         ## Refresh button - input$refresh
         hr(),
-        actionButton("refresh", label = "Refresh")
+        actionButton("refresh", label = "Refresh")#,
 
+        ## Export code
+        # hr(),
+        # downloadButton("exportcode", "Export code"),
+        # actionButton("export", label = "Export analysis"),
+        # conditionalPanel(condition = "input.export > 0",
+        #   helpText("plot_testmetric")                 
+        # )
       )
     )
   )

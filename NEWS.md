@@ -21,7 +21,7 @@ dispRity 0.2.0 (2016-04-01)
 
   * Blabla
  -->
- moms v1.2 (2020-09-29)
+ moms v1.2.1 (2020-11-19)
 =========================
 
 ### NEW FEATURES
@@ -29,6 +29,7 @@ dispRity 0.2.0 (2016-04-01)
   * added `"evenness"` reduction algorithm
   * added the "standard deviation of the nearest neighbours" as density metrics
   * when selecting different types of space reduction, the GUI now tells what should be the expected changes in disparity
+  * added `test.metric` analysis
 
  moms v1.0 (2020-04-28)
 =========================
