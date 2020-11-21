@@ -1,7 +1,7 @@
 # ## DEBUG
 # stop("DEBUG server")
 # input <- list()
-# input$space_type <- "User"
+# input$space_type <- "Demo"
 # input$demo_data <- "Beck and Lee 2014"
 # input$n_dimensions <- 2
 # input$n_elements <- 300
@@ -97,8 +97,7 @@ get.space <- function(input, args.only = FALSE){
 
         ## Select the right data
         dataset <- switch.demo.dataset(input)
-        return(demo_data[[dataset]]$matrix)
-
+        return(demo_data[[dataset]]$matrix[[1]])
     }
 
     ## Getting the arguments
@@ -267,7 +266,7 @@ get.reduction <- function(input, space) {
 
         ## Select the right data
         dataset <- switch.demo.dataset(input)
-        return(1:dim(demo_data[[dataset]]$matrix)[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
+        return(1:dim(demo_data[[dataset]]$matrix[[1]])[1] %in% c(demo_data[[dataset]]$subsets[[1]]$elements))
     }
 
 
@@ -672,19 +671,20 @@ write.header <- function() {
           "# If you use this for publication, please cite the following:",
           "# moms:     https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.6452",
           "# R:        https://cran.r-project.org/doc/FAQ/R-FAQ.html#Citing-R",
-          "# ape:      https://cran.r-project.org/web//packages/ape/citation.html",
           "# dispRity: https://cran.r-project.org/web//packages/dispRity/citation.html",
-          "###########################################################################")
+          "###########################################################################",
+          "")
         )
     libraries <- paste0(
         c("## Loading/installing packages",
           "if(!require(dispRity)) install.packages(\"dispRity\")",
-          "library(dispRity)"))
+          "library(dispRity)",
+          ""))
     return(c(header, libraries))
 }
 
 write.space <- function(input) {
-    header <- "## Generating the space\n"
+    header <- "## Generating the space"
     ## Generating the space
     if(input$space_type == "Demo") {
         space_name <- switch(input$demo_data,
@@ -703,7 +703,9 @@ write.space <- function(input) {
     if(input$space_type == "Input") {
         ## User input space
         space_make <- paste0(c("## Loading the space from a file",
-                        paste0("input <- read.csv(file = ", input$upload_input_matrix$datapath, ",")))
+                               "## (this assumes the file is in your current directory",
+                               "## you might need to change the path to the file manually)",
+                        paste0("input <- read.csv(file = \"", input$upload_input_matrix$name, "\",")))
         read_csv_options <- switch(as.character(space_reader_id),
                             "0" = "                  row.names = NULL, header = FALSE)",
                             "1" = "                  row.names = 1, header = FALSE)",
@@ -717,15 +719,24 @@ write.space <- function(input) {
         ## Parametrised space
         space_args <- get.space(input, args.only = TRUE)
 
+        ## Get the distribution function name
+        space_args$function_name <- switch(input$distributions,
+                                           Normal    = "rnorm",
+                                           LogNormal = "rlnorm",
+                                           Uniform   = "runif",
+                                           Gamma     = "rgamma",
+                                           Poisson   = "rpois",
+                                           Specific  = as.character(input$distribution_list))
+
         ## Making the space
         space_make <- paste0(
         c("## Simulating a space",
-       paste0("space <- space.maker(elements     = ", space_args$elements, ","),
-       paste0("                     dimensions   = ", space_args$dimensions, ","),
-                                    ## TODO: add distribution_name
-       paste0("                     distribution = ", space_args$distribution_name, ","),
-       paste0("                     arguments    = list(",
-                paste(paste(names(unlist(space_args$arguments)), unlist(space_args$arguments), sep = " = "), collapse = ", "), "))")))
+   paste0("space <- space.maker(elements     = ", space_args$elements, ","),
+   paste0("                     dimensions   = ", space_args$dimensions, ","),
+   paste0("                     distribution = ", space_args$function_name, ","),
+   paste0("                     arguments    = list(", paste(paste(space_args$arguments), collapse = ",\n                                         ")),
+   paste0("                                         )"),
+   paste0("                     )")))
     }
 
     return(c(header, space_make))    
