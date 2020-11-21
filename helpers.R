@@ -658,6 +658,12 @@ run.simulations <- function(input, n_replicates) {
     return(mapply(make.groups, spaces, reduced_spaces, SIMPLIFY = FALSE))
 }
 
+## Utility for adding a comma to the last script line
+add.comma <- function(script) {
+    script[length(script)] <- paste0(script[length(script)], ",")
+    return(script)
+}
+
 ## Write code
 write.header <- function() {
     v_moms     <- packageVersion("moms")
@@ -716,6 +722,8 @@ write.space <- function(input) {
     }
 
     if(input$space_type == "User") {
+        space_make <- character()
+
         ## Parametrised space
         space_args <- get.space(input, args.only = TRUE)
 
@@ -728,46 +736,119 @@ write.space <- function(input) {
                                            Poisson   = "rpois",
                                            Specific  = as.character(input$distribution_list))
 
+        ## Making the scree bit
+        if(input$scree == "Decreasing") {
+            space_make <- c(space_make,
+                c("## Making a vector of proportion of variance per dimension",
+           paste0("my_scree <- rev(cumsum(rep(1/", input$n_dimensions, ", ", input$n_dimensions, ")))")))
+        } 
+        if(input$scree == "LogNormal") {
+            space_make <- c(space_make,
+                c("## Making a vector of proportion of variance per dimension",
+           paste0("my_scree <- cumprod(rep(1/2, ", input$n_dimensions, "))"),
+           paste0("my_scree <- my_scree/max(my_scree)")))
+        } 
+
+        ## Making the correlation bit
+        if(input$correlation == "Vector") {
+            space_make <- c(space_make,
+                c("## Making a empty correlation matrix",
+           paste0("cor_matrix <- matrix(1, ", input$n_dimensions, ", ", input$n_dimensions, ")"),
+                  "## Filling the matrix triangles",
+           paste0("cor_matrix[lower.tri(cor_matrix)] <- c(", input$correlation_value_vector, ")"),
+           paste0("cor_matrix[upper.tri(cor_matrix)] <- c(", input$correlation_value_vector, ")")))
+        }
+
+        if(input$correlation == "Upload") {
+            space_make <- c(space_make,
+                c("## Loading a correlation matrix",
+                  "## (the path may need adjustment)",
+           paste0("cor_matrix <- read.csv(file = \"", input$correlation_value_csv$name, "\" header = FALSE)")))
+        }
+
         ## Making the space
-        space_make <- paste0(
+        space_make <- c(space_make,
         c("## Simulating a space",
    paste0("space <- space.maker(elements     = ", space_args$elements, ","),
    paste0("                     dimensions   = ", space_args$dimensions, ","),
    paste0("                     distribution = ", space_args$function_name, ","),
    paste0("                     arguments    = list(", paste(paste(space_args$arguments), collapse = ",\n                                         ")),
-   paste0("                                         )"),
-   paste0("                     )")))
+   paste0("                                         )")))
+
+        ## Add scree
+        if(input$scree != "Uniform") {
+            space_make <- add.comma(space_make)
+            space_make <- c(space_make,
+   paste0("                     scree        = my_scree"))
+        }
+
+        ## Add correlation
+        if(input$scree != "Uncorrelated") {
+            space_make <- add.comma(space_make)
+            space_make <- c(space_make,
+   paste0("                     cor.matrix   = cor_matrix"))
+        } 
+
+        ## Close the space.maker function
+        space_make <- paste0(c(space_make, paste0("                     )")))
     }
 
-    return(c(header, space_make))    
+    return(c(header, space_make, ""))
 }
 
 write.reduction <- function(input) {
     header <- "## Reducing the space"
-    rest   <- "hahaha"
-    return(c(header, rest))    
+
+    if(input$space_type == "Demo") {
+        removal <- "TODO"
+    } else {
+        ## Reduction type
+        reduce_type <- switch(input$reduce,
+                              "Random"   = "random",
+                              "Limit"    = "limit",
+                              "Displace" = "displacement",
+                              "Density"  = "density",
+                              "Evenness" = "evenness")
+        ## The removal
+        if(input$proportion_remove) {
+            removal <- paste0(
+            c("## Creating a proportional space",
+              "## Getting the range for each dimension",
+              "scree <- apply(space, 2, FUN = function(X) diff(range(X)))/diff(range(space[,1]))", 
+              "## Scaling each dimension to have the same range",
+              "prop_space <- space %*% diag(1/scree)",
+              "## Selecting the elements to remove",
+       paste0("to_remove <- reduce.space(prop_space, type = \"", reduce_type, "\", remove = ", 1-input$remove, ")")))
+        } else {
+            removal <- paste0(
+            c("## Selecting the elements to remove",
+       paste0("to_remove <- reduce.space(space, type = \"", reduce_type, "\", remove = ", 1-input$remove, ")")))
+        }
+    }
+
+    return(c(header, removal, ""))    
 }
 
 write.disparity <- function(input) {
     header <- "## Calculating disparity"
     rest   <- "hahaha"
-    return(c(header, rest))    
+    return(c(header, rest, ""))    
 }
 
 write.plot <- function(input) {
     header <- "## Plotting the results"
     rest   <- "hahaha"
-    return(c(header, rest))    
+    return(c(header, rest, ""))    
 }
 
 write.simulation <- function(input) {
     header <- "## Simulations"
     rest   <- "hahaha"
-    return(c(header, rest))    
+    return(c(header, rest, ""))    
 }
 
 write.test <- function(input) {
     header <- "## Testing the metric"
     rest   <- "hahaha"
-    return(c(header, rest))    
+    return(c(header, rest, ""))    
 }
