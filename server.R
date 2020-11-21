@@ -152,7 +152,7 @@ shinyServer(
 
                 ## Add the legend for the default spaces
                 if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
-                    ## Select the dataset names
+                    ## Select the dataset names
                     subset_names <- names(demo_data[[switch.demo.dataset(input)]]$subsets)
                 
                     ## Get the legend text
@@ -178,7 +178,7 @@ shinyServer(
                     ## Custom subsets
 
                     if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
-                        ## Select the demo dispRity object
+                        ## Select the demo dispRity object
                         groups <- demo_data[[switch.demo.dataset(input)]]
                     } else {
                         ## Create dispRity groups
@@ -255,7 +255,7 @@ shinyServer(
             # }
 
             ## ~~~~~~~~~~
-            ## Disparity
+            ## Extra analyses
             ## ~~~~~~~~~~
 
             output$plot_simulations <- renderPlot({
@@ -325,6 +325,53 @@ shinyServer(
                 plot(test_metric, col = colours, ylab = ylabel)
             })
 
+            ## ~~~~~~~~~~
+            ## Extra cpde
+            ## ~~~~~~~~~~
+            output$export.code <- downloadHandler(
+
+                ## Filename management
+                filename = function() {
+                    ## Getting the output name
+                    paste(paste("moms", format(Sys.time(), "%Y-%m-%d-%H%M%S"), sep = "_"), sep = ".", "R")
+                },
+
+                ## Export management
+                content = function(file) {
+                    
+                    txt_out <- character()
+                    ## Adding the header
+                    txt_out <- c(txt_out, write.header())
+
+                    ## Adding the space generator
+                    txt_out <- c(txt_out, write.space(input))
+
+                    ## Adding the space reduction
+                    if(input$reduce !=  "None") {
+                        txt_out <- c(txt_out, write.reduction(input))
+                    }
+
+                    ## Adding the disparity calculation
+                    txt_out <- c(txt_out, write.disparity(input))
+
+                    ## Adding the plot functions
+                    txt_out <- c(txt_out, write.plot(input))
+
+                    ## Adding the simulations
+                    if(input$simulate > 0) {
+                        txt_out <- c(txt_out, write.simulation(input))
+                    }
+
+                    ## Adding the testing
+                    if(input$testmetric > 0) {
+                        txt_out <- c(txt_out, write.test(input))
+                    }                    
+
+                    ## Exporting the file
+                    writeLines(txt_out, file)
+    
+                }
+            )
         },
         ## Plot size
         # height = reactive(ifelse(!is.null(input$innerWidth), input$innerWidth*3/7.5, 0))

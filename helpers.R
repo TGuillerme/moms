@@ -49,9 +49,10 @@ get.space <- function(input, args.only = FALSE){
 
     ## Input space
     if(input$space_type == "Input"){
-        ## Load the file
+        ## Load the file
         shiny::req(input$upload_input_matrix)
         space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = NULL, header = FALSE))
+        space_reader_id <<- 0
 
         ## Check whether it can work out with rownames
         if(class(space) != "matrix") {
@@ -64,12 +65,15 @@ get.space <- function(input, args.only = FALSE){
             ## Is not numeric
             ## Try reload with row or col names
             space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = 1, header = FALSE))
+            space_reader_id <<- 1
             ## Try changing parameters
             if(!is.numeric(space)) {
                 space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = NULL, header = TRUE))
+                space_reader_id <<- 2
             } 
             if(!is.numeric(space)) {
                 space <- as.matrix(read.csv(file = input$upload_input_matrix$datapath, row.names = 1, header = TRUE))
+                space_reader_id <<- 3
             }
         }
 
@@ -86,9 +90,9 @@ get.space <- function(input, args.only = FALSE){
         return(space)
     }
 
-    ## Demo space
+    ## Demo space
     if(input$space_type == "Demo"){
-        ## Load the demo data
+        ## Load the demo data
         data(demo_data)
 
         ## Select the right data
@@ -256,9 +260,9 @@ get.space <- function(input, args.only = FALSE){
 #'  a list (detailing the error message to be displayed) if there's an error.
 get.reduction <- function(input, space) {
 
-    ## Demo space
+    ## Demo space
     if(input$use_demo_groups == TRUE){
-        ## Load the demo data
+        ## Load the demo data
         data(demo_data)
 
         ## Select the right data
@@ -471,7 +475,7 @@ handle.metrics <- function(input, dispRity_args, session) {
             )
         },
         User = {
-            ## Get name
+            ## Get name
             metric_name <- input$metric_specific1
             
             ## Get functions
@@ -536,7 +540,7 @@ handle.metrics <- function(input, dispRity_args, session) {
         } else {
             group_size <- nrow(dispRity_args$data)
         }
-        ## Get the rarefaction number
+        ## Get the rarefaction number
         rare_number <- round(input$n_rarefaction/100 * group_size)
         ## Correct the rarefaction number (if < 3)
         rare_number <- ifelse(rare_number < 3, 3, rare_number)
@@ -602,7 +606,7 @@ get.prop.change <- function(table, change = "change", rarefaction) {
     colnames(table)[ncol(table)] <- change
 
     if(rarefaction) {
-        ## Add bootstrapped values
+        ## Add bootstrapped values
         proportional_changes <- table[-1,4]/table[1,4]*100-100
         ## Add a new column
         table <- cbind(table, "")
@@ -655,4 +659,104 @@ run.simulations <- function(input, n_replicates) {
     return(mapply(make.groups, spaces, reduced_spaces, SIMPLIFY = FALSE))
 }
 
+## Write code
+write.header <- function() {
+    v_moms     <- packageVersion("moms")
+    v_dispRity <- packageVersion("dispRity")
+    header <- paste0(
+        c("###########################################################################",
+   paste0("# Code generated using the moms shiny app version ", as.character(v_moms)),
+          "# https://tguillerme.shinyapps.io/moms/",
+   paste0("# Accessed on ", date(), " and based on dispRity ", as.character(v_dispRity)),
+          "#",
+          "# If you use this for publication, please cite the following:",
+          "# moms:     https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.6452",
+          "# R:        https://cran.r-project.org/doc/FAQ/R-FAQ.html#Citing-R",
+          "# ape:      https://cran.r-project.org/web//packages/ape/citation.html",
+          "# dispRity: https://cran.r-project.org/web//packages/dispRity/citation.html",
+          "###########################################################################")
+        )
+    libraries <- paste0(
+        c("## Loading/installing packages",
+          "if(!require(dispRity)) install.packages(\"dispRity\")",
+          "library(dispRity)"))
+    return(c(header, libraries))
+}
 
+write.space <- function(input) {
+    header <- "## Generating the space\n"
+    ## Generating the space
+    if(input$space_type == "Demo") {
+        space_name <- switch(input$demo_data,
+                            "Beck and Lee 2014"   = "beck",
+                            "Wright 2017"         = "wright",
+                            "Marcy et al. 2016"   = "marcy",
+                            "Hopkins et al. 2016" = "hopkins",
+                            "Jones et al. 2015"   = "jones",
+                            "Healy et al. 2019"   = "healy")
+
+        space_make <- paste0(c("## Loading the space from the demo datasets",
+                               "data(demo_data)",
+                        paste0("space <- demo_data$", space_name)))
+    }
+
+    if(input$space_type == "Input") {
+        ## User input space
+        space_make <- paste0(c("## Loading the space from a file",
+                        paste0("input <- read.csv(file = ", input$upload_input_matrix$datapath, ",")))
+        read_csv_options <- switch(as.character(space_reader_id),
+                            "0" = "                  row.names = NULL, header = FALSE)",
+                            "1" = "                  row.names = 1, header = FALSE)",
+                            "2" = "                  row.names = NULL, header = TRUE)",
+                            "3" = "                  row.names = 1, header = TRUE)")
+        space_make <- paste0(c(space_make, read_csv_options,
+                               "space <- as.matrix(input)"))
+    }
+
+    if(input$space_type == "User") {
+        ## Parametrised space
+        space_args <- get.space(input, args.only = TRUE)
+
+        ## Making the space
+        space_make <- paste0(
+        c("## Simulating a space",
+       paste0("space <- space.maker(elements     = ", space_args$elements, ","),
+       paste0("                     dimensions   = ", space_args$dimensions, ","),
+                                    ## TODO: add distribution_name
+       paste0("                     distribution = ", space_args$distribution_name, ","),
+       paste0("                     arguments    = list(",
+                paste(paste(names(unlist(space_args$arguments)), unlist(space_args$arguments), sep = " = "), collapse = ", "), "))")))
+    }
+
+    return(c(header, space_make))    
+}
+
+write.reduction <- function(input) {
+    header <- "## Reducing the space"
+    rest   <- "hahaha"
+    return(c(header, rest))    
+}
+
+write.disparity <- function(input) {
+    header <- "## Calculating disparity"
+    rest   <- "hahaha"
+    return(c(header, rest))    
+}
+
+write.plot <- function(input) {
+    header <- "## Plotting the results"
+    rest   <- "hahaha"
+    return(c(header, rest))    
+}
+
+write.simulation <- function(input) {
+    header <- "## Simulations"
+    rest   <- "hahaha"
+    return(c(header, rest))    
+}
+
+write.test <- function(input) {
+    header <- "## Testing the metric"
+    rest   <- "hahaha"
+    return(c(header, rest))    
+}

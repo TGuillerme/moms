@@ -427,15 +427,11 @@ shinyUI(fluidPage(
         
         ## Refresh button - input$refresh
         hr(),
-        actionButton("refresh", label = "Refresh")#,
+        actionButton("refresh", label = "Refresh"),
 
-        ## Export code
-        # hr(),
-        # downloadButton("exportcode", "Export code"),
-        # actionButton("export", label = "Export analysis"),
-        # conditionalPanel(condition = "input.export > 0",
-        #   helpText("plot_testmetric")                 
-        # )
+        # Export code
+        hr(),
+        downloadButton("export.code", "Export code")
       )
     )
   )
