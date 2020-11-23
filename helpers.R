@@ -666,7 +666,7 @@ add.comma <- function(script) {
 
 ## Write code
 write.header <- function() {
-    v_moms     <- packageVersion("moms")
+    v_moms     <- "1.2.1"#packageVersion("moms")
     v_dispRity <- packageVersion("dispRity")
     header <- paste0(
         c("###########################################################################",
