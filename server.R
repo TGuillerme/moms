@@ -347,7 +347,7 @@ shinyServer(
                     txt_out <- c(txt_out, write.space(input))
 
                     ## Adding the space reduction
-                    if(input$reduce !=  "None") {
+                    if(input$reduce != "None") {
                         txt_out <- c(txt_out, write.reduction(input))
                     }
 

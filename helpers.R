@@ -344,12 +344,12 @@ handle.metrics <- function(input, dispRity_args, session) {
                 "Median distance from centroid (Euclidean)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
-                    dispRity_code <- "stats::median(dispRity::centroids(matrix))"
+                    dispRity_code <- "median(dispRity::centroids(matrix))"
                 },
                 "Median distance from centroid (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- "stats::median(dispRity::centroids(matrix, method = \"manhattan\"))"
+                    dispRity_code <- "median(dispRity::centroids(matrix, method = \"manhattan\"))"
                 },
                 "n-ball volume" = {
                     dispRity_args$metric <- n.ball.volume
@@ -417,12 +417,12 @@ handle.metrics <- function(input, dispRity_args, session) {
                 "Median pairwise distance (Euclidean)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "euclidean"
-                    dispRity_code <- "stats::median(dispRity::pairwise.dist(matrix))"
+                    dispRity_code <- "median(dispRity::pairwise.dist(matrix))"
                 },
                 "Median pairwise distance (Manhattan)" = {
                     dispRity_args$metric <- c(median, pairwise.dist)
                     dispRity_args$method <- "manhattan"
-                    dispRity_code <- "stats::median(dispRity::pairwise.dist(matrix, method = \"manhattan\"))"
+                    dispRity_code <- "median(dispRity::pairwise.dist(matrix, method = \"manhattan\"))"
                 },
                 "Minimum spanning tree average length" = {
                     dispRity_args$metric <- function(matrix) sum(span.tree.length(matrix))/nrow(matrix)
@@ -463,13 +463,13 @@ handle.metrics <- function(input, dispRity_args, session) {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "euclidean"
                     dispRity_args$centroid <- 0
-                    dispRity_code <- "stats::median(dispRity::centroids(matrix, centroid = 0))"
+                    dispRity_code <- "median(dispRity::centroids(matrix, centroid = 0))"
                 },
                 "Median distance from centre (Manhattan)" = {
                     dispRity_args$metric <- c(median, centroids)
                     dispRity_args$method <- "manhattan"
                     dispRity_args$centroid <- 0
-                    dispRity_code <- "stats::median(dispRity::centroids(matrix, centroid = 0, method = \"manhattan\"))"
+                    dispRity_code <- "median(dispRity::centroids(matrix, centroid = 0, method = \"manhattan\"))"
                 }
             )
         },
@@ -703,7 +703,7 @@ write.space <- function(input) {
 
         space_make <- paste0(c("## Loading the space from the demo datasets",
                                "data(demo_data)",
-                        paste0("space <- demo_data$", space_name)))
+                        paste0("space <- demo_data$", space_name, "$matrix[[1]]")))
     }
 
     if(input$space_type == "Input") {
@@ -783,7 +783,7 @@ write.space <- function(input) {
         }
 
         ## Add correlation
-        if(input$scree != "Uncorrelated") {
+        if(input$correlation != "Uncorrelated") {
             space_make <- add.comma(space_make)
             space_make <- c(space_make,
    paste0("                     cor.matrix   = cor_matrix"))
@@ -797,18 +797,23 @@ write.space <- function(input) {
 }
 
 write.reduction <- function(input) {
-    header <- "## Reducing the space"
-
-    if(input$space_type == "Demo") {
-        removal <- "TODO"
+    if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
+        
+        header  <- ""
+        removal <- ""
+    
     } else {
+
+        header <- "## Reducing the space"
+
         ## Reduction type
         reduce_type <- switch(input$reduce,
-                              "Random"   = "random",
-                              "Limit"    = "limit",
-                              "Displace" = "displacement",
-                              "Density"  = "density",
-                              "Evenness" = "evenness")
+                   "Random"   = "random",
+                   "Limit"    = "size",
+                   "Displace" = "position",
+                   "Density"  = "density",
+                   "Evenness" = "evenness")
+
         ## The removal
         if(input$proportion_remove) {
             removal <- paste0(
@@ -824,31 +829,89 @@ write.reduction <- function(input) {
             c("## Selecting the elements to remove",
        paste0("to_remove <- reduce.space(space, type = \"", reduce_type, "\", remove = ", 1-input$remove, ")")))
         }
+
+        if(input$inverse_remove) {
+            removal <- c(removal,
+                         "## Inverse the selection",
+                         "to_remove <- !to_remove")
+        }
     }
 
-    return(c(header, removal, ""))    
+    #     reduced_space_points = to_remove
+
+    return(c(header, removal, ""))
 }
 
 write.disparity <- function(input) {
     header <- "## Calculating disparity"
-    rest   <- "hahaha"
-    return(c(header, rest, ""))    
+
+    dispRity_make <- "## Creating the dispRity object"
+
+    ## Making the dispRity object
+    if(input$space_type == "Demo" && input$use_demo_groups == TRUE) {
+        space_name <- switch(input$demo_data,
+                                "Beck and Lee 2014"   = "beck",
+                                "Wright 2017"         = "wright",
+                                "Marcy et al. 2016"   = "marcy",
+                                "Hopkins et al. 2016" = "hopkins",
+                                "Jones et al. 2015"   = "jones",
+                                "Healy et al. 2019"   = "healy")
+
+        dispRity_make <- c(dispRity_make,
+                    paste0("disparity_space <- demo_data$", space_name))
+    } else {
+        ## Add rownames
+        dispRity_make <- c("## Adding row names to the space",
+                           "rownames(space) <- 1:nrow(space)",
+                           dispRity_make)
+
+        dispRity_make <- c(dispRity_make,
+"disparity_space <- custom.subsets(space,",
+"                         group = list(\"Full space\" = rownames(space),",
+"                                      \"Reduced space\" = rownames(space)[to_remove]))")
+
+    }
+
+    ## Measuring disparity
+    dispRity_make <- c(dispRity_make,
+       "## Disparity function",
+paste0("disparity.metric <- function(matrix) ", metrics_handle$code),
+       "## Measuring disparity",
+       "disparity_space <- dispRity(disparity_space, metric = disparity.metric)")
+
+    ## Summarising the results
+    dispRity_make <- c(dispRity_make,
+        "## Summarising the results",
+        "summary(disparity_space)")
+
+    return(c(header, dispRity_make, ""))    
 }
 
 write.plot <- function(input) {
     header <- "## Plotting the results"
-    rest   <- "hahaha"
-    return(c(header, rest, ""))    
+    plotscript   <- "plot(disparity_space, type = \"preview\")"
+    return(c(header, plotscript, ""))    
 }
 
 write.simulation <- function(input) {
-    header <- "## Simulations"
-    rest   <- "hahaha"
+    header <- "## Simulations not available for rendering yet"
+    rest   <- "## Please refer to the reproducible procedure here:\n##    https://github.com/TGuillerme/moms" 
     return(c(header, rest, ""))    
 }
 
 write.test <- function(input) {
     header <- "## Testing the metric"
-    rest   <- "hahaha"
-    return(c(header, rest, ""))    
+    do_shift <- switch(input$reduce,
+                   "Random"   = "random",
+                   "Limit"    = "size",
+                   "Displace" = "position",
+                   "Density"  = "density",
+                   "Evenness" = "evenness")
+
+    testscript <- c("## Testing the metric",
+             paste0("test_metric <- test.metric(space, metric = disparity.metric, shifts = \"", do_shift, "\")"),
+                    "## Plotting the test results",
+             paste0("plot(test_metric, ylab = \"", metrics_handle$name, "\")"))
+
+    return(c(header, testscript, ""))    
 }
