@@ -14,7 +14,7 @@
 # input$upload_input_matrix$name <- "trait_space_small.csv"
 
 
-# input$reduce <- "Limit"
+# input$reduce <- "Size"
 # input$remove <- 0.4
 # input$proportion_remove <- FALSE
 # input$inverse_remove <- FALSE
@@ -276,10 +276,10 @@ get.reduction <- function(input, space) {
             ## Simple removal
             return(reduce.space(space, type = "random", 1-input$remove, verbose = FALSE, return.optim = FALSE))
         },
-        Limit = {
+        Size = {
             type <- "limit"
         },
-        Displace = {
+        Position = {
             type <- "displacement"
         },
         Density = {
@@ -809,8 +809,8 @@ write.reduction <- function(input) {
         ## Reduction type
         reduce_type <- switch(input$reduce,
                    "Random"   = "random",
-                   "Limit"    = "size",
-                   "Displace" = "position",
+                   "Size"     = "size",
+                   "Position" = "position",
                    "Density"  = "density",
                    "Evenness" = "evenness")
 
@@ -903,8 +903,8 @@ write.test <- function(input) {
     header <- "## Testing the metric"
     do_shift <- switch(input$reduce,
                    "Random"   = "random",
-                   "Limit"    = "size",
-                   "Displace" = "position",
+                   "Size"     = "size",
+                   "Position" = "position",
                    "Density"  = "density",
                    "Evenness" = "evenness")
 

@@ -21,7 +21,7 @@ dispRity 0.2.0 (2016-04-01)
 
   * Blabla
  -->
- moms v1.2.1 (2020-11-23)
+ moms v1.2.2 (2021-03-15)
 =========================
 
 ### NEW FEATURES
@@ -31,6 +31,10 @@ dispRity 0.2.0 (2016-04-01)
   * when selecting different types of space reduction, the GUI now tells what should be the expected changes in disparity
   * added `test.metric` analysis
   * added `export code` button
+
+### MINOR IMPROVEMENTS
+
+  * changed the modification algorithms names `Limit` and `Displace` to `Size` and `Position` respectively for consistency with the rest of the app.
 
  moms v1.0 (2020-04-28)
 =========================

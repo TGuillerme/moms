@@ -182,10 +182,10 @@ shinyUI(fluidPage(
         ## --------------------
 
         ## Modify space - input$reduce
-        selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Limit", "Displace", "Density", "Evenness"), selected = "None"),
+        selectInput("reduce", label = h2("Space modification"), choices = list("None", "Random", "Size", "Position", "Density", "Evenness"), selected = "None"),
 
-        conditionalPanel(condition = "input.reduce == \"Limit\"", helpText("Expecting changes in size.")),
-        conditionalPanel(condition = "input.reduce == \"Displace\"", helpText("Expecting changes in position.")),
+        conditionalPanel(condition = "input.reduce == \"Size\"", helpText("Expecting changes in size.")),
+        conditionalPanel(condition = "input.reduce == \"Position\"", helpText("Expecting changes in position.")),
         conditionalPanel(condition = "input.reduce == \"Density\"", helpText("Expecting changes in density.")),
         conditionalPanel(condition = "input.reduce == \"Evenness\"", helpText("Expecting changes in density.")),
 

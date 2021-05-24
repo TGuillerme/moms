@@ -309,8 +309,8 @@ shinyServer(
                 ## Switch the shifts
                 do_shift <- switch(input$reduce,
                                    "Random"   = "random",
-                                   "Limit"    = "size",
-                                   "Displace" = "position",
+                                   "Size"     = "size",
+                                   "Position" = "position",
                                    "Density"  = "density",
                                    "Evenness" = "evenness")
 
