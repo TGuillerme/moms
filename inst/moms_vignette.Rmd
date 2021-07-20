@@ -123,11 +123,13 @@ Four modifications are implemented:
 
 * **Random:** to remove a random proportion of elements.
 
-* **Limit:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where \$rho$ is selected such that the desired proportion of elements are selected).
+* **Size:** by removing all elements with a distance from the centre (mean point) of the space lower or greater than a radius $\rho$ (where $\rho$ is selected such that the desired proportion of elements are selected).
 
-* **Displace:** by removing points similarly as above but using the distance from the furthest point from the centre.
+* **Position:** by removing points similarly as above but using the distance from the furthest point from the centre.
 
 * **Density:** by removing any pairs of point with a distance $D$ from each other where (where $D$ is selected such that the desired proportion of elements are selected).
+
+* **Evenness:** by removing points from the highest or lowest density regions of the distribution on each dimension (to "flatten" or "steepen" the curve).
 
 For each removal algorithm, you can choose the proportion of elements to remove using the "Proportion to remove" sliding bar (between 10% and 90%).
 It is also possible to use the "Inverse removal" button to inverse the selection: for example if you randomly remove 33% of the elements, ticking this option will keep the 33% selected elements (i.e. remove 66% others).
@@ -186,6 +188,11 @@ It is also possible, when parametrising a user input space ([see space section a
 This option can take several minutes to run depending on the shiny apps sever traffic (or your machine if you're running the locally).
 The results will are displayed in a graph and show the proportion of overlap between the space occupancy in the reduced space (bottom in Fig. 6) and the ones from a random removal (top in Fig. 6).
 The more these distributions overlap (measured by the Bhattacharrya Coefficient), the more likely your metric will pick up random signal rather than the real signal from your reduction. 
+
+#### Testing the metric
+
+If you want you can also test the effect of the space modification on the metric score by using the inbuilt `dispRity::test.metric` function (much faster but may be less precise).
+You can find all about how the `dispRity::test.metric` works [here](https://raw.githack.com/TGuillerme/dispRity/master/inst/gitbook/_book/details-of-specific-functions.html#which-disparity-metric-to-choose) but basically a slope indicates a change in metric score and a "flat" line indicates no change.
 
 ### Changing the display
 
