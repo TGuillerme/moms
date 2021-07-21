@@ -55,7 +55,7 @@ get.space <- function(input, args.only = FALSE){
         space_reader_id <<- 0
 
         ## Check whether it can work out with rownames
-        if(class(space) != "matrix") {
+        if(!is(space, "matrix")) {
             ## Was not a matrix
             return("Not a matrix")
         }
@@ -83,7 +83,7 @@ get.space <- function(input, args.only = FALSE){
         }
 
         ## Check class and space
-        if(class(space) != "matrix" && any(is.na(space))) {
+        if(!is(space, "matrix") && any(is.na(space))) {
             return("Impossible to read the input matrix.\nThe input matrix should have no missing characters, and only numeric values.")
         }
 
@@ -533,7 +533,7 @@ handle.metrics <- function(input, dispRity_args, session) {
 
     if(input$rarefaction == TRUE) {
         ## Get the sampling value
-        if(class(dispRity_args$data) == "dispRity") {
+        if(is(dispRity_args$data, "dispRity")) {
             ## Get the minimum group size
             group_size <- min(size.subsets(dispRity_args$data))
         } else {
