@@ -13,3 +13,13 @@ input_test.txt
 inst/shiftingspace_files/*
 
 ariel_stuff/*
+
+*.fls
+*.aux
+*.docx
+*.fdb_latexmk
+*.log
+*.out
+*.synctex.gz
+
+inst/MEE/*
