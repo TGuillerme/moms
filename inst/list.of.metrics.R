@@ -22,7 +22,7 @@ convhull <- function(matrix) {
 metrics_list    <- list("func.disp" = func.disp,
                         "sum.var"   = c(sum, variances),
                         "sum.range" = c(sum, ranges),
-                        "ellips.vol"= ellipse.volume,
+                        "ellips.vol"= dispRity::ellipsoid.volume,
                         "span.tree" = c(mean, span.tree.length),
                         "func.eve"  = func.eve,
                         "ave.neigh" = c(mean, neighbours),
