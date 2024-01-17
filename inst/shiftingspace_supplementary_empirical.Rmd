@@ -274,7 +274,7 @@ save(demo_data, file = "../data/demo_data.rda")
 source("list.of.metrics.R")
 ```
 
-```{r running_empirical, echo = TRUE, eval = FALSE}
+```{r running_empirical, echo = TRUE, eval = TRUE}
 ## Loading the data
 trait_spaces <- demo_data
 

@@ -74,7 +74,7 @@ This section runs and summarises the simulations.
 The simulations are run silently in this markdown file (and are not printed on the compiled version of this document).
 The code is available within this R markdown file (un-compiled).
 
-```{r start_simulation, echo = TRUE, eval = FALSE}
+```{r start_simulation, echo = TRUE, eval = TRUE}
 ## Set the overall number of replicates
 n_replicates <- 20
 
@@ -86,7 +86,7 @@ elements <- function() 200
 set.seed(42)
 ```
 
-```{r generate_spaces_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = FALSE}
+```{r generate_spaces_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = TRUE}
 ## List of distributions
 distributions_list <- list(
     "unifor" = list(distribution = runif, arguments = list(list("min" = -0.5,
@@ -167,12 +167,12 @@ all_spaces <- list(uniform3 = space.simulation(distributions_list$unifor,
 ```
 
 
-```{r shift_spaces_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = FALSE}
+```{r shift_spaces_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = TRUE}
 ## Shifting each space
 shift_groups <- lapply(all_spaces, lapply, shift.group.simulation, remove = 0.5)
 ```
 
-```{r get_disparity_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = FALSE}
+```{r get_disparity_simulation, echo = TRUE, warning = FALSE, results = 'hide', eval = TRUE}
 ## Measuring disparity
 remove_05 <- mapply(metrics.simulation, all_spaces, shift_groups,
                   MoreArgs = list(metrics = metrics_list, rare.dim = NULL,
