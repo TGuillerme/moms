@@ -22,12 +22,6 @@ generate.fable.empirical(data, test, precision, plot.param, dataset)
 \description{
 Generates the plots for the empirical example fable. The R markdown compiler should name them as "<snippet_name>-<ID>.<type>"
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }

@@ -749,7 +749,7 @@ write.space <- function(input) {
            paste0("my_scree <- my_scree/max(my_scree)")))
         } 
 
-        ## Making the correlation bit
+        ## Making the correlation bit
         if(input$correlation == "Vector") {
             space_make <- c(space_make,
                 c("## Making a empty correlation matrix",
@@ -908,7 +908,7 @@ write.test <- function(input) {
                    "Density"  = "density",
                    "Evenness" = "evenness")
 
-    testscript <- c("## Testing the metric",
+    testscript <- c(header,
              paste0("test_metric <- test.metric(space, metric = disparity.metric, shifts = \"", do_shift, "\")"),
                     "## Plotting the test results",
              paste0("plot(test_metric, ylab = \"", metrics_handle$name, "\")"))

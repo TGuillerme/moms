@@ -16,12 +16,6 @@ s.test(metric.ID, type, test.results = list(s = space_test, r = all_dim_test))
 \description{
 Displays the p-value and significance token in the fable from the tests
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }

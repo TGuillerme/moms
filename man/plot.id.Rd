@@ -20,12 +20,6 @@
 \description{
 Plots one distribution for the fable following the plot ID
 }
-\examples{
-
-}
-\seealso{
-
-}
 \author{
 Thomas Guillerme
 }
